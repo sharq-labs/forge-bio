@@ -167,14 +167,21 @@ IndependenceFamily
     origin_type
     originating_study_id?
     cohort_id?
+    consortium_id?
+    biobank_or_dataset_id?
+    participant_overlap_group?
     lab_or_consortium?
     parent_dataset_id?
+    meta_analysis_parent_ids?
+    independence_confidence
     lineage_complete
 ```
 
 The same experiment copied through multiple databases remains one family.
 
-Unknown ancestry must not be interpreted as independence.
+Distinct publications are not sufficient evidence of independent samples.
+
+Unknown lineage or participant overlap must not be interpreted as independence.
 
 ## 12. Evidence strength
 
@@ -243,3 +250,17 @@ It can be reported as model output but cannot be re-ingested as independent biol
 The taxonomy has an evidence_schema_version.
 
 Changing category meaning requires a schema/ADR change, not silent remapping.
+
+## 17. Representation-time provenance
+
+Structured evidence derived from an older observation must preserve both:
+- the underlying observation/publication availability;
+- the structured derivation availability, method, and knowledge watermark.
+
+A 2008 publication converted into a gene assignment by a 2026 knowledge-bearing model is not automatically a 2008 structured gene-level fact.
+
+## 18. Population / ancestry metadata
+
+For human evidence, population and ancestry are retained where scientifically relevant and available.
+
+Missing values remain UNKNOWN. Evidence aggregated across populations must not silently erase population-specific applicability.
