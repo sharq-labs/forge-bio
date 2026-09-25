@@ -1,6 +1,6 @@
 # ADR-006 — Outcome Gene Assignment and Historical Novelty
 
-**Status:** Proposed — P0 blocker  
+**Status:** Accepted — pre-code hardening  
 **Decision scope:** B-TGT gene-level future outcomes
 
 ## Decision
