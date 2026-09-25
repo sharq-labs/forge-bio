@@ -70,7 +70,21 @@ Fixed K must be paired with at least one normalized metric:
 
 The final primary pair is selected on development data and frozen before sealed evaluation.
 
-## 8. Feasibility decisions still required
+## 8. Horizon feasibility policy
+
+Candidate horizons are fixed at:
+
+```text
+3, 5, 7, 10 years
+```
+
+The provider/outcome audit may remove horizons with inadequate observable coverage.
+
+The development procedure selects the smallest remaining H meeting preregistered event-yield, event-bearing-disease, ambiguity/censoring, and CI-width requirements.
+
+The model's lift/performance is not an H-selection criterion.
+
+## 9. Feasibility decisions still required
 
 The pilot/provider audit must determine:
 - exact primary E1 subtype;
