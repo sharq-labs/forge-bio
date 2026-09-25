@@ -1,6 +1,6 @@
 # ADR-007 — Benchmark Design Provenance and Analyst Blinding
 
-**Status:** Proposed — P0 blocker  
+**Status:** Accepted — pre-code hardening  
 **Decision scope:** confirmatory historical benchmarking
 
 ## Decision
