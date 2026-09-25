@@ -1,0 +1,867 @@
+# Architecture V1
+
+**Status:** Authoritative V1  
+**Project:** Forge Bio  
+**Architecture style:** Modular monolith, benchmark-first, evidence-ledger, temporal by construction
+
+---
+
+## 1. Executive decision
+
+Forge Bio is not architected primarily as a drug-discovery AI, knowledge graph, LLM application, or molecule-prediction system.
+
+It is architected as a:
+
+> **Temporally controlled scientific evidence, hypothesis-ranking, and historical-validation platform.**
+
+The primary scientific artifact is not a raw model score. It is a ranked hypothesis generated from an explicitly frozen knowledge state, together with:
+
+- admissible supporting evidence
+- counter-evidence
+- evidence gaps
+- temporal admissibility
+- identity mappings
+- provenance
+- uncertainty
+- applicability limits
+- ranking rationale
+- later evaluation against independently defined future events
+
+Historical validation is therefore an early platform capability, not an evaluation feature added after modeling.
+
+---
+
+## 2. Architectural invariants
+
+### 2.1 Two planes, one wall
+
+The platform has two scientific planes:
+
+```text
+PAST / HISTORICAL KNOWLEDGE PLANE
+    evidence admissible at cutoff T
+
+FUTURE / OUTCOME PLANE
+    events observed after T
+```
+
+Only the evaluation layer may read both.
+
+Rankers, feature builders, graph projections, and candidate generators must not import or query the Future plane.
+
+### 2.2 Frozen ranking before label reveal
+
+For confirmatory studies:
+
+```text
+freeze MAP
+→ freeze historical snapshot
+→ build candidate universe
+→ run ranking
+→ hash + seal ranking artifact
+→ unlock future labels
+→ evaluate
+→ produce MAR
+```
+
+A result that was produced after inspecting its future labels is exploratory, not confirmatory.
+
+### 2.3 UNKNOWN is a scientific state
+
+UNKNOWN is never silently converted into:
+
+- old enough
+- safe
+- negative
+- zero uncertainty
+- no contradiction
+- no risk
+
+This applies to dates, mappings, labels, evidence coverage, temporal provenance, model training cutoffs, and outcome status.
+
+### 2.4 Graph is a projection, not truth
+
+The authoritative scientific state is a ledger of:
+
+- entities
+- versioned identifiers/mappings
+- claims
+- evidence records
+- temporal assessments
+- provenance
+- contradictions/gaps
+
+A graph is generated from those records for a specific historical view.
+
+### 2.5 Models do not define scientific policy
+
+Models may compute scores.
+
+Models may not decide:
+
+- whether evidence is historically admissible
+- whether a future event counts as a validation endpoint
+- whether a mapping is scientifically valid
+- whether missing evidence is negative
+- whether a candidate is clinically effective
+
+---
+
+## 3. Operating regimes
+
+### 3.1 STRICT_HISTORICAL
+
+Only information and model-visible artifacts whose biomedical knowledge content is defensibly admissible by T may be used.
+
+A strict-historical run may support retrospective temporal claims.
+
+### 3.2 HISTORICAL_INPUT_MODERN_PRIOR
+
+Explicit inputs are historical, but a modern pretrained model, ontology, embedding, mapping, or representation may encode knowledge beyond T.
+
+This mode is useful for ablation and engineering studies, but must never be presented as evidence that the complete system could have operated at T.
+
+### 3.3 CURRENT_DISCOVERY
+
+Current evidence and current models are allowed.
+
+This mode produces present-day research hypotheses only.
+
+It does not produce a historical-validity claim.
+
+---
+
+## 4. Core scientific model
+
+### 4.1 Identity is separate from representation
+
+Every scientific concept receives an internal immutable identity.
+
+External names and IDs are versioned assertions about that identity.
+
+Core concepts include:
+
+- DiseaseConcept
+- Phenotype
+- Gene
+- Protein
+- ProteinComplex
+- PathwayConcept
+- ChemicalStructure
+- ChemicalParent / ActiveMoiety
+- ActiveIngredient
+- MedicinalProduct
+- DrugCombination
+- Publication
+- Study
+- Trial
+- RegulatoryAction
+
+### 4.2 Target is a role
+
+`Target` is not treated as a universal primitive entity.
+
+A therapeutically meaningful target hypothesis is closer to:
+
+```text
+TargetHypothesis
+    disease
+    biological_entity
+    desired_intervention_direction
+    biological_context
+    optional_modality_class
+```
+
+A gene, protein, protein complex, pathway component, or other biological entity becomes a target only relative to a disease, mechanism, direction, and context.
+
+### 4.3 Hypothesis classes
+
+Initial candidate classes:
+
+- PathwayCandidate
+- MechanismCandidate
+- TargetCandidate
+- CompoundCandidate
+- RepurposingCandidate
+
+Deferred:
+
+- CombinationCandidate
+- NovelMoleculeCandidate
+
+Each candidate type has its own candidate universe, endpoint semantics, matching rules, and benchmark.
+
+---
+
+## 5. Evidence model
+
+### 5.1 Claims and evidence are different
+
+A claim is a structured proposition.
+
+Example:
+
+```text
+subject: Protein X
+predicate: associated_with
+object: Disease Y
+direction: supports inhibition
+context: human / tissue / subtype / assay
+```
+
+An EvidenceRecord is one source-backed observation bearing on a claim.
+
+### 5.2 Scientific evidence class vs source channel
+
+Do not mix evidence method with where the evidence was found.
+
+Example:
+
+```text
+method_class   = GENETIC_HUMAN
+source_channel = PUBLICATION
+extraction     = CURATED
+```
+
+Recommended method classes include:
+
+- GENETIC_HUMAN
+- GENETIC_MODEL_ORGANISM
+- FUNCTIONAL_INVITRO
+- FUNCTIONAL_INVIVO
+- BIOCHEMICAL_BINDING
+- PHARMACOLOGICAL
+- EXPRESSION_OMICS
+- PATHWAY_CURATED
+- STRUCTURAL
+- PRECLINICAL_INVITRO
+- PRECLINICAL_INVIVO
+- CLINICAL_OBSERVATIONAL
+- CLINICAL_INTERVENTIONAL
+- REGULATORY
+- SAFETY
+- EPIDEMIOLOGICAL
+- COMPUTATIONAL_PREDICTION
+
+Possible source channels include:
+
+- PUBLICATION
+- DATABASE
+- REGISTRY
+- REGULATORY_DOCUMENT
+- CURATED_DATASET
+- INTERNAL_DERIVATION
+
+"Literature" is normally a source channel, not a scientific evidence-strength class.
+
+### 5.3 Independence
+
+Multiple databases may repeat the same experiment.
+
+Evidence therefore carries lineage and an independence grouping such as:
+
+```text
+evidence_family_id
+upstream_claim_ids
+derived_from_ids
+```
+
+Aggregation must be independence-aware.
+
+### 5.4 Support, contradiction, and gaps remain separate
+
+Every hypothesis dossier exposes at least:
+
+```text
+Supporting evidence
+Counter-evidence
+Coverage / gaps
+```
+
+They are not immediately collapsed into one number.
+
+A missing dataset is a gap.
+
+A missing negative trial is not positive evidence.
+
+---
+
+## 6. Contradiction semantics
+
+Opposite observations are not automatically contradictions.
+
+A comparability gate must consider:
+
+- entity compatibility
+- relation compatibility
+- direction
+- species
+- tissue / cell type
+- disease subtype
+- dose or intervention context
+- population
+- endpoint
+- experimental design
+- temporal scope
+
+Conflict states may include:
+
+- DIRECT_CONTRADICTION
+- DIRECTIONAL_CONFLICT
+- MECHANISTIC_CONFLICT
+- NO_EFFECT
+- TARGET_ENGAGEMENT_FAILURE
+- CLINICAL_EFFICACY_FAILURE
+- GENETIC_DIRECTION_CONFLICT
+- SAFETY_COUNTEREVIDENCE
+- CONTEXTUAL_DISAGREEMENT
+- PARTIAL_CONTRADICTION
+- RETRACTION_OR_CORRECTION
+- INCOMPARABLE
+- INCONCLUSIVE
+- UNRESOLVED
+
+A high model score never deletes a contradiction.
+
+---
+
+## 7. Temporal model
+
+### 7.1 Distinct time dimensions
+
+Records may have several time dimensions:
+
+- event_time
+- published_time
+- first_publicly_available_time
+- source_release_time
+- indexed_time
+- valid_from / valid_to
+- superseded_time
+- ingested_time
+- system_observed_time
+
+Historical admissibility is normally governed by the earliest defensible **public availability interval**, not merely by the year printed on a paper.
+
+### 7.2 Partial-date semantics
+
+Never fabricate date precision.
+
+If only the year 1998 is known:
+
+```text
+earliest_possible = 1998-01-01
+latest_possible   = 1998-12-31
+precision         = YEAR
+```
+
+For cutoff T:
+
+```text
+latest_possible <= T  → ADMIT
+earliest_possible > T → REFUSE
+interval overlaps T   → UNKNOWN
+no defensible date    → UNKNOWN
+```
+
+Strict historical mode excludes UNKNOWN from model-visible data while retaining it in audit statistics.
+
+### 7.3 Knowledge Watermark
+
+Every knowledge-bearing artifact carries a `KnowledgeWatermark`.
+
+The watermark means:
+
+> the latest biomedical knowledge that the artifact could encode.
+
+It is **not** the date on which the implementation code was written.
+
+Formal states:
+
+```text
+NON_KNOWLEDGE_BEARING
+DATED(date)
+UNKNOWN
+```
+
+Join semantics:
+
+```text
+join(NON_KNOWLEDGE_BEARING, DATED(2008)) = DATED(2008)
+join(DATED(2006), DATED(2008))            = DATED(2008)
+join(UNKNOWN, anything)                    = UNKNOWN
+```
+
+Examples of non-knowledge-bearing implementation:
+
+- hashing
+- deterministic sorting
+- arithmetic
+- generic serialization
+- generic statistical primitives
+
+Examples of knowledge-bearing artifacts:
+
+- ontology releases
+- disease mappings
+- manually curated gene-family lists
+- pretrained biomedical language models
+- current graph topology
+- embeddings
+- learned negative-sampling distributions
+- target classifications
+
+Implementation provenance is stored separately:
+
+```text
+code_commit
+library_version
+container_digest
+configuration_hash
+```
+
+### 7.4 Transitive temporal taint
+
+The watermark propagates through the full dependency DAG:
+
+```text
+raw record
+→ normalization
+→ mapping
+→ knowledge projection
+→ feature
+→ embedding
+→ model
+→ prediction
+```
+
+If any required knowledge-bearing dependency is UNKNOWN or later than T, the derived artifact is not admissible in STRICT_HISTORICAL mode.
+
+---
+
+## 8. Identity model
+
+### 8.1 Historical identity vs evaluation bridge
+
+Modern identity resolution can itself leak future knowledge.
+
+Therefore identity is split into:
+
+**Model-visible historical identity**
+
+- only mappings admissible by T
+- usable in candidate generation and features
+
+**Evaluation bridge**
+
+- may use modern mappings
+- used only after ranking to match historical entities to later future events
+- never visible to feature generation or ranking
+
+### 8.2 Mapping uncertainty is preserved
+
+A mapping is not forced to one answer.
+
+A mapping record should include:
+
+```text
+mapping_id
+internal_entity_id
+external_namespace
+external_identifier
+relation: EXACT | BROAD | NARROW | RELATED | REPLACED_BY
+source
+source_version
+valid_from
+valid_to
+availability_interval
+mapping_confidence
+review_status
+provenance_id
+```
+
+One-to-many identity is represented explicitly.
+
+---
+
+## 9. HistoricalKnowledgeView
+
+Rankers never receive:
+
+- unrestricted database connections
+- raw object-store credentials
+- Future Outcome storage
+- provider APIs
+- arbitrary SQL access
+- filesystem paths to raw datasets
+
+They receive a frozen read-only capability:
+
+```text
+HistoricalKnowledgeView
+    cutoff
+    temporal_policy
+    admitted datasets
+    candidate universe
+    admissibility statistics
+    content hashes
+    knowledge watermark
+```
+
+This view is the only model-visible scientific input boundary.
+
+---
+
+## 10. Candidate-universe policy
+
+The candidate universe itself is a possible leakage channel.
+
+A historical experiment must not rank all entities known today.
+
+Candidate eligibility must be proven as-of-T.
+
+Conceptually:
+
+```text
+entity_known_by_cutoff == TRUE
+and
+identity_admissible_by_cutoff == TRUE
+and
+candidate_class_eligible == TRUE
+```
+
+Candidate-universe construction is versioned, hashed, and included in the MAP.
+
+---
+
+## 11. Future Outcome / Oracle plane
+
+Ground truth is not stored as one `is_correct` field.
+
+It is an immutable ledger of FutureEvents such as:
+
+- biological association
+- human genetic validation
+- mechanistic validation
+- functional intervention evidence
+- preclinical validation
+- target clinical entry
+- drug clinical entry
+- clinical efficacy signal
+- clinical failure
+- regulatory approval
+- regulatory withdrawal
+- guideline adoption
+- mechanistically informative failure
+
+Endpoint-specific labels are derived from this event ledger.
+
+Label states include:
+
+- POSITIVE
+- NEGATIVE_CONFIRMED
+- UNKNOWN
+- RIGHT_CENSORED
+- COMPETING_EVENT
+- CONFLICTED / AMBIGUOUS
+- KNOWN_AT_T where applicable
+
+"Not observed" does not automatically mean negative.
+
+---
+
+## 12. Benchmark families
+
+### 12.1 B-TGT — Target Discovery
+
+Primary question:
+
+> Given only evidence available at T, can the system rank disease-specific target/intervention hypotheses that later receive predefined independent biological or mechanistic validation?
+
+This benchmark establishes biological prioritization signal.
+
+### 12.2 B-REP — Drug Repurposing
+
+Primary question:
+
+> Given only evidence available at T and an as-of-T universe of existing active moieties / drugs, can the system prioritize disease–drug hypotheses that later receive predefined investigation or success events?
+
+This benchmark tests translation from biological prioritization into therapeutic prioritization.
+
+Trial entry and therapeutic success are separate endpoints.
+
+---
+
+## 13. Benchmark governance
+
+Every confirmatory benchmark freezes:
+
+- Question of Interest
+- Context of Use
+- cutoff
+- observation horizon
+- candidate universe
+- disease universe
+- allowed and forbidden providers
+- provider releases
+- temporal policy
+- identity policy
+- endpoint definitions
+- label rules
+- matching rules
+- ranking algorithm
+- model/config versions
+- random seeds
+- primary and secondary metrics
+- confidence-interval method
+- success criteria
+- exclusions
+- subgroup analyses
+- ablations
+- holdout tier
+- permitted lockbox accesses
+
+Holdout tiers:
+
+```text
+DEVELOPMENT
+VALIDATION
+SEALED_LOCKBOX
+```
+
+A lockbox that has been repeatedly inspected is no longer an untouched lockbox.
+
+---
+
+## 14. Metrics and success criterion
+
+Important metrics may include:
+
+- Recall@K
+- Recall at percentage of candidate universe
+- event MRR
+- NDCG@K where graded relevance is predeclared
+- enrichment@K vs random
+- candidate rank percentile
+- cumulative event recall
+- case-level bootstrap confidence intervals
+
+Hit@K may be reported descriptively but must not be the sole headline metric.
+
+The central product-value comparator is:
+
+```text
+lift over research-attention baseline
+```
+
+Examples:
+
+```text
+ΔRecall@K vs historical research attention
+ΔNDCG@K vs historical research attention
+Enrichment@K over attention baseline
+```
+
+A sophisticated model that only re-ranks what researchers were already studying has not demonstrated discovery value.
+
+---
+
+## 15. Modeling progression
+
+Promotion is evidence-gated:
+
+```text
+Random
+→ Research attention / popularity
+→ Deterministic evidence ranking
+→ Regularized classical models
+→ Nonlinear tabular models
+→ Historical graph features
+→ KGE
+→ GNN
+→ Approved historical-safe pretrained representations
+→ Multimodal models
+→ Ensembles
+```
+
+Each stage must show incremental value over the best simpler stage.
+
+Modern pretrained artifacts whose training knowledge horizon exceeds T are excluded from STRICT_HISTORICAL mode.
+
+---
+
+## 16. Storage architecture
+
+V1 is a modular monolith.
+
+Recommended storage:
+
+- immutable raw provider artifacts: content-addressed object storage or local equivalent
+- normalized analytical datasets: Parquet
+- local analytical query: DuckDB / Polars
+- scientific registry and relational integrity: PostgreSQL when operationally justified
+- graph projections: in-memory / per-view, using NetworkX, igraph, or later tensor formats
+- MAP/MAR/specifications: content-addressed JSON/YAML + rendered Markdown/HTML
+
+A graph database is not the system of record.
+
+PostgreSQL is not required merely to begin BIG 0; it is introduced when the registry, identity constraints, access logs, and experiment lifecycle need transactional persistence.
+
+---
+
+## 17. Provider architecture
+
+Provider adapters expose source facts, not scientific truth.
+
+A provider should conceptually support:
+
+```text
+metadata()
+license_info()
+list_available_releases()
+get_release_manifest()
+fetch_release()
+verify_release()
+parse_snapshot()
+availability_evidence()
+record_provenance()
+capabilities()
+```
+
+Provider qualification states include:
+
+- HISTORICAL_SAFE
+- HISTORICAL_CONDITIONAL
+- CURRENT_ONLY
+- FUTURE_VALIDATION_ONLY
+- PROHIBITED_FOR_BENCHMARK
+- UNKNOWN
+
+UNKNOWN is never treated as safe.
+
+Historical cutoffs are chosen after provider temporal audit, not assumed in advance.
+
+---
+
+## 18. Repository bounded contexts
+
+Target repository structure:
+
+```text
+src/forge_bio/
+├── kernel/
+├── identity/
+├── temporal/
+├── provenance/
+├── uncertainty/
+├── providers/
+├── corpus/
+├── evidence/
+├── knowledge/
+├── hypotheses/
+├── ranking/
+├── outcomes/
+├── benchmarks/
+├── experiments/
+├── validation/
+├── reporting/
+└── interfaces/
+```
+
+Cross-cutting architecture rules are enforced with tests/import contracts.
+
+---
+
+## 19. Verification vs validation
+
+### Verification
+
+Asks whether the software behaves according to specification.
+
+Required examples:
+
+- temporal admission property tests
+- UNKNOWN fail-closed tests
+- knowledge-watermark propagation tests
+- future-sentinel tests
+- candidate-universe determinism
+- identity mapping invariants
+- snapshot checksum tests
+- feature-lineage completeness
+- metric golden tests
+- reproducibility from manifests
+- ranking determinism
+- network-disabled confirmatory runs where applicable
+- forbidden import/dependency tests
+
+Critical metamorphic invariant:
+
+> Adding a post-cutoff inadmissible record must produce no change in historical features or ranking.
+
+### Validation
+
+Asks whether the system has scientifically useful predictive behavior.
+
+Eventually includes:
+
+- rolling temporal holdouts
+- unseen diseases
+- disease-family holdouts
+- target-family holdouts
+- similarity-aware splits
+- external future-outcome sources
+- multiple historical cutoffs
+- ablation studies
+- calibration where meaningful
+- sealed lockbox
+- prospective shadow validation
+
+---
+
+## 20. LLM policy
+
+No LLM participates in the strict V1 ranking path.
+
+Later LLM/NLP extraction may be introduced only behind controlled interfaces with:
+
+- explicitly supplied documents
+- span grounding
+- model/version provenance
+- unsupported-fact rejection
+- extraction validation
+- null/shuffled-document canaries
+- strict vs contaminated-arm comparison
+
+An LLM never controls temporal admission, labels, validation status, or scientific truth.
+
+---
+
+## 21. Scientific stop rule
+
+Before expensive graph/deep/multimodal development:
+
+> If deterministic and classical models cannot show credible lift over research-attention/evidence-count baselines on sealed historical cases, stop advanced modeling and investigate the data, endpoint definition, candidate universe, and scientific premise.
+
+A clean negative result is preferable to an impressive contaminated demo.
+
+---
+
+## 22. Architectural decisions frozen in V1
+
+The following are frozen unless superseded by ADR:
+
+1. Benchmark-first development.
+2. Past/Future plane separation.
+3. HistoricalKnowledgeView as model input capability.
+4. UNKNOWN is first-class and fail-closed.
+5. KnowledgeWatermark is separate from implementation provenance.
+6. Graph is a projection.
+7. Target is a disease/context-specific role.
+8. Evidence method is distinct from source channel.
+9. Candidate universes are historical.
+10. Future ground truth is event-based and endpoint-specific.
+11. Research-attention baseline is mandatory.
+12. Cutoff era is selected through provider audit.
+13. B-TGT precedes or accompanies B-REP as the biological foundation.
+14. No LLM/deep model requirement in V1.
+15. No clinical-treatment claims.
