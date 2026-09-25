@@ -36,34 +36,34 @@
 
 - [ ] B-TGT-E1 primary scientific estimand is frozen, including disease weighting and zero-future-event disease policy.
 - [ ] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
-- [ ] E1-NOVEL / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
-- [ ] One primary E1 subtype selection procedure is accepted before sealed evaluation.
+- [x] E1-NOVEL / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
+- [x] One primary E1 subtype selection procedure is accepted before sealed evaluation.
 - [ ] Endpoint evidence-quality rule is chosen after provider/outcome feasibility audit.
 - [ ] Initial H candidate set and feasibility procedure are accepted.
-- [ ] Fixed-K evaluation has a candidate-universe-normalized companion metric.
-- [ ] Multiplicity policy for secondary endpoints/cutoffs/subgroups is defined.
+- [x] Fixed-K evaluation has a candidate-universe-normalized companion metric.
+- [x] Multiplicity policy for secondary endpoints/cutoffs/subgroups is defined.
 
 ### Outcome integrity
 
-- [ ] OutcomeGeneAssignmentPolicy accepted.
-- [ ] HistoricalNoveltyAudit policy accepted.
-- [ ] Locus/variant-level events cannot silently become gene-level positives.
-- [ ] Current/modern learned L2G output is prohibited as unqualified primary strict-historical ground truth.
-- [ ] Future-event independence includes cohort/dataset/sample-overlap semantics.
-- [ ] UNKNOWN sample overlap is not treated as independent replication.
-- [ ] Outcome adjudication blinding/dual-review policy is accepted.
-- [ ] Population/ancestry applicability fields are defined for relevant outcome classes.
+- [x] OutcomeGeneAssignmentPolicy accepted.
+- [x] HistoricalNoveltyAudit policy accepted.
+- [x] Locus/variant-level events cannot silently become gene-level positives.
+- [x] Current/modern learned L2G output is prohibited as unqualified primary strict-historical ground truth.
+- [x] Future-event independence includes cohort/dataset/sample-overlap semantics.
+- [x] UNKNOWN sample overlap is not treated as independent replication.
+- [x] Outcome adjudication blinding/dual-review policy is accepted.
+- [x] Population/ancestry applicability fields are defined for relevant outcome classes.
 
 ### Ascertainment and hindsight
 
-- [ ] Discoverability / observation-propensity confounding is part of the formal threat model.
-- [ ] Required historical discoverability baseline family is defined.
-- [ ] Attention-momentum control is defined.
-- [ ] Researcher hindsight / design-time leakage policy is accepted.
-- [ ] BenchmarkDesignProvenance schema is defined.
+- [x] Discoverability / observation-propensity confounding is part of the formal threat model.
+- [x] Required historical discoverability baseline family is defined.
+- [x] Attention-momentum control is defined.
+- [x] Researcher hindsight / design-time leakage policy is accepted.
+- [x] BenchmarkDesignProvenance schema is defined.
 - [ ] Ranking-team / outcome-adjudication / lockbox-custodian roles are defined.
 - [ ] Sealed disease identity blinding policy is decided.
-- [ ] Knowledge-historical vs technology-contemporaneous claims are explicitly separated.
+- [x] Knowledge-historical vs technology-contemporaneous claims are explicitly separated.
 
 ### Feasibility and governance
 
