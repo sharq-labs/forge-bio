@@ -99,6 +99,18 @@ Do not start production scientific code before that gate.
 - [Model Training Policy](docs/MODEL_TRAINING_POLICY.md)
 - [Pre-Code Readiness Checklist](docs/PRE_CODE_CHECKLIST.md)
 - [Scientific Red-Team Gap Register](docs/SCIENTIFIC_RED_TEAM_GAPS.md)
+- [Scientific Glossary](docs/GLOSSARY.md)
+- [Core Scientific Types](docs/CORE_TYPES.md)
+- [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
+- [Architecture Dependency Rules](docs/DEPENDENCY_RULES.md)
+- [Prohibited Dependency / Leakage Fixtures](docs/PROHIBITED_DEPENDENCY_FIXTURES.md)
+- [B-TGT-E1 Estimand Proposal](docs/BENCHMARK_ESTIMAND_V0.md)
+- [Scientific Specification Governance](docs/SCIENTIFIC_SPEC_GOVERNANCE.md)
+- [Lockbox Policy](docs/LOCKBOX_POLICY.md)
+- [QoI Schema](docs/schemas/QOI_SCHEMA.md)
+- [Context-of-Use Schema](docs/schemas/CONTEXT_OF_USE_SCHEMA.md)
+- [MAP Schema](docs/schemas/MAP_SCHEMA.md)
+- [MAR Schema](docs/schemas/MAR_SCHEMA.md)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
 - [Architecture Decision Records](docs/adr/)
@@ -107,20 +119,13 @@ Do not start production scientific code before that gate.
 
 The readiness checklist and red-team gap register are authoritative.
 
-Important unresolved P0 work now includes:
-- licensing posture;
-- BIG 0 schemas/artifacts promised by the master plan;
-- scientific estimand and zero-future-event disease policy;
-- disease/genetic regime for B-TGT-E1;
-- final E1 primary subtype and evidence-quality rule;
-- candidate H feasibility;
-- manual outcome-feasibility pilot;
-- locus→gene outcome-assignment policy operationalization;
-- HistoricalNoveltyAudit operationalization;
-- discoverability/observation-propensity control definition;
-- analyst-hindsight / blinding governance;
-- lockbox custody;
-- scientific-spec repository governance.
+Important unresolved P0 work is now limited mainly to evidence-bearing decisions that require real feasibility data or explicit ownership choice:
+- licensing posture (ADR-005 owner decision);
+- final frozen B-TGT-E1 estimand after feasibility evidence;
+- final primary E1 subtype and endpoint evidence-quality threshold;
+- manual outcome-feasibility pilot and its ambiguity/curation/lineage measurements.
+
+The V0 primary genetic regime, H candidate procedure, locus→gene policy, novelty policy, discoverability controls, analyst-hindsight governance, lockbox mechanism, schemas, core types, golden world, and dependency rules are now specified.
 
 Do **not** start production scientific code while any P0 blocker remains active.
 
