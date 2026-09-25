@@ -1,6 +1,6 @@
 # Architecture V1
 
-**Status:** Authoritative V1  
+**Status:** PRE-CODE CANDIDATE V1 — freeze only after P0 checklist closure  
 **Project:** Forge Bio  
 **Architecture style:** Modular monolith, benchmark-first, evidence-ledger, temporal by construction
 
@@ -223,36 +223,20 @@ source_channel = PUBLICATION
 extraction     = CURATED
 ```
 
-Recommended method classes include:
+Evidence semantics are orthogonal rather than one flat enum. An EvidenceRecord separates:
 
-- GENETIC_HUMAN
-- GENETIC_MODEL_ORGANISM
-- FUNCTIONAL_INVITRO
-- FUNCTIONAL_INVIVO
-- BIOCHEMICAL_BINDING
-- PHARMACOLOGICAL
-- EXPRESSION_OMICS
-- PATHWAY_CURATED
-- STRUCTURAL
-- PRECLINICAL_INVITRO
-- PRECLINICAL_INVIVO
-- CLINICAL_OBSERVATIONAL
-- CLINICAL_INTERVENTIONAL
-- REGULATORY
-- SAFETY
-- EPIDEMIOLOGICAL
-- COMPUTATIONAL_PREDICTION
+- evidence domain
+- experimental system
+- study design/method
+- stance
+- source channel
+- extraction method
+- biological context
+- observation/effect payload
 
-Possible source channels include:
+The normative taxonomy is defined in [EVIDENCE_TAXONOMY.md](EVIDENCE_TAXONOMY.md).
 
-- PUBLICATION
-- DATABASE
-- REGISTRY
-- REGULATORY_DOCUMENT
-- CURATED_DATASET
-- INTERNAL_DERIVATION
-
-"Literature" is normally a source channel, not a scientific evidence-strength class.
+"Literature" is a source channel, not a scientific evidence-strength class.
 
 ### 5.3 Independence
 
@@ -343,6 +327,8 @@ Records may have several time dimensions:
 
 Historical admissibility is normally governed by the earliest defensible **public availability interval**, not merely by the year printed on a paper.
 
+Every admissible record carries a first-class AvailabilityAttestation including interval, precision, basis, supporting source, and attestation quality. Normative rules are in [TEMPORAL_SEMANTICS.md](TEMPORAL_SEMANTICS.md).
+
 ### 7.2 Partial-date semantics
 
 Never fabricate date precision.
@@ -391,6 +377,8 @@ join(NON_KNOWLEDGE_BEARING, DATED(2008)) = DATED(2008)
 join(DATED(2006), DATED(2008))            = DATED(2008)
 join(UNKNOWN, anything)                    = UNKNOWN
 ```
+
+Every code/config/rule dependency also declares KnowledgeBearingness = NON_KNOWLEDGE_BEARING | KNOWLEDGE_BEARING | UNKNOWN. A modern implementation date alone does not move the watermark, but hard-coded biomedical knowledge does.
 
 Examples of non-knowledge-bearing implementation:
 
@@ -502,13 +490,14 @@ HistoricalKnowledgeView
     cutoff
     temporal_policy
     admitted datasets
-    candidate universe
     admissibility statistics
     content hashes
     knowledge watermark
 ```
 
-This view is the only model-visible scientific input boundary.
+This view is the only model-visible scientific knowledge boundary.
+
+CandidateUniverse is a **separate immutable input artifact** so the same HistoricalKnowledgeView can support different benchmark families without conflating "what was knowable" with "what this study permits ranking".
 
 ---
 
@@ -530,13 +519,17 @@ and
 candidate_class_eligible == TRUE
 ```
 
-Candidate-universe construction is versioned, hashed, and included in the MAP.
+Candidate-universe construction is versioned, hashed, included in the MAP, and carries membership provenance.
+
+The normative policy is defined in [IDENTITY_POLICY.md](IDENTITY_POLICY.md) and [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md).
 
 ---
 
 ## 11. Future Outcome / Oracle plane
 
 Ground truth is not stored as one `is_correct` field.
+
+Future events must carry source lineage and an independence family. A post-cutoff database annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
 
 It is an immutable ledger of FutureEvents such as:
 
@@ -741,6 +734,8 @@ UNKNOWN is never treated as safe.
 
 Historical cutoffs are chosen after provider temporal audit, not assumed in advance.
 
+Provider qualification is field/derivation-level, not only provider-level: (provider, release, field_or_derivation, intended_use). The normative process and Reconstruction Fidelity Study are defined in [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md).
+
 ---
 
 ## 18. Repository bounded contexts
@@ -865,3 +860,23 @@ The following are frozen unless superseded by ADR:
 13. B-TGT precedes or accompanies B-REP as the biological foundation.
 14. No LLM/deep model requirement in V1.
 15. No clinical-treatment claims.
+
+
+---
+
+## 23. Pre-code hardening references
+
+The following documents are normative for implementation detail and close gaps intentionally left abstract in this architecture:
+
+- [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md) — first falsifiable benchmark, disease sampling frame, candidate universe, future-event independence, paired baseline delta.
+- [TEMPORAL_SEMANTICS.md](TEMPORAL_SEMANTICS.md) — AvailabilityAttestation, KnowledgeBearingness, watermark algebra, retractions, temporal metamorphic tests.
+- [EVIDENCE_TAXONOMY.md](EVIDENCE_TAXONOMY.md) — orthogonal evidence schema and minimal contradiction primitive.
+- [IDENTITY_POLICY.md](IDENTITY_POLICY.md) — historical identity, evaluation bridge, deterministic hypothesis identity, canonical serialization.
+- [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md) — field-level provider qualification and Reconstruction Fidelity Study.
+- [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md) — nested temporal supervised training and leakage-safe tuning.
+- [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md) — P0/P1 go/no-go gates.
+- [adr/](adr/) — explicit decisions that may change architecture.
+
+### Freeze rule
+
+This document becomes **FROZEN V1** only after every P0 item in PRE_CODE_CHECKLIST is closed or explicitly superseded by an ADR. Until then, implementation may cover tooling/document schemas needed to close P0, but scientific production code must not outrun unresolved contracts.
