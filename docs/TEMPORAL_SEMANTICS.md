@@ -17,6 +17,8 @@ Keep distinct:
 - valid_from / valid_to
 - superseded_time
 - retracted_time
+- representation_created_time
+- adjudicated_time
 - ingested_time
 - system_time
 
@@ -168,6 +170,21 @@ This applies to normalized records, mappings, graph projections, candidate unive
 
 Hidden side inputs are prohibited.
 
+## 10.1 Observation time vs structured representation time
+
+The temporal status of an underlying observation and the temporal status of a derived structured assertion are separate.
+
+Example:
+
+```text
+primary_publication_available = 2008
+modern_gene_assignment_created = 2026
+```
+
+A 2026 knowledge-bearing assignment cannot inherit a 2008 watermark merely because it cites the 2008 paper.
+
+Strict mode evaluates the exact representation visible to the model, not only the age of its cited source.
+
 ## 11. Operating policies
 
 ### STRICT_ARCHIVED
@@ -178,6 +195,18 @@ A newer/current source is reconstructed using temporal evidence. Allowed only wh
 
 ### CONTAMINATED_MODERN_PRIOR
 Historical explicit inputs plus a later/unknown-horizon model, mapping, ontology, or representation. Never presented as strict historical evidence.
+
+## 11.1 Knowledge-historical vs technology-contemporaneous
+
+Temporal admissibility answers whether biomedical knowledge visible to the method is defensibly available by T.
+
+It does not establish that the exact algorithm, software stack, hardware, or compute budget existed at T.
+
+Reports distinguish:
+- KNOWLEDGE_HISTORICAL;
+- TECHNOLOGY_CONTEMPORANEOUS.
+
+The second requires separate evidence and is not implied by STRICT_HISTORICAL.
 
 ## 12. Coverage accounting
 
@@ -200,4 +229,6 @@ Required:
 4. insert future graph edge -> strict graph/features rejected;
 5. change generic implementation version only -> watermark unchanged;
 6. add a 2026 biomedical constant -> watermark becomes 2026 or UNKNOWN;
-7. replace historical text with current corrected text -> snapshot verification fails.
+7. replace historical text with current corrected text -> snapshot verification fails;
+8. derive a gene assignment in 2026 from a 2008 paper -> assignment watermark remains 2026/UNKNOWN, not 2008;
+9. change only generic compute infrastructure -> biomedical knowledge watermark remains unchanged.
