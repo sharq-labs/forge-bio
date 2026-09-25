@@ -12,7 +12,7 @@ Forge Bio will determine whether a computational therapeutic-hypothesis process 
 
 The platform must answer:
 
-> If the system had access only to information defensibly available at time T, could it prioritize biological mechanisms, therapeutic targets, and later existing-drug hypotheses that subsequently reached preregistered scientific endpoints — and could it do so better than research-attention and other trivial baselines?
+> If the system had access only to information defensibly available at time T, could it prioritize biological mechanisms, therapeutic targets, and later existing-drug hypotheses that subsequently reached preregistered scientific endpoints — and could it do so better than research-attention, discoverability/observation-opportunity, and other trivial baselines?
 
 The roadmap optimizes for:
 
@@ -947,6 +947,18 @@ Implementation order is governed by:
 - [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md)
 - [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md)
 - [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md)
+- [GLOSSARY.md](GLOSSARY.md)
+- [CORE_TYPES.md](CORE_TYPES.md)
+- [GOLDEN_SYNTHETIC_WORLD.md](GOLDEN_SYNTHETIC_WORLD.md)
+- [DEPENDENCY_RULES.md](DEPENDENCY_RULES.md)
+- [PROHIBITED_DEPENDENCY_FIXTURES.md](PROHIBITED_DEPENDENCY_FIXTURES.md)
+- [BENCHMARK_ESTIMAND_V0.md](BENCHMARK_ESTIMAND_V0.md)
+- [SCIENTIFIC_SPEC_GOVERNANCE.md](SCIENTIFIC_SPEC_GOVERNANCE.md)
+- [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md)
+- [schemas/QOI_SCHEMA.md](schemas/QOI_SCHEMA.md)
+- [schemas/CONTEXT_OF_USE_SCHEMA.md](schemas/CONTEXT_OF_USE_SCHEMA.md)
+- [schemas/MAP_SCHEMA.md](schemas/MAP_SCHEMA.md)
+- [schemas/MAR_SCHEMA.md](schemas/MAR_SCHEMA.md)
 - [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md)
 - [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md)
 - [adr/](adr/)
