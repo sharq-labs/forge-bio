@@ -1,6 +1,6 @@
 # Scientific Master Plan
 
-**Status:** Authoritative V1  
+**Status:** PRE-CODE CANDIDATE V1 — active hardening  
 **Project:** Forge Bio  
 **Execution principle:** prove temporal scientific value before expensive model complexity
 
@@ -142,6 +142,8 @@ Determine which sources can support historical science and make future informati
 - TemporalGuard
 - strict / reconstructed / contaminated temporal policies
 - provider audit matrix across candidate cutoff eras
+- field-level provider qualification
+- Reconstruction Fidelity Study protocol and first verdicts where archived comparisons exist
 
 ## Candidate audit eras
 
@@ -227,6 +229,7 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - evidence method classes
 - source channels
 - evidence-family / independence semantics
+- minimal comparability + ConflictAssessment primitive
 - provenance DAG
 - content hashing
 - reproducible normalized datasets
@@ -238,6 +241,7 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - every transformation records code/config identity
 - literature is represented as a source channel, not a strength class
 - duplicate database propagation does not create false independent evidence
+- contradiction/comparability primitive exists before BIG 7; BIG 10 expands it rather than introducing it from scratch
 
 ## Do not build
 
@@ -406,8 +410,9 @@ Determine whether learned weighting adds predictive information beyond transpare
 
 ## Rules
 
-- nested temporal training only
-- no future labels as training targets
+- nested temporal training per MODEL_TRAINING_POLICY.md
+- each training anchor has features as-of t_i and labels only from a fully observed window ending no later than T_eval
+- no post-T_eval outcome may enter training
 - grouped disease-aware validation
 - complete feature lineage
 - model knowledge horizon recorded
@@ -500,67 +505,11 @@ This milestone determines whether the project has platform-level target-prioriti
 
 ---
 
-# BIG 12 — Historical Graph Projections & Graph Features
+# BIG 12 — Drug / Active-Moiety Historical Layer
 
 ## Goal
 
-Add relational biology only after tabular/evidence baselines are established.
-
-## Outputs
-
-- cutoff-specific graph projection
-- evidence-bearing edges
-- path/network features
-- degree-controlled analyses
-- network proximity
-- historical metapath features where justified
-
-## Acceptance
-
-- every edge traces to admitted evidence
-- graph topology is recomputed per historical view
-- graph features add value beyond degree/popularity controls
-- no present-day topology enters strict mode
-
-## Do not build
-
-- graph database as source of truth
-
----
-
-# BIG 13 — Representation Learning
-
-## Goal
-
-Test whether learned graph representations add value beyond simple historical graph statistics.
-
-## Candidate families
-
-- KGE
-- R-GCN / HGT-like approaches
-- other heterogeneous graph models
-
-## Rules
-
-- training occurs on historical views
-- similarity-aware and family-aware splits
-- compute cost tracked
-- no prestige exemption: advanced models must beat simpler graph features
-
-## Acceptance
-
-- clear improvement on predefined generalization benchmark
-- gain survives disease-family holdout
-- leakage audit passes
-- model artifact has complete training provenance
-
----
-
-# BIG 14 — Drug / Active-Moiety Historical Layer
-
-## Goal
-
-Add therapeutic-chemical identity and historical drug-target evidence without weakening temporal integrity.
+Add therapeutic-chemical identity and historical drug-target evidence early enough to test product-value translation before expensive representation learning.
 
 ## Scope
 
@@ -591,11 +540,11 @@ Add therapeutic-chemical identity and historical drug-target evidence without we
 
 ---
 
-# BIG 15 — Drug Repurposing Historical Benchmark (B-REP)
+# BIG 13 — Drug Repurposing Historical Benchmark (B-REP)
 
 ## Goal
 
-Test whether the platform can prioritize existing-drug hypotheses before later investigation or success.
+Test whether target/mechanism signal translates into useful therapeutic prioritization before investing in advanced graph/deep models.
 
 ## Separate endpoints
 
@@ -606,7 +555,7 @@ At minimum distinguish:
 - regulatory approval
 - mechanistically informative failure
 
-Trial entry measures where the field went, not whether the treatment worked.
+Trial entry measures where the field went, not whether treatment worked.
 
 ## Baselines
 
@@ -614,15 +563,75 @@ Trial entry measures where the field went, not whether the treatment worked.
 - research attention
 - number of prior indications
 - target-overlap guilt-by-association
-- network proximity
+- network proximity where historically admissible
 - deterministic evidence ranking
 
 ## Acceptance
 
-- B-REP beats or meaningfully differs from field-attention controls on sealed data
+- B-REP is evaluated against field-attention controls on sealed data
 - success endpoints are reported separately from trial-entry endpoints
 - candidate universe and drug identity are historically safe
 - no patient-level or treatment-recommendation output
+
+## Scientific gate
+
+If B-TGT signal does not translate into B-REP value, keep the platform scoped to biological/target prioritization until the failure mode is understood.
+
+---
+
+# BIG 14 — Historical Graph Projections & Graph Features
+
+## Goal
+
+Add relational biology only after B-TGT and an initial B-REP value test exist.
+
+## Outputs
+
+- cutoff-specific graph projection
+- evidence-bearing edges
+- path/network features
+- degree-controlled analyses
+- network proximity
+- historical metapath features where justified
+
+## Acceptance
+
+- every edge traces to admitted evidence
+- graph topology is recomputed per historical view
+- graph features add value beyond degree/popularity controls
+- no present-day topology enters strict mode
+
+## Do not build
+
+- graph database as source of truth
+
+---
+
+# BIG 15 — Representation Learning
+
+## Goal
+
+Test whether learned graph representations add value beyond simple historical graph statistics and existing repurposing baselines.
+
+## Candidate families
+
+- KGE
+- R-GCN / HGT-like approaches
+- other heterogeneous graph models
+
+## Rules
+
+- training occurs on historical views
+- similarity-aware and family-aware splits
+- compute cost tracked
+- no prestige exemption: advanced models must beat simpler graph and therapeutic baselines
+
+## Acceptance
+
+- clear improvement on predefined generalization benchmark
+- gain survives disease-family holdout
+- leakage audit passes
+- model artifact has complete training provenance
 
 ---
 
@@ -815,17 +824,17 @@ Does signal survive diseases/families/cutoffs?
 
 If no: restrict applicability.
 
-## Gate 6 — Advanced ML
-
-Do advanced models improve over simpler baselines?
-
-If no: do not keep complexity for appearance.
-
-## Gate 7 — Repurposing value
+## Gate 6 — Repurposing value
 
 Does target/mechanism signal translate into B-REP value?
 
-If no: keep the platform scoped to target prioritization.
+If no: keep the platform scoped to target prioritization while investigating the gap.
+
+## Gate 7 — Advanced ML
+
+After B-TGT and B-REP baselines exist, do graph/deep models improve over simpler baselines?
+
+If no: do not keep complexity for appearance.
 
 ## Gate 8 — Prospective evidence
 
@@ -840,8 +849,8 @@ This is the ultimate long-term evidence.
 ```text
 Current milestone: BIG 0
 Implementation status: not started
-Architecture status: V1 frozen
-Scientific contract: V1 frozen
+Architecture status: PRE-CODE CANDIDATE V1
+Scientific contract: PRE-CODE CANDIDATE V1
 Historical benchmark result: none yet
 ML result: none yet
 Repurposing result: none yet
@@ -849,3 +858,21 @@ Prospective result: none yet
 ```
 
 The next implementation work must start from BIG 0 and should not skip directly to models.
+
+
+---
+
+# 8. Pre-code hardening references
+
+Implementation order is governed by:
+
+- [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md)
+- [TEMPORAL_SEMANTICS.md](TEMPORAL_SEMANTICS.md)
+- [EVIDENCE_TAXONOMY.md](EVIDENCE_TAXONOMY.md)
+- [IDENTITY_POLICY.md](IDENTITY_POLICY.md)
+- [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md)
+- [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md)
+- [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md)
+- [adr/](adr/)
+
+No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
