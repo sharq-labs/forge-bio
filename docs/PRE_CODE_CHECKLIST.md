@@ -22,24 +22,24 @@
 
 ### BIG 0 promised artifacts
 
-- [ ] Project glossary exists and ambiguous biomedical/statistical terms are defined.
-- [ ] Machine-readable or normative QoI schema exists.
-- [ ] Context-of-Use schema exists.
-- [ ] MAP schema exists.
-- [ ] MAR schema exists.
-- [ ] Core scientific enums/value objects are specified.
-- [ ] Minimal golden synthetic biomedical world is specified.
-- [ ] Architecture import/dependency rules are specified.
-- [ ] Deliberate prohibited-dependency fixtures/examples are specified.
+- [x] Project glossary exists and ambiguous biomedical/statistical terms are defined.
+- [x] Machine-readable or normative QoI schema exists.
+- [x] Context-of-Use schema exists.
+- [x] MAP schema exists.
+- [x] MAR schema exists.
+- [x] Core scientific enums/value objects are specified.
+- [x] Minimal golden synthetic biomedical world is specified.
+- [x] Architecture import/dependency rules are specified.
+- [x] Deliberate prohibited-dependency fixtures/examples are specified.
 
 ### Benchmark estimand and endpoint
 
 - [ ] B-TGT-E1 primary scientific estimand is frozen, including disease weighting and zero-future-event disease policy.
-- [ ] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
+- [x] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
 - [x] E1-NOVEL / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
 - [x] One primary E1 subtype selection procedure is accepted before sealed evaluation.
 - [ ] Endpoint evidence-quality rule is chosen after provider/outcome feasibility audit.
-- [ ] Initial H candidate set and feasibility procedure are accepted.
+- [x] Initial H candidate set and feasibility procedure are accepted.
 - [x] Fixed-K evaluation has a candidate-universe-normalized companion metric.
 - [x] Multiplicity policy for secondary endpoints/cutoffs/subgroups is defined.
 
@@ -61,8 +61,8 @@
 - [x] Attention-momentum control is defined.
 - [x] Researcher hindsight / design-time leakage policy is accepted.
 - [x] BenchmarkDesignProvenance schema is defined.
-- [ ] Ranking-team / outcome-adjudication / lockbox-custodian roles are defined.
-- [ ] Sealed disease identity blinding policy is decided.
+- [x] Ranking-team / outcome-adjudication / lockbox-custodian roles are defined.
+- [x] Sealed disease identity blinding policy is decided.
 - [x] Knowledge-historical vs technology-contemporaneous claims are explicitly separated.
 
 ### Feasibility and governance
@@ -75,8 +75,8 @@
 - [ ] Pilot reports population/ancestry metadata coverage.
 - [ ] Pilot yields go/redesign/no-go recommendation for B-TGT-E1-v0.
 - [ ] ADR-005 licensing posture decided by project owner.
-- [ ] Initial lockbox custodian/storage mechanism chosen.
-- [ ] Authoritative scientific-spec change governance chosen (protected branch or equivalent reviewed process).
+- [x] Initial lockbox custodian/storage mechanism chosen.
+- [x] Authoritative scientific-spec change governance chosen (protected branch or equivalent reviewed process).
 
 ## P1 — must close before sealed confirmatory run
 
@@ -128,6 +128,8 @@
 - [ ] Temporal metamorphic test suite passes.
 - [ ] Benchmark null/falsification tests pass.
 - [ ] Reproduction from manifest succeeds.
+- [ ] Protected-authoritative-branch / reviewed-merge controls are operationally verified.
+- [ ] Lockbox storage isolation and credential separation are operationally verified.
 
 ## Sample-size / feasibility rule
 
@@ -183,3 +185,19 @@ For strongest retrospective claims, methodology should be frozen before sealed d
 A failed gate changes the plan; it is never bypassed to keep schedule.
 
 The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md).
+
+
+## Normative P0 artifact index
+
+- [GLOSSARY.md](GLOSSARY.md)
+- [schemas/QOI_SCHEMA.md](schemas/QOI_SCHEMA.md)
+- [schemas/CONTEXT_OF_USE_SCHEMA.md](schemas/CONTEXT_OF_USE_SCHEMA.md)
+- [schemas/MAP_SCHEMA.md](schemas/MAP_SCHEMA.md)
+- [schemas/MAR_SCHEMA.md](schemas/MAR_SCHEMA.md)
+- [CORE_TYPES.md](CORE_TYPES.md)
+- [GOLDEN_SYNTHETIC_WORLD.md](GOLDEN_SYNTHETIC_WORLD.md)
+- [DEPENDENCY_RULES.md](DEPENDENCY_RULES.md)
+- [PROHIBITED_DEPENDENCY_FIXTURES.md](PROHIBITED_DEPENDENCY_FIXTURES.md)
+- [BENCHMARK_ESTIMAND_V0.md](BENCHMARK_ESTIMAND_V0.md)
+- [SCIENTIFIC_SPEC_GOVERNANCE.md](SCIENTIFIC_SPEC_GOVERNANCE.md)
+- [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md)
