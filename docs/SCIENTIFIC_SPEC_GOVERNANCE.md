@@ -75,3 +75,15 @@ Before sealed confirmatory work, at least one reviewer independent of the change
 The policy decision is now fixed: **reviewed PRs + protected authoritative branch (or equivalent enforced review control) are required before FROZEN V1**.
 
 Actual GitHub protection configuration is an operational prerequisite and must be verified separately.
+
+
+## 8. Required scientific roles
+
+Before sealed confirmatory work, responsibilities are separated conceptually into:
+- **Ranking Team** — historical inputs, features, models, sealed ranking production;
+- **Outcome Adjudication Team** — FutureEvent construction, novelty audit, gene assignment, blinded adjudication;
+- **Lockbox Custodian** — custody/access control and release after MAP/ranking freeze.
+
+One person may temporarily occupy more than one role in early development only when the conflict is documented and the claim tier is downgraded where necessary.
+
+The normative custody details are in [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md).
