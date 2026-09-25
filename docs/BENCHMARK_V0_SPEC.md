@@ -52,17 +52,19 @@ Any conditional estimand such as "performance among diseases with at least one f
 
 ## 4. Disease/genetic regime
 
-"Human genetic support" does not have one universal interpretation across:
-- Mendelian / rare disease;
-- common-complex disease;
-- somatic cancer genetics;
-- pharmacogenomic or other specialized settings.
+"Human genetic support" does not have one universal interpretation across Mendelian disease, common-complex disease, somatic cancer, and pharmacogenomic settings.
 
-B-TGT-E1-v0 must either:
-1. restrict the primary confirmatory benchmark to one clearly specified regime; or
-2. define separate endpoint rules and report separate benchmark strata.
+The **primary B-TGT-E1-v0 confirmatory regime is fixed to common-complex germline disease/trait genetics**.
 
-Pooling incompatible regimes into one headline result is prohibited.
+Excluded from the primary V0 pool:
+- primary Mendelian / rare-disease gene-discovery cases;
+- somatic cancer-driver genetics;
+- pharmacogenomic endpoints;
+- other regimes whose endpoint semantics materially differ.
+
+Those domains may receive separate benchmark families or explicitly separate strata later.
+
+They may not be pooled into the V0 headline result.
 
 ## 5. Cutoff selection
 
@@ -86,9 +88,27 @@ The selected cutoff becomes immutable inside the MAP.
 
 H is a fixed duration, not "until today".
 
-Candidate H values may be explored using development-visible information for event yield, coverage, censoring, and expected uncertainty. H is frozen before sealed evaluation.
+Pre-code candidate horizons are:
 
-The feasibility procedure may not inspect sealed case outcomes to choose H.
+```text
+3 years
+5 years
+7 years
+10 years
+```
+
+Provider/outcome feasibility may eliminate a candidate horizon when observation coverage is inadequate.
+
+Among feasible horizons, the development procedure chooses the **smallest H** that satisfies preregistered minimums for:
+- qualifying event yield;
+- number of event-bearing diseases;
+- outcome-source coverage;
+- censoring/ambiguity;
+- expected confidence-interval width.
+
+H is **not** selected because it maximizes Forge Bio lift or makes the model look best.
+
+The chosen H is frozen before sealed evaluation. Sealed case outcomes may not be inspected to choose H.
 
 ## 7. Endpoint family E1
 
