@@ -95,6 +95,13 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - MAR schema
 - claim maturity ladder
 - leakage threat model
+- scientific red-team gap register
+- benchmark scientific estimand
+- E1 endpoint subtype semantics
+- OutcomeGeneAssignmentPolicy
+- HistoricalNoveltyAudit policy
+- BenchmarkDesignProvenance / analyst-hindsight policy
+- discoverability/ascertainment control policy
 - core enums/value objects
 - minimal golden synthetic biomedical world
 
@@ -105,6 +112,12 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - evidence vs prediction vs validation
 - target-as-role semantics
 - initial endpoint vocabulary
+- disease/genetic regime for B-TGT-E1
+- zero-future-event disease estimand
+- locus-to-gene outcome semantics
+- historical novelty audit
+- discoverability/observation-propensity controls
+- researcher-hindsight / analyst-blinding governance
 - benchmark holdout governance
 
 ## Acceptance
@@ -114,6 +127,11 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - architecture dependency rules documented
 - deliberate prohibited dependency examples are specified
 - golden world has known identities, dates, claims, evidence, and future events
+- endpoint family distinguishes novel discovery from replication/evidence maturation
+- locus-level evidence cannot silently become gene-level validation
+- zero-event disease policy and scientific estimand are frozen before sealed outcomes
+- researcher hindsight is governed separately from technical lockbox access
+- discoverability/ascertainment is a required benchmark control
 
 ## Do not build
 
@@ -123,6 +141,42 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - frontend
 - agent
 - drug-generation workflows
+
+---
+
+# BIG 0F — Benchmark Feasibility Pilot
+
+## Goal
+
+Test whether B-TGT-E1 ground truth can be constructed credibly before provider-scale implementation.
+
+This is a scientific feasibility exercise, not a model-performance experiment.
+
+## Manual pilot
+
+Adjudicate a small heterogeneous set of future genetic events and measure:
+- historical novelty at T;
+- locus-level versus gene-level evidence;
+- gene-assignment method and knowledge horizon;
+- cohort/sample overlap;
+- retrospective curation burden;
+- ancestry/population metadata availability;
+- adjudicator disagreement;
+- fraction of unresolved AMBIGUOUS events.
+
+## Outputs
+
+- pilot event ledger;
+- novelty-audit examples;
+- gene-assignment examples;
+- lineage/overlap examples;
+- ambiguity statistics;
+- workload estimate;
+- GO / REDESIGN / NO-GO recommendation for B-TGT-E1-v0.
+
+## Gate
+
+Do not build provider-scale benchmark machinery if the endpoint cannot be adjudicated with acceptable ambiguity and reconstruction burden.
 
 ---
 
@@ -261,8 +315,12 @@ Build ground truth as endpoint-specific future events isolated from historical r
 
 - FutureEvent taxonomy
 - physically/logically separate outcome storage
-- endpoint definitions
+- endpoint definitions and E1 subtype rules
 - label derivation engine
+- OutcomeGeneAssignmentPolicy implementation
+- HistoricalNoveltyAudit workflow
+- cohort/dataset/sample-overlap lineage
+- blinded outcome-adjudication workflow
 - POSITIVE / NEGATIVE_CONFIRMED / UNKNOWN / RIGHT_CENSORED / COMPETING_EVENT / CONFLICTED states
 - evaluation-only modern identity bridge
 
@@ -273,6 +331,10 @@ Build ground truth as endpoint-specific future events isolated from historical r
 - endpoint labels are reproducible from event ledger + policy version
 - future event source coverage is auditable
 - event-time and public-availability semantics are preserved
+- locus/variant events cannot silently become gene-level positives
+- novelty ambiguity is explicit
+- UNKNOWN cohort/sample overlap is not treated as independent replication
+- outcome adjudication provenance is complete
 
 ---
 
@@ -316,10 +378,13 @@ Establish the real performance floor.
 
 - random
 - historical research attention / publication count
+- historical attention momentum / research-growth velocity
+- historical discoverability / observation-propensity control
 - evidence-volume popularity
 - entity popularity
 - graph-degree popularity where historical graph exists
 - simple deterministic biological baseline
+- benchmark falsification/null controls where applicable
 
 ## North-star comparison
 
@@ -390,7 +455,11 @@ No LLM, PLM, GNN, current graph, or future-trained representation.
 - zero unresolved temporal-integrity violations
 - reproducible historical snapshot
 - sealed evaluation completed
-- result compared to research-attention baseline
+- result compared to research-attention and discoverability controls
+- zero-event disease policy enforced
+- fixed K accompanied by a candidate-universe-normalized metric
+- null/placebo controls do not reproduce the claimed signal
+- locus-to-gene and novelty sensitivity analyses pass
 - results reported even if negative
 
 ---
@@ -763,10 +832,14 @@ It should contain:
 - historical candidate universe
 - random baseline
 - research-attention baseline
+- attention-momentum/discoverability baseline
 - deterministic scientific baseline
+- explicit E1 endpoint subtype
+- scientific estimand + zero-event disease policy
+- OutcomeGeneAssignmentPolicy + HistoricalNoveltyAudit
 - MAP + MAR
-- temporal leakage suite
-- complete provenance
+- temporal leakage and benchmark-falsification suite
+- complete provenance + BenchmarkDesignProvenance
 
 No GUI is required.
 
@@ -802,7 +875,7 @@ If no: change cutoff/source design.
 
 ## Gate 2 — Benchmark validity
 
-Do leakage tests, candidate-universe tests, and label semantics survive verification?
+Do temporal leakage tests, candidate-universe tests, outcome gene-assignment rules, historical-novelty audits, ascertainment controls, zero-event estimand rules, analyst-hindsight governance, and label semantics survive verification?
 
 If no: do not model.
 
@@ -873,6 +946,9 @@ Implementation order is governed by:
 - [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md)
 - [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md)
 - [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md)
+- [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md)
+- [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md)
+- [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
