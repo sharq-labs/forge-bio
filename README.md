@@ -6,20 +6,18 @@ It is designed to answer a narrow scientific question:
 
 > Given only biomedical information that was genuinely available at time **T**, can a computational system prioritize disease mechanisms, therapeutic targets, and later existing-drug hypotheses that subsequently receive predefined independent validation?
 
-The project is **benchmark-first**, not AI-first. Historical validity, provenance, evidence semantics, uncertainty, identity, and reproducibility are first-class requirements. Machine learning is introduced only after simple baselines and a leakage-resistant benchmark exist.
+The project is **benchmark-first**, not AI-first. Historical validity, provenance, evidence semantics, uncertainty, identity, and reproducibility are first-class requirements.
 
 ## What Forge Bio is
 
 Forge Bio is a research platform for:
 
 - temporally controlled biomedical evidence
-- therapeutic hypothesis generation and ranking
 - disease → mechanism → target prioritization
 - later disease → existing active-moiety / drug repurposing prioritization
-- explicit supporting evidence, counter-evidence, and gaps
+- supporting evidence, counter-evidence, and explicit gaps
 - uncertainty and applicability reporting
-- historical retrospective validation
-- sealed benchmark evaluation
+- sealed historical benchmarking
 - prospective shadow validation
 
 ## What Forge Bio is not
@@ -29,67 +27,75 @@ Forge Bio is not:
 - a patient diagnosis system
 - a treatment recommender
 - a dosing system
-- a clinical decision-support system
+- clinical decision support
 - a system that claims computational predictions are proven therapies
-- a pharmaceutical synthesis or manufacturing workflow
+- a pharmaceutical synthesis/manufacturing workflow
 - an LLM whose output is treated as scientific truth
 
 The platform produces **research hypotheses for further scientific investigation**.
 
 ## Scientific operating modes
 
-Forge Bio distinguishes three modes:
+1. **STRICT_HISTORICAL** — all model-visible knowledge must be defensibly admissible by cutoff T.
+2. **HISTORICAL_INPUT_MODERN_PRIOR** — historical explicit inputs may use modern/unknown-horizon priors, but the run is labelled contaminated and cannot support a strict historical claim.
+3. **CURRENT_DISCOVERY** — current evidence/models are allowed for present-day research prioritization only.
 
-1. **Strict historical benchmark** — every model-visible artifact must be defensibly admissible by cutoff T.
-2. **Historical-input / modern-prior experiment** — historical explicit inputs may be combined with modern pretrained representations, but the run is labelled contaminated/non-historical and cannot support a strict retrospective claim.
-3. **Current hypothesis discovery** — current evidence and current models are allowed for present-day research prioritization, with no historical claim.
+## Core architecture
 
-## Core architectural rule
+A ranker never receives unrestricted storage plus a cutoff parameter.
 
-A ranker does not receive unrestricted storage plus a cutoff parameter.
-
-It receives a frozen, read-only:
+It receives:
 
 ```text
-HistoricalKnowledgeView(cutoff=T)
+HistoricalKnowledgeView
++
+CandidateUniverse
 ```
 
-The Past/Historical Knowledge Zone and the Future Outcome/Oracle Zone are logically and preferably physically separated. The ranking artifact is frozen and hashed before future labels are available to evaluation.
+The Historical Knowledge plane and Future Outcome plane are isolated. A confirmatory ranking is frozen and hashed before future labels are opened.
 
 ## Scientific north star
 
-The key question is not whether a model beats random.
+Beating random is insufficient.
 
-It is whether it shows reproducible lift over what the research field was already paying attention to at T.
+The central question is whether the platform shows reproducible lift over **historical research attention** and other trivial popularity/evidence-volume baselines.
 
-Important comparators therefore include:
+## Initial benchmark families
 
-- random ranking
-- historical publication/research-attention ranking
-- evidence-volume ranking
-- target/drug popularity
-- graph-degree/popularity controls
-- deterministic evidence-quality ranking
+- **B-TGT — Target Discovery:** establishes biological prioritization signal.
+- **B-REP — Drug Repurposing:** tests whether biological signal translates into therapeutic prioritization.
 
-## Initial benchmark sequence
+The first proposed benchmark is **B-TGT-E1-v0**, a narrow disease–gene target-association benchmark evaluated against later independent human genetic support. It does not claim intervention-direction or clinical validation.
 
-Forge Bio will use two sibling benchmark families:
+## Pre-code status
 
-- **B-TGT — Target Discovery:** Disease → therapeutic target / intervention direction.
-- **B-REP — Repurposing:** Disease → existing active moiety / drug.
+Current phase: **Pre-Code Hardening / BIG 0**
 
-B-TGT establishes whether the platform contains genuine biological prioritization signal. B-REP tests whether that signal translates into useful therapeutic prioritization.
+The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
-## Authoritative project documents
+Do not start production scientific code before that gate.
 
-- [Architecture V1](docs/ARCHITECTURE_V1.md)
-- [Scientific Contract](docs/SCIENTIFIC_CONTRACT.md)
+## Core documents
+
+- [Architecture V1 Candidate](docs/ARCHITECTURE_V1.md)
+- [Scientific Contract V1 Candidate](docs/SCIENTIFIC_CONTRACT.md)
 - [Scientific Master Plan](docs/SCIENTIFIC_MASTER_PLAN.md)
+- [Benchmark V0 Specification](docs/BENCHMARK_V0_SPEC.md)
+- [Temporal Semantics](docs/TEMPORAL_SEMANTICS.md)
+- [Evidence Taxonomy](docs/EVIDENCE_TAXONOMY.md)
+- [Identity Policy](docs/IDENTITY_POLICY.md)
+- [Provider Qualification](docs/PROVIDER_QUALIFICATION.md)
+- [Model Training Policy](docs/MODEL_TRAINING_POLICY.md)
+- [Pre-Code Readiness Checklist](docs/PRE_CODE_CHECKLIST.md)
+- [Architecture Decision Records](docs/adr/)
 
-These documents are authoritative until superseded by an explicit ADR or a versioned replacement.
+## Current unresolved P0 decisions
 
-## Status
+The readiness checklist is authoritative. At present, the remaining owner/research decisions include:
 
-Current phase: **BIG 0 — Scientific Contract & Threat Model**
+- licensing posture
+- final B-TGT-E1 evidence-quality rule
+- candidate H values / feasibility procedure
+- lockbox custody mechanism
 
-No production scientific model should be implemented before the project contracts, temporal rules, evidence semantics, and benchmark governance are frozen.
+Once P0 is closed, the next step is a final red-team review. Only then do we declare **GO FOR BIG 0 CODE**.
