@@ -899,7 +899,7 @@ An LLM never controls temporal admission, labels, validation status, or scientif
 
 Before expensive graph/deep/multimodal development:
 
-> If deterministic and classical models cannot show credible lift over research-attention/evidence-count baselines on sealed historical cases, stop advanced modeling and investigate the data, endpoint definition, candidate universe, and scientific premise.
+> If deterministic and classical models cannot show credible lift over research-attention, evidence-count, and endpoint-appropriate discoverability controls on sealed historical cases, stop advanced modeling and investigate the data, endpoint definition, candidate universe, ascertainment process, and scientific premise.
 
 A clean negative result is preferable to an impressive contaminated demo.
 
