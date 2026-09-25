@@ -1,6 +1,6 @@
 # Scientific Contract
 
-**Status:** Authoritative V1  
+**Status:** PRE-CODE CANDIDATE V1 — freeze only after P0 checklist closure  
 **Purpose:** Define what Forge Bio may claim, what it must prove, and what it must never silently assume.
 
 ---
@@ -291,7 +291,7 @@ in STRICT_HISTORICAL mode.
 
 If the watermark is UNKNOWN, the artifact is inadmissible.
 
-Implementation date/version is provenance, not automatically a knowledge watermark.
+Every relevant code/config/rule dependency also declares whether it is NON_KNOWLEDGE_BEARING, KNOWLEDGE_BEARING, or UNKNOWN. Implementation date/version is provenance, not automatically a biomedical knowledge watermark. Normative semantics are in [TEMPORAL_SEMANTICS.md](TEMPORAL_SEMANTICS.md).
 
 ### 8.5 Future outcome isolation
 
@@ -342,13 +342,17 @@ Every evidence item links to:
 
 - source artifact
 - source record
-- evidence method class
+- evidence domain
+- experimental system
+- study design/method
 - source channel
 - biological context
-- availability assessment
+- AvailabilityAttestation
 - provenance lineage
 - extraction method
 - independence family
+
+The normative orthogonal schema is defined in [EVIDENCE_TAXONOMY.md](EVIDENCE_TAXONOMY.md).
 
 ### 10.2 Literature is not a strength class
 
@@ -439,6 +443,8 @@ A mapping with ambiguity is not silently coerced to EXACT.
 
 Ground truth is an event ledger.
 
+A future event counts as independent only when its lineage satisfies the benchmark's independence rule. A later annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
+
 Benchmarks derive labels for a named endpoint.
 
 Examples of distinct endpoints:
@@ -496,7 +502,9 @@ Used for rediscovery/training policy, but excluded from the main "future discove
 
 ## 15. Benchmark contract
 
-A confirmatory benchmark must freeze before evaluation:
+A confirmatory benchmark must freeze before evaluation. Disease selection and the candidate universe must themselves be defined from as-of-T criteria; famous later-success cases cannot be hand-picked into the primary confirmatory sample.
+
+A confirmatory benchmark must freeze:
 
 - cutoff
 - candidate universe
@@ -755,3 +763,54 @@ Forge Bio must remain a computational research tool.
 It must not generate operational pharmaceutical synthesis protocols, patient medication instructions, or dosing recommendations.
 
 The system ranks hypotheses for qualified scientific investigation; experimental, clinical, and regulatory confirmation remain outside the authority of the platform.
+
+
+---
+
+## 26. Benchmark V0 scope lock
+
+The first benchmark is intentionally narrow and is defined in [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md).
+
+B-TGT-E1-v0 predicts disease–gene target-association prioritization and evaluates later independent human genetic support. It does **not** claim to validate intervention direction, clinical efficacy, or treatment success.
+
+The endpoint-quality threshold, H, primary K, success threshold, and coverage thresholds are development-time decisions that must be frozen in the MAP before sealed evaluation.
+
+---
+
+## 27. Provider qualification contract
+
+Historical safety is qualified at:
+
+```text
+(provider, release/version, field_or_derivation, intended_use)
+```
+
+not at provider-name level.
+
+The full process is defined in [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md), including the Reconstruction Fidelity Study for conditional reconstructed sources.
+
+---
+
+## 28. Identity and hashing contract
+
+Historical identity, evaluation-only modern bridges, deterministic HypothesisKey semantics, CandidateUniverse identity, and canonical serialization are defined in [IDENTITY_POLICY.md](IDENTITY_POLICY.md).
+
+Any artifact used as a cryptographic scientific identity must use canonical serialization and an explicit schema version.
+
+---
+
+## 29. Training contract
+
+Strict supervised learning is allowed through **nested temporal training**, not by attaching future labels to a present-day table.
+
+The normative training rules are defined in [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md).
+
+A model evaluated at T_eval may train on historical anchor challenges t_i only when each training outcome window is fully observable by T_eval under the frozen policy.
+
+---
+
+## 30. Readiness rule
+
+[PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md) is the operational go/no-go authority.
+
+This contract becomes FROZEN V1 only when all P0 items are closed or explicitly superseded by ADR.
