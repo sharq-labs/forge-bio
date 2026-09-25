@@ -198,7 +198,7 @@ Every governed study defines a Question of Interest (QoI).
 
 Example:
 
-> Given only publicly available biomedical evidence admissible by cutoff T, can Forge Bio prioritize disease-specific therapeutic target hypotheses that later reach endpoint E within horizon H, with positive lift over historical research-attention baselines?
+> Given only publicly available biomedical evidence admissible by cutoff T, can Forge Bio prioritize disease-specific therapeutic target hypotheses that later reach endpoint E within horizon H, with positive lift over historical research-attention and endpoint-appropriate discoverability controls?
 
 Required QoI fields:
 
@@ -789,7 +789,7 @@ Do not patch over missing history with modern annotations.
 
 ### Gate B — Baseline value
 
-If transparent models do not beat research-attention/evidence-count baselines on development data, investigate the scientific premise before adding complexity.
+If transparent models do not beat research-attention, evidence-count, and endpoint-appropriate discoverability controls on development data, investigate the scientific premise before adding complexity.
 
 ### Gate C — Sealed confirmation
 
