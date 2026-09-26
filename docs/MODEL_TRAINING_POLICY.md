@@ -108,11 +108,20 @@ SEALED_LOCKBOX labels never participate in:
 - calibration fitting;
 - threshold selection.
 
-## 6. Calibration
+## 6. Calibration and probability claims
 
 Calibration for endpoint E/H uses only historical challenges whose endpoint windows are fully observed by the relevant calibration cutoff.
 
 A probability output requires separate calibration evidence.
+
+Probability claims additionally require:
+- explicit endpoint and horizon;
+- held-out calibration assessment;
+- at least one proper scoring rule frozen before confirmatory evaluation;
+- applicability/domain statement;
+- no reuse of sealed validation labels for recalibration.
+
+Recalibration creates a new model artifact/version and invalidates inherited calibration claims until re-evaluated.
 
 ## 7. Feature selection
 
@@ -134,7 +143,26 @@ Unknown training composition => historical_safe = UNKNOWN.
 
 Modern-prior experiments are allowed only in the explicitly contaminated operating mode.
 
-## 9. Training artifact
+## 9. Applicability, shift, and prediction-risk audit
+
+T3+/probabilistic evaluation audits at least:
+- data/source selection;
+- predictors/features;
+- outcome/label construction;
+- analysis/evaluation.
+
+Where relevant, evaluate shift across:
+- time;
+- provider/source;
+- population/ancestry;
+- disease/target family;
+- phenotype/measurement definition;
+- assay/platform;
+- base rate.
+
+Outside-domain use is labelled extrapolation, not validated prediction.
+
+## 10. Training artifact
 
 Every trained model records:
 - model_id/version;
@@ -159,7 +187,7 @@ Every trained model records:
 - knowledge watermark;
 - environment digest.
 
-## 10. Failure condition
+## 11. Failure condition
 
 A strict confirmatory model fails closed if:
 - any training example uses a qualifying event after T_eval;
@@ -168,4 +196,7 @@ A strict confirmatory model fails closed if:
 - a training label bypasses required phenotype-match or genetic-replication adjudication;
 - future-conditioned filtering changes the training population outside the frozen estimand;
 - the same ScientificEventFamily receives training weight beyond the frozen cross-anchor reuse policy;
-- any preprocessing/statistical transform is fit using records unavailable at the relevant training anchor.
+- any preprocessing/statistical transform is fit using records unavailable at the relevant training anchor;
+- probabilistic performance is claimed from discrimination alone without required calibration/scoring evidence;
+- applicability/domain shift is ignored for a claimed validated prediction;
+- a materially changed model/preprocessing/measurement/numerical dependency inherits stale validation without a new validation target.
