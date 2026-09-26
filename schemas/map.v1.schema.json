@@ -747,6 +747,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "ambiguity_sensitivity_method_id": {
+          "const": "AMBIGUOUS_EVENT_BEST_WORST_TIPPING_POINT_V1"
+        },
+        "disease_weighting_sensitivity_method_id": {
+          "enum": [
+            "HIERARCHICAL_DISEASE_SENSITIVITY_V1",
+            "PRECISION_WEIGHTED_DISEASE_SENSITIVITY_V1"
+          ]
+        },
+        "label_feature_method_coupling_sensitivity_id": {
+          "const": "METHOD_FAMILY_STRATIFIED_LABEL_FEATURE_SENSITIVITY_V1"
         }
       }
     },
@@ -1009,6 +1021,13 @@
                 "exclusiveMinimum": 0
               }
             }
+          },
+          "planned_analyses": {
+            "required": [
+              "ambiguity_sensitivity_method_id",
+              "disease_weighting_sensitivity_method_id",
+              "label_feature_method_coupling_sensitivity_id"
+            ]
           }
         }
       }
