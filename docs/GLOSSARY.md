@@ -48,9 +48,13 @@ This glossary defines terms that must not be used interchangeably.
 
 **Endpoint** — the predeclared future event definition used to evaluate a ranking.
 
-**E1-NOVEL** — qualifying post-T human genetic support with no qualifying pre-T support after HistoricalNoveltyAudit.
+**PreTGeneticState** — frozen historical assessment of whether the candidate has NO_SIGNAL_OBSERVED, SUGGESTIVE, QUALIFYING, or AMBIGUOUS pre-T human genetic evidence under the benchmark policy.
 
-**E1-REPLICATION** — qualifying independent post-T replication/maturation of a pre-T weak or suggestive genetic signal.
+**E1-NOVEL-STRICT** — qualifying post-T human genetic support only when PreTGeneticState = NO_SIGNAL_OBSERVED and HistoricalNoveltyAudit = NOVEL_CONFIRMED.
+
+**E1-MATURATION** — a pre-T suggestive genetic signal later crosses the qualifying endpoint threshold. It is not de novo discovery.
+
+**E1-REPLICATION** — qualifying independent post-T replication of a pre-existing association under the GeneticReplicationPolicy.
 
 **E1-CROSSMODAL** — a pre-T non-genetic ranking evaluated against later qualifying human genetic support.
 
@@ -64,7 +68,15 @@ This glossary defines terms that must not be used interchangeably.
 
 **OutcomeGeneAssignmentPolicy** — governed policy for determining when locus/variant-level human genetic evidence may support a gene-level outcome.
 
-**HistoricalNoveltyAudit** — evaluation-side audit verifying that a purported novel outcome was not already qualifying evidence at or before T.
+**OutcomePhenotypeMatchPolicy** — governed policy for determining whether a future disease/trait phenotype is scientifically equivalent enough to the benchmark disease to count for the primary endpoint.
+
+**GeneticReplicationPolicy** — governed policy for deciding whether a later genetic study is a genuine replication based on phenotype, locus/variant, allele harmonization, effect direction, population, cohort independence, overlap, and related comparability.
+
+**HistoricalNoveltyAudit** — evaluation-side audit verifying the pre-T signal state and whether a purported strict-novel outcome had already been observed before T.
+
+**ValidationGeneration** — versioned validation case/outcome set with access count and ACTIVE / SPENT_FOR_MODEL_SELECTION / RETIRED state.
+
+**OutcomeSnapshotCommitment** — immutable commitment to the exact future-outcome releases, ledger, adjudication batch, and evaluation identity bridge used for evaluation.
 
 ## Bias and governance
 
