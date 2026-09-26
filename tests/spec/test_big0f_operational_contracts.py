@@ -55,6 +55,8 @@ def pilot_result() -> dict:
         "provider_audit_id": "BIG0F-PROVIDER-AUDIT-V1",
         "provider_audit_digest": "sha256:" + "a" * 64,
         "adjudicator_independence_attestation_digest": "sha256:" + "b" * 64,
+        "curation_audit_id": "BIG0F-CURATION-AUDIT-V1",
+        "curation_audit_digest": "sha256:" + "c" * 64,
         "seal_attestation_ids": ["OTS-1", "OSF-1"],
         "first_adjudication_at": "2026-09-26T12:00:00Z",
         "cutoff": "2008-12-31",
