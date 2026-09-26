@@ -15,6 +15,7 @@ required = [
     ROOT / "schemas" / "qoi.v1.schema.json",
     ROOT / "schemas" / "map.v1.schema.json",
     ROOT / "schemas" / "mar.v1.schema.json",
+    ROOT / "schemas" / "scientific-twin.v1.schema.json",
 ]
 for path in required:
     if not path.exists():
@@ -76,3 +77,15 @@ if errors:
     sys.exit(1)
 
 print("SPEC INTEGRITY CHECK PASSED")
+
+
+# Scientific twin claim-boundary checks
+twin_arch = (ROOT / "docs" / "SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md").read_text(encoding="utf-8")
+for required_phrase in [
+    "T0_PROFILE_ONLY",
+    "T3_VALIDATED_PREDICTIVE_TWIN",
+    "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN",
+    "Patient-specific twins are excluded from V1.",
+]:
+    if required_phrase not in twin_arch:
+        errors.append(f"scientific twin architecture missing required claim boundary: {required_phrase}")
