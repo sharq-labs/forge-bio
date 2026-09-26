@@ -111,9 +111,13 @@ Models may not decide:
 Future labels are not treated as raw truth merely because they are stored in the Future plane.
 
 Outcome construction must separately govern:
-- historical novelty;
+- historical novelty and HistoricalGeneticSearchCoverage;
+- canonical genomic variant/locus identity and harmonization;
 - locus/variant-to-gene assignment;
-- cohort/sample independence;
+- phenotype identity/matching;
+- cohort/dataset/SampleSet identity and independence;
+- ScientificEventFamily identity/credit;
+- Past/Future provider coupling;
 - retrospective curation;
 - adjudicator blinding;
 - ascertainment/discoverability bias.
@@ -128,27 +132,44 @@ Confirmatory benchmark design therefore records BenchmarkDesignProvenance and ro
 
 ---
 
-## 3. Operating regimes
+## 3. Scientific operating mode and historical data policy
 
-### 3.1 STRICT_HISTORICAL
+Scientific claim mode and historical-data sourcing are orthogonal.
+
+### ScientificOperatingMode
+
+#### 3.1 STRICT_HISTORICAL
 
 Only information and model-visible artifacts whose biomedical knowledge content is defensibly admissible by T may be used.
 
 A strict-historical run may support retrospective temporal claims.
 
-### 3.2 HISTORICAL_INPUT_MODERN_PRIOR
+#### 3.2 HISTORICAL_INPUT_MODERN_PRIOR
 
 Explicit inputs are historical, but a modern pretrained model, ontology, embedding, mapping, or representation may encode knowledge beyond T.
 
 This mode is useful for ablation and engineering studies, but must never be presented as evidence that the complete system could have operated at T.
 
-### 3.3 CURRENT_DISCOVERY
+#### 3.3 CURRENT_DISCOVERY
 
 Current evidence and current models are allowed.
 
 This mode produces present-day research hypotheses only.
 
 It does not produce a historical-validity claim.
+
+### HistoricalDataPolicy
+
+```text
+ARCHIVED_ONLY
+RECONSTRUCTED_ALLOWED
+```
+
+A STRICT_HISTORICAL run may use RECONSTRUCTED_ALLOWED only when reconstruction-dependent fields pass the frozen Reconstruction Fidelity gate and all model-visible knowledge watermarks remain <= T.
+
+CONTAMINATED_MODERN_PRIOR is a run classification, not a HistoricalDataPolicy value.
+
+Normative semantics: [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md).
 
 ---
 
@@ -163,8 +184,12 @@ External names and IDs are versioned assertions about that identity.
 Core concepts include:
 
 - DiseaseConcept
-- Phenotype
+- PhenotypeConcept
 - Gene
+- GenomeAssembly
+- ReferenceSequence
+- GenomicVariant
+- GenomicLocus
 - Protein
 - ProteinComplex
 - PathwayConcept
@@ -177,6 +202,12 @@ Core concepts include:
 - Study
 - Trial
 - RegulatoryAction
+- Cohort
+- Dataset
+- Biobank
+- Consortium
+- SampleSet
+- LDReferencePanel
 
 ### 4.2 Target is a role
 
@@ -490,7 +521,18 @@ Therefore identity is split into:
 - may not convert a locus/variant association into a causal-gene outcome merely by modern assignment
 - may not rescue a failed prediction through post-hoc broadening without a preregistered sensitivity analysis
 
-### 8.2 Mapping uncertainty is preserved
+### 8.2 Genomic and study-population identity
+
+For genetic evidence/outcomes:
+- rsIDs and coordinate strings are external representations, not canonical variant identity;
+- genome assembly/reference sequence, normalized alleles, liftover, strand/orientation, and harmonization are provenance-bearing;
+- LD proxy relations carry population/ancestry, reference panel/release, assembly, metric, value, and derivation provenance;
+- Cohort/Dataset/Biobank/Consortium/SampleSet identities replace free-text independence assertions;
+- PhenotypeConcept is distinct from DiseaseConcept.
+
+Normative policy: [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md).
+
+### 8.3 Mapping uncertainty is preserved
 
 A mapping is not forced to one answer.
 
@@ -532,6 +574,8 @@ They receive a frozen read-only capability:
 ```text
 HistoricalKnowledgeView
     cutoff
+    scientific_operating_mode
+    historical_data_policy
     temporal_policy
     admitted datasets
     admissibility statistics
@@ -565,6 +609,8 @@ candidate_class_eligible == TRUE
 
 Candidate-universe construction is versioned, hashed, included in the MAP, and carries membership provenance.
 
+Historical identity eligibility does not imply equal genetic measurability at T. The benchmark therefore preserves the broad identity-valid universe and reports a preregistered GeneticObservabilityAtT sensitivity universe constructed only from as-of-T criteria.
+
 The normative policy is defined in [IDENTITY_POLICY.md](IDENTITY_POLICY.md) and [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md).
 
 ---
@@ -573,13 +619,19 @@ The normative policy is defined in [IDENTITY_POLICY.md](IDENTITY_POLICY.md) and 
 
 Ground truth is not stored as one `is_correct` field.
 
-Future events must carry source lineage and an independence family. A post-cutoff database annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
+Future events must carry source lineage, a ScientificEventFamily identity, and an independence family. A post-cutoff database annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
+
+A preprint, paper, and database rows may be manifestations of one scientific event. Default V0 primary credit is at most one per ScientificEventFamily.
+
+Past input and Future outcome provider lineages are compared for shared upstream/curation machinery. Material coupling requires sensitivity analysis.
 
 For genetic outcomes, the event ledger distinguishes locus/variant discovery from gene assignment. Gene-level positives retain assignment method, assignment evidence, assignment time, assignment knowledge watermark, and uncertainty.
 
 Independence lineage may include study, cohort, consortium, dataset/biobank, participant-overlap group, and meta-analysis parents. UNKNOWN overlap is not treated as independent replication.
 
-E1-NOVEL-STRICT outcomes require both `PreTGeneticState = NO_SIGNAL_OBSERVED` and `HistoricalNoveltyAudit = NOVEL_CONFIRMED`, so suggestive pre-T signals cannot be relabelled as de novo discovery.
+E1-NOVEL-STRICT outcomes require `PreTGeneticState = NO_SIGNAL_OBSERVED`, `HistoricalNoveltyAudit = NOVEL_CONFIRMED`, and the MAP-frozen minimum HistoricalGeneticSearchCoverage grade. Below-threshold historical coverage becomes AMBIGUOUS, not strict novelty.
+
+The outcome plane distinguishes KNOWN_TO_RANKER_AT_T from KNOWN_PUBLICLY_AT_T so a provider miss is not mistaken for future novelty.
 
 Future genetic outcomes also carry explicit phenotype-match and replication assessments. A related trait/risk factor is not silently promoted to the benchmark disease, and a repeated locus is not automatically independent replication.
 
@@ -660,8 +712,14 @@ Every confirmatory benchmark freezes:
 - disease universe
 - allowed and forbidden providers
 - provider releases
+- scientific operating mode
+- historical data policy
 - temporal policy
 - identity policy
+- genomic identity / variant-harmonization / LD policy
+- historical genetic-search coverage / observability policy
+- ScientificEventFamily credit policy
+- provider-coupling policy
 - endpoint definitions
 - pre-T genetic-state policy
 - phenotype-match policy
@@ -669,8 +727,10 @@ Every confirmatory benchmark freezes:
 - genetic-replication policy
 - label rules
 - matching rules
-- validation-generation identity/status
-- Future Outcome snapshot/ledger commitment
+- validation-generation identity/status/access count/disclosure level
+- CrossAnchorEventReusePolicy
+- outcome-event discovery freeze
+- Future Outcome snapshot/ledger/event-family/provider-coupling commitment
 - ranking algorithm
 - model/config versions
 - random seeds
@@ -863,8 +923,13 @@ Required examples:
 - future-sentinel tests
 - candidate-universe determinism
 - identity mapping invariants
+- genomic normalization/liftover/allele/LD provenance invariants
+- cohort/dataset/SampleSet identity/overlap invariants
 - snapshot checksum tests
-- feature-lineage completeness
+- feature/preprocessing lineage completeness
+- ScientificEventFamily deduplication tests
+- cross-anchor event-reuse tests
+- provider-coupling audit tests
 - metric golden tests
 - reproducibility from manifests
 - ranking determinism
@@ -889,7 +954,11 @@ Eventually includes:
 - external future-outcome sources
 - multiple historical cutoffs
 - outcome gene-assignment sensitivity
-- historical-novelty audit
+- genomic harmonization / LD-reference-panel sensitivity
+- historical-novelty/search-coverage audit
+- historical genetic-observability sensitivity
+- ScientificEventFamily credit sensitivity
+- Past/Future provider-coupling sensitivity
 - discoverability/ascertainment controls
 - blinded outcome adjudication
 - benchmark null/placebo controls
@@ -956,6 +1025,14 @@ The following are frozen unless superseded by ADR:
 22. B-TGT precedes or accompanies B-REP as the biological foundation.
 23. No LLM/deep model requirement in V1.
 24. No clinical-treatment claims.
+25. Genomic variant/locus identity is reference/assembly/allele aware; rsIDs are external identifiers.
+26. Harmonization/liftover/LD relations are provenance-bearing scientific derivations.
+27. Strict novelty is gated by historical genetic-search coverage.
+28. KNOWN_TO_RANKER_AT_T and KNOWN_PUBLICLY_AT_T are distinct.
+29. ScientificEventFamily identity prevents duplicated manifestations/locus-to-many-gene inflation.
+30. Past/Future provider coupling is measured and sensitivity-tested.
+31. Cross-anchor event reuse is explicitly bounded.
+32. ScientificOperatingMode and HistoricalDataPolicy are orthogonal.
 
 
 ---
@@ -977,6 +1054,11 @@ The following documents are normative for implementation detail and close gaps i
 - [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md) — disease/trait phenotype equivalence for future outcomes.
 - [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md) — strict novelty, maturation, and genetic replication semantics.
 - [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md) — validation reuse and immutable Future Outcome commitments.
+- [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md) — canonical genomic identity, harmonization, and LD provenance.
+- [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md) — historical search coverage, public-vs-ranker knowledge, and observability.
+- [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md) — event-family identity, provider coupling, cross-anchor reuse, and validation disclosure.
+- [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md) — operating mode vs historical data policy.
+- [../schemas/README.md](../schemas/README.md) — executable QoI/MAP/MAR schemas.
 - [adr/](adr/) — explicit decisions that may change architecture.
 
 ### Freeze rule
