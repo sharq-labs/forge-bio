@@ -1070,12 +1070,12 @@ The following are frozen unless superseded by ADR:
 27. Disease, pathogen, and pathogen–host systems are distinct.
 28. Patient-specific twins are outside V1 Context of Use.
 29. Genomic variant/locus identity is reference/assembly/allele aware; rsIDs are external identifiers.
-26. Harmonization/liftover/LD relations are provenance-bearing scientific derivations.
-27. Strict novelty is gated by historical genetic-search coverage.
-28. KNOWN_TO_RANKER_AT_T and KNOWN_PUBLICLY_AT_T are distinct.
-29. ScientificEventFamily identity prevents duplicated manifestations/locus-to-many-gene inflation.
-30. Past/Future provider coupling is measured and sensitivity-tested.
-31. Cross-anchor event reuse is explicitly bounded.
+30. Harmonization/liftover/LD relations are provenance-bearing scientific derivations.
+31. Strict novelty is gated by historical genetic-search coverage.
+32. KNOWN_TO_RANKER_AT_T and KNOWN_PUBLICLY_AT_T are distinct.
+33. ScientificEventFamily identity prevents duplicated manifestations/locus-to-many-gene inflation.
+34. Past/Future provider coupling is measured and sensitivity-tested.
+35. Cross-anchor event reuse is explicitly bounded.
 36. ScientificOperatingMode and HistoricalDataPolicy are orthogonal.
 37. Scientific profiles/twins are time-indexed and obey HistoricalKnowledgeView/watermark semantics.
 
