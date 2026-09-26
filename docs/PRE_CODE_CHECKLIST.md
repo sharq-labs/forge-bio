@@ -85,6 +85,32 @@
 - [x] Knowledge-historical vs technology-contemporaneous claims are explicitly separated.
 - [x] ScientificOperatingMode is separated from HistoricalDataPolicy.
 
+### BIG 0F-0 critical-path hardening
+
+- [x] Primary gene-level endpoint restricts primary positives to high-specificity assignment classes.
+- [x] AUTHOR_NAMED / NEAREST_GENE / positional-only / generic-database mappings are non-primary unless independently high-specificity.
+- [x] Assignment-attention audit is mandatory.
+- [x] Combined Nuisance Model is the primary comparator.
+- [x] Genomic-architecture, cross-trait pleiotropy, observability, and attention nuisance families are mandatory where reconstructable.
+- [x] GeneModelRelease is first-class for historical gene geometry/length/windows.
+- [x] Confirmatory MAP requires numeric alpha / effect / power / success fields.
+- [x] ConfirmatoryProgramBudget schema exists for research-program multiplicity.
+- [x] BIG 0F sampling rule and target-size rule are frozen in BIG_0F_PROTOCOL.md.
+- [x] BIG 0F numeric GO / REDESIGN / NO-GO thresholds are frozen before adjudication.
+- [x] BIG 0F pilot cases are permanently DEVELOPMENT_EXPOSED.
+- [x] BIG 0F requires symmetric non-event historical audit.
+- [x] BIG 0F requires mini historical-provider availability audit.
+- [x] BIG 0F requires development-only Combined Nuisance headroom analysis.
+- [x] Biomedical-domain dependencies default to knowledge-bearing/UNKNOWN unless explicitly qualified.
+- [x] Primary outcomes cannot rely solely on the same curation pipeline used as historical input.
+- [x] Cross-disease shared-control/study lineage is included in dependence sensitivity.
+- [x] Cross-field scientific semantic validator exists.
+- [x] Hostile-review regression tests exist.
+- [ ] Hostile-review regression suite passes on the current branch.
+- [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
+- [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
+- [ ] Independent custodian / third-party seal mechanism identified and tested.
+
 ### Feasibility and governance
 
 - [ ] Manual outcome feasibility pilot completed on heterogeneous events.
@@ -126,14 +152,17 @@
 ### Statistics and controls
 
 - [ ] Sample-size/event-yield feasibility completed on development-visible sources.
+- [ ] Simulation-based power analysis completed.
+- [ ] Confirmatory alpha, minimum scientifically meaningful effect, and target power frozen.
 - [ ] Zero-event disease handling verified in metric engine.
 - [ ] All-frame observed-event review-budget utility implemented.
-- [ ] Primary K/review budget chosen on development data only.
+- [ ] Primary metric frozen; any K/review-budget secondary metric chosen on development data only.
 - [ ] Candidate-universe-normalized primary/secondary metric implemented.
-- [ ] Strongest required attention/discoverability comparator frozen.
+- [ ] Combined Nuisance comparator implementation and exact as-of-T feature sources frozen.
 - [ ] Paired disease/challenge-level CI method frozen.
-- [ ] Disease-family/block dependence sensitivity method frozen.
-- [ ] Multiplicity policy frozen.
+- [ ] Disease-family + consortium/study-family + shared-control dependence sensitivity method frozen.
+- [ ] Within-study multiplicity policy frozen.
+- [ ] ConfirmatoryProgramBudget / alpha-spending allocations frozen.
 - [ ] Negative-control suite frozen.
 - [ ] Temporal placebo control defined where feasible.
 - [ ] Outcome-source and gene-assignment sensitivity analyses frozen.
