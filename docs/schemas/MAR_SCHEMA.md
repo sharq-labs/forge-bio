@@ -26,6 +26,11 @@ data:
   historical_snapshot_ids: [string]
   candidate_universe_digest: string
   future_outcome_snapshot_ids: [string]
+  future_outcome_snapshot_digest: string
+  outcome_ledger_digest: string
+  adjudication_batch_digest: string
+  evaluation_identity_bridge_digest: string
+  validation_generation_id: string
   provider_versions: [string]
 
 verification:
@@ -43,6 +48,9 @@ coverage:
   unknown_count: integer
   novelty_ambiguity_fraction: number
   assignment_ambiguity_fraction: number
+  phenotype_match_ambiguity_fraction: number
+  pre_t_genetic_state_ambiguity_fraction: number
+  replication_inconclusive_fraction: number
   lineage_completeness_fraction: number
   outcome_coverage_fraction: number
   ancestry_population_missing_fraction: number
@@ -56,6 +64,9 @@ results:
   confidence_interval: string
   success_rule_result: PASS | FAIL | INVALID
   normalized_companion_metric: string
+  all_frame_review_budget_utility: object
+  event_bearing_disease_coverage: number
+  zero_event_disease_review_burden: object
   secondary_results: [object]
 
 bias_and_sensitivity:
@@ -63,6 +74,9 @@ bias_and_sensitivity:
   attention_momentum_result: object
   historical_novelty_result: object
   gene_assignment_sensitivity: object
+  phenotype_match_sensitivity: object
+  replication_policy_sensitivity: object
+  disease_family_block_ci_sensitivity: object
   outcome_source_ablation: object
   ancestry_population_analysis: object
   reporting_bias_analysis: object
@@ -71,6 +85,9 @@ bias_and_sensitivity:
 governance:
   benchmark_design_provenance_id: string
   lockbox_access_log_ref: string
+  validation_generation_status: string
+  validation_access_count: integer
+  adjudication_blinding_status: string
   adjudication_summary: string
   deviations: [object]
 
@@ -88,6 +105,10 @@ interpretation:
 - negative controls are reported even when embarrassing;
 - ambiguity and missingness are reported, not hidden;
 - exact claim language is bounded by the endpoint actually evaluated;
-- zero-event disease handling matches the frozen estimand;
+- zero-event disease handling matches the frozen estimand and all-frame utility is reported;
+- strongest L3 status is not claimed when sealed outcome adjudicators saw rank/order;
+- exact outcome snapshot/ledger commitments match the MAP;
+- phenotype-match and replication-policy sensitivities are reported where material;
+- disease-family/block dependence sensitivity is reported;
 - population/ancestry limitations are explicit;
 - post-hoc analyses are labelled exploratory.
