@@ -75,3 +75,23 @@ prohibited_claim_language:
   - safe because ranked highly
   - clinically validated from computational rank alone
 ```
+
+
+## Scientific digital twin extension
+
+Allowed V1 research uses include:
+- evidence-backed disease/pathogen/therapeutic profiles;
+- as-of-T ScientificTwinSnapshots;
+- mechanistic research models where assumptions and provenance are explicit;
+- held-out/future validation of predictive research twins;
+- computational perturbation/sensitivity analysis used to generate research hypotheses.
+
+Excluded V1 uses include:
+- patient-specific diagnosis;
+- patient-specific treatment selection;
+- dosing recommendations;
+- autonomous clinical decision support;
+- representing an unvalidated static graph as a predictive digital twin;
+- claiming simulation output establishes clinical efficacy or safety.
+
+Patient-specific digital twins require a separate future Context of Use and are not inherited from this schema.
