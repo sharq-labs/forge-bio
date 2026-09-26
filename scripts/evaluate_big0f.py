@@ -115,6 +115,20 @@ def load_threshold_manifest(path: Path = DEFAULT_THRESHOLD_PATH) -> dict[str, An
     manifest = load_json_strict(path)
     _validate_schema(manifest, THRESHOLD_SCHEMA_PATH)
     t = manifest["thresholds"]
+    metadata = manifest["threshold_metadata"]
+    if set(metadata) != set(t):
+        raise ValueError(
+            "threshold metadata must exactly cover the frozen threshold set "
+            f"(missing={sorted(set(t) - set(metadata))}, extra={sorted(set(metadata) - set(t))})"
+        )
+    variant_ids: list[str] = []
+    for variant in manifest["sensitivity_variants"]:
+        variant_ids.append(variant["variant_id"])
+        unknown = set(variant["overrides"]) - set(t)
+        if unknown:
+            raise ValueError(f"sensitivity variant contains unknown threshold keys: {sorted(unknown)}")
+    if len(variant_ids) != len(set(variant_ids)):
+        raise ValueError("sensitivity variant_id values must be unique")
     if t["max_ambiguity_go"] > t["max_ambiguity_redesign"]:
         raise ValueError("ambiguity GO threshold cannot exceed REDESIGN/NO-GO boundary")
     if t["min_agreement_go"] < t["min_agreement_redesign"]:
