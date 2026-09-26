@@ -14,17 +14,31 @@
     "digest"
   ],
   "properties": {
-    "audit_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "big0f-provider-audit-v1"},
+    "audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-provider-audit-v1"
+    },
     "source_families": {
       "type": "array",
       "minItems": 4,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["source_family_id", "family_kind", "provider_id", "historical_release_id"],
+        "required": [
+          "source_family_id",
+          "family_kind",
+          "provider_id",
+          "historical_release_id",
+          "release_evidence_digest"
+        ],
         "properties": {
-          "source_family_id": {"type": "string", "minLength": 1},
+          "source_family_id": {
+            "type": "string",
+            "minLength": 1
+          },
           "family_kind": {
             "enum": [
               "PRIMARY_PUBLICATION_METADATA",
@@ -34,10 +48,75 @@
               "OTHER"
             ]
           },
-          "provider_id": {"type": "string", "minLength": 1},
-          "historical_release_id": {"type": "string", "minLength": 1}
+          "provider_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "historical_release_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "release_evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
         }
-      }
+      },
+      "uniqueItems": true,
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "family_kind": {
+                "const": "PRIMARY_PUBLICATION_METADATA"
+              }
+            },
+            "required": [
+              "family_kind"
+            ]
+          },
+          "minContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "family_kind": {
+                "const": "GWAS_HISTORICAL"
+              }
+            },
+            "required": [
+              "family_kind"
+            ]
+          },
+          "minContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "family_kind": {
+                "const": "IDENTITY_ONTOLOGY"
+              }
+            },
+            "required": [
+              "family_kind"
+            ]
+          },
+          "minContains": 1
+        },
+        {
+          "contains": {
+            "properties": {
+              "family_kind": {
+                "const": "HISTORICAL_GENE_MODEL_ANNOTATION"
+              }
+            },
+            "required": [
+              "family_kind"
+            ]
+          },
+          "minContains": 1
+        }
+      ]
     },
     "required_field_cells": {
       "type": "array",
@@ -57,55 +136,142 @@
           "retrospectively_curated",
           "mapping_needed",
           "license_access_constraint",
-          "coverage_grade"
+          "coverage_grade",
+          "evidence_digest"
         ],
         "properties": {
-          "disease_id": {"type": "string", "minLength": 1},
-          "source_family_id": {"type": "string", "minLength": 1},
-          "field_id": {"type": "string", "minLength": 1},
-          "criticality": {"enum": ["CRITICAL", "REQUIRED", "OPTIONAL"]},
-          "historical_release_obtainable": {"type": "boolean"},
-          "release_version_identifiable": {"type": "boolean"},
-          "field_existed_at_t": {"type": "boolean"},
-          "value_reconstructable": {"type": "boolean"},
-          "retrospectively_curated": {"type": "boolean"},
-          "mapping_needed": {"type": "boolean"},
-          "license_access_constraint": {"type": "boolean"},
-          "coverage_grade": {"enum": ["HIGH", "MODERATE", "LOW", "UNKNOWN"]}
+          "disease_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_family_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "field_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "criticality": {
+            "enum": [
+              "CRITICAL",
+              "REQUIRED",
+              "OPTIONAL"
+            ]
+          },
+          "historical_release_obtainable": {
+            "type": "boolean"
+          },
+          "release_version_identifiable": {
+            "type": "boolean"
+          },
+          "field_existed_at_t": {
+            "type": "boolean"
+          },
+          "value_reconstructable": {
+            "type": "boolean"
+          },
+          "retrospectively_curated": {
+            "type": "boolean"
+          },
+          "mapping_needed": {
+            "type": "boolean"
+          },
+          "license_access_constraint": {
+            "type": "boolean"
+          },
+          "coverage_grade": {
+            "enum": [
+              "HIGH",
+              "MODERATE",
+              "LOW",
+              "UNKNOWN"
+            ]
+          },
+          "evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
         }
       }
     },
     "provider_coupling": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["risk", "shared_pipeline_fraction", "evidence_digests"],
+      "required": [
+        "risk",
+        "shared_pipeline_fraction",
+        "evidence_digests"
+      ],
       "properties": {
-        "risk": {"enum": ["LOW", "MODERATE", "HIGH", "UNKNOWN"]},
-        "shared_pipeline_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "risk": {
+          "enum": [
+            "LOW",
+            "MODERATE",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "shared_pipeline_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
         "evidence_digests": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
         }
       }
     },
     "ancestry_population_audit": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["adequacy", "case_records", "evidence_digests"],
+      "required": [
+        "adequacy",
+        "case_records",
+        "evidence_digests"
+      ],
       "properties": {
-        "adequacy": {"enum": ["ADEQUATE", "INADEQUATE", "UNKNOWN"]},
+        "adequacy": {
+          "enum": [
+            "ADEQUATE",
+            "INADEQUATE",
+            "UNKNOWN"
+          ]
+        },
         "case_records": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["case_id", "metadata_available"],
+            "required": [
+              "case_id",
+              "metadata_available",
+              "population_metadata_source_id",
+              "provenance_digest"
+            ],
             "properties": {
-              "case_id": {"type": "string", "minLength": 1},
-              "metadata_available": {"type": "boolean"}
+              "case_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "metadata_available": {
+                "type": "boolean"
+              },
+              "population_metadata_source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "provenance_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-fA-F]{64}$"
+              }
             }
           }
         },
@@ -113,10 +279,16 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
         }
       }
     },
-    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
   }
 }
