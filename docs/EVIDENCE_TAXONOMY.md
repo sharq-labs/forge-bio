@@ -130,6 +130,17 @@ NULL_RESULT is not automatically REFUTES.
 
 ML/LLM extraction carries extractor/model identity and horizon.
 
+Non-native extraction is governed by [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md).
+
+Confirmatory evidence generation requires:
+- recoverable source grounding/span;
+- extractor ID/version/config;
+- task/domain-specific ExtractionQualityCard;
+- explicit abstention/review state;
+- preservation of source/IndependenceFamily lineage.
+
+Extractor confidence is not evidence strength.
+
 ## 9. BiologicalContext
 
 Support explicit fields for:
@@ -357,3 +368,22 @@ Where relevant, distinguish:
 - model-form uncertainty.
 
 These are not collapsed into one generic confidence scalar.
+
+
+## 22. Extraction quality
+
+```text
+SourceArtifact
+→ SourceRecord
+→ ExtractionArtifact
+→ ScientificClaim
+→ EvidenceRecord
+```
+
+A structured extraction layer can introduce error even when the source is correct.
+
+Automated extraction qualification is task/domain specific and reports at least precision, recall, abstention, and known failure modes.
+
+Material model/prompt/rule/ontology/output-schema changes create a new extractor version and trigger requalification.
+
+Multiple extracted claims from one originating observation retain shared source lineage and do not become independent evidence.
