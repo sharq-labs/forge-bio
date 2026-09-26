@@ -1,6 +1,6 @@
 # Machine-Verifiable Scientific Schemas
 
-These JSON Schemas are executable companions to the normative Markdown contracts.
+These JSON Schemas are machine-readable specification companions to the normative Markdown contracts.
 
 Files:
 - `qoi.v1.schema.json`
@@ -44,29 +44,29 @@ Rules:
 - Schema version and content digest are included in frozen artifacts.
 
 
-Scientific-twin/profile schemas are exercised by executable positive/negative contract tests under `tests/spec/`. A schema file merely parsing as JSON is not sufficient for readiness.
+When implementation begins, scientific-twin/profile schemas must be exercised by positive/negative contract tests. A schema file merely parsing as JSON is not sufficient for implementation readiness.
 
 
 BIG 0R5 schemas enforce quantitative/credibility semantics, including unit-required observations, missing/censoring state, custom-transform provenance, numerical-verification adequacy, and Context-of-Use-specific credibility conclusions.
 
-BIG 0F-0 adds a second enforcement layer:
-- `scripts/scientific_invariants.py` for cross-field scientific invariants;
-- `tests/spec/test_hostile_review_regressions.py` for permanent adversarial regression tests.
+BIG 0F-0 defines a second enforcement layer for future implementation:
+- cross-field scientific invariant checks;
+- permanent adversarial regression tests derived from the hostile-review attack catalog.
 
 A frozen artifact is not considered valid merely because it passes JSON Schema.
 
-BIG 0F operational-prep contracts additionally provide:
-- deterministic seal-bundle construction + tamper detection;
+BIG 0F operational-prep contracts additionally specify:
+- deterministic seal-bundle construction + tamper-detection requirements;
 - structure-frozen vs confirmatory-instance estimand distinction;
 - endpoint-quality decision structure;
 - machine-readable pilot result;
-- deterministic GO / REDESIGN / NO_GO evaluation.
+- deterministic GO / REDESIGN / NO_GO decision semantics.
 
 
-Round 2 hostile-review closure adds executable cross-artifact enforcement:
-- `scripts/select_big0f_sample.py` — external-frame-seal + post-seal randomness selection;
-- `scripts/evaluate_endpoint_quality.py` — executable frozen endpoint criteria;
-- `scripts/validate_research_program.py` — one program-wide confirmatory alpha budget;
+Round 2 hostile-review closure adds cross-artifact implementation requirements:
+- external-frame-seal + post-seal randomness selection must be reconstructable;
+- frozen endpoint criteria must have one canonical future evaluator;
+- confirmatory attempts must consume one program-wide alpha budget;
 - `config/big0f-thresholds.v1.json` — sealed decision thresholds/sensitivity variants;
 - `config/big0f-adjudication-policy.v1.json` — frozen primary assignment/ascertainment classes;
 - `config/big0f-nuisance-manifest.v1.json` — mandatory disease-specific attention/opportunity comparator.
