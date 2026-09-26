@@ -1,152 +1,142 @@
 from __future__ import annotations
 
+import copy
 import unittest
 
-from scripts.evaluate_big0f import evaluate
+from scripts.evaluate_big0f import EvaluationContext, evaluate, load_threshold_manifest
+from tests.spec.test_big0f_operational_contracts import pilot_result
 
 
-def base():
-    return {
-        "assignment_metrics": {
-            "primary_eligible_fraction": 0.70,
-            "author_named_fraction": 0.10,
-            "nearest_gene_fraction": 0.10,
-            "attention_assignment_association": 0.10,
-        },
-        "ambiguity_metrics": {
-            "novelty_ambiguity_fraction": 0.10,
-            "variant_harmonization_ambiguity_fraction": 0.05,
-            "phenotype_ambiguity_fraction": 0.10,
-            "sample_overlap_ambiguity_fraction": 0.10,
-            "any_primary_endpoint_ambiguity_fraction": 0.15,
-        },
-        "provider_metrics": {
-            "required_field_availability_fraction": 0.95,
-            "historical_search_coverage_distribution": {"HIGH": 0.6, "MODERATE": 0.4},
-            "provider_coupling_risk": "LOW",
-        },
-        "independence_metrics": {
-            "event_family_deduplication_fraction": 0.10,
-            "locus_to_many_gene_credit_impact": 0.05,
-            "pre_t_cohort_reuse_fraction": 0.20,
-        },
-        "adjudication_metrics": {
-            "duplicate_review_fraction": 0.30,
-            "duplicate_review_count": 30,
-            "adjudicated_event_case_count": 100,
-            "primary_assignment_agreement": 0.80,
-            "phenotype_agreement": 0.80,
-        },
-        "applicability_metrics": {
-            "ancestry_metadata_coverage_fraction": 0.90,
-            "ancestry_population_metadata_adequacy": "ADEQUATE",
-        },
-        "curation_metrics": {
-            "retrospective_curation_burden_assessment": "ACCEPTABLE",
-            "median_minutes_per_event_case": 20.0,
-            "symmetric_non_event_audit_complete": True,
-            "non_event_case_count": 100,
-            "median_minutes_per_non_event_case": 12.0,
-        },
-        "threshold_sensitivity_stable": True,
-        "power_metrics": {
-            "alpha": 0.05,
-            "target_power": 0.80,
-            "estimated_power": 0.85,
-            "minimum_scientifically_meaningful_effect": 0.05,
-        },
-        "nuisance_headroom_metrics": {
-            "median_positive_rank_fraction": 0.10,
-            "top_1pct_fraction": 0.10,
-            "top_5pct_fraction": 0.30,
-        },
-        "untouched_confirmatory_disease_count": 20,
-        "high_specificity_positive_count": 30,
-    }
+CTX = EvaluationContext(
+    seal_verified=True,
+    threshold_manifest_verified=True,
+    power_analysis_verified=True,
+    adjudication_policy_verified=True,
+    nuisance_manifest_verified=True,
+    decision_engine_sealed=True,
+    pilot_schema_sealed=True,
+    sampling_code_sealed=True,
+)
+
+
+def decide(x):
+    return evaluate(x, load_threshold_manifest(), context=CTX).decision
 
 
 class Big0FDecisionTests(unittest.TestCase):
     def test_go(self):
-        self.assertEqual("GO", evaluate(base()).decision)
+        self.assertEqual("GO", decide(pilot_result()))
 
     def test_no_go_on_low_availability(self):
-        x = base()
+        x = pilot_result()
         x["provider_metrics"]["required_field_availability_fraction"] = 0.60
-        self.assertEqual("NO_GO", evaluate(x).decision)
+        self.assertEqual("NO_GO", decide(x))
 
     def test_no_go_on_low_power(self):
-        x = base()
+        x = pilot_result()
         x["power_metrics"]["estimated_power"] = 0.60
-        self.assertEqual("NO_GO", evaluate(x).decision)
+        self.assertEqual("NO_GO", decide(x))
 
-    def test_no_go_uses_union_ambiguity_not_max_component(self):
-        x = base()
-        x["ambiguity_metrics"].update({
-            "novelty_ambiguity_fraction": 0.15,
-            "variant_harmonization_ambiguity_fraction": 0.15,
-            "phenotype_ambiguity_fraction": 0.15,
-            "sample_overlap_ambiguity_fraction": 0.15,
-            "any_primary_endpoint_ambiguity_fraction": 0.60,
-        })
-        self.assertEqual("NO_GO", evaluate(x).decision)
+    def test_no_go_uses_union_ambiguity(self):
+        x = pilot_result()
+        x["ambiguity_metrics"]["any_primary_endpoint_ambiguity_fraction"] = 0.60
+        self.assertEqual("NO_GO", decide(x))
 
-    def test_inconclusive_if_union_ambiguity_is_inconsistent(self):
-        x = base()
-        x["ambiguity_metrics"]["phenotype_ambiguity_fraction"] = 0.30
-        x["ambiguity_metrics"]["any_primary_endpoint_ambiguity_fraction"] = 0.10
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_missing_verified_context_cannot_go(self):
+        self.assertNotEqual("GO", evaluate(pilot_result(), load_threshold_manifest()).decision)
 
-    def test_inconclusive_if_duplicate_review_below_protocol_minimum(self):
-        x = base()
+    def test_inconclusive_if_duplicate_review_below_minimum(self):
+        x = pilot_result()
         x["adjudication_metrics"]["duplicate_review_count"] = 20
         x["adjudication_metrics"]["duplicate_review_fraction"] = 0.20
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+        self.assertEqual("INCONCLUSIVE", decide(x))
 
-    def test_inconclusive_if_duplicate_fraction_disagrees_with_count(self):
-        x = base()
-        x["adjudication_metrics"]["duplicate_review_fraction"] = 0.90
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_redesign_after_second_inconclusive(self):
+        x = pilot_result()
+        x["prior_inconclusive_count"] = 1
+        x["adjudication_metrics"]["duplicate_review_count"] = 20
+        x["adjudication_metrics"]["duplicate_review_fraction"] = 0.20
+        self.assertEqual("REDESIGN", decide(x))
 
-    def test_inconclusive_if_threshold_sensitivity_is_unstable(self):
-        x = base()
-        x["threshold_sensitivity_stable"] = False
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_redesign_on_attention_ci_touching_boundary(self):
+        x = pilot_result()
+        x["assignment_metrics"]["attention_assignment_ci_high"] = 0.30
+        self.assertEqual("REDESIGN", decide(x))
 
-    def test_inconclusive_if_ancestry_adequacy_unknown(self):
-        x = base()
-        x["applicability_metrics"]["ancestry_population_metadata_adequacy"] = "UNKNOWN"
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_redesign_if_hypothesis_free_fraction_low(self):
+        x = pilot_result()
+        x["assignment_metrics"]["hypothesis_free_primary_positive_fraction"] = 0.30
+        self.assertEqual("REDESIGN", decide(x))
 
-    def test_redesign_if_ancestry_metadata_inadequate(self):
-        x = base()
-        x["applicability_metrics"]["ancestry_population_metadata_adequacy"] = "INADEQUATE"
-        self.assertEqual("REDESIGN", evaluate(x).decision)
+    def test_redesign_on_nuisance_top1_saturation(self):
+        x = pilot_result()
+        x["nuisance_headroom_metrics"]["top_1pct_fraction"] = 0.30
+        self.assertEqual("REDESIGN", decide(x))
 
-    def test_inconclusive_if_symmetric_non_event_audit_incomplete(self):
-        x = base()
-        x["curation_metrics"]["symmetric_non_event_audit_complete"] = False
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_impossible_top1_gt_top5_raises(self):
+        x = pilot_result()
+        x["nuisance_headroom_metrics"]["top_1pct_fraction"] = 0.90
+        x["nuisance_headroom_metrics"]["top_5pct_fraction"] = 0.10
+        with self.assertRaises(ValueError):
+            decide(x)
 
-    def test_inconclusive_if_symmetric_non_event_sample_too_small(self):
-        x = base()
-        x["curation_metrics"]["non_event_case_count"] = 50
-        self.assertEqual("INCONCLUSIVE", evaluate(x).decision)
+    def test_event_bearing_cannot_exceed_diseases(self):
+        x = pilot_result()
+        x["event_bearing_disease_count"] = 13
+        with self.assertRaises(ValueError):
+            decide(x)
 
-    def test_redesign_on_attention_circularity(self):
-        x = base()
-        x["assignment_metrics"]["attention_assignment_association"] = 0.50
-        self.assertEqual("REDESIGN", evaluate(x).decision)
+    def test_high_spec_cannot_exceed_candidate_events(self):
+        x = pilot_result()
+        x["high_specificity_positive_count"] = 101
+        with self.assertRaises(ValueError):
+            decide(x)
 
-    def test_redesign_on_nuisance_saturation(self):
-        x = base()
-        x["nuisance_headroom_metrics"]["median_positive_rank_fraction"] = 0.005
-        self.assertEqual("REDESIGN", evaluate(x).decision)
+    def test_all_candidate_events_must_be_adjudicated(self):
+        x = pilot_result()
+        x["adjudication_metrics"]["adjudicated_event_case_count"] = 50
+        x["adjudication_metrics"]["duplicate_review_count"] = 30
+        x["adjudication_metrics"]["duplicate_review_fraction"] = 0.60
+        self.assertEqual("INCONCLUSIVE", decide(x))
 
-    def test_no_go_takes_priority_over_redesign_when_measurements_complete(self):
-        x = base()
-        x["provider_metrics"]["required_field_availability_fraction"] = 0.60
-        x["assignment_metrics"]["attention_assignment_association"] = 0.50
-        self.assertEqual("NO_GO", evaluate(x).decision)
+    def test_moderate_provider_coupling_redesigns(self):
+        x = pilot_result()
+        x["provider_metrics"]["provider_coupling_risk"] = "MODERATE"
+        self.assertEqual("REDESIGN", decide(x))
+
+    def test_curation_burden_is_not_self_declared_only(self):
+        x = pilot_result()
+        x["curation_metrics"]["median_minutes_per_event_case"] = 900.0
+        self.assertEqual("REDESIGN", decide(x))
+
+    def test_asymmetric_non_event_burden_redesigns(self):
+        x = pilot_result()
+        x["curation_metrics"]["median_minutes_per_non_event_case"] = 0.1
+        self.assertEqual("REDESIGN", decide(x))
+
+    def test_ancestry_coverage_low_redesigns(self):
+        x = pilot_result()
+        x["applicability_metrics"]["ancestry_metadata_coverage_fraction"] = 0.20
+        self.assertEqual("REDESIGN", decide(x))
+
+    def test_power_pool_must_meet_computed_requirement(self):
+        x = pilot_result()
+        x["untouched_confirmatory_disease_count"] = 20
+        x["power_metrics"]["required_confirmatory_disease_count"] = 25
+        self.assertEqual("NO_GO", decide(x))
+
+    def test_nan_cannot_reach_decision(self):
+        for path in [
+            ("adjudication_metrics", "primary_assignment_agreement"),
+            ("ambiguity_metrics", "any_primary_endpoint_ambiguity_fraction"),
+            ("power_metrics", "estimated_power"),
+            ("provider_metrics", "required_field_availability_fraction"),
+            ("nuisance_headroom_metrics", "median_positive_rank_fraction"),
+        ]:
+            x = pilot_result()
+            x[path[0]][path[1]] = float("nan")
+            with self.assertRaises(ValueError, msg=str(path)):
+                decide(x)
 
 
 if __name__ == "__main__":
