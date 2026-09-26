@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/map.v1.schema.json",
+  "title": "Forge Bio Model Analysis Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "map_id",
+    "schema_version",
+    "status",
+    "created_at",
+    "qoi_ref",
+    "context_of_use_ref",
+    "estimand_ref",
+    "benchmark",
+    "providers",
+    "policies",
+    "model",
+    "baselines",
+    "statistics",
+    "outcome_commitment",
+    "coverage_gates",
+    "planned_analyses",
+    "governance",
+    "stop_conditions"
+  ],
+  "properties": {
+    "map_id": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "map-v1"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "FROZEN",
+        "RETIRED"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "frozen_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "digest": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "qoi_ref": {
+      "type": "string"
+    },
+    "context_of_use_ref": {
+      "type": "string"
+    },
+    "estimand_ref": {
+      "type": "string"
+    },
+    "benchmark": {
+      "type": "object",
+      "required": [
+        "benchmark_id",
+        "generation",
+        "cutoff",
+        "horizon",
+        "disease_sampling_frame_id",
+        "candidate_universe_id",
+        "development_split_id",
+        "validation_split_id",
+        "validation_generation_id",
+        "sealed_lockbox_id"
+      ],
+      "properties": {
+        "benchmark_id": {
+          "type": "string"
+        },
+        "generation": {
+          "type": "string"
+        },
+        "cutoff": {
+          "type": "string"
+        },
+        "horizon": {
+          "type": "string"
+        },
+        "disease_sampling_frame_id": {
+          "type": "string"
+        },
+        "candidate_universe_id": {
+          "type": "string"
+        },
+        "development_split_id": {
+          "type": "string"
+        },
+        "validation_split_id": {
+          "type": "string"
+        },
+        "validation_generation_id": {
+          "type": "string"
+        },
+        "sealed_lockbox_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "providers": {
+      "type": "object",
+      "required": [
+        "past_snapshot_ids",
+        "future_outcome_source_ids",
+        "provider_card_versions",
+        "reconstruction_fidelity_verdicts"
+      ],
+      "properties": {
+        "past_snapshot_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "future_outcome_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provider_card_versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reconstruction_fidelity_verdicts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "boolean",
+          "number",
+          "array",
+          "object"
+        ]
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "baselines": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "outcome_commitment": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "coverage_gates": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "planned_analyses": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
