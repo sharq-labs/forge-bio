@@ -2,13 +2,16 @@
 
 **Status:** PRE-CODE HARDENING REQUIRED  
 **Benchmark family:** B-TGT  
+**Benchmark role:** B-TGT-A1 — Disease–Gene Association Prioritization  
 **Benchmark ID:** B-TGT-E1-v0
 
 ## 1. Question of Interest
 
 > Given only evidence admissible by historical cutoff T, can Forge Bio rank disease–gene biological target-association candidates that later acquire qualifying independent human genetic support within a fixed horizon H, with positive lift over both historical research-attention and historical discoverability controls?
 
-This benchmark tests biological target-prioritization signal. It does not validate intervention direction, causality, drug efficacy, safety, or clinical success.
+This benchmark tests **disease–gene association prioritization as an early target-program signal**. It does not itself validate a therapeutic target, intervention direction, causality, target tractability, drug efficacy, safety, or clinical success.
+
+The umbrella B-TGT program may later earn stronger "target discovery" language only after direction/mechanism/causal-target evidence is evaluated.
 
 A temporally clean benchmark is not automatically a valid discovery benchmark. The design must also control outcome ascertainment, modern gene assignment, researcher hindsight, and future-conditioned case selection.
 
@@ -114,25 +117,45 @@ The chosen H is frozen before sealed evaluation. Sealed case outcomes may not be
 
 A single undifferentiated "later human genetic support" label is prohibited.
 
-Every qualifying positive belongs to an explicit endpoint subtype.
+Every candidate relevant to E1 first receives a frozen pre-T genetic-state assessment:
 
-### E1-NOVEL — new human genetic support
+```text
+PreTGeneticState
+    NO_SIGNAL_OBSERVED
+    SUGGESTIVE
+    QUALIFYING
+    AMBIGUOUS
+```
+
+`NO_SIGNAL_OBSERVED` means no relevant signal was found after the preregistered historical audit with adequate coverage. It is not an ontological claim that no signal existed anywhere.
+
+### E1-NOVEL-STRICT — new human genetic support
 
 Requirements:
-- no qualifying human genetic support is established at or before T under the historical endpoint rule;
-- the candidate passes HistoricalNoveltyAudit;
-- a qualifying post-T event occurs in (T, T+H].
+- `PreTGeneticState = NO_SIGNAL_OBSERVED`;
+- `HistoricalNoveltyAudit = NOVEL_CONFIRMED`;
+- a qualifying post-T event occurs in (T, T+H];
+- phenotype matching, gene assignment, and endpoint-quality rules pass.
 
-This is the strongest V0 subtype for a claim about previously unestablished genetic support.
+This is the only E1 subtype that may support a strict "new genetic support" claim.
 
-### E1-REPLICATION — independent maturation / replication
+### E1-MATURATION — suggestive signal becomes qualifying
 
 Requirements:
-- some preregistered pre-T genetic signal exists but does not meet the future qualifying endpoint;
-- post-T evidence meets the replication endpoint;
-- independence requirements pass.
+- `PreTGeneticState = SUGGESTIVE`;
+- post-T evidence crosses the frozen endpoint-quality threshold.
 
-This measures replication/evidence maturation, not de novo discovery.
+This measures evidence/statistical maturation and must never be merged into E1-NOVEL-STRICT for the headline novelty claim.
+
+### E1-REPLICATION — independent replication
+
+Requirements:
+- a preregistered pre-T association exists;
+- the post-T evidence satisfies `GeneticReplicationAssessment`;
+- phenotype comparability and cohort/sample independence pass;
+- effect/allele/direction handling satisfies the frozen replication policy.
+
+Replication is distinct from both de novo discovery and mere threshold maturation.
 
 ### E1-CROSSMODAL — non-genetic evidence predicts later genetics
 
@@ -140,7 +163,7 @@ The evaluated model arm uses pre-T non-genetic evidence only, or isolates geneti
 
 The future endpoint is qualifying human genetic support after T.
 
-This subtype is designed to test whether non-genetic biological evidence anticipates later genetics rather than simply ranking genetic momentum.
+This subtype tests whether non-genetic biological evidence anticipates later genetics rather than simply ranking genetic momentum.
 
 ### Primary subtype
 
@@ -148,17 +171,37 @@ The sealed confirmatory MAP must choose exactly one primary E1 subtype after fea
 
 Other subtypes are secondary unless a separate MAP is registered.
 
+Normative semantics: [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md).
+
 ## 8. Qualifying genetic event
 
 A qualifying event must:
 1. satisfy the endpoint-subtype rule;
 2. contain benchmark-approved human genetic evidence;
-3. satisfy the predeclared evidence-quality threshold;
+3. satisfy the predeclared multidimensional evidence-quality threshold;
 4. have defensible first public availability in (T, T+H];
 5. be independently source/study backed under the lineage policy;
 6. pass disease and gene identity adjudication;
-7. not be merely a post-T re-curation of pre-T evidence;
-8. satisfy OutcomeGeneAssignmentPolicy when a gene-level label depends on locus/variant assignment.
+7. pass OutcomePhenotypeMatchPolicy for the benchmark disease/trait;
+8. not be merely a post-T re-curation of pre-T evidence;
+9. satisfy OutcomeGeneAssignmentPolicy when a gene-level label depends on locus/variant assignment;
+10. satisfy GeneticReplicationPolicy when the subtype is E1-REPLICATION.
+
+The endpoint-quality payload retains, where applicable:
+- sample size;
+- effect size;
+- standard error;
+- p-value;
+- effect allele;
+- effect direction;
+- variant/locus;
+- population/ancestry;
+- discovery vs replication role;
+- independent-sample status;
+- heterogeneity statistics;
+- gene-assignment method.
+
+Genome-wide significance alone is not a complete endpoint-quality rule.
 
 The precise quality threshold is frozen before sealed evaluation.
 
@@ -186,7 +229,40 @@ Identity reconciliation may establish that two identifiers refer to the same ent
 
 Normative policy: [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md).
 
-## 10. Historical novelty audit
+## 10. Outcome phenotype matching
+
+A future genetic event for a related trait, biomarker, intermediate phenotype, or risk factor is not automatically a positive for the benchmark disease.
+
+Every qualifying event receives an `OutcomePhenotypeMatchAssessment`.
+
+Primary V0 defaults:
+- EXACT qualifies;
+- SAME_CONCEPT_DIFFERENT_DEFINITION requires explicit adjudication;
+- NARROWER is sensitivity/case-specific unless preregistered otherwise;
+- BROADER, SURROGATE, RISK_FACTOR, INTERMEDIATE_PHENOTYPE, RELATED do not qualify for the primary endpoint;
+- UNRESOLVED fails closed.
+
+Normative policy: [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md).
+
+## 11. Genetic replication semantics
+
+E1-REPLICATION requires a `GeneticReplicationAssessment` covering at least:
+- phenotype match;
+- locus/variant compatibility;
+- effect allele and harmonization;
+- effect-direction consistency;
+- LD proxy relation where relevant;
+- population/ancestry;
+- cohort independence;
+- participant overlap;
+- analysis compatibility;
+- heterogeneity status.
+
+Only preregistered qualifying verdicts count.
+
+Normative policy: [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md).
+
+## 12. Historical novelty audit
 
 E1-NOVEL requires an evaluation-side HistoricalNoveltyAudit.
 
@@ -212,7 +288,7 @@ The audit records:
 
 The Future Outcome plane must not be used as a model feature when auditing novelty.
 
-## 11. Non-positive and censoring states
+## 13. Non-positive and censoring states
 
 **NEGATIVE_CONFIRMED:** only when an affirmative preregistered failure definition is satisfied.
 
@@ -226,7 +302,7 @@ The Future Outcome plane must not be used as a model feature when auditing novel
 
 Absence of future genetic support is not a negative.
 
-## 12. Candidate universe
+## 14. Candidate universe
 
 CandidateUniverse is a separate immutable artifact from HistoricalKnowledgeView.
 
@@ -255,7 +331,7 @@ The universe may not be constructed from a current "all known targets" or "all d
 
 The primary universe policy is frozen before sealed evaluation. Alternative universes may be sensitivity analyses only.
 
-## 13. Disease sampling frame
+## 15. Disease sampling frame
 
 Diseases must not be selected because designers know famous later successes.
 
@@ -273,7 +349,7 @@ Manual/famous-case additions are exploratory and reported separately.
 
 Where practical, sealed disease identities remain hidden from the ranking methodology team until algorithm and feature families are frozen.
 
-## 14. Future-event independence
+## 16. Future-event independence
 
 Distinct database rows, publications, or PMIDs do not guarantee independent evidence.
 
@@ -304,7 +380,7 @@ UNKNOWN cohort/sample overlap is not interpreted as independent replication.
 
 A post-T annotation that only re-curates pre-T evidence does not qualify as new independent support.
 
-## 15. Discoverability / observation-propensity control
+## 17. Discoverability / observation-propensity control
 
 Later outcome observation is not assumed to be missing at random.
 
@@ -333,7 +409,7 @@ These controls are benchmark comparators; they are not automatically allowed as 
 
 A claimed biological-discovery signal must be distinguishable from discoverability/measurement opportunity.
 
-## 16. Baselines
+## 18. Baselines
 
 Mandatory:
 - random;
@@ -346,7 +422,7 @@ Mandatory:
 
 Graph degree/network proximity is added only when historically admissible.
 
-## 17. Primary and secondary metrics
+## 19. Primary and secondary metrics
 
 The primary statistic reports absolute performance and paired delta against the strongest preregistered non-biological attention/discoverability control.
 
@@ -363,18 +439,38 @@ The MAP freezes the exact comparator.
 
 Fixed K must be accompanied by at least one candidate-universe-normalized metric, such as:
 - Recall at x% of candidate universe;
-- candidate rank percentile;
-- review-budget-normalized utility.
+- candidate rank percentile.
 
-Secondary metrics may include event MRR, preregistered NDCG, enrichment versus random, and per-disease distributions.
+The benchmark also requires a secondary **all-frame review-budget utility** that includes zero-event diseases, for example:
+
+```text
+ObservedEventYield@TotalReviewBudget =
+    observed qualifying future events captured
+    /
+    total candidates reviewed across the full frozen disease frame
+```
+
+This measures observed future-event yield, not biological precision. It does not convert non-observation into a negative label.
+
+Secondary metrics may also include:
+- event MRR;
+- preregistered NDCG;
+- enrichment versus random;
+- event-bearing disease coverage;
+- zero-event disease review burden;
+- per-disease distributions.
 
 The zero-future-event policy from the estimand section governs all aggregate metrics.
 
-## 18. Confidence intervals and multiplicity
+## 20. Confidence intervals and multiplicity
 
 The primary baseline delta uses paired disease/challenge-level resampling unless a justified alternative is preregistered.
 
 Candidate rows within one disease are not treated as independent samples.
+
+Because related diseases may share genes, pathways, cohorts, consortia, or publication ecosystems, confirmatory analysis must include a preregistered dependence sensitivity such as disease-family block bootstrap or another cluster-aware interval method.
+
+If the apparent signal disappears under family/block dependence, the MAR must report that limitation.
 
 Before sealed evaluation, MAP freezes:
 - resampling unit;
@@ -385,7 +481,7 @@ Before sealed evaluation, MAP freezes:
 - one primary K/budget;
 - multiplicity policy for secondary endpoints, cutoffs, subgroups, and sensitivity analyses.
 
-## 19. Coverage and ascertainment gates
+## 21. Coverage and ascertainment gates
 
 Confirmatory studies freeze:
 - maximum UNKNOWN fraction per required Past source;
@@ -402,18 +498,25 @@ Cases failing hard thresholds are INVALID_CASE or handled only according to prer
 
 They are never silently repaired or excluded after viewing model performance.
 
-## 20. Outcome adjudication
+## 22. Outcome adjudication
 
 Outcome classification must be protected from ranking-aware confirmation bias.
 
-Where feasible:
-- adjudicators are blinded to model rank/order;
-- ambiguous or assignment-dependent positives receive dual review;
+For strongest L3 SEALED_CONFIRMATORY evaluation:
+- outcome adjudicators **must be blinded** to model rank/order;
+- violation automatically downgrades the confirmatory tier.
+
+For development/exploratory work, weaker blinding is allowed only when declared.
+
+In all tiers:
+- ambiguous or assignment-dependent positives receive dual review according to the frozen policy;
 - disagreements are logged and resolved by versioned policy;
 - adjudicator identity, timestamp, source set, and rationale are provenance;
 - the ranking team does not alter endpoint rules after seeing sealed errors.
 
-## 21. Negative controls / benchmark falsification
+Normative governance: [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md).
+
+## 23. Negative controls / benchmark falsification
 
 Before accepting a scientific signal, run preregistered controls where applicable:
 - future-sentinel invariance;
@@ -426,7 +529,7 @@ Before accepting a scientific signal, run preregistered controls where applicabl
 
 A null/control method that reproduces the claimed signal invalidates or materially weakens the interpretation until explained.
 
-## 22. Ancestry and population applicability
+## 24. Ancestry and population applicability
 
 Evidence and OutcomeEvents preserve population/ancestry metadata where scientifically relevant and available.
 
@@ -438,7 +541,7 @@ The MAR reports:
 
 Performance in an ancestry-skewed historical evidence base is not silently generalized to all populations.
 
-## 23. Representation-time provenance
+## 25. Representation-time provenance
 
 For structured facts derived after the primary observation, retain both:
 - time the underlying observation became public;
@@ -446,23 +549,54 @@ For structured facts derived after the primary observation, retain both:
 
 An old paper processed by a modern knowledge-bearing curation or model does not automatically become strict-historical structured evidence.
 
-## 24. Success criterion
+## 26. Validation-generation governance
+
+VALIDATION is not an infinitely reusable tuning surface.
+
+Each validation case/outcome set belongs to a versioned generation with:
+- case-set digest;
+- outcome-snapshot digest;
+- access count;
+- ACTIVE / SPENT_FOR_MODEL_SELECTION / RETIRED status.
+
+A generation that materially influences model/feature/endpoint selection is marked spent and is not described as untouched evidence.
+
+## 27. Future outcome snapshot commitment
+
+Before sealed evaluation, freeze/commit:
+- future outcome source release IDs;
+- future outcome snapshot IDs/digest;
+- outcome-ledger digest;
+- adjudication-batch digest;
+- evaluation identity-bridge digest;
+- phenotype-match policy version;
+- gene-assignment policy version;
+- replication policy version.
+
+Changing a provider release, adjudication batch, mapping bridge, or outcome policy creates a new evaluation artifact/generation.
+
+Normative governance: [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md).
+
+## 28. Success criterion
 
 A sealed confirmatory claim requires all of:
 1. no unresolved P0 scientific-integrity blocker;
 2. primary endpoint subtype and estimand frozen;
 3. ranking sealed before outcome reveal;
-4. HistoricalNoveltyAudit policy passed;
+4. HistoricalNoveltyAudit and PreTGeneticState policy passed;
 5. OutcomeGeneAssignmentPolicy passed;
-6. primary delta exceeds the preregistered threshold against the strongest required attention/discoverability control;
-7. confidence interval satisfies the preregistered rule;
-8. signal is not driven by one disease/family/research-intensity stratum;
-9. null/placebo controls do not reproduce the result;
-10. sensitivity analyses show no material identity, reconstruction, gene-assignment, or outcome-source artifact.
+6. OutcomePhenotypeMatchPolicy passed;
+7. GeneticReplicationPolicy passed when applicable;
+8. exact Future Outcome snapshot/ledger commitment matches the frozen MAP;
+9. primary delta exceeds the preregistered threshold against the strongest required attention/discoverability control;
+10. confidence interval satisfies the preregistered rule and dependence sensitivity is reported;
+11. signal is not driven by one disease/family/research-intensity stratum;
+12. null/placebo controls do not reproduce the result;
+13. sensitivity analyses show no material identity, reconstruction, phenotype-match, gene-assignment, replication, or outcome-source artifact.
 
 Results are reported even when negative.
 
-## 25. Interpretation boundary
+## 29. Interpretation boundary
 
 This benchmark does not prove:
 - causal gene status;
@@ -473,7 +607,7 @@ This benchmark does not prove:
 - safety;
 - treatment success.
 
-A positive B-TGT-E1 result supports only the endpoint-specific claim earned by the primary subtype.
+A positive B-TGT-E1 result supports only the endpoint-specific **disease–gene association prioritization** claim earned by the primary subtype. It is not, by itself, "therapeutic target discovery".
 
 The project must not call the result "discovery signal" if a plausible alternative explanation remains that the model primarily predicts:
 - future research attention;
