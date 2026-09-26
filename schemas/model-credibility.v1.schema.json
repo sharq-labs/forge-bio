@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/model-credibility.v1.schema.json",
+  "title": "Forge Bio Model Credibility Assessment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assessment_id",
+    "schema_version",
+    "model_artifact_id",
+    "context_of_use_id",
+    "research_decision",
+    "model_influence",
+    "consequence_if_wrong",
+    "credibility_goal",
+    "verification_adequacy",
+    "numerical_verification_adequacy",
+    "validation_adequacy",
+    "uncertainty_adequacy",
+    "applicability_adequacy",
+    "prediction_risk_of_bias",
+    "limitations",
+    "residual_risks",
+    "conclusion",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "model-credibility-v1"
+    },
+    "model_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_of_use_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "research_decision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_influence": {
+      "enum": [
+        "ADVISORY",
+        "MATERIAL",
+        "DOMINANT"
+      ]
+    },
+    "consequence_if_wrong": {
+      "enum": [
+        "LOW_RESEARCH_COST",
+        "MODERATE_RESEARCH_COST",
+        "HIGH_RESEARCH_COST",
+        "MISLEADING_SCIENTIFIC_CLAIM"
+      ]
+    },
+    "credibility_goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verification_adequacy": {
+      "enum": [
+        "ADEQUATE",
+        "CONDITIONAL",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "numerical_verification_adequacy": {
+      "enum": [
+        "NOT_APPLICABLE",
+        "ADEQUATE",
+        "CONDITIONAL",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "validation_adequacy": {
+      "enum": [
+        "ADEQUATE",
+        "CONDITIONAL",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "uncertainty_adequacy": {
+      "enum": [
+        "ADEQUATE",
+        "CONDITIONAL",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "applicability_adequacy": {
+      "enum": [
+        "ADEQUATE",
+        "CONDITIONAL",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "prediction_risk_of_bias": {
+      "enum": [
+        "LOW",
+        "SOME_CONCERNS",
+        "HIGH",
+        "UNKNOWN",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "known_model_discrepancy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conclusion": {
+      "enum": [
+        "ADEQUATE_FOR_COU",
+        "CONDITIONALLY_ADEQUATE",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "conclusion": {
+            "const": "ADEQUATE_FOR_COU"
+          }
+        },
+        "required": [
+          "conclusion"
+        ]
+      },
+      "then": {
+        "properties": {
+          "verification_adequacy": {
+            "const": "ADEQUATE"
+          },
+          "validation_adequacy": {
+            "const": "ADEQUATE"
+          },
+          "uncertainty_adequacy": {
+            "const": "ADEQUATE"
+          },
+          "applicability_adequacy": {
+            "const": "ADEQUATE"
+          },
+          "prediction_risk_of_bias": {
+            "enum": [
+              "LOW",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "numerical_verification_adequacy": {
+            "enum": [
+              "NOT_APPLICABLE",
+              "ADEQUATE"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
