@@ -312,6 +312,23 @@
         "string",
         "null"
       ]
+    },
+    "validation_verdict": {
+      "enum": [
+        "NOT_APPLICABLE",
+        "PASS",
+        "FAIL",
+        "INCONCLUSIVE"
+      ]
+    },
+    "credibility_conclusion": {
+      "enum": [
+        "NOT_APPLICABLE",
+        "ADEQUATE_FOR_COU",
+        "CONDITIONALLY_ADEQUATE",
+        "INADEQUATE",
+        "UNKNOWN"
+      ]
     }
   },
   "allOf": [
@@ -362,7 +379,9 @@
           "state_definition_id",
           "update_policy_artifact_id",
           "credibility_assessment_id",
-          "model_execution_kind"
+          "model_execution_kind",
+          "validation_verdict",
+          "credibility_conclusion"
         ],
         "properties": {
           "state_definition_id": {
@@ -379,6 +398,12 @@
           "credibility_assessment_id": {
             "type": "string",
             "minLength": 1
+          },
+          "validation_verdict": {
+            "const": "PASS"
+          },
+          "credibility_conclusion": {
+            "const": "ADEQUATE_FOR_COU"
           }
         }
       }
@@ -403,7 +428,9 @@
           "state_model_artifact_id",
           "parameter_artifact_ids",
           "credibility_assessment_id",
-          "model_execution_kind"
+          "model_execution_kind",
+          "validation_verdict",
+          "credibility_conclusion"
         ],
         "properties": {
           "state_model_artifact_id": {
@@ -419,6 +446,12 @@
           "credibility_assessment_id": {
             "type": "string",
             "minLength": 1
+          },
+          "validation_verdict": {
+            "const": "PASS"
+          },
+          "credibility_conclusion": {
+            "const": "ADEQUATE_FOR_COU"
           }
         }
       }
@@ -445,7 +478,9 @@
           "validation_generation_id",
           "benchmark_design_provenance_id",
           "credibility_assessment_id",
-          "model_execution_kind"
+          "model_execution_kind",
+          "validation_verdict",
+          "credibility_conclusion"
         ],
         "properties": {
           "prediction_spec_id": {
@@ -473,6 +508,12 @@
           "credibility_assessment_id": {
             "type": "string",
             "minLength": 1
+          },
+          "validation_verdict": {
+            "const": "PASS"
+          },
+          "credibility_conclusion": {
+            "const": "ADEQUATE_FOR_COU"
           }
         }
       }
