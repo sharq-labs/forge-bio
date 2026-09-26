@@ -37,6 +37,8 @@ providers:
   reconstruction_fidelity_verdicts: [string]
 
 policies:
+  scientific_operating_mode: STRICT_HISTORICAL | HISTORICAL_INPUT_MODERN_PRIOR | CURRENT_DISCOVERY
+  historical_data_policy: ARCHIVED_ONLY | RECONSTRUCTED_ALLOWED
   temporal_policy_version: string
   identity_policy_version: string
   evidence_schema_version: string
@@ -47,6 +49,14 @@ policies:
   pre_t_genetic_state_policy_version: string
   outcome_phenotype_match_policy_version: string
   genetic_replication_policy_version: string
+  genomic_identity_policy_version: string
+  variant_harmonization_policy_version: string
+  ld_policy_version: string
+  historical_genetic_coverage_policy_version: string
+  genetic_observability_policy_version: string
+  scientific_event_family_policy_version: string
+  provider_coupling_policy_version: string
+  cross_anchor_event_reuse_policy_version: string
   independence_policy_version: string
   adjudication_policy_version: string
   zero_event_policy_version: string
@@ -59,6 +69,8 @@ model:
   config_hash: string
   random_seeds: [integer]
   knowledge_watermark: string
+  preprocessing_artifact_ids: [string]
+  feature_selection_artifact_id: string?
 
 baselines:
   primary_comparator_id: string
@@ -83,6 +95,9 @@ outcome_commitment:
   outcome_ledger_digest: string
   adjudication_batch_digest: string
   evaluation_identity_bridge_digest: string
+  scientific_event_family_ledger_digest: string
+  provider_coupling_assessment_digest: string
+  outcome_event_discovery_frozen_at: datetime
 
 coverage_gates:
   max_temporal_unknown_fraction: number
@@ -91,6 +106,8 @@ coverage_gates:
   max_novelty_ambiguity_fraction: number
   max_assignment_ambiguity_fraction: number
   min_lineage_completeness_fraction: number
+  min_historical_genetic_coverage_grade: HIGH | MODERATE | LOW
+  max_variant_harmonization_ambiguity_fraction: number
 
 planned_analyses:
   subgroup_analyses: [string]
@@ -108,6 +125,7 @@ governance:
   sealed_outcome_adjudicator_blinding_required: boolean
   validation_generation_status: ACTIVE | SPENT_FOR_MODEL_SELECTION | RETIRED
   validation_access_count: integer
+  validation_max_disclosure_level: AGGREGATE_ONLY | SUBGROUP | PER_CASE | FULL_LABEL
   deviation_policy: string
 
 stop_conditions: [string]
@@ -123,13 +141,17 @@ A FROZEN MAP must not contain unresolved placeholders for:
 - horizon;
 - candidate universe;
 - disease frame;
+- scientific operating mode and historical data policy;
+- genomic identity / variant-harmonization / LD policy;
+- historical genetic-search coverage and observability policy;
+- scientific-event-family / provider-coupling / cross-anchor reuse policy;
 - outcome gene-assignment policy;
 - phenotype-match policy;
 - genetic-replication policy;
 - novelty / pre-T genetic-state policy;
 - zero-event policy;
 - validation generation;
-- exact future-outcome snapshot commitment;
+- exact future-outcome snapshot/event-family/provider-coupling commitment;
 - all-frame utility metric;
 - dependence-sensitivity method;
 - success rule.
