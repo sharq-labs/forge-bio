@@ -347,6 +347,11 @@ This milestone is intentionally narrow. It precedes BIG 0F and blocks it.
 - ConfirmatoryProgramBudget
 - research-program multiplicity / attempt accounting
 - BIG 0F sampling frame + random seed commitment procedure
+- deterministic seal-bundle builder + tamper verification
+- executable estimand structure contract
+- executable endpoint-quality rule template
+- executable BIG 0F result contract
+- deterministic GO / REDESIGN / NO_GO evaluator
 - second-adjudicator protocol
 - pilot DEVELOPMENT_EXPOSED exclusion rule
 - symmetric non-event historical-audit sample
@@ -406,6 +411,8 @@ A free-text success threshold is prohibited.
 ## BIG 0F entry gate
 
 BIG 0F cannot start until:
+- local seal-bundle/tamper dry-run passes CI;
+- pilot-result and deterministic-decision contracts pass CI;
 - pilot sampling rule is frozen;
 - target pilot N is frozen from source availability without outcome adjudication;
 - numeric GO / REDESIGN / NO-GO threshold categories are defined;
