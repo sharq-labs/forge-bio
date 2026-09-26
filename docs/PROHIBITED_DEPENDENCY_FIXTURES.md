@@ -387,3 +387,40 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** several statements extracted from one paper are assigned different IndependenceFamilies.
 
 **Expected:** source-lineage verification collapses them to the originating observation lineage.
+
+
+## F-64 — Post-T retraction rewrites historical ranking
+
+**Setup:** a source available at T is retracted at T+5 and the historical snapshot/rank is recomputed as though the source never existed.
+
+**Expected:** temporal/lifecycle verification fails; original historical state is preserved and a separate current fragility analysis is produced.
+
+## F-65 — Exhausted benchmark reused as fresh confirmation
+
+**Setup:** individual outcomes were inspected and methodology changed, but the same generation is labelled ACTIVE_CONFIRMATORY.
+
+**Expected:** BenchmarkExposure lifecycle rejects the strongest confirmatory claim.
+
+## F-66 — Strongest confirmatory artifact has no external seal
+
+**Setup:** only an internal Git hash is available for a strongest-tier ranking/prediction commitment.
+
+**Expected:** strongest-tier gate fails until required ExternalSealAttestation exists.
+
+## F-67 — Public prospective prediction drives later research
+
+**Setup:** targets are publicly released, collaborators/labs investigate them, and later support is counted as unexposed independent prospective validation.
+
+**Expected:** PredictionExposure classification marks exposure risk; clean independent L6 claim fails or is sensitivity-qualified.
+
+## F-68 — Null attempts omitted from research-program history
+
+**Setup:** only favorable endpoint/horizon/model-family attempts are reported.
+
+**Expected:** ResearchProgramAttempt ledger audit identifies selective reporting and downgrades confirmatory interpretation.
+
+## F-69 — Frozen ontology/provider representation overwritten in place
+
+**Setup:** a newer ontology/provider schema silently replaces an older frozen representation.
+
+**Expected:** snapshot/digest/migration verification fails; a new derivation artifact is required.
