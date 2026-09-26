@@ -31,6 +31,8 @@ BIG 0F remains `NUISANCE_ONLY`; semantic biological-evidence features are forbid
 
 Headline nuisance metrics are not accepted as free summary numbers.
 
+The eligible positive-event set is committed by digest before nuisance headroom summaries are accepted. The nuisance run must contain exactly that complete eligible positive set—no omission of poorly ranked positives and no addition of favorable cases.
+
 For every positive event used in the headroom analysis, record:
 - disease ID;
 - event ID;
@@ -40,7 +42,7 @@ For every positive event used in the headroom analysis, record:
 
 The future evaluator must verify the event against the committed candidate universe and full rank output, then recompute median rank, top-1%, and top-5% metrics.
 
-If the candidate universe or full rank output cannot be recovered from the committed digests, the result is `INCONCLUSIVE`.
+If the candidate universe, full rank output, or complete eligible positive-event set cannot be recovered and cross-checked from the committed digests, the result is `INCONCLUSIVE`.
 
 ## Manifest parity
 
