@@ -42,12 +42,12 @@
           "exposure_time",
           "exposure_kind",
           "disclosure_level",
-          "audience"
+          "audience_role"
         ],
         "properties": {
           "exposure_time": {
             "type": "string",
-            "minLength": 1
+            "format": "date-time"
           },
           "exposure_kind": {
             "enum": [
@@ -67,14 +67,20 @@
               "FULL_LABEL"
             ]
           },
-          "audience": {
-            "type": "string",
-            "minLength": 1
-          },
           "downstream_change_ref": {
             "type": [
               "string",
               "null"
+            ]
+          },
+          "audience_role": {
+            "enum": [
+              "RANKING_TEAM",
+              "OUTCOME_ADJUDICATOR",
+              "LOCKBOX_CUSTODIAN",
+              "INDEPENDENT_REVIEWER",
+              "PUBLIC",
+              "OTHER"
             ]
           }
         }
@@ -97,5 +103,59 @@
       "type": "string",
       "minLength": 1
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "lifecycle_status": {
+            "const": "ACTIVE_CONFIRMATORY"
+          }
+        },
+        "required": [
+          "lifecycle_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "exposure_events": {
+            "not": {
+              "contains": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "audience_role": {
+                        "const": "RANKING_TEAM"
+                      },
+                      "disclosure_level": {
+                        "enum": [
+                          "PER_CASE",
+                          "FULL_LABEL"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "audience_role",
+                      "disclosure_level"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "downstream_change_ref"
+                    ],
+                    "properties": {
+                      "downstream_change_ref": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
