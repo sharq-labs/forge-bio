@@ -25,6 +25,8 @@ Files:
 - `external-seal-attestation.v1.schema.json`
 - `prediction-exposure-event.v1.schema.json`
 - `research-program-attempt.v1.schema.json`
+- `gene-model-release.v1.schema.json`
+- `confirmatory-program-budget.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
@@ -37,3 +39,9 @@ Scientific-twin/profile schemas are exercised by executable positive/negative co
 
 
 BIG 0R5 schemas enforce quantitative/credibility semantics, including unit-required observations, missing/censoring state, custom-transform provenance, numerical-verification adequacy, and Context-of-Use-specific credibility conclusions.
+
+BIG 0F-0 adds a second enforcement layer:
+- `scripts/scientific_invariants.py` for cross-field scientific invariants;
+- `tests/spec/test_hostile_review_regressions.py` for permanent adversarial regression tests.
+
+A frozen artifact is not considered valid merely because it passes JSON Schema.
