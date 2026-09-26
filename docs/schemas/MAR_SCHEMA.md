@@ -4,7 +4,7 @@
 
 The MAR records what actually happened.
 
-Executable companion: [MAR JSON Schema](../../../schemas/mar.v1.schema.json). Negative and invalid results receive a MAR too.
+Executable companion: [MAR JSON Schema](../../schemas/mar.v1.schema.json). Negative and invalid results receive a MAR too.
 
 ## Required top-level structure
 
