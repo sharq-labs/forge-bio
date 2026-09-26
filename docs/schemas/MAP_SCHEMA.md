@@ -189,7 +189,7 @@ Any post-freeze change creates a new MAP generation or a documented deviation. I
 
 JSON Schema is not the only validator.
 
-`scripts/scientific_invariants.py` additionally enforces scientific invariants including:
+When implementation begins, one canonical cross-field semantic validator must enforce scientific invariants including:
 - STRICT_HISTORICAL watermark is not UNKNOWN and does not exceed cutoff;
 - primary comparator equals Combined Nuisance Model;
 - confirmatory ranking/adjudication/custodian roles are separated;
@@ -197,4 +197,4 @@ JSON Schema is not the only validator.
 - confirmatory coverage gates are non-vacuous;
 - alpha/power/success thresholds are numeric.
 
-A FROZEN artifact is valid only when both JSON Schema and semantic invariants pass.
+A FROZEN artifact is valid only when both JSON Schema and the future canonical semantic-invariant checks pass.
