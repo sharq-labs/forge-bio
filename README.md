@@ -132,6 +132,7 @@ Do not start production scientific code before that gate.
 - [Scientific Glossary](docs/GLOSSARY.md)
 - [Core Scientific Types](docs/CORE_TYPES.md)
 - [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
+- [Golden Scientific Twin World](docs/GOLDEN_TWIN_WORLD.md)
 - [Architecture Dependency Rules](docs/DEPENDENCY_RULES.md)
 - [Prohibited Dependency / Leakage Fixtures](docs/PROHIBITED_DEPENDENCY_FIXTURES.md)
 - [B-TGT-E1 Estimand Proposal](docs/BENCHMARK_ESTIMAND_V0.md)
