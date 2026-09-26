@@ -25,7 +25,8 @@
     "hyperparameter_search_space_digest",
     "tuning_budget_id",
     "early_stopping_rule_id",
-    "random_seed_policy_id"
+    "random_seed_policy_id",
+    "feature_family_records"
   ],
   "properties": {
     "run_id": {
@@ -156,6 +157,44 @@
     "random_seed_policy_id": {
       "type": "string",
       "minLength": 1
+    },
+    "feature_family_records": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "feature_family_id",
+          "source_release_ids",
+          "feature_artifact_digest",
+          "transform_digest"
+        ],
+        "properties": {
+          "feature_family_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_release_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "feature_artifact_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "transform_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
+        }
+      }
     }
   }
 }
