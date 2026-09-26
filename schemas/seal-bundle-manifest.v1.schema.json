@@ -28,7 +28,10 @@
     "adjudication_policy_schema_sha256",
     "nuisance_manifest_schema_sha256",
     "power_analysis_schema_sha256",
-    "power_engine_sha256"
+    "power_engine_sha256",
+    "selection_provenance_schema_sha256",
+    "nuisance_run_schema_sha256",
+    "provenance_verifier_sha256"
   ],
   "properties": {
     "seal_bundle_version": {
@@ -131,6 +134,18 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "frame_seal_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_provenance_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_run_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "provenance_verifier_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
