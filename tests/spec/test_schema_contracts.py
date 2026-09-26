@@ -315,5 +315,74 @@ class QuantitativeAndCredibilitySchemaTests(unittest.TestCase):
         self.validate("effect-estimate.v1.schema.json", x)
 
 
+class ExtractionQualitySchemaTests(unittest.TestCase):
+    def validate(self, schema_name: str, instance: dict) -> None:
+        Draft202012Validator(load(schema_name)).validate(instance)
+
+    def assert_invalid(self, schema_name: str, instance: dict) -> None:
+        with self.assertRaises(ValidationError):
+            self.validate(schema_name, instance)
+
+    def test_llm_extraction_requires_quality_card(self) -> None:
+        x = {
+            "extraction_id": "X1",
+            "schema_version": "extraction-artifact-v1",
+            "source_artifact_id": "SA1",
+            "source_record_id": "SR1",
+            "source_locator_or_span": "p1:paragraph2",
+            "extraction_method": "LLM_EXTRACTED",
+            "extractor_id": "ext",
+            "extractor_version": "1",
+            "knowledge_watermark": "DATED(2020-01-01)",
+            "output_schema_version": "claims-v1",
+            "extracted_claim_ids": ["C1"],
+            "abstention_state": "NOT_ABSTAINED",
+            "reviewer_state": "PENDING",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("extraction-artifact.v1.schema.json", x)
+
+    def test_valid_llm_extraction_with_quality_card(self) -> None:
+        x = {
+            "extraction_id": "X2",
+            "schema_version": "extraction-artifact-v1",
+            "source_artifact_id": "SA1",
+            "source_record_id": "SR1",
+            "source_locator_or_span": "p1:paragraph2",
+            "extraction_method": "LLM_EXTRACTED",
+            "extractor_id": "ext",
+            "extractor_version": "1",
+            "knowledge_watermark": "DATED(2020-01-01)",
+            "output_schema_version": "claims-v1",
+            "extracted_claim_ids": ["C1"],
+            "abstention_state": "NOT_ABSTAINED",
+            "reviewer_state": "REVIEWED",
+            "quality_card_id": "Q1",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.validate("extraction-artifact.v1.schema.json", x)
+
+    def test_conditional_quality_requires_condition(self) -> None:
+        x = {
+            "quality_card_id": "Q1",
+            "schema_version": "extraction-quality-card-v1",
+            "extractor_id": "ext",
+            "extractor_version": "1",
+            "task_definition": "claim extraction",
+            "domain_scope": "genetics",
+            "gold_set_id": "G1",
+            "sample_size": 100,
+            "precision": 0.95,
+            "recall": 0.90,
+            "abstention_rate": 0.05,
+            "known_failure_modes": [],
+            "qualification_status": "CONDITIONAL",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("extraction-quality-card.v1.schema.json", x)
+
+
 if __name__ == "__main__":
     unittest.main()
