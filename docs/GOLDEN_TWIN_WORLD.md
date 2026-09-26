@@ -105,6 +105,8 @@ T1_DYNAMIC_KNOWLEDGE_TWIN
 
 Adds an explicit state-transition model for a narrow pathogen–host mechanism with:
 - named state variables;
+- TwinStateModelArtifact with structural provenance/watermark;
+- TwinUpdatePolicyArtifact with provenance/watermark;
 - parameter provenance;
 - assumptions;
 - uncertainty;
@@ -120,7 +122,7 @@ No predictive maturity is earned merely because the model simulates.
 
 ### TW3 — Predictive twin
 
-The TW2 model is frozen and evaluated against held-out/future observations.
+The TW2 model is frozen and evaluated against held-out/future observations under MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance governance.
 
 Expected maturity only if:
 - target/horizon were frozen;
@@ -138,7 +140,7 @@ Otherwise it remains T2.
 
 ### TW4 — Intervention simulation twin
 
-Requires T3-level validity for the relevant state/target plus a versioned computational perturbation and sensitivity/UQ analysis.
+Requires T3-level validity for the relevant state/target plus CausalAssumptionSet, InterventionSemantics, an allowed IdentifiabilityStatus, a versioned computational perturbation, and sensitivity/UQ analysis.
 
 Output remains a research hypothesis.
 
@@ -175,6 +177,9 @@ A pathogen-only predictive model may not silently claim host-disease behavior wh
 8. T3 requires held-out/future validation artifacts.
 9. T4 requires T3 validity plus perturbation sensitivity/uncertainty.
 10. changing model parameters produces a new immutable TwinState/model artifact.
-11. modern parameter fitting cannot contaminate STRICT_HISTORICAL Twin(subject, T).
-12. pathogen-only state cannot be interpreted as a validated pathogen–host model.
-13. simulation output is not stored as clinical evidence.
+11. STRICT_HISTORICAL Twin(subject, T) must record explicit cutoff T.
+12. modern state-model topology/update policy/parameter fitting cannot contaminate STRICT_HISTORICAL Twin(subject, T).
+13. pathogen-only state cannot be interpreted as a validated pathogen–host model.
+14. T3 requires MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance references.
+15. T4 with NOT_IDENTIFIED/UNKNOWN identifiability is rejected.
+16. simulation output is not stored as clinical evidence.
