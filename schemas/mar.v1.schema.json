@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/mar.v1.schema.json",
+  "title": "Forge Bio Model Analysis Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mar_id",
+    "schema_version",
+    "map_id",
+    "map_digest",
+    "benchmark_id",
+    "benchmark_generation",
+    "execution",
+    "data",
+    "verification",
+    "coverage",
+    "results",
+    "bias_and_sensitivity",
+    "governance",
+    "interpretation"
+  ],
+  "properties": {
+    "mar_id": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "mar-v1"
+    },
+    "map_id": {
+      "type": "string"
+    },
+    "map_digest": {
+      "type": "string"
+    },
+    "benchmark_id": {
+      "type": "string"
+    },
+    "benchmark_generation": {
+      "type": "string"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "bias_and_sensitivity": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
