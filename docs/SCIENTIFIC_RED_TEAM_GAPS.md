@@ -704,3 +704,41 @@ ResearchProgramAttempt ledger records positive, null, negative, inconclusive, an
 **Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
 Material migrations are new immutable derivation artifacts with source/target versions, migration rule, affected semantics, provenance, and digest.
+
+
+## Independent hostile review — BIG 0F-0 action ledger
+
+An independent adversarial review materially downgraded the prior self-assessment and reopened the B-TGT-E1 critical path.
+
+The previous statement that no major design gap remained is not used after this review.
+
+| ID | Finding | Status after BIG 0F-0 hardening |
+|---|---|---|
+| HR-01 | Gene assignment can re-import research attention | CLOSED-POLICY / EMPIRICAL-OPEN — high-specificity primary classes; attention audit required |
+| HR-02 | Genomic-architecture / pleiotropy baselines missing | CLOSED-POLICY / DATA-OPEN — mandatory nuisance families added |
+| HR-03 | Strongest-single comparator is inadequate | CLOSED-POLICY — Combined Nuisance Model is primary comparator |
+| HR-04 | No confirmatory alpha / power / MDE / numeric success rule | CLOSED-SCHEMA / EMPIRICAL-OPEN — MAP fields required; pilot supplies power inputs |
+| HR-05 | Repeated confirmatory generations mine one finite history | CLOSED-POLICY / SCHEMA — ConfirmatoryProgramBudget + attempt ledger |
+| HR-06 | Solo designer/adjudicator/custodian cannot support strongest tier | OPERATIONAL-OPEN — independent adjudicator/custodian required |
+| HR-07 | Strict novelty may be power maturation | EMPIRICAL-OPEN — pre-T cohort reuse + power-maturation audit in BIG 0F |
+| HR-08 | Positive-only historical audit can be asymmetric | CLOSED-POLICY / EMPIRICAL-OPEN — seeded non-event audit required |
+| HR-09 | Disease frame can be chosen with hindsight | CLOSED-POLICY / OPERATIONAL-OPEN — mechanical frame + sealed seed |
+| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-IN-PROGRESS — semantic validator + hostile regression suite; CI must pass |
+| HR-11 | Knowledge-bearingness was too self-declared | CLOSED-POLICY — biomedical-domain dependencies default UNKNOWN/knowledge-bearing |
+| HR-12 | Same curation pipeline can feed Past and Future | CLOSED-POLICY / EMPIRICAL-OPEN — primary-source/independent outcome path required |
+| HR-13 | External seals / null reporting were self-attestable | CLOSED-SCHEMA / OPERATIONAL-OPEN — approved external authority types + disclosure schedule |
+| HR-14 | Recall@K is discrete under sparse events | CLOSED-POLICY / EMPIRICAL-OPEN — event-rank percentile preferred for pilot |
+| HR-15 | Cross-disease shared controls create dependence | CLOSED-POLICY / IMPLEMENTATION-OPEN — shared-control/study-family blocks required |
+| HR-16 | Gene annotation release was not first-class | CLOSED-POLICY / SCHEMA — GeneModelRelease added |
+| HR-17 | EffectEstimate could not safely represent GWAS effects | CLOSED-SCHEMA — allele/variant/context + ratio/HR constraints added |
+| HR-18 | Scientific Twin / VVUQ gates were too weak and off critical path | DEFERRED — advanced Twin work frozen until core B-TGT evidence exists |
+| HR-19 | Extraction qualification could be vacuous | CLOSED-SCHEMA / EMPIRICAL-OPEN — task thresholds and negation/null metrics required |
+| HR-20 | Prospective validation starts too late | CLOSED-ROADMAP — private externally timestamped ledger starts with stable BIG 7 ranker |
+
+### Critical interpretation
+
+BIG 0F-0 is complete only when HR-10 regression tests pass and HR-06/HR-09 operational prerequisites required for pilot start are satisfied.
+
+BIG 0F then determines whether HR-01, HR-04, HR-07, HR-08, HR-12, HR-14, HR-19 and related feasibility risks are scientifically tolerable.
+
+No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
