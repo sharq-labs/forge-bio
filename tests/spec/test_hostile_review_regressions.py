@@ -174,6 +174,9 @@ def valid_map() -> dict:
             "sensitivity_analyses": [],
             "source_ablations": [],
             "negative_controls": ["attention-stratified permutation"],
+            "ambiguity_sensitivity_method_id": "AMBIGUOUS_EVENT_BEST_WORST_TIPPING_POINT_V1",
+            "disease_weighting_sensitivity_method_id": "HIERARCHICAL_DISEASE_SENSITIVITY_V1",
+            "label_feature_method_coupling_sensitivity_id": "METHOD_FAMILY_STRATIFIED_LABEL_FEATURE_SENSITIVITY_V1",
         },
         "governance": {
             "benchmark_design_provenance_id": "BDP1",
@@ -486,6 +489,21 @@ class HostileReviewRegressionTests(unittest.TestCase):
         }
         validator("confirmatory-program-budget.v1.schema.json").validate(x)
         self.assertTrue(validate_semantics("confirmatory_program_budget", x))
+
+    def test_confirmatory_map_requires_round2_ambiguity_sensitivity(self) -> None:
+        x = valid_map()
+        del x["planned_analyses"]["ambiguity_sensitivity_method_id"]
+        assert_schema_invalid(self, "map.v1.schema.json", x)
+
+    def test_confirmatory_map_requires_disease_weighting_sensitivity(self) -> None:
+        x = valid_map()
+        del x["planned_analyses"]["disease_weighting_sensitivity_method_id"]
+        assert_schema_invalid(self, "map.v1.schema.json", x)
+
+    def test_confirmatory_map_requires_method_family_coupling_sensitivity(self) -> None:
+        x = valid_map()
+        del x["planned_analyses"]["label_feature_method_coupling_sensitivity_id"]
+        assert_schema_invalid(self, "map.v1.schema.json", x)
 
 
 if __name__ == "__main__":
