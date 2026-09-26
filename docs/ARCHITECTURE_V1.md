@@ -945,12 +945,17 @@ The following are frozen unless superseded by ADR:
 11. Research-attention and endpoint-appropriate discoverability controls are mandatory.
 12. Cutoff era is selected through provider audit.
 13. Gene-level future outcomes separate identity reconciliation from locus-to-gene assignment.
-14. Historical novelty is audited independently for discovery claims.
-15. Researcher hindsight is governed separately from technical future-label isolation.
-16. The benchmark estimand and zero-event disease policy are frozen before sealed outcome access.
-17. B-TGT precedes or accompanies B-REP as the biological foundation.
-18. No LLM/deep model requirement in V1.
-19. No clinical-treatment claims.
+14. Strict novelty distinguishes no-observed-signal from suggestive pre-T genetics.
+15. Disease/trait phenotype matching is explicit.
+16. Genetic replication requires allele/direction/phenotype/lineage comparability.
+17. Historical novelty is audited independently for discovery claims.
+18. Researcher hindsight is governed separately from technical future-label isolation.
+19. Validation generations track adaptive reuse.
+20. Exact Future Outcome snapshots/ledgers are committed before sealed evaluation.
+21. The benchmark estimand and zero-event disease policy are frozen before sealed outcome access.
+22. B-TGT precedes or accompanies B-REP as the biological foundation.
+23. No LLM/deep model requirement in V1.
+24. No clinical-treatment claims.
 
 
 ---
@@ -969,6 +974,9 @@ The following documents are normative for implementation detail and close gaps i
 - [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md) — active adversarial scientific-integrity blockers.
 - [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md) — locus/gene assignment and historical novelty.
 - [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md) — researcher hindsight, role separation, and blinding.
+- [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md) — disease/trait phenotype equivalence for future outcomes.
+- [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md) — strict novelty, maturation, and genetic replication semantics.
+- [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md) — validation reuse and immutable Future Outcome commitments.
 - [adr/](adr/) — explicit decisions that may change architecture.
 
 ### Freeze rule
