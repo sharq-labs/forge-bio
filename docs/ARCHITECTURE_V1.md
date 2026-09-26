@@ -579,7 +579,9 @@ For genetic outcomes, the event ledger distinguishes locus/variant discovery fro
 
 Independence lineage may include study, cohort, consortium, dataset/biobank, participant-overlap group, and meta-analysis parents. UNKNOWN overlap is not treated as independent replication.
 
-E1-NOVEL outcomes also require a separate HistoricalNoveltyAudit so incomplete Past-source coverage cannot silently create false novelty.
+E1-NOVEL-STRICT outcomes require both `PreTGeneticState = NO_SIGNAL_OBSERVED` and `HistoricalNoveltyAudit = NOVEL_CONFIRMED`, so suggestive pre-T signals cannot be relabelled as de novo discovery.
+
+Future genetic outcomes also carry explicit phenotype-match and replication assessments. A related trait/risk factor is not silently promoted to the benchmark disease, and a repeated locus is not automatically independent replication.
 
 It is an immutable ledger of FutureEvents such as:
 
@@ -615,13 +617,20 @@ Label states include:
 
 ## 12. Benchmark families
 
-### 12.1 B-TGT — Target Discovery
+### 12.1 B-TGT — Target Program
 
-Primary question:
+B-TGT is an umbrella program for biological and eventual therapeutic-target prioritization.
 
-> Given only evidence available at T, can the system rank disease-specific target/intervention hypotheses that later receive predefined independent biological or mechanistic validation?
+The first V0 benchmark is explicitly narrower:
 
-This benchmark establishes biological prioritization signal.
+```text
+B-TGT-A1 / B-TGT-E1-v0
+Disease–Gene Association Prioritization
+```
+
+It asks whether temporally clean evidence can rank disease–gene associations that later receive predefined independent human genetic support.
+
+This V0 benchmark does **not** by itself establish causal therapeutic-target validity, intervention direction, or tractability. Stronger target-discovery language requires later mechanism/direction/causal-target endpoints.
 
 ### 12.2 B-REP — Drug Repurposing
 
@@ -654,18 +663,25 @@ Every confirmatory benchmark freezes:
 - temporal policy
 - identity policy
 - endpoint definitions
+- pre-T genetic-state policy
+- phenotype-match policy
+- outcome gene-assignment policy
+- genetic-replication policy
 - label rules
 - matching rules
+- validation-generation identity/status
+- Future Outcome snapshot/ledger commitment
 - ranking algorithm
 - model/config versions
 - random seeds
 - primary and secondary metrics
 - candidate-universe-normalized companion metric
+- all-frame review-budget utility
 - discoverability/observation-propensity control
 - negative/null control plan
 - confidence-interval method
+- disease-family/block dependence sensitivity
 - multiplicity policy
-- outcome gene-assignment policy
 - historical novelty policy
 - BenchmarkDesignProvenance
 - success criteria
@@ -685,6 +701,10 @@ SEALED_LOCKBOX
 
 A lockbox that has been repeatedly inspected is no longer an untouched lockbox.
 
+VALIDATION is also versioned into generations. Once a validation generation materially influences methodology, it is marked SPENT_FOR_MODEL_SELECTION rather than represented as untouched evidence.
+
+The exact Future Outcome snapshot/ledger/adjudication/identity-bridge artifacts are committed before sealed evaluation so labels cannot silently move after ranking freeze.
+
 ---
 
 ## 14. Metrics and success criterion
@@ -698,7 +718,10 @@ Important metrics may include:
 - enrichment@K vs random
 - candidate rank percentile
 - cumulative event recall
-- case-level bootstrap confidence intervals
+- all-frame observed-event yield per total review budget
+- event-bearing disease coverage
+- zero-event disease review burden
+- disease-level confidence intervals with disease-family/block sensitivity
 
 Hit@K may be reported descriptively but must not be the sole headline metric.
 
