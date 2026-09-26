@@ -1283,3 +1283,34 @@ Validation attaches to an exact dependency digest.
 Material change to model structure, preprocessing/features, parameters, measurement model, update policy, endpoint, applicability domain, or output-changing numerical configuration creates a new validation target.
 
 Normative policy: [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md).
+
+
+---
+
+## 41. Evidence extraction and curation contract
+
+Source quality and extraction quality are separate.
+
+Non-native structured extraction requires an ExtractionArtifact with:
+- source artifact/record;
+- recoverable source locator/span;
+- extraction method;
+- extractor/version/config;
+- knowledge horizon/watermark;
+- output schema version;
+- extracted claim IDs;
+- abstention state;
+- review/adjudication state;
+- provenance/digest.
+
+Automated/rule-based extractors require a task/domain-specific ExtractionQualityCard.
+
+Rules:
+- extractor confidence != scientific evidence strength;
+- an extracted claim without reviewable source grounding cannot become confirmatory EvidenceRecord;
+- human review does not erase machine-extraction provenance;
+- multiple extracted statements from one source do not create independent biological evidence;
+- material extractor/model/prompt/rule/ontology/schema changes trigger requalification;
+- UNKNOWN/UNQUALIFIED extraction quality is refused for confirmatory evidence generation.
+
+Normative policy: [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md).
