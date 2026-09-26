@@ -70,13 +70,6 @@ checklist = (ROOT / "docs" / "PRE_CODE_CHECKLIST.md").read_text(encoding="utf-8"
 if "- [x] ADR-005 licensing posture decided" not in checklist:
     errors.append("PRE_CODE_CHECKLIST must record ADR-005 as decided")
 
-if errors:
-    print("SPEC INTEGRITY CHECK FAILED")
-    for err in errors:
-        print(f"- {err}")
-    sys.exit(1)
-
-print("SPEC INTEGRITY CHECK PASSED")
 
 
 # Scientific twin claim-boundary checks
@@ -89,3 +82,11 @@ for required_phrase in [
 ]:
     if required_phrase not in twin_arch:
         errors.append(f"scientific twin architecture missing required claim boundary: {required_phrase}")
+
+if errors:
+    print("SPEC INTEGRITY CHECK FAILED")
+    for err in errors:
+        print(f"- {err}")
+    sys.exit(1)
+
+print("SPEC INTEGRITY CHECK PASSED")
