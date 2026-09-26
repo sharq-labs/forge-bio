@@ -18,6 +18,8 @@ CTX = EvaluationContext(
     sampling_code_sealed=True,
     selection_provenance_verified=True,
     nuisance_run_verified=True,
+    provider_audit_verified=True,
+    adjudicator_independence_verified=True,
 )
 
 
