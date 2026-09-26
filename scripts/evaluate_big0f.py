@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.build_seal_bundle import manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
+from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,6 +25,7 @@ ADJUDICATION_SCHEMA_PATH = ROOT / "schemas" / "big0f-adjudication-policy.v1.sche
 NUISANCE_SCHEMA_PATH = ROOT / "schemas" / "big0f-nuisance-manifest.v1.schema.json"
 DEFAULT_THRESHOLD_PATH = ROOT / "config" / "big0f-thresholds.v1.json"
 DEFAULT_SAMPLING_CODE_PATH = ROOT / "scripts" / "select_big0f_sample.py"
+DEFAULT_POWER_ENGINE_PATH = ROOT / "scripts" / "simulate_big0f_power.py"
 
 
 @dataclass(frozen=True)
@@ -372,6 +374,7 @@ def _verified_context_from_files(
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
     sampling_code_path: Path,
+    power_engine_path: Path,
 ) -> EvaluationContext:
     threshold_manifest = load_json_strict(threshold_manifest_path)
     _validate_schema(threshold_manifest, THRESHOLD_SCHEMA_PATH)
@@ -404,6 +407,7 @@ def _verified_context_from_files(
         "adjudication_policy_schema": ADJUDICATION_SCHEMA_PATH,
         "nuisance_manifest_schema": NUISANCE_SCHEMA_PATH,
         "power_analysis_schema": POWER_SCHEMA_PATH,
+        "power_engine": power_engine_path,
     }
 
     authorities: set[str] = set()
@@ -456,6 +460,14 @@ def _verified_context_from_files(
 
     power = load_json_strict(power_analysis_path)
     _validate_schema(power, POWER_SCHEMA_PATH)
+    if seal_manifest["power_engine_sha256"] != sha256_file(power_engine_path):
+        raise ValueError("power engine is not the version committed by the seal")
+    power_recompute_errors = verify_power_artifact(
+        power,
+        engine_sha256=sha256_file(power_engine_path),
+    )
+    if power_recompute_errors:
+        raise ValueError("power artifact failed deterministic recomputation: " + " | ".join(power_recompute_errors))
     power_digest = sha256_file(power_analysis_path)
     if power_digest != result["power_metrics"]["power_analysis_digest"]:
         raise ValueError("power analysis digest mismatch")
@@ -497,6 +509,7 @@ def main() -> int:
     ap.add_argument("--adjudication-policy", type=Path, required=True)
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
+    ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
 
     data = load_json_strict(args.pilot_result)
@@ -514,6 +527,7 @@ def main() -> int:
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,
         sampling_code_path=args.sampling_code,
+        power_engine_path=args.power_engine,
     )
     result = evaluate(data, threshold_manifest, context=context)
 
