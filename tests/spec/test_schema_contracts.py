@@ -161,7 +161,7 @@ class ProfileSchemaTests(unittest.TestCase):
             "historical_data_policy": "ARCHIVED_ONLY",
             "uncertainty_bundle_ref": "uq-1",
             "provenance_ref": "prov-1",
-            "knowledge_watermark": {"kind": "DATED", "date": "2026-09-26"},
+            "knowledge_watermark": "DATED(2026-09-26)",
             "digest": "sha256:test",
         }
 
@@ -189,7 +189,7 @@ class ProfileSchemaTests(unittest.TestCase):
             "scientific_operating_mode": "CURRENT_DISCOVERY",
             "historical_data_policy": "ARCHIVED_ONLY",
             "provenance_ref": "prov-1",
-            "knowledge_watermark": {"kind": "DATED", "date": "2026-09-26"},
+            "knowledge_watermark": "DATED(2026-09-26)",
             "digest": "sha256:test",
         }
         self.validate("virus-profile-extension.v1.schema.json", virus)
@@ -443,7 +443,7 @@ class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
         x = {
             "attestation_id": "ES1",
             "schema_version": "external-seal-attestation-v1",
-            "artifact_digest": "sha256:abc",
+            "artifact_digest": "sha256:abcdef12",
             "artifact_type": "ranking",
             "sealed_at": "2026-01-01T00:00:00Z",
             "external_registry_or_custodian_ref": "custodian-1",
