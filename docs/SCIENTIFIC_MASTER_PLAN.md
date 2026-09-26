@@ -1310,12 +1310,16 @@ Repurposing result: none yet
 Prospective result: none yet
 ```
 
-The next implementation work must start from BIG 0 and should not skip directly to models.
+The next implementation work must start only after the BIG 0F false-GO closure contracts are frozen and the pre-code gate is explicitly passed; it should not skip directly to models.
 
 
 ---
 
 # 8. Pre-code hardening references
+
+The current hostile-review closure contract is:
+
+- [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
 
 Implementation order is governed by:
 
