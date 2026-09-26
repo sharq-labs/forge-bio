@@ -1,6 +1,6 @@
-# B-TGT-E1-v0 Estimand Proposal
+# B-TGT-E1-v0 Estimand Contract
 
-**Status:** PRE-CODE CANDIDATE — must be accepted/frozen after feasibility pilot
+**Status:** STRUCTURE FROZEN — exact confirmatory H / primary subtype / primary metric instantiated after BIG 0F under the sealed selection rules
 
 ## 1. Target question
 
@@ -10,7 +10,7 @@ This is a **conditional ranking estimand**, not a claim that every disease will 
 
 Future positive credit is defined on the frozen ScientificEventFamily / GeneticDiscoveryEventFamily ledger. Multiple manifestations of one discovery do not create multiple primary events, and multiple gene assignments from one locus do not automatically multiply event credit.
 
-## 2. Proposed primary population
+## 2. Frozen primary population
 
 Primary V0 regime:
 
@@ -67,7 +67,7 @@ Also report:
 
 These are **observed-event utility metrics**, not biological precision/false-positive metrics. A zero-event disease does not imply its recommended candidates were biologically false.
 
-## 6. Proposed disease weighting
+## 6. Frozen disease weighting
 
 For the primary event-ranking analysis:
 - compute the metric within each event-bearing disease;
@@ -76,7 +76,7 @@ For the primary event-ranking analysis:
 
 Event-weighted results may be secondary.
 
-## 7. Proposed comparator
+## 7. Frozen primary comparator family
 
 The primary comparator is the preregistered **Combined Nuisance Model**, not the strongest single control.
 
@@ -138,7 +138,28 @@ Provider-lineage sensitivity is also required when Past inputs and Future outcom
 
 LD/reference-panel sensitivity is required when proxy-variant matching materially determines replication labels.
 
-## 11. Feasibility decisions still required
+## 11. Frozen structure vs confirmatory instantiation
+
+The following are **frozen now**:
+- primary population/regime;
+- equal disease weighting across event-bearing diseases;
+- zero-event disease retention/accounting rule;
+- conditional ranking estimand interpretation;
+- secondary all-frame utility requirement;
+- primary nested comparator family;
+- no headline claim from beating random/single popularity controls;
+- horizon selection procedure;
+- high-specificity gene-assignment requirement / locus-level redesign fallback.
+
+The following are **confirmatory instance parameters** and are intentionally selected only after BIG 0F using the already-frozen rules:
+- exact H;
+- exact primary E1 subtype;
+- exact primary metric;
+- endpoint-quality threshold values;
+- exact Combined Nuisance feature sources;
+- confirmatory minimum effect / power inputs.
+
+This distinction is machine-readable in `schemas/estimand.v1.schema.json`.
 
 The pilot/provider audit must determine:
 - exact primary E1 subtype, including strict novelty vs maturation;
@@ -161,7 +182,7 @@ The pilot/provider audit must determine:
 - observability sensitivity policy details;
 - pilot sampling rule, N, second-adjudication fraction, and contamination rule.
 
-Until these are frozen, this document remains PRE-CODE CANDIDATE.
+These empirical instance parameters remaining open do not reopen the frozen estimand structure. They block a sealed confirmatory run, not implementation of the parameterized metric/benchmark machinery.
 
 
 ## 12. Assignment-attention robustness
