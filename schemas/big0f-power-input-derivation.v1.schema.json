@@ -19,25 +19,41 @@
     "minimum_independent_variance_sources",
     "source_eligibility",
     "decision_semantics",
-    "frozen_at"
+    "frozen_at",
+    "variance_source_discovery_policy",
+    "variance_source_registry_required"
   ],
   "properties": {
-    "contract_id": {"const": "BIG0F-POWER-INPUT-DERIVATION-V1"},
-    "schema_version": {"const": "big0f-power-input-derivation-v1"},
-    "status": {"const": "FROZEN"},
-    "biological_arm_observed": {"const": false},
+    "contract_id": {
+      "const": "BIG0F-POWER-INPUT-DERIVATION-V1"
+    },
+    "schema_version": {
+      "const": "big0f-power-input-derivation-v1"
+    },
+    "status": {
+      "const": "FROZEN"
+    },
+    "biological_arm_observed": {
+      "const": false
+    },
     "primary_variance_source_policy": {
       "const": "INDEPENDENT_SAME_ESTIMAND_DEVELOPMENT_REQUIRED_FOR_GO"
     },
     "fallback_proxy_method": {
       "const": "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
     },
-    "fallback_proxy_go_eligible": {"const": false},
-    "sd_estimator": {"const": "DISEASE_LEVEL_SAMPLE_SD"},
+    "fallback_proxy_go_eligible": {
+      "const": false
+    },
+    "sd_estimator": {
+      "const": "DISEASE_LEVEL_SAMPLE_SD"
+    },
     "uncertainty_method": {
       "const": "BOOTSTRAP_UPPER_95_CI_FOR_PRIMARY_PLANNING_SD"
     },
-    "dependence_adjustment_required": {"const": true},
+    "dependence_adjustment_required": {
+      "const": true
+    },
     "zero_event_policy": {
       "const": "RETAIN_IN_FRAME_NO_FABRICATED_RANK_SCORE_REPORT_ALL_FRAME_UTILITY"
     },
@@ -58,12 +74,24 @@
         "source_identity_and_digest_required"
       ],
       "properties": {
-        "same_estimand_required": {"const": true},
-        "same_primary_metric_required": {"const": true},
-        "development_exposed_allowed": {"const": true},
-        "confirmatory_overlap_forbidden": {"const": true},
-        "pilot_biological_arm_forbidden": {"const": true},
-        "source_identity_and_digest_required": {"const": true}
+        "same_estimand_required": {
+          "const": true
+        },
+        "same_primary_metric_required": {
+          "const": true
+        },
+        "development_exposed_allowed": {
+          "const": true
+        },
+        "confirmatory_overlap_forbidden": {
+          "const": true
+        },
+        "pilot_biological_arm_forbidden": {
+          "const": true
+        },
+        "source_identity_and_digest_required": {
+          "const": true
+        }
       }
     },
     "decision_semantics": {
@@ -76,12 +104,29 @@
         "power_below_target_under_primary_conservative_scenario"
       ],
       "properties": {
-        "no_eligible_independent_variance_source": {"const": "INCONCLUSIVE"},
-        "proxy_only": {"const": "INCONCLUSIVE"},
-        "scenario_instability": {"const": "REDESIGN"},
-        "power_below_target_under_primary_conservative_scenario": {"const": "NO_GO"}
+        "no_eligible_independent_variance_source": {
+          "const": "INCONCLUSIVE"
+        },
+        "proxy_only": {
+          "const": "INCONCLUSIVE"
+        },
+        "scenario_instability": {
+          "const": "REDESIGN"
+        },
+        "power_below_target_under_primary_conservative_scenario": {
+          "const": "NO_GO"
+        }
       }
     },
-    "frozen_at": {"type": "string", "format": "date-time"}
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "variance_source_discovery_policy": {
+      "const": "SEALED_EXHAUSTIVE_ELIGIBLE_SOURCE_REGISTRY"
+    },
+    "variance_source_registry_required": {
+      "const": true
+    }
   }
 }
