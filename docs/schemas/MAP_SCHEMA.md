@@ -2,7 +2,9 @@
 
 **Status:** NORMATIVE PRE-CODE V1
 
-The MAP is frozen before confirmatory execution. The runtime must reject configuration drift from the frozen MAP hash.
+The MAP is frozen before confirmatory execution.
+
+Executable companion: [MAP JSON Schema](../../../schemas/map.v1.schema.json). The runtime must reject configuration drift from the frozen MAP hash.
 
 ## Required top-level structure
 
