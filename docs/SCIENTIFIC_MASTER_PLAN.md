@@ -4,6 +4,8 @@
 **Project:** Forge Bio  
 **Execution principle:** prove temporal scientific value before expensive model complexity
 
+**Pre-code repository rule:** this phase contains specification artifacts only. Runtime implementation code and executable test harnesses are deferred until the pre-code gate is passed.
+
 ---
 
 ## 1. Mission
@@ -1299,7 +1301,7 @@ This is the ultimate long-term evidence.
 
 ```text
 Current milestone: BIG 0F-0 critical-path hardening → BIG 0F
-Implementation status: not started
+Implementation status: intentionally not started; runtime implementation code deferred
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
 Historical benchmark result: none yet
