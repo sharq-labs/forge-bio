@@ -39,9 +39,29 @@ Because event-recall ranking metrics are undefined when no future positives exis
 - the primary ranking estimand is explicitly conditional on at least one observable qualifying event;
 - no claim of performance across all diseases is inferred from that conditional metric.
 
-A secondary benchmark may later define a decision-utility estimand that covers zero-event diseases.
+The benchmark now also requires a secondary all-frame review-budget estimand that covers zero-event diseases without treating them as negatives.
 
-## 5. Proposed disease weighting
+## 5. Secondary all-frame review-budget estimand
+
+The full frozen disease frame is used to estimate operational search-space efficiency.
+
+A candidate metric is:
+
+```text
+ObservedEventYield@TotalReviewBudget =
+    observed qualifying future events captured
+    /
+    total candidates reviewed across all frozen diseases
+```
+
+Also report:
+- event-bearing disease coverage;
+- zero-event disease review burden;
+- total candidate review budget.
+
+These are **observed-event utility metrics**, not biological precision/false-positive metrics. A zero-event disease does not imply its recommended candidates were biologically false.
+
+## 6. Proposed disease weighting
 
 For the primary event-ranking analysis:
 - compute the metric within each event-bearing disease;
@@ -50,7 +70,7 @@ For the primary event-ranking analysis:
 
 Event-weighted results may be secondary.
 
-## 6. Proposed comparator
+## 7. Proposed comparator
 
 Primary delta:
 
@@ -62,7 +82,7 @@ metric(strongest preregistered attention/discoverability control)
 
 The comparator identity is frozen in MAP.
 
-## 7. Candidate-universe normalization
+## 8. Candidate-universe normalization
 
 Fixed K must be paired with at least one normalized metric:
 - Recall at x% of candidate universe; or
@@ -70,7 +90,7 @@ Fixed K must be paired with at least one normalized metric:
 
 The final primary pair is selected on development data and frozen before sealed evaluation.
 
-## 8. Horizon feasibility policy
+## 9. Horizon feasibility policy
 
 Candidate horizons are fixed at:
 
@@ -84,10 +104,18 @@ The development procedure selects the smallest remaining H meeting preregistered
 
 The model's lift/performance is not an H-selection criterion.
 
-## 9. Feasibility decisions still required
+## 10. Dependence sensitivity
+
+Primary event-bearing-disease analysis uses disease-level paired resampling.
+
+A preregistered disease-family/block resampling sensitivity is also required to test whether shared biology/cohorts/publication ecosystems make ordinary disease-level intervals overconfident.
+
+If results materially weaken under family/block resampling, that limitation is part of the primary interpretation.
+
+## 11. Feasibility decisions still required
 
 The pilot/provider audit must determine:
-- exact primary E1 subtype;
+- exact primary E1 subtype, including strict novelty vs maturation;
 - final H;
 - primary K/review budget;
 - normalized companion metric;
