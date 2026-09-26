@@ -12,7 +12,7 @@ The Combined Nuisance comparator used in BIG 0F must be the comparator that was 
 Every future nuisance-run artifact must bind:
 - the frozen nuisance-manifest digest;
 - the exact mandatory feature-family set;
-- per-family feature artifact digests;
+- per-family feature-family records binding each family to source releases, feature artifact digest, and transform digest;
 - historical source/release IDs;
 - candidate-universe digest;
 - full rank-output digest;
