@@ -80,8 +80,21 @@
             ]
           },
           "field_or_artifact": {
-            "type": "string",
-            "minLength": 1
+            "enum": [
+              "study_design_class",
+              "p_value",
+              "sample_size",
+              "independence_status",
+              "phenotype_relation",
+              "genomic_harmonization_status",
+              "allele_direction_status",
+              "population_ancestry_status",
+              "replication_status",
+              "heterogeneity_status",
+              "gene_assignment_class",
+              "historical_novelty_status",
+              "source_quality_status"
+            ]
           },
           "operator": {
             "enum": [
@@ -441,7 +454,17 @@
                   ]
                 }
               }
-            ]
+            ],
+            "items": {
+              "properties": {
+                "required": {
+                  "const": true
+                }
+              }
+            }
+          },
+          "endpoint_subtype": {
+            "const": "E1-NOVEL-STRICT"
           }
         }
       }
