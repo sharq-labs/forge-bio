@@ -38,6 +38,12 @@ threshold_manifest_schema_sha256
 adjudication_policy_schema_sha256
 nuisance_manifest_schema_sha256
 power_analysis_schema_sha256
+selection_provenance_schema_sha256
+nuisance_run_schema_sha256
+provider_audit_schema_sha256
+adjudicator_independence_schema_sha256
+provenance_verifier_sha256
+external_authority_verifier_sha256
 power_engine_sha256
 created_at
 created_by_role
@@ -48,6 +54,8 @@ Do not rely on filenames alone.
 The externally attested manifest digest is the root commitment. Verification must compare against that independently stored/registered digest; recomputing a fresh digest from the manifest under test is not sufficient.
 
 The study team does **not** choose a random seed.
+
+The evaluator independently fetches the sealed DRAND round and requires the returned round/randomness to equal the beacon artifact. Unsupported beacon providers fail closed in V0 until a code-backed verifier exists for them.
 
 The disease frame is externally sealed first. The exact verified frame-seal attestation artifact is hashed into the root bundle. A verified public randomness-beacon round published after that frame seal is then bound to both the frame digest and the exact frame-seal attestation digest. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
 
@@ -85,6 +93,8 @@ verification_status = VERIFIED only after proof verification
 
 The timestamp proof is stored separately from the source repository and must be independently verifiable.
 
+For a claim-valid BIG 0F evaluation, `scripts/verify_external_authorities.py` recreates the exact committed artifact bytes in a temporary verification workspace and executes the OpenTimestamps client against the supplied `.ots` proof. Missing client/proof, non-zero verification, or absence of a verified timestamp success result fails closed. A study-authored `verification_status = VERIFIED` field is not accepted as proof.
+
 ## 5. OSF registration seal
 
 Submit the protocol/manifest as an OSF Registration before first case adjudication.
@@ -102,6 +112,8 @@ verification_evidence_ref = <registration record reference>
 ```
 
 If embargoed, preserve evidence needed later to show the original registration date and content identity.
+
+For BIG 0F claim-valid evaluation, the verification evidence reference must resolve through an approved HTTPS OSF host and the independently fetched registry evidence must contain the exact committed artifact digest. If the record is embargoed or otherwise inaccessible to the verifier at evaluation time, the external-verification gate remains closed rather than trusting a local assertion.
 
 ## 6. Independent custodian
 
@@ -137,7 +149,10 @@ Perform a dry run with synthetic/non-study content:
 16. verify that a one-byte component modification fails;
 17. verify that evaluator/sampling/schema modification fails;
 18. verify that any manifest-field mutation fails schema and/or attested-digest verification;
-19. record both verified ExternalSealAttestation artifacts.
+19. record both verified ExternalSealAttestation artifacts;
+20. run the code-backed OpenTimestamps verifier against the exact committed bytes and proof;
+21. fetch the OSF verification record independently and match the exact artifact digest;
+22. fetch the selected DRAND round independently and match its randomness to the sealed beacon artifact.
 
 Only after this dry run succeeds may the checklist item "seal mechanism identified and tested" be closed.
 
