@@ -7,8 +7,11 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator, FormatChecker
+
 
 DOMAIN = b"forge-bio-big0f-seed-v1\0"
+SCHEMA_PATH = Path(__file__).resolve().parents[1] / "schemas" / "seal-bundle-manifest.v1.schema.json"
 
 
 def canonical_json_bytes(obj: Any) -> bytes:
@@ -91,8 +94,24 @@ def verify_manifest(
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
     seed_hex: str,
+    expected_manifest_digest: str,
 ) -> list[str]:
     errors: list[str] = []
+
+    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    schema_errors = sorted(
+        Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(manifest),
+        key=lambda err: list(err.absolute_path),
+    )
+    for err in schema_errors:
+        location = ".".join(str(p) for p in err.absolute_path) or "<root>"
+        errors.append(f"manifest schema violation at {location}: {err.message}")
+
+    actual_manifest_digest = manifest_digest(manifest)
+    if actual_manifest_digest != expected_manifest_digest:
+        errors.append(
+            f"manifest digest mismatch: expected {expected_manifest_digest!r}, got {actual_manifest_digest!r}"
+        )
 
     checks = {
         "protocol_sha256": sha256_file(protocol_path),
@@ -141,9 +160,15 @@ def main() -> int:
     ap.add_argument("--sampling-algorithm-version", default="seeded-permutation-v1")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--verify", action="store_true")
+    ap.add_argument(
+        "--expected-manifest-digest",
+        help="Externally attested sha256:<64 hex> manifest digest; required with --verify",
+    )
     args = ap.parse_args()
 
     if args.verify:
+        if not args.expected_manifest_digest:
+            ap.error("--expected-manifest-digest is required with --verify")
         manifest = json.loads(args.output.read_text(encoding="utf-8"))
         errors = verify_manifest(
             manifest,
@@ -153,6 +178,7 @@ def main() -> int:
             adjudication_policy_path=args.adjudication_policy,
             nuisance_manifest_path=args.nuisance_manifest,
             seed_hex=args.seed_hex,
+            expected_manifest_digest=args.expected_manifest_digest,
         )
         if errors:
             for e in errors:
