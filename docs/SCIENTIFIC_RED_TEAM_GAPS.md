@@ -569,3 +569,66 @@ Spec Integrity now executes JSON Schema positive/negative tests, including inval
 **Status:** OPEN-OPERATIONAL
 
 Branch protection / required independent review remains unresolved under GitHub Issue #2 and blocks FROZEN V1, though it does not block BIG 0F exploratory feasibility work.
+
+
+## BIG 0R5 model-credibility / quantitative-integrity closure ledger
+
+### R5-01 — VVUQ not tied tightly enough to Context of Use
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+CredibilityAssessmentArtifact now ties model credibility to the exact research decision, model influence, consequence-if-wrong, and CoU.
+
+### R5-02 — Quantitative values could carry ambiguous unit/scale/transform semantics
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+QuantityDefinition, QuantitativeObservation, EffectEstimate, and MeasurementProcessArtifact are first-class. Unit/dimension/scale/transform/missingness/censoring rules fail closed where comparability is required.
+
+### R5-03 — Numerical solver error could masquerade as biological/model certainty
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+NumericalVerificationArtifact separates solver/discretization/stochastic numerical error from measurement, parameter, sampling, and model-form uncertainty.
+
+### R5-04 — Parameter identifiability / model discrepancy under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T2+ credibility now requires parameter adequacy/identifiability where applicable and a ModelDiscrepancyAssessment. Calibration cannot silently compensate for structural error.
+
+### R5-05 — Predictive applicability / distribution shift under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T3+ requires applicability/shift analysis across relevant temporal, source, population, disease/target family, phenotype/measurement, platform, and base-rate axes.
+
+### R5-06 — Probability claims could rely on discrimination alone
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Probability claims require held-out calibration plus at least one proper scoring rule and an explicit endpoint/horizon.
+
+### R5-07 — Material model changes could inherit stale validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Validation attaches to an exact dependency digest. Material changes to model structure, features/preprocessing, parameters, measurement model, numerical configuration, endpoint, update policy, or applicability create a new validation target.
+
+### R5-08 — Development quality and evaluation risk of bias were not explicitly separated
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Predictive evaluation now audits data/source, predictors/features, outcome/label, and analysis/evaluation separately.
+
+### R5-09 — Measurement/batch process could be hidden behind one numeric field
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+MeasurementProcessArtifact and normalization/batch provenance are explicit; future-fitted normalization remains temporal leakage.
+
+### R5-10 — Scientific credibility could be treated as a universal model property
+
+**Status:** CLOSED-POLICY
+
+Credibility is explicitly CoU-specific. "Validated model" without the validated target/domain/use is prohibited language.
