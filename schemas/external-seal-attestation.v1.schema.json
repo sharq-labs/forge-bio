@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/external-seal-attestation.v1.schema.json",
+  "title": "Forge Bio External Seal Attestation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "attestation_id",
+    "schema_version",
+    "artifact_digest",
+    "artifact_type",
+    "sealed_at",
+    "external_registry_or_custodian_ref",
+    "attestation_method",
+    "signer_or_service_identity",
+    "verification_status",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "attestation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "external-seal-attestation-v1"
+    },
+    "artifact_digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sealed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "external_registry_or_custodian_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attestation_method": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signer_or_service_identity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verification_status": {
+      "enum": [
+        "VERIFIED",
+        "FAILED",
+        "UNKNOWN"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
