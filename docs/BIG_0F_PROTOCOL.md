@@ -363,7 +363,8 @@ GO requires all:
 - independent duplicate-adjudication minimum coverage completed;
 - nuisance headroom not saturated under both the median-rank and sealed top-1%-positive-fraction rules;
 - event-bearing disease fraction meets the sealed diversity threshold;
-- simulation-based target power >= 0.80 at the frozen alpha/effect;
+- power variance evidence is GO-eligible under the frozen Power Input Derivation Contract;
+- simulation-based target power >= 0.80 at the frozen alpha/effect under the primary conservative scenario;
 - untouched diseases remain available for sealed confirmation.
 
 ### Incomplete prerequisite rule
@@ -375,6 +376,7 @@ The deterministic evaluator returns `INCONCLUSIVE` rather than GO when a mandato
 - provider-coupling risk is UNKNOWN;
 - retrospective-curation burden is UNKNOWN;
 - symmetric non-event audit is incomplete/undersized;
+- no eligible independent same-estimand variance source exists for a GO-capable power conclusion;
 - a mandatory prerequisite remains unresolved.
 
 Threshold sensitivity is not self-declared: the evaluator reloads the sealed threshold manifest, evaluates all sealed sensitivity variants, and returns REDESIGN if the terminal decision changes.
