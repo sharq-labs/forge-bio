@@ -1175,3 +1175,111 @@ Normative documents:
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+
+
+---
+
+## 39. Quantitative scientific semantics contract
+
+A numeric value is not scientifically interpretable without explicit semantic metadata.
+
+Quantitative evidence/features/twin variables use:
+- QuantityDefinition;
+- unit/dimension;
+- measurement scale;
+- transform;
+- measurement process;
+- context;
+- uncertainty;
+- provenance.
+
+Rules:
+- p-value != effect estimate;
+- odds ratio != risk ratio != hazard ratio;
+- ratio != log-ratio;
+- normalized assay intensity != physical concentration;
+- missing/censored != zero;
+- incompatible dimensions cannot be aggregated;
+- normalization/imputation/batch correction are provenance-bearing transformations;
+- a transformation fitted on post-cutoff data is temporal leakage.
+
+Normative policy: [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md).
+
+---
+
+## 40. Model credibility contract
+
+A model is credible only relative to a defined Context of Use.
+
+```text
+validated for CoU A
+!=
+validated for CoU B
+```
+
+T2+ credibility considers:
+- research decision;
+- model influence;
+- consequence if wrong;
+- software/model verification;
+- numerical verification when applicable;
+- parameter adequacy/identifiability;
+- model discrepancy;
+- validation adequacy;
+- uncertainty adequacy;
+- applicability/domain shift;
+- prediction risk of bias.
+
+### 40.1 Numerical verification
+
+For numerical simulation, verification considers:
+- solver/engine/version;
+- numerical method/order where applicable;
+- tolerances;
+- discretization/timestep/resolution;
+- convergence/refinement;
+- stochastic replicate/Monte Carlo error;
+- invariant/residual checks;
+- reference/synthetic solution checks where possible;
+- numerical error;
+- reproducibility tolerance.
+
+Numerical agreement is not biological validation.
+
+### 40.2 Predictive risk/applicability
+
+T3+ separates model development from model evaluation and audits:
+- data/source selection;
+- predictors/features;
+- outcome/label construction;
+- analysis/evaluation.
+
+Applicability evaluates relevant shift across:
+- time;
+- provider/source;
+- population/ancestry;
+- disease/target family;
+- phenotype/measurement definition;
+- assay/platform;
+- base rate/prevalence where relevant.
+
+Outside-domain prediction is extrapolation, not validated prediction.
+
+### 40.3 Probability claims
+
+Probability outputs require:
+- explicit endpoint/horizon;
+- held-out calibration;
+- calibration assessment;
+- at least one proper scoring rule;
+- applicability boundary.
+
+Discrimination alone is insufficient.
+
+### 40.4 Validation invalidation
+
+Validation attaches to an exact dependency digest.
+
+Material change to model structure, preprocessing/features, parameters, measurement model, update policy, endpoint, applicability domain, or output-changing numerical configuration creates a new validation target.
+
+Normative policy: [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md).
