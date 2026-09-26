@@ -16,6 +16,12 @@ required = [
     ROOT / "schemas" / "map.v1.schema.json",
     ROOT / "schemas" / "mar.v1.schema.json",
     ROOT / "schemas" / "scientific-twin.v1.schema.json",
+    ROOT / "schemas" / "disease-profile.v1.schema.json",
+    ROOT / "schemas" / "pathogen-profile.v1.schema.json",
+    ROOT / "schemas" / "virus-profile-extension.v1.schema.json",
+    ROOT / "schemas" / "pathogen-host-profile.v1.schema.json",
+    ROOT / "schemas" / "therapeutic-profile.v1.schema.json",
+    ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
     if not path.exists():
