@@ -23,7 +23,9 @@
     "nuisance_headroom_metrics",
     "decision",
     "decision_reasons",
-    "digest"
+    "digest",
+    "untouched_confirmatory_disease_count",
+    "high_specificity_positive_count"
   ],
   "properties": {
     "pilot_id": {
@@ -248,22 +250,22 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "median_positive_percentile",
+        "median_positive_rank_fraction",
         "top_1pct_fraction",
         "top_5pct_fraction"
       ],
       "properties": {
-        "median_positive_percentile": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
-        },
         "top_1pct_fraction": {
           "type": "number",
           "minimum": 0,
           "maximum": 1
         },
         "top_5pct_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "median_positive_rank_fraction": {
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -289,6 +291,14 @@
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "untouched_confirmatory_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "high_specificity_positive_count": {
+      "type": "integer",
+      "minimum": 0
     }
   }
 }
