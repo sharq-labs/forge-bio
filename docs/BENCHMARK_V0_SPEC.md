@@ -410,6 +410,8 @@ cohort_ids
 consortium_ids
 biobank_or_dataset_ids
 participant_overlap_group
+shared_control_group_id
+cross_disease_study_family_id
 meta_analysis_parent_ids
 independence_family_id
 independence_confidence
@@ -423,6 +425,10 @@ Cohort, Dataset, Biobank, Consortium, and SampleSet references must resolve thro
 UNKNOWN cohort/sample overlap is not interpreted as independent replication.
 
 A post-T annotation that only re-curates pre-T evidence does not qualify as new independent support.
+
+For the primary confirmatory outcome, prefer primary publications, deposited summary statistics, or an outcome extraction path operationally independent of any Past input curation pipeline.
+
+A catalog/database that materially contributes to historical model inputs may not simultaneously serve as the sole primary future ground-truth pipeline. If unavoidable, the same-pipeline result is secondary and an independent-primary-source sensitivity is required.
 
 Normative event/source policy: [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md).
 
@@ -539,7 +545,15 @@ The primary baseline delta uses paired disease/challenge-level resampling unless
 
 Candidate rows within one disease are not treated as independent samples.
 
-Because related diseases may share genes, pathways, cohorts, consortia, or publication ecosystems, confirmatory analysis must include a preregistered dependence sensitivity such as disease-family block bootstrap or another cluster-aware interval method.
+Because related diseases may share genes, pathways, cohorts, consortia, **shared control sets**, cross-disorder studies, or publication ecosystems, confirmatory analysis must include a preregistered dependence sensitivity.
+
+Where applicable, resampling blocks must include:
+- disease family;
+- consortium/study family;
+- shared-control group;
+- cross-disease meta-analysis/study lineage.
+
+Disease IDs alone are not sufficient clustering units when one study/control set contributes outcomes to multiple diseases.
 
 If the apparent signal disappears under family/block dependence, the MAR must report that limitation.
 
