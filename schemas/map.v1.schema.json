@@ -721,10 +721,7 @@
         "subgroup_analyses",
         "sensitivity_analyses",
         "source_ablations",
-        "negative_controls",
-        "ambiguity_sensitivity_method_id",
-        "disease_weighting_sensitivity_method_id",
-        "label_feature_method_coupling_sensitivity_id"
+        "negative_controls"
       ],
       "properties": {
         "subgroup_analyses": {
@@ -1024,6 +1021,13 @@
                 "exclusiveMinimum": 0
               }
             }
+          },
+          "planned_analyses": {
+            "required": [
+              "ambiguity_sensitivity_method_id",
+              "disease_weighting_sensitivity_method_id",
+              "label_feature_method_coupling_sensitivity_id"
+            ]
           }
         }
       }
