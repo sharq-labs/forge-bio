@@ -36,9 +36,16 @@ The platform produces **research hypotheses for further scientific investigation
 
 ## Scientific operating modes
 
+Scientific claim mode and historical-data sourcing are separate axes.
+
+**ScientificOperatingMode**
 1. **STRICT_HISTORICAL** — all model-visible knowledge must be defensibly admissible by cutoff T.
 2. **HISTORICAL_INPUT_MODERN_PRIOR** — historical explicit inputs may use modern/unknown-horizon priors, but the run is labelled contaminated and cannot support a strict historical claim.
 3. **CURRENT_DISCOVERY** — current evidence/models are allowed for present-day research prioritization only.
+
+**HistoricalDataPolicy**
+- **ARCHIVED_ONLY**
+- **RECONSTRUCTED_ALLOWED** — only when reconstruction fidelity and watermarks pass the frozen policy.
 
 ## Core architecture
 
@@ -76,11 +83,18 @@ E1 is explicitly split into:
 - **E1-CROSSMODAL** — pre-T non-genetic evidence anticipating later genetics.
 
 The benchmark also governs:
+- canonical genomic variant/locus identity;
+- genome-build/liftover/allele harmonization;
+- LD/reference-panel provenance;
+- historical genetic-search coverage and observability;
 - locus→gene assignment;
 - disease/trait phenotype matching;
 - pre-T signal-state auditing;
 - replication comparability;
-- cohort/sample independence;
+- cohort/dataset/biobank/SampleSet identity and independence;
+- ScientificEventFamily deduplication and one-event-family credit;
+- Past/Future provider-lineage coupling;
+- cross-anchor event reuse;
 - discoverability bias;
 - zero-event disease review burden;
 - validation-set reuse;
@@ -91,7 +105,7 @@ A positive V0 result is evidence about **disease–gene association prioritizati
 
 ## Pre-code status
 
-Current phase: **Pre-Code Hardening / BIG 0**
+Current phase: **Pre-Code Hardening / BIG 0R3 → BIG 0F**
 
 The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
@@ -122,24 +136,32 @@ Do not start production scientific code before that gate.
 - [Context-of-Use Schema](docs/schemas/CONTEXT_OF_USE_SCHEMA.md)
 - [MAP Schema](docs/schemas/MAP_SCHEMA.md)
 - [MAR Schema](docs/schemas/MAR_SCHEMA.md)
+- [Machine-Verifiable JSON Schemas](schemas/README.md)
+- [Repository License](LICENSE)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
 - [ADR-008 — Outcome Phenotype Matching](docs/adr/ADR-008-outcome-phenotype-matching.md)
 - [ADR-009 — Genetic Replication and Pre-T Signal State](docs/adr/ADR-009-genetic-replication-and-signal-state.md)
 - [ADR-010 — Validation Generations and Outcome Snapshot Commitment](docs/adr/ADR-010-validation-generations-and-outcome-freeze.md)
+- [ADR-011 — Genomic Identity, Harmonization, and LD Provenance](docs/adr/ADR-011-genomic-identity-harmonization.md)
+- [ADR-012 — Historical Genetic Observability and Novelty Coverage](docs/adr/ADR-012-historical-genetic-observability.md)
+- [ADR-013 — Scientific Event Identity, Source Coupling, and Adaptive Reuse](docs/adr/ADR-013-event-identity-source-coupling.md)
+- [ADR-014 — Scientific Operating Mode vs Historical Data Policy](docs/adr/ADR-014-operating-mode-data-policy.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
 
 The readiness checklist and red-team gap register are authoritative.
 
-Important unresolved P0 work is now limited mainly to evidence-bearing decisions that require real feasibility data or explicit ownership choice:
-- licensing posture (ADR-005 owner decision);
+Important unresolved P0 work is now limited to evidence-bearing feasibility decisions:
 - final frozen B-TGT-E1 estimand after feasibility evidence;
 - final primary E1 subtype and endpoint evidence-quality threshold;
-- manual outcome-feasibility pilot and its ambiguity/curation/lineage measurements.
+- manual outcome-feasibility pilot and its ambiguity/coverage/curation/lineage measurements;
+- pilot GO / REDESIGN / NO-GO verdict.
 
-The V0 primary genetic regime, H candidate procedure, strict novelty/maturation semantics, phenotype-match policy, locus→gene policy, genetic-replication policy, discoverability controls, validation-generation rules, immutable outcome-snapshot commitment, analyst-hindsight governance, lockbox mechanism, schemas, core types, golden world, and dependency rules are now specified.
+ADR-005 is decided: commercial-later engineering posture; repository code/docs Apache-2.0; provider-data licenses remain source-specific.
+
+The V0 primary genetic regime, H candidate procedure, strict novelty/maturation semantics, genomic identity/harmonization/LD provenance, phenotype-match policy, locus→gene policy, genetic-replication policy, historical-search coverage, observability sensitivity, ScientificEventFamily accounting, provider-coupling controls, cross-anchor reuse, validation-generation rules, immutable outcome-snapshot commitment, analyst-hindsight governance, lockbox mechanism, executable schemas, core types, golden world, and dependency rules are now specified.
 
 Do **not** start production scientific code while any P0 blocker remains active.
 

@@ -1,25 +1,42 @@
 # ADR-005 — Licensing Posture
 
-**Status:** OPEN — must be decided before provider implementation
+**Status:** Accepted — commercial-later engineering posture
 
-## Decision required
+## Decision
 
-Choose one:
-1. academic/open research only;
-2. commercial product later;
-3. commercial from day one.
+Forge Bio is designed for **commercial later**.
 
-## Recommended default
+Repository source code and project documentation are licensed under **Apache License 2.0** unless a file explicitly states otherwise.
 
-Design for **commercial later** unless project ownership decides otherwise.
+Provider data, downloaded artifacts, model weights, ontologies, mappings, and derived datasets do **not** inherit the repository license. Their source-specific rights and restrictions remain separately governed by SourceSnapshot license manifests.
 
-That means provider selection and redistribution architecture should avoid assuming that all research-access data can later be redistributed commercially.
+## Provider rule
+
+Provider selection and redistribution architecture must not assume that research-access data can be redistributed or used commercially.
+
+Every SourceSnapshot records:
+- license name/version;
+- terms version/hash;
+- attribution requirements;
+- commercial-use status;
+- redistribution constraints;
+- derived-data constraints;
+- share-alike/copyleft obligations where applicable;
+- reviewer/status.
+
+A provider may be:
+- usable for internal research;
+- prohibited from redistribution;
+- prohibited from commercial use;
+- excluded from the commercial-later core.
+
+These states are independent of code licensing.
 
 ## Consequences
 
-- every source snapshot carries license metadata;
-- restrictive providers may be excluded from core dependencies;
-- provider qualification includes redistribution/derived-data constraints;
-- a future commercial mode must not inherit incompatible data silently.
+- the open repository may evolve toward commercial use without silently inheriting incompatible data rights;
+- restrictive providers are isolated behind adapters/manifests;
+- public releases exclude provider data unless redistribution rights are verified;
+- future legal review may tighten provider eligibility without changing the scientific architecture.
 
-This ADR is engineering governance, not legal advice.
+This ADR defines engineering posture and is not legal advice.

@@ -7,10 +7,14 @@ These are semantic contracts, not implementation-language commitments.
 ## Operating and temporal types
 
 ```text
-OperatingMode
+ScientificOperatingMode
     STRICT_HISTORICAL
     HISTORICAL_INPUT_MODERN_PRIOR
     CURRENT_DISCOVERY
+
+HistoricalDataPolicy
+    ARCHIVED_ONLY
+    RECONSTRUCTED_ALLOWED
 
 KnowledgeBearingness
     NON_KNOWLEDGE_BEARING
@@ -35,6 +39,10 @@ EntityKind
     DISEASE
     PHENOTYPE
     GENE
+    GENOME_ASSEMBLY
+    REFERENCE_SEQUENCE
+    GENOMIC_VARIANT
+    GENOMIC_LOCUS
     PROTEIN
     PROTEIN_COMPLEX
     PATHWAY
@@ -47,6 +55,12 @@ EntityKind
     STUDY
     TRIAL
     REGULATORY_ACTION
+    COHORT
+    DATASET
+    BIOBANK
+    CONSORTIUM
+    SAMPLE_SET
+    LD_REFERENCE_PANEL
 
 MappingRelation
     EXACT
@@ -162,6 +176,18 @@ ValidationGenerationStatus
     SPENT_FOR_MODEL_SELECTION
     RETIRED
 
+ValidationDisclosureLevel
+    AGGREGATE_ONLY
+    SUBGROUP
+    PER_CASE
+    FULL_LABEL
+
+HistoricalGeneticCoverageGrade
+    HIGH
+    MODERATE
+    LOW
+    UNKNOWN
+
 NoveltyAuditState
     NOVEL_CONFIRMED
     KNOWN_AT_T
@@ -201,6 +227,19 @@ KnowledgeWatermark
 EntityId
 EntityRevision
 ExternalIdentifierAssignment
+GenomeAssembly
+ReferenceSequence
+GenomicVariant
+GenomicLocus
+VariantHarmonizationArtifact
+LDReferencePanel
+LDRelation
+PhenotypeConcept
+Cohort
+Dataset
+Biobank
+Consortium
+SampleSet
 ScientificClaim
 EvidenceRecord
 IndependenceFamily
@@ -214,7 +253,14 @@ OutcomeGeneAssignment
 OutcomePhenotypeMatchAssessment
 PreTGeneticStateAssessment
 GeneticReplicationAssessment
+HistoricalGeneticSearchCoverage
+GeneticObservabilityAtT
 HistoricalNoveltyAudit
+ScientificEventFamily
+GeneticDiscoveryEventFamily
+ProviderLineage
+InputOutcomeCouplingAssessment
+CrossAnchorEventReusePolicy
 ValidationGeneration
 OutcomeSnapshotCommitment
 BenchmarkDesignProvenance
@@ -230,7 +276,12 @@ UncertaintyBundle
 - LabelState is endpoint-specific.
 - gene != protein != target.
 - locus/variant event != gene assignment.
+- rsID/coordinate string != canonical variant identity.
+- LD relation is population/reference-panel/version dependent.
+- harmonization/liftover is a provenance-bearing derivation.
 - phenotype/trait relation != disease identity.
+- database row/publication != scientific event family.
+- cohort/dataset aliases do not imply independent samples.
 - suggestive pre-T genetics != novel discovery.
 - replication != repeated database annotation.
 - identity reconciliation != causal assignment.

@@ -38,13 +38,13 @@ Assignment-dependent positives are reported separately or sensitivity-tested.
 
 ## HistoricalNoveltyAudit
 
-A candidate classified as E1-NOVEL must pass an evaluation-side audit for qualifying pre-T evidence.
+A candidate classified as E1-NOVEL-STRICT must pass an evaluation-side HistoricalNoveltyAudit and satisfy the ADR-012 historical-search-coverage threshold.
 
 The audit:
 - may use sources unavailable to the ranker;
 - must never feed those sources back into historical features;
 - records search/source coverage and reviewer decision;
-- returns NOVEL_CONFIRMED, KNOWN_AT_T, or NOVELTY_AMBIGUOUS.
+- returns NOVEL_CONFIRMED, KNOWN_AT_T, or NOVELTY_AMBIGUOUS, while separately recording KNOWN_TO_RANKER_AT_T vs KNOWN_PUBLICLY_AT_T.
 
 NOVELTY_AMBIGUOUS is excluded or handled only by preregistered policy; it is never silently counted as novel.
 
@@ -54,3 +54,6 @@ NOVELTY_AMBIGUOUS is excluded or handled only by preregistered policy; it is nev
 - identity reconciliation cannot create causal-gene evidence;
 - gene assignment provenance becomes part of outcome provenance;
 - locus-level and gene-level benchmarks may coexist but are never conflated.
+
+
+Genomic locus/variant identity and harmonization are governed by ADR-011. Historical search coverage and observability are governed by ADR-012.

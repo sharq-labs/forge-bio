@@ -68,13 +68,17 @@ It remains valid historical evidence of what happened; it is not deleted.
 
 Before implementation, the project owner may approve scientific-doc PRs.
 
-Before sealed confirmatory work, at least one reviewer independent of the change author should review changes affecting endpoint, estimand, labels, or lockbox policy.
+Before FROZEN V1 and before sealed confirmatory work, at least one reviewer independent of the change author must approve changes affecting endpoint, estimand, labels, identity semantics, temporal admission, or lockbox policy.
+
+A pull request authored and merged by the same person with no independent review does not satisfy this requirement.
 
 ## 7. Current repository action
 
 The policy decision is now fixed: **reviewed PRs + protected authoritative branch (or equivalent enforced review control) are required before FROZEN V1**.
 
-Actual GitHub protection configuration is an operational prerequisite and must be verified separately.
+Repository support files now include `.github/CODEOWNERS`.
+
+Actual GitHub branch-protection/ruleset configuration remains an operational prerequisite and must be verified separately. **FROZEN V1 is prohibited while the authoritative branch is unprotected or reviewed-merge enforcement is off.**
 
 
 ## 8. Required scientific roles
@@ -87,3 +91,16 @@ Before sealed confirmatory work, responsibilities are separated conceptually int
 One person may temporarily occupy more than one role in early development only when the conflict is documented and the claim tier is downgraded where necessary.
 
 The normative custody details are in [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md).
+
+
+## 9. Machine-verifiable schemas
+
+Normative Markdown schemas have executable JSON Schema companions under `/schemas`.
+
+Frozen QoI/MAP/MAR artifacts must:
+- validate against the pinned JSON Schema version;
+- reject unknown fields in governed structures;
+- contain no unresolved freeze placeholders;
+- record schema version and digest.
+
+Schema validation complements, but does not replace, scientific semantic review.

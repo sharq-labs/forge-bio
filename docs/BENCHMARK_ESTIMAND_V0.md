@@ -8,6 +8,8 @@ For diseases selected from an as-of-T sampling frame in the primary genetic regi
 
 This is a **conditional ranking estimand**, not a claim that every disease will produce a future qualifying event.
 
+Future positive credit is defined on the frozen ScientificEventFamily / GeneticDiscoveryEventFamily ledger. Multiple manifestations of one discovery do not create multiple primary events, and multiple gene assignments from one locus do not automatically multiply event credit.
+
 ## 2. Proposed primary population
 
 Primary V0 regime:
@@ -41,6 +43,8 @@ Because event-recall ranking metrics are undefined when no future positives exis
 
 The benchmark now also requires a secondary all-frame review-budget estimand that covers zero-event diseases without treating them as negatives.
 
+Historical identity eligibility is analyzed separately from GeneticObservabilityAtT. The MAR reports the primary broad-universe estimand and a preregistered historically-observable sensitivity without constructing either universe from future outcomes.
+
 ## 5. Secondary all-frame review-budget estimand
 
 The full frozen disease frame is used to estimate operational search-space efficiency.
@@ -57,7 +61,9 @@ ObservedEventYield@TotalReviewBudget =
 Also report:
 - event-bearing disease coverage;
 - zero-event disease review burden;
-- total candidate review budget.
+- total candidate review budget;
+- ScientificEventFamily deduplication fraction;
+- locus-to-many-gene primary-credit sensitivity.
 
 These are **observed-event utility metrics**, not biological precision/false-positive metrics. A zero-event disease does not imply its recommended candidates were biologically false.
 
@@ -112,6 +118,10 @@ A preregistered disease-family/block resampling sensitivity is also required to 
 
 If results materially weaken under family/block resampling, that limitation is part of the primary interpretation.
 
+Provider-lineage sensitivity is also required when Past inputs and Future outcome sources share material upstream/curation machinery. The primary interpretation must state whether lift survives same-pipeline exclusion or an external-source comparison when feasible.
+
+LD/reference-panel sensitivity is required when proxy-variant matching materially determines replication labels.
+
 ## 11. Feasibility decisions still required
 
 The pilot/provider audit must determine:
@@ -121,6 +131,11 @@ The pilot/provider audit must determine:
 - normalized companion metric;
 - minimum number of event-bearing diseases;
 - acceptable zero-event fraction;
-- CI-width requirement.
+- CI-width requirement;
+- minimum HistoricalGeneticSearchCoverage grade for E1-NOVEL-STRICT;
+- acceptable variant/harmonization ambiguity;
+- ScientificEventFamily credit policy thresholds if the default one-credit rule needs refinement;
+- acceptable Past/Future provider-coupling level;
+- observability sensitivity policy details.
 
 Until these are frozen, this document remains PRE-CODE CANDIDATE.

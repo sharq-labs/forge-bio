@@ -49,7 +49,25 @@ Each anchor is a complete historical challenge with its own:
 - labels;
 - provenance.
 
+Overlapping anchor windows may expose the same ScientificEventFamily more than once. That duplication is governed explicitly.
+
+```text
+CrossAnchorEventReusePolicy
+    event_family_grouping
+    maximum_total_event_credit
+    anchor_weighting
+    overlap_handling
+```
+
+Default V0/V1 training policy:
+- group labels by ScientificEventFamily;
+- bound total training weight contributed by one event family across anchors;
+- report effective sample size after grouping;
+- do not allow one discovery to receive unbounded repeated credit simply because multiple anchors overlap it.
+
 Do not create one present-day table and attach old timestamps after the fact.
+
+Normative decision: [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md).
 
 ## 4. Entity leakage
 
@@ -71,6 +89,17 @@ Where the endpoint is vulnerable to research-opportunity bias, validation also s
 Hyperparameters may be tuned only using development/validation challenges whose labels are permitted by the training policy.
 
 Validation data are versioned into generations. When validation results materially influence feature/model/endpoint/hyperparameter/threshold selection, the generation becomes SPENT_FOR_MODEL_SELECTION and may not be described later as untouched validation.
+
+Validation provenance records both access count and maximum disclosure level:
+
+```text
+AGGREGATE_ONLY
+SUBGROUP
+PER_CASE
+FULL_LABEL
+```
+
+Adaptive risk is assessed from feedback granularity as well as number of accesses.
 
 SEALED_LOCKBOX labels never participate in:
 - feature selection;
@@ -111,13 +140,20 @@ Every trained model records:
 - model_id/version;
 - code commit;
 - config hash;
+- preprocessing artifact IDs;
+- feature-selection artifact ID;
+- normalizer/scaler fit artifact IDs;
+- imputer artifact IDs;
+- vocabulary/encoding dictionary artifact IDs;
+- aggregate-statistic fit cutoffs (for example IDF/background frequencies);
 - training challenge IDs;
 - training anchor dates;
 - training dataset IDs;
 - endpoint family/subtype and horizon;
 - estimand/version;
 - PreTGeneticState, novelty, phenotype-match, gene-assignment, and replication policy versions;
-- validation-generation IDs/statuses used during selection;
+- validation-generation IDs/statuses/disclosure levels used during selection;
+- CrossAnchorEventReusePolicy version;
 - split policy;
 - seeds;
 - knowledge watermark;
@@ -130,4 +166,6 @@ A strict confirmatory model fails closed if:
 - a gene-level label depends on an ungoverned modern assignment;
 - a purported E1-NOVEL-STRICT label has a pre-T SUGGESTIVE/QUALIFYING/AMBIGUOUS state or bypasses HistoricalNoveltyAudit;
 - a training label bypasses required phenotype-match or genetic-replication adjudication;
-- future-conditioned filtering changes the training population outside the frozen estimand.
+- future-conditioned filtering changes the training population outside the frozen estimand;
+- the same ScientificEventFamily receives training weight beyond the frozen cross-anchor reuse policy;
+- any preprocessing/statistical transform is fit using records unavailable at the relevant training anchor.

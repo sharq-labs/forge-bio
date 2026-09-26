@@ -127,6 +127,7 @@ Each validation generation records:
 - case-set digest;
 - outcome-snapshot digest;
 - access count;
+- maximum disclosure level: AGGREGATE_ONLY / SUBGROUP / PER_CASE / FULL_LABEL;
 - ACTIVE / SPENT_FOR_MODEL_SELECTION / RETIRED status.
 
 If validation results materially influence feature, model, endpoint, hyperparameter, threshold, disease, or candidate selection, the generation becomes SPENT_FOR_MODEL_SELECTION.
@@ -142,17 +143,24 @@ If individual sealed errors/outcomes are inspected and methodology changes in re
 
 ## 8. Future Outcome commitment
 
+For strongest L3 work, outcome-event discovery and adjudication are completed and committed before model rank/order is revealed.
+
 Before the ranking/outcome join, custody verifies immutable commitments for:
 - future outcome source releases;
 - Future Outcome snapshot digest;
 - outcome-ledger digest;
+- ScientificEventFamily ledger digest;
 - adjudication-batch digest;
 - evaluation identity-bridge digest;
+- provider-lineage/input-outcome-coupling assessment digest;
 - phenotype-match policy;
 - gene-assignment policy;
-- replication policy.
+- replication policy;
+- genomic identity/harmonization/LD policy.
 
-A changed provider release, adjudication batch, or evaluation bridge is a new evaluation generation.
+Searching for additional sealed outcome events after seeing rank/order automatically downgrades strongest L3 status.
+
+A changed provider release, event-family ledger, adjudication batch, provider-coupling assessment, or evaluation bridge is a new evaluation generation.
 
 ## 9. Implementation verification deferred to P1
 

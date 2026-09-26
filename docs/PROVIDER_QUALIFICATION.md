@@ -47,6 +47,10 @@ population_ancestry_coverage
 representation_derivation_time_semantics
 ontology_dependency
 derived_model_dependency
+upstream_source_families
+curation_pipeline_family
+ontology_families
+identity_mapping_families
 coverage_scope
 known_gaps
 qualification_by_field
@@ -213,6 +217,30 @@ Changing provider/release/field qualification requires:
 ## 13. Future outcome provider qualification
 
 Future outcome sources are qualified independently from Past providers.
+
+Independence of qualification does not imply independence of curation lineage.
+
+Each provider/release also emits:
+
+```text
+ProviderLineage
+    provider_id
+    upstream_source_families
+    curation_pipeline_family
+    ontology_families
+    identity_mapping_families
+```
+
+For every benchmark generation, Past input providers and Future outcome providers receive an `InputOutcomeCouplingAssessment`.
+
+Material coupling requires preregistered sensitivity analysis such as:
+- exclude the same curation-pipeline family;
+- external future-source replication;
+- upstream-source-family ablation.
+
+A result that only predicts the later state of the same curation pipeline does not earn an independent biological-discovery claim.
+
+Normative decision: [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md).
 
 A source may be excellent for current discovery and still be unsuitable as benchmark ground truth because of:
 - retrospective curation;
