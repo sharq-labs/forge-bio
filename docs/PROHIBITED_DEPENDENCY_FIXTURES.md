@@ -276,3 +276,34 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** a disease/pathogen/therapeutic twin is used to generate patient-specific treatment or dosing output under V1 Context of Use.
 
 **Expected:** Context-of-Use validation rejects execution.
+
+
+## F-46 — Future mechanism hidden in historical state-model topology
+
+**Setup:** Twin(subject, 2010) uses a state-model structure manually designed from a mechanism first established after 2010 while numeric parameters use only pre-2010 data.
+
+**Expected:** state-model artifact watermark exceeds cutoff or is UNKNOWN; STRICT_HISTORICAL twin construction fails closed.
+
+## F-47 — Predictive twin without MAP/MAR validation governance
+
+**Setup:** an artifact declares T3 but has no prediction spec, MAP, MAR, ValidationGeneration, or BenchmarkDesignProvenance.
+
+**Expected:** JSON Schema rejects the artifact.
+
+## F-48 — Non-identifiable T4 intervention
+
+**Setup:** a T4 artifact includes a perturbation but IdentifiabilityStatus is NOT_IDENTIFIED or UNKNOWN.
+
+**Expected:** JSON Schema rejects T4 maturity; output may remain exploratory T2/T3 simulation only.
+
+## F-49 — Twin prediction written back as evidence
+
+**Setup:** model prediction/simulation output is inserted into EvidenceRecord and later consumed as if independent biological evidence.
+
+**Expected:** dependency/claim verification rejects the cycle.
+
+## F-50 — Historical profile without cutoff
+
+**Setup:** a STRICT_HISTORICAL disease/pathogen/therapeutic profile omits cutoff T.
+
+**Expected:** profile JSON Schema rejects the artifact.
