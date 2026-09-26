@@ -20,7 +20,8 @@
     "selection_rule",
     "previous_round_id",
     "previous_round_published_at",
-    "frame_seal_attestation_digest"
+    "frame_seal_attestation_digest",
+    "chain_hash"
   ],
   "properties": {
     "beacon_id": {
@@ -85,6 +86,9 @@
     "frame_seal_attestation_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "chain_hash": {
+      "const": "8990e7a9aaed2ffed73dbd7092123d6f289930540d7651336225dc172e51b2ce"
     }
   }
 }
