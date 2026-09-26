@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/virus-profile-extension.v1.schema.json",
+  "title": "Forge Bio Virus Scientific Profile Extension v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "extension_id",
+    "schema_version",
+    "pathogen_id",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest"
+  ],
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "virus-profile-extension-v1"
+    },
+    "pathogen_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "genome_material_class": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "strandedness": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "genome_segmentation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "envelope_state": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "viral_gene_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "viral_protein_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "entry_mechanism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "replication_compartment_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "assembly_release_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_receptor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_factor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "lineage_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "viral_variant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "immune_escape_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "antiviral_resistance_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
