@@ -10,7 +10,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.select_big0f_sample import derive_sampling_key
+from scripts.select_big0f_sample import derive_sampling_key, validate_frame_seal
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -74,6 +74,7 @@ def build_manifest(
     protocol_path: Path,
     disease_frame_path: Path,
     randomness_beacon_path: Path,
+    frame_seal_attestation_path: Path,
     threshold_manifest_path: Path,
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
@@ -90,13 +91,20 @@ def build_manifest(
 ) -> dict[str, Any]:
     frame_digest = sha256_file(disease_frame_path)
     beacon = _load_json(randomness_beacon_path)
+    frame_seal_attestation = _load_json(frame_seal_attestation_path)
     beacon_errors = _validate(beacon, BEACON_SCHEMA_PATH)
     if beacon_errors:
         raise ValueError("invalid randomness beacon artifact: " + " | ".join(beacon_errors))
     if beacon["frame_digest"] != frame_digest:
         raise ValueError("randomness beacon artifact is not bound to the sealed disease frame")
+    validate_frame_seal(
+        frame_digest=frame_digest,
+        beacon=beacon,
+        frame_seal_attestation=frame_seal_attestation,
+        frame_seal_attestation_digest=sha256_file(frame_seal_attestation_path),
+    )
     published = datetime.fromisoformat(beacon["published_at"].replace("Z", "+00:00"))
-    frame_sealed = datetime.fromisoformat(beacon["frame_sealed_at"].replace("Z", "+00:00"))
+    frame_sealed = datetime.fromisoformat(frame_seal_attestation["sealed_at"].replace("Z", "+00:00"))
     if published <= frame_sealed:
         raise ValueError("randomness beacon must be published after the frame seal")
     previous = datetime.fromisoformat(beacon["previous_round_published_at"].replace("Z", "+00:00"))
@@ -112,6 +120,7 @@ def build_manifest(
         "protocol_version": "BIG-0F-v0",
         "protocol_sha256": sha256_file(protocol_path),
         "disease_frame_sha256": frame_digest,
+        "frame_seal_attestation_sha256": sha256_file(frame_seal_attestation_path),
         "randomness_beacon_id": beacon["beacon_id"],
         "randomness_beacon_sha256": sha256_file(randomness_beacon_path),
         "derived_sampling_key_commitment_sha256": sha256_bytes(key),
@@ -152,6 +161,7 @@ def verify_manifest(
     checks = {
         "protocol_sha256": sha256_file(component_paths["protocol"]),
         "disease_frame_sha256": sha256_file(component_paths["disease_frame"]),
+        "frame_seal_attestation_sha256": sha256_file(component_paths["frame_seal_attestation"]),
         "randomness_beacon_sha256": sha256_file(component_paths["randomness_beacon"]),
         "threshold_manifest_sha256": sha256_file(component_paths["threshold_manifest"]),
         "adjudication_policy_sha256": sha256_file(component_paths["adjudication_policy"]),
@@ -170,10 +180,17 @@ def verify_manifest(
             errors.append(f"{key} mismatch: manifest={manifest.get(key)!r}, actual={actual!r}")
 
     beacon = _load_json(component_paths["randomness_beacon"])
+    frame_seal_attestation = _load_json(component_paths["frame_seal_attestation"])
     frame_digest = checks["disease_frame_sha256"]
     if beacon.get("frame_digest") != frame_digest:
         errors.append("randomness beacon is not bound to the current disease frame")
     try:
+        validate_frame_seal(
+            frame_digest=frame_digest,
+            beacon=beacon,
+            frame_seal_attestation=frame_seal_attestation,
+            frame_seal_attestation_digest=checks["frame_seal_attestation_sha256"],
+        )
         key = derive_sampling_key(frame_digest, beacon["randomness_hex"])
         if manifest.get("derived_sampling_key_commitment_sha256") != sha256_bytes(key):
             errors.append("derived sampling-key commitment mismatch")
@@ -195,6 +212,7 @@ def main() -> int:
     ap.add_argument("--protocol", type=_path, required=True)
     ap.add_argument("--disease-frame", type=_path, required=True)
     ap.add_argument("--randomness-beacon", type=_path, required=True)
+    ap.add_argument("--frame-seal-attestation", type=_path, required=True)
     ap.add_argument("--threshold-manifest", type=_path, required=True)
     ap.add_argument("--adjudication-policy", type=_path, required=True)
     ap.add_argument("--nuisance-manifest", type=_path, required=True)
@@ -217,6 +235,7 @@ def main() -> int:
         "protocol": args.protocol,
         "disease_frame": args.disease_frame,
         "randomness_beacon": args.randomness_beacon,
+        "frame_seal_attestation": args.frame_seal_attestation,
         "threshold_manifest": args.threshold_manifest,
         "adjudication_policy": args.adjudication_policy,
         "nuisance_manifest": args.nuisance_manifest,
@@ -247,6 +266,7 @@ def main() -> int:
         protocol_path=args.protocol,
         disease_frame_path=args.disease_frame,
         randomness_beacon_path=args.randomness_beacon,
+        frame_seal_attestation_path=args.frame_seal_attestation,
         threshold_manifest_path=args.threshold_manifest,
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,

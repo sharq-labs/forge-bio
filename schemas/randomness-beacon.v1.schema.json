@@ -19,7 +19,8 @@
     "digest",
     "selection_rule",
     "previous_round_id",
-    "previous_round_published_at"
+    "previous_round_published_at",
+    "frame_seal_attestation_digest"
   ],
   "properties": {
     "beacon_id": {
@@ -80,6 +81,10 @@
     "previous_round_published_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "frame_seal_attestation_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }

@@ -36,6 +36,7 @@
     },
     "artifact_type": {
       "enum": [
+        "BIG0F_DISEASE_FRAME",
         "BIG0F_SEAL_BUNDLE",
         "MAP",
         "RANKING_ARTIFACT",
@@ -172,6 +173,34 @@
         "properties": {
           "independence_from_study_team": {
             "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "enum": [
+              "BIG0F_DISEASE_FRAME",
+              "BIG0F_SEAL_BUNDLE"
+            ]
+          }
+        },
+        "required": [
+          "artifact_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "authority_type": {
+            "enum": [
+              "THIRD_PARTY_TIMESTAMP_SERVICE",
+              "PUBLIC_REGISTRY"
+            ]
+          },
+          "verification_status": {
+            "const": "VERIFIED"
           }
         }
       }

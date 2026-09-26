@@ -27,15 +27,15 @@ The prior "no known major gap" statement is therefore **withdrawn**.
 
 Forge Bio will not self-award a higher scientific-plan score after self-authored fixes.
 
-The latest independent hostile assessment before BIG 0F-0 is treated as the reference external assessment:
+The latest independent hostile assessment is **Round 2** and is treated as the reference external assessment:
 
 ```text
-Scientific plan strength: approximately 5/10
+Scientific plan strength: 5.5/10
 Current empirical evidence strength: 0/10
-Readiness for scientific implementation: approximately 2/10
+Readiness to start BIG 0F: 4/10
 ```
 
-Those values are not permanent project labels. They describe the state reviewed before BIG 0F-0 closure.
+Those values describe the exact pre-closure state reviewed in Round 2. The project does not self-award a higher score after implementing the Round 2 patch.
 
 The project is re-scored only after:
 1. BIG 0F-0 is complete;
@@ -178,3 +178,22 @@ The following remain genuinely external/empirical:
 - final endpoint-quality values;
 - exact confirmatory estimand instance;
 - BIG 0F empirical measurements and decision.
+
+
+## 11. Round 2 bounded closure
+
+Round 2 did **not** justify another architecture phase. It identified a bounded enforcement/specification patch before empirical work.
+
+The closure patch therefore focuses only on:
+- mandatory disease-specific content-free attention volume/momentum;
+- fail-closed BIG 0F decision evaluation;
+- sealing decision-critical code/schema/manifests;
+- post-frame-seal public randomness;
+- frozen hypothesis-free primary ascertainment;
+- nuisance-only pilot diagnostics;
+- one canonical research-program alpha budget;
+- executable endpoint-quality rules.
+
+Advanced Digital Twin / Pathogen / Therapeutic work remains frozen/deferred.
+
+The next independent score must come from a fresh hostile re-review of the merged state, not from this document.

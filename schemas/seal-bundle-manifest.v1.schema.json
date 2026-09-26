@@ -11,6 +11,7 @@
     "protocol_version",
     "protocol_sha256",
     "disease_frame_sha256",
+    "frame_seal_attestation_sha256",
     "randomness_beacon_id",
     "randomness_beacon_sha256",
     "derived_sampling_key_commitment_sha256",
@@ -126,6 +127,10 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "power_engine_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_seal_attestation_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }

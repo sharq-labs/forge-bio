@@ -55,7 +55,8 @@
         "minimum_scientifically_meaningful_effect",
         "min_hypothesis_free_primary_positive_fraction",
         "max_label_feature_method_coupling_fraction",
-        "min_high_specificity_positive_count"
+        "min_high_specificity_positive_count",
+        "min_event_bearing_disease_fraction"
       ],
       "properties": {
         "alpha": {
@@ -180,6 +181,11 @@
         "min_high_specificity_positive_count": {
           "type": "integer",
           "minimum": 1
+        },
+        "min_event_bearing_disease_fraction": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
         }
       }
     },

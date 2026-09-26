@@ -21,6 +21,7 @@ seal_bundle_version
 protocol_version
 protocol_sha256
 disease_frame_sha256
+frame_seal_attestation_sha256
 randomness_beacon_id
 randomness_beacon_sha256
 derived_sampling_key_commitment_sha256
@@ -37,6 +38,7 @@ threshold_manifest_schema_sha256
 adjudication_policy_schema_sha256
 nuisance_manifest_schema_sha256
 power_analysis_schema_sha256
+power_engine_sha256
 created_at
 created_by_role
 ```
@@ -47,7 +49,7 @@ The externally attested manifest digest is the root commitment. Verification mus
 
 The study team does **not** choose a random seed.
 
-The disease frame is externally sealed first. A verified public randomness-beacon round published after that frame seal is then bound to the frame. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
+The disease frame is externally sealed first. The exact verified frame-seal attestation artifact is hashed into the root bundle. A verified public randomness-beacon round published after that frame seal is then bound to both the frame digest and the exact frame-seal attestation digest. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
 
 ## 3. Canonicalization
 

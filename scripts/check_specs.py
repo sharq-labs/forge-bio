@@ -52,6 +52,21 @@ required = [
     ROOT / "docs" / "adr" / "ADR-020-e1-primary-comparator-confirmatory-rule.md",
     ROOT / "docs" / "adr" / "ADR-021-big-0f-pilot-protocol.md",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
+    ROOT / "schemas" / "big0f-threshold-manifest.v1.schema.json",
+    ROOT / "schemas" / "big0f-adjudication-policy.v1.schema.json",
+    ROOT / "schemas" / "big0f-nuisance-manifest.v1.schema.json",
+    ROOT / "schemas" / "big0f-power-analysis.v1.schema.json",
+    ROOT / "schemas" / "randomness-beacon.v1.schema.json",
+    ROOT / "config" / "big0f-thresholds.v1.json",
+    ROOT / "config" / "big0f-adjudication-policy.v1.json",
+    ROOT / "config" / "big0f-nuisance-manifest.v1.json",
+    ROOT / "scripts" / "select_big0f_sample.py",
+    ROOT / "scripts" / "evaluate_endpoint_quality.py",
+    ROOT / "scripts" / "validate_research_program.py",
+    ROOT / "scripts" / "simulate_big0f_power.py",
+    ROOT / "tests" / "spec" / "test_endpoint_quality_executor.py",
+    ROOT / "tests" / "spec" / "test_research_program_validator.py",
+    ROOT / "tests" / "spec" / "test_round2_hostile_regressions.py",
 ]
 for path in required:
     if not path.exists():
@@ -180,6 +195,54 @@ for phrase in [
 ]:
     if phrase not in checklist:
         errors.append(f"readiness checklist missing operational-prep closure: {phrase}")
+
+
+
+# Round 2 hostile-review closure checks
+round2_required_phrases = {
+    ROOT / "docs" / "BIG_0F_PROTOCOL.md": [
+        "NUISANCE_ONLY",
+        "E1-NOVEL-STRICT",
+        "EVENT_RANK_PERCENTILE_V1",
+        "public randomness-beacon",
+    ],
+    ROOT / "docs" / "adr" / "ADR-020-e1-primary-comparator-confirmatory-rule.md": [
+        "HYPOTHESIS_FREE_CODING_OR_LOF",
+        "disease-specific attention",
+        "EVENT_RANK_PERCENTILE_V1",
+    ],
+    ROOT / "docs" / "EXTERNAL_SEAL_RUNBOOK.md": [
+        "frame_seal_attestation_sha256",
+        "decision_engine_sha256",
+        "sampling_code_sha256",
+        "power_engine_sha256",
+    ],
+}
+for path, phrases in round2_required_phrases.items():
+    text = path.read_text(encoding="utf-8")
+    for phrase in phrases:
+        if phrase not in text:
+            errors.append(f"{path.relative_to(ROOT)} missing Round 2 contract phrase: {phrase}")
+
+nuisance = json.loads((ROOT / "config" / "big0f-nuisance-manifest.v1.json").read_text(encoding="utf-8"))
+for family in [
+    "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+    "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+]:
+    if family not in nuisance.get("mandatory_feature_families", []):
+        errors.append(f"BIG 0F nuisance manifest missing mandatory family: {family}")
+if nuisance.get("pilot_model_evaluation_mode") != "NUISANCE_ONLY":
+    errors.append("BIG 0F pilot must remain NUISANCE_ONLY")
+
+adjudication = json.loads((ROOT / "config" / "big0f-adjudication-policy.v1.json").read_text(encoding="utf-8"))
+if adjudication.get("other_high_specificity_method_allowed") is not False:
+    errors.append("BIG 0F V0 may not reopen OTHER_HIGH_SPECIFICITY_METHOD")
+if adjudication.get("primary_metric_id") != "EVENT_RANK_PERCENTILE_V1":
+    errors.append("BIG 0F V0 primary metric drifted from EVENT_RANK_PERCENTILE_V1")
+
+thresholds = json.loads((ROOT / "config" / "big0f-thresholds.v1.json").read_text(encoding="utf-8"))
+if thresholds.get("thresholds", {}).get("alpha") != 0.05:
+    errors.append("BIG 0F alpha must remain frozen at 0.05")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")

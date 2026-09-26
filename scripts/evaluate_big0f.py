@@ -367,6 +367,7 @@ def _verified_context_from_files(
     protocol_path: Path,
     disease_frame_path: Path,
     randomness_beacon_path: Path,
+    frame_seal_attestation_path: Path,
     threshold_manifest_path: Path,
     seal_bundle_manifest_path: Path,
     seal_attestation_paths: list[Path],
@@ -397,6 +398,7 @@ def _verified_context_from_files(
         "protocol": protocol_path,
         "disease_frame": disease_frame_path,
         "randomness_beacon": randomness_beacon_path,
+        "frame_seal_attestation": frame_seal_attestation_path,
         "threshold_manifest": threshold_manifest_path,
         "adjudication_policy": adjudication_policy_path,
         "nuisance_manifest": nuisance_manifest_path,
@@ -502,6 +504,7 @@ def main() -> int:
     ap.add_argument("--protocol", type=Path, required=True)
     ap.add_argument("--disease-frame", type=Path, required=True)
     ap.add_argument("--randomness-beacon", type=Path, required=True)
+    ap.add_argument("--frame-seal-attestation", type=Path, required=True)
     ap.add_argument("--threshold-manifest", type=Path, default=DEFAULT_THRESHOLD_PATH)
     ap.add_argument("--seal-bundle-manifest", type=Path, required=True)
     ap.add_argument("--seal-attestation", type=Path, action="append", required=True)
@@ -520,6 +523,7 @@ def main() -> int:
         protocol_path=args.protocol,
         disease_frame_path=args.disease_frame,
         randomness_beacon_path=args.randomness_beacon,
+        frame_seal_attestation_path=args.frame_seal_attestation,
         threshold_manifest_path=args.threshold_manifest,
         seal_bundle_manifest_path=args.seal_bundle_manifest,
         seal_attestation_paths=args.seal_attestation,

@@ -752,3 +752,51 @@ No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
 | HR-22 | GO/REDESIGN thresholds had ambiguous denominators/statistic semantics | CLOSED-POLICY — field-availability formula, critical fields, agreement statistic, and sensitivity reporting defined |
 | HR-23 | Nuisance+biology arm could win through larger learner/tuning capacity | CLOSED-POLICY — primary comparison is nested and capacity/tuning-budget matched |
 | HR-24 | "External seal" lacked an operational implementation candidate | PARTIAL-OPERATIONAL — dual OpenTimestamps + OSF Registration runbook identified; dry run and independent custodian remain open |
+
+
+## Independent hostile review — Round 2 action ledger
+
+Round 2 materially confirmed the conceptual improvements from Round 1, but found that several machine-enforcement and program-governance surfaces could still be bypassed.
+
+The latest independent Round 2 assessment before this closure patch was:
+
+```text
+Scientific-plan strength: 5.5/10
+Current evidence strength: 0/10
+Readiness to start BIG 0F: 4/10
+```
+
+The project does not self-rescore after applying these fixes.
+
+| ID | Round 2 finding | Current closure status |
+|---|---|---|
+| R2-01 | Disease-specific attention volume/momentum not mandatory in the primary nuisance block | CLOSED-SCHEMA/CONFIG/TEST — both are mandatory content-free nuisance families |
+| R2-02 | BIG 0F evaluator admitted false GO paths | CLOSED-ENGINE/TEST — strict finite JSON, schema validation, cross-field bounds, deterministic thresholds, bounded INCONCLUSIVE |
+| R2-03 | Decision code/result schema/sampling/power code outside seal root | CLOSED-SEAL/TEST — bundle v2 commits all decision-critical code/schemas/manifests |
+| R2-04 | Random seed could be ground before commitment | CLOSED-DESIGN/TEST — externally sealed frame then first verified post-seal public randomness beacon; exact frame-seal artifact committed |
+| R2-05 | Pilot augmented biological arm could tune later contrast | CLOSED-POLICY/CONFIG — pilot mode is NUISANCE_ONLY; V0 subtype/metric are frozen |
+| R2-06 | Alpha budget could reset by renaming benchmark family | CLOSED-SCHEMA/VALIDATOR/TEST — canonical research_program_id/budget plus cross-artifact generation allocation validation |
+| R2-07 | Primary-positive ascertainment could include targeted candidate-gene studies | CLOSED-POLICY/CONFIG/EXECUTOR — V0 primary study designs are genome/exome/biobank-wide only |
+| R2-08 | Comparator capacity parity lived mainly in prose | CLOSED-MAP/SEMANTIC — learner/search/tuning/preprocessing/early-stop/seed parity are first-class MAP fields |
+| R2-09 | Endpoint-quality FROZEN rule could be non-executable | CLOSED-EXECUTOR/TEST — frozen field registry/operators/mandatory dimensions and event evaluation |
+| R2-10 | Ambiguity used component max rather than unique-case union | CLOSED-RESULT/ENGINE/TEST — any_primary_endpoint_ambiguity_fraction is required and consistency-checked |
+| R2-11 | Threshold sensitivity was self-reported | CLOSED-ENGINE — sealed sensitivity variants are re-evaluated; unstable conclusion becomes REDESIGN |
+| R2-12 | INCONCLUSIVE could be carried indefinitely | CLOSED-ENGINE — bounded attempts; repeated INCONCLUSIVE becomes REDESIGN |
+| R2-13 | Power could be self-reported | CLOSED-ARTIFACT/ENGINE — power artifact is schema-bound, code-sealed and deterministically recomputed |
+| R2-14 | Exposure ledger allowed adaptive disclosure routes | CLOSED-SCHEMA/SEMANTIC/TEST — active confirmatory generation forbids label/per-case/full disclosures and enforces aggregate/subgroup budgets |
+| R2-15 | External seal could be internally asserted | CLOSED-SCHEMA/SEMANTIC for BIG 0F — frame/bundle require external timestamp/public-registry authority; real service dry run remains OPERATIONAL-OPEN |
+| R2-16 | Empirical adjudicator/custodian independence not yet instantiated | OPERATIONAL-OPEN — real independent second adjudicator and custodian remain start gates |
+| R2-17 | BIG 0F evidence/provider feasibility is untested | EMPIRICAL-OPEN — this is the purpose of BIG 0F, not a documentation closure |
+| R2-18 | Twin/quantitative side surfaces have residual P2 issues | DEFERRED/NON-BLOCKING — no T2+ twin claim is on the BIG 0F critical path |
+
+### Round 2 closure boundary
+
+BIG 0F may not begin scientific adjudication merely because R2-01..R2-15 are implemented.
+
+The remaining start gates are operational:
+- assign an independent second adjudicator;
+- assign an independent custodian;
+- complete an external frame/bundle seal dry run with real third-party/public-registry evidence;
+- seal the real protocol/frame/policies before the first case is seen.
+
+Empirical BIG 0F findings remain open by design.

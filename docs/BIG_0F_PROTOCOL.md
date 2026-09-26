@@ -244,6 +244,12 @@ A development-only power-maturation baseline is constructed from historically av
 
 On pilot-only DEVELOPMENT data, build **only the Combined Nuisance Model** using the frozen nuisance manifest.
 
+Canonical pilot model-evaluation mode:
+
+```text
+NUISANCE_ONLY
+```
+
 BIG 0F **must not run the nuisance + disease-specific biological-evidence arm** and must not inspect Forge Bio biological-model lift. This prevents the pilot from tuning subtype, nuisance definition, metric, or minimum effect toward a favorable biological result.
 
 The nuisance manifest requires content-free disease-specific attention volume and attention momentum in addition to genomic architecture, pleiotropy, observability, sample-size trajectory, and provider coverage.
