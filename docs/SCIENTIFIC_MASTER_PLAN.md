@@ -4,6 +4,8 @@
 **Project:** Forge Bio  
 **Execution principle:** prove temporal scientific value before expensive model complexity
 
+**Pre-code repository rule:** this phase contains specification artifacts only. Runtime implementation code and executable test harnesses are deferred until the pre-code gate is passed.
+
 ---
 
 ## 1. Mission
@@ -1299,7 +1301,7 @@ This is the ultimate long-term evidence.
 
 ```text
 Current milestone: BIG 0F-0 critical-path hardening → BIG 0F
-Implementation status: not started
+Implementation status: intentionally not started; runtime implementation code deferred
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
 Historical benchmark result: none yet
@@ -1308,12 +1310,16 @@ Repurposing result: none yet
 Prospective result: none yet
 ```
 
-The next implementation work must start from BIG 0 and should not skip directly to models.
+The next implementation work must start only after the BIG 0F false-GO closure contracts are frozen and the pre-code gate is explicitly passed; it should not skip directly to models.
 
 
 ---
 
 # 8. Pre-code hardening references
+
+The current hostile-review closure contract is:
+
+- [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
 
 Implementation order is governed by:
 
