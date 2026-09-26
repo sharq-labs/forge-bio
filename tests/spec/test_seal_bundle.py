@@ -130,39 +130,73 @@ class SealBundleV2Tests(unittest.TestCase):
             "digest": "sha256:" + "9" * 64,
         }
 
+    def dual_attestations(self, manifest):
+        return [
+            self.attestation(manifest, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+            self.attestation(manifest, "PUBLIC_REGISTRY"),
+        ]
+
     def test_clean_bundle_verifies(self):
         m = self.build()
-        self.assertEqual([], verify_manifest(m, attestation=self.attestation(m), component_paths=self.components()))
+        self.assertEqual([], verify_manifest(
+            m,
+            attestations=self.dual_attestations(m),
+            component_paths=self.components(),
+        ))
+
+    def test_single_attestation_is_rejected(self):
+        m = self.build()
+        errors = verify_manifest(
+            m,
+            attestations=[self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE")],
+            component_paths=self.components(),
+        )
+        self.assertTrue(any("dual external attestations" in e or "PUBLIC_REGISTRY" in e for e in errors))
+
+    def test_duplicate_authority_does_not_satisfy_dual_seal(self):
+        m = self.build()
+        errors = verify_manifest(
+            m,
+            attestations=[
+                self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+                self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+            ],
+            component_paths=self.components(),
+        )
+        self.assertTrue(any("PUBLIC_REGISTRY" in e for e in errors))
 
     def test_component_tamper_is_detected(self):
         m = self.build()
         self.frame.write_text(json.dumps(["D-EVIL"]) + "\n", encoding="utf-8")
-        errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
+        errors = verify_manifest(m, attestations=self.dual_attestations(m), component_paths=self.components())
         self.assertTrue(any("disease_frame_sha256 mismatch" in e for e in errors))
 
     def test_decision_engine_tamper_is_detected(self):
         m = self.build()
         self.engine.write_text(self.engine.read_text(encoding="utf-8") + "\n# mutation\n", encoding="utf-8")
-        errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
+        errors = verify_manifest(m, attestations=self.dual_attestations(m), component_paths=self.components())
         self.assertTrue(any("decision_engine_sha256 mismatch" in e for e in errors))
 
     def test_sampling_code_tamper_is_detected(self):
         m = self.build()
         self.sampling.write_text(self.sampling.read_text(encoding="utf-8") + "\n# mutation\n", encoding="utf-8")
-        errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
+        errors = verify_manifest(m, attestations=self.dual_attestations(m), component_paths=self.components())
         self.assertTrue(any("sampling_code_sha256 mismatch" in e for e in errors))
 
     def test_power_engine_tamper_is_detected(self):
         m = self.build()
         self.power_engine.write_text(self.power_engine.read_text(encoding="utf-8") + "\n# mutation\n", encoding="utf-8")
-        errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
+        errors = verify_manifest(m, attestations=self.dual_attestations(m), component_paths=self.components())
         self.assertTrue(any("power_engine_sha256 mismatch" in e for e in errors))
 
     def test_manifest_mutation_cannot_be_resealed_by_caller_argument(self):
         m = self.build()
         att = self.attestation(m)
         m["protocol_version"] = "EVIL"
-        errors = verify_manifest(m, attestation=att, component_paths=self.components())
+        errors = verify_manifest(m, attestations=[
+            att,
+            self.attestation(m, "PUBLIC_REGISTRY"),
+        ], component_paths=self.components())
         self.assertTrue(errors)
         self.assertTrue(any("externally attested digest" in e or "schema violation" in e for e in errors))
 
