@@ -19,6 +19,7 @@ The same biological allele may appear under:
 The identity layer adds first-class scientific entities:
 
 ```text
+GeneModelRelease
 GenomeAssembly
 ReferenceSequence
 GenomicVariant
@@ -31,6 +32,24 @@ Consortium
 SampleSet
 LDReferencePanel
 ```
+
+### GeneModelRelease
+
+Historical gene geometry is release-dependent.
+
+```text
+GeneModelRelease
+    gene_model_release_id
+    provider
+    release_id
+    genome_assembly_id
+    release_time
+    availability_attestation
+    knowledge_watermark
+    digest
+```
+
+Gene length, gene span, nearest-gene distance, regional gene density, and variant-opportunity features must resolve through a GeneModelRelease admissible at T.
 
 ### GenomicVariant
 
@@ -112,6 +131,7 @@ MODERN_EVALUATION_LD is evaluation-only, versioned, and sensitivity-tested when 
 
 ## Consequences
 
+- gene geometry/length features cannot silently use a current annotation release;
 - variant/locus identity becomes deterministic and reviewable;
 - genome-build/allele normalization is not a hidden utility step;
 - LD proxy matching carries ancestry/reference-panel provenance;
