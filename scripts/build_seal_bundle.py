@@ -200,6 +200,48 @@ def verify_manifest(
     return errors
 
 
+def verify_dual_attestations(
+    manifest: dict[str, Any],
+    *,
+    attestations: list[dict[str, Any]],
+    component_paths: dict[str, Path],
+) -> list[str]:
+    errors: list[str] = []
+    if len(attestations) < 2:
+        errors.append("BIG 0F requires both timestamp-service and public-registry attestations")
+        return errors
+
+    authorities: set[str] = set()
+    actual_digest = manifest_digest(manifest)
+    seen_ids: set[str] = set()
+
+    for index, attestation in enumerate(attestations):
+        errors.extend(
+            f"attestation[{index}] {e}"
+            for e in verify_manifest(
+                manifest,
+                attestation=attestation,
+                component_paths=component_paths,
+            )
+        )
+        authority = attestation.get("authority_type")
+        if isinstance(authority, str):
+            authorities.add(authority)
+        attestation_id = attestation.get("attestation_id")
+        if isinstance(attestation_id, str):
+            if attestation_id in seen_ids:
+                errors.append(f"duplicate attestation_id: {attestation_id}")
+            seen_ids.add(attestation_id)
+        if attestation.get("artifact_digest") != actual_digest:
+            errors.append(f"attestation[{index}] does not target the sealed bundle digest")
+
+    required = {"THIRD_PARTY_TIMESTAMP_SERVICE", "PUBLIC_REGISTRY"}
+    missing = sorted(required - authorities)
+    if missing:
+        errors.append("dual seal missing authority types: " + ",".join(missing))
+    return errors
+
+
 def _path(value: str) -> Path:
     p = Path(value)
     if not p.exists():
@@ -228,7 +270,12 @@ def main() -> int:
     ap.add_argument("--created-by-role", choices=["INDEPENDENT_CUSTODIAN", "PREREGISTRATION_OPERATOR"], required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--verify", action="store_true")
-    ap.add_argument("--attestation-record", type=_path)
+    ap.add_argument(
+        "--attestation-record",
+        type=_path,
+        action="append",
+        help="Repeat twice: third-party timestamp and public-registry attestations",
+    )
     args = ap.parse_args()
 
     component_paths = {
@@ -250,11 +297,15 @@ def main() -> int:
     }
 
     if args.verify:
-        if args.attestation_record is None:
-            ap.error("--attestation-record is required with --verify")
+        if not args.attestation_record or len(args.attestation_record) < 2:
+            ap.error("--verify requires two --attestation-record values")
         manifest = _load_json(args.output)
-        attestation = _load_json(args.attestation_record)
-        errors = verify_manifest(manifest, attestation=attestation, component_paths=component_paths)
+        attestations = [_load_json(path) for path in args.attestation_record]
+        errors = verify_dual_attestations(
+            manifest,
+            attestations=attestations,
+            component_paths=component_paths,
+        )
         if errors:
             for err in errors:
                 print(err)
