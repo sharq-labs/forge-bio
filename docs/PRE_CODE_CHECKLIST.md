@@ -168,6 +168,63 @@
 - [ ] Protected-authoritative-branch / reviewed-merge controls are operationally verified.
 - [ ] Lockbox storage isolation and credential separation are operationally verified.
 
+## Platform extension — Scientific Digital Twin readiness
+
+These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot explicitly uses twin outputs.
+
+### BIG 0R4 contracts
+
+- [x] DiseaseScientificProfile contract exists.
+- [x] Pathogen/Virus/PathogenHost scientific profile contracts exist.
+- [x] TherapeuticScientificProfile contract exists.
+- [x] Disease and pathogen are represented as distinct scientific identities.
+- [x] Twin maturity hierarchy T0–T4 is accepted.
+- [x] Static profile/graph is prohibited from claiming predictive twin maturity.
+- [x] Patient-specific digital twins are excluded from V1 Context of Use.
+- [x] Scientific Twin JSON Schema exists.
+- [x] Disease/Pathogen/Virus/PathogenHost/Therapeutic executable profile schemas exist.
+- [x] Twin schema enforces inherited T1/T2/T3/T4 maturity prerequisites.
+- [x] Historical twin/profile schemas require explicit cutoff T.
+- [x] Twin state-model structure/update policy are knowledge-bearing provenance/watermark dependencies.
+- [x] Profile/twin dependency wall is defined.
+- [x] Scientific Contract includes twin maturity, temporal, validation, causal, and clinical claim boundaries.
+- [x] T3 reuses MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance governance.
+- [x] T4 requires causal assumptions/intervention semantics/identifiability/sensitivity artifacts.
+- [x] Executable positive/negative schema contract tests exist.
+
+### Before any T2 mechanistic-twin claim
+
+- [ ] State variables and transitions are explicitly defined.
+- [ ] Parameter units/meaning/provenance are complete.
+- [ ] Model assumptions and applicability domain are documented.
+- [ ] Mechanistic verification tests pass.
+- [ ] Historical twin state-model structure, update policy, parameters, preprocessing, and representations obey cutoff/watermark rules when used as-of-T.
+
+### Before any T3 predictive-twin claim
+
+- [ ] Prediction target/horizon frozen.
+- [ ] MAP is frozen for the twin prediction target/horizon.
+- [ ] Held-out or future validation completed.
+- [ ] MAR records the actual twin validation execution.
+- [ ] ValidationGeneration and BenchmarkDesignProvenance are recorded.
+- [ ] Predictive metrics and calibration reported where applicable.
+- [ ] Uncertainty quantification evaluated.
+- [ ] Applicability/OOD behavior evaluated.
+- [ ] Failure analysis reported.
+- [ ] No validation data entered model construction through parameters, feature selection, or tuning.
+
+### Before any T4 intervention-simulation claim
+
+- [ ] T3 predictive validity is established for the relevant state/target.
+- [ ] CausalAssumptionSet is explicit and versioned.
+- [ ] InterventionSemantics are explicit and versioned.
+- [ ] IdentifiabilityStatus is IDENTIFIED, PARTIALLY_IDENTIFIED, or ASSUMPTION_DEPENDENT.
+- [ ] Perturbation semantics are explicit and versioned.
+- [ ] Sensitivity analysis completed.
+- [ ] Model-form/parameter uncertainty propagated.
+- [ ] Simulation output is labelled a research hypothesis, not clinical evidence.
+- [ ] No patient-specific treatment or dosing recommendation is produced.
+
 ## Sample-size / feasibility rule
 
 Before freezing the sealed benchmark, use only development-visible information to estimate:
@@ -240,12 +297,16 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [schemas/MAR_SCHEMA.md](schemas/MAR_SCHEMA.md)
 - [CORE_TYPES.md](CORE_TYPES.md)
 - [GOLDEN_SYNTHETIC_WORLD.md](GOLDEN_SYNTHETIC_WORLD.md)
+- [GOLDEN_TWIN_WORLD.md](GOLDEN_TWIN_WORLD.md)
 - [DEPENDENCY_RULES.md](DEPENDENCY_RULES.md)
 - [PROHIBITED_DEPENDENCY_FIXTURES.md](PROHIBITED_DEPENDENCY_FIXTURES.md)
 - [BENCHMARK_ESTIMAND_V0.md](BENCHMARK_ESTIMAND_V0.md)
 - [SCIENTIFIC_SPEC_GOVERNANCE.md](SCIENTIFIC_SPEC_GOVERNANCE.md)
 - [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md)
 - [../schemas/README.md](../schemas/README.md)
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
 - [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)

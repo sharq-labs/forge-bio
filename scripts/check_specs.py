@@ -15,6 +15,13 @@ required = [
     ROOT / "schemas" / "qoi.v1.schema.json",
     ROOT / "schemas" / "map.v1.schema.json",
     ROOT / "schemas" / "mar.v1.schema.json",
+    ROOT / "schemas" / "scientific-twin.v1.schema.json",
+    ROOT / "schemas" / "disease-profile.v1.schema.json",
+    ROOT / "schemas" / "pathogen-profile.v1.schema.json",
+    ROOT / "schemas" / "virus-profile-extension.v1.schema.json",
+    ROOT / "schemas" / "pathogen-host-profile.v1.schema.json",
+    ROOT / "schemas" / "therapeutic-profile.v1.schema.json",
+    ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
     if not path.exists():
@@ -68,6 +75,19 @@ for path in sorted((ROOT / "docs").rglob("*.md")):
 checklist = (ROOT / "docs" / "PRE_CODE_CHECKLIST.md").read_text(encoding="utf-8")
 if "- [x] ADR-005 licensing posture decided" not in checklist:
     errors.append("PRE_CODE_CHECKLIST must record ADR-005 as decided")
+
+
+
+# Scientific twin claim-boundary checks
+twin_arch = (ROOT / "docs" / "SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md").read_text(encoding="utf-8")
+for required_phrase in [
+    "T0_PROFILE_ONLY",
+    "T3_VALIDATED_PREDICTIVE_TWIN",
+    "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN",
+    "Patient-specific twins are excluded from V1.",
+]:
+    if required_phrase not in twin_arch:
+        errors.append(f"scientific twin architecture missing required claim boundary: {required_phrase}")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")

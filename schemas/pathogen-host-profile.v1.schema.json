@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/pathogen-host-profile.v1.schema.json",
+  "title": "Forge Bio Pathogen Host Scientific Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "schema_version",
+    "subject_entity_id",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "uncertainty_bundle_ref",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest",
+    "pathogen_id",
+    "host_species_id"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "pathogen-host-profile-v1"
+    },
+    "subject_entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contradiction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_gap_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncertainty_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pathogen_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "host_species_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interaction_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_receptor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_factor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_tissue_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_cell_type_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "innate_immune_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "adaptive_immune_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disease_mechanism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "phenotype_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathogen_target_hypothesis_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_target_hypothesis_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "therapeutic_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

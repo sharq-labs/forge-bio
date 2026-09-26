@@ -38,6 +38,19 @@ TemporalAdmissionDecision
 EntityKind
     DISEASE
     PHENOTYPE
+    ORGANISM_TAXON
+    PATHOGEN
+    VIRUS
+    BACTERIUM
+    FUNGUS
+    PARASITE
+    STRAIN
+    PATHOGEN_VARIANT
+    ANATOMICAL_STRUCTURE
+    TISSUE
+    CELL_TYPE
+    BIOLOGICAL_PROCESS
+    BIOMARKER
     GENE
     GENOME_ASSEMBLY
     REFERENCE_SEQUENCE
@@ -188,6 +201,30 @@ HistoricalGeneticCoverageGrade
     LOW
     UNKNOWN
 
+DigitalTwinMaturityLevel
+    T0_PROFILE_ONLY
+    T1_DYNAMIC_KNOWLEDGE_TWIN
+    T2_MECHANISTIC_TWIN
+    T3_VALIDATED_PREDICTIVE_TWIN
+    T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
+
+ScientificTwinFamily
+    DISEASE_TWIN
+    PATHOGEN_TWIN
+    PATHOGEN_HOST_TWIN
+    THERAPEUTIC_TWIN
+
+TherapeuticModality
+    SMALL_MOLECULE
+    ANTIBODY
+    PROTEIN_BIOLOGIC
+    PEPTIDE
+    NUCLEIC_ACID
+    GENE_THERAPY
+    CELL_THERAPY
+    VACCINE
+    OTHER
+
 NoveltyAuditState
     NOVEL_CONFIRMED
     KNOWN_AT_T
@@ -235,6 +272,35 @@ VariantHarmonizationArtifact
 LDReferencePanel
 LDRelation
 PhenotypeConcept
+OrganismTaxon
+PathogenConcept
+VirusConcept
+BacteriumConcept
+FungusConcept
+ParasiteConcept
+StrainConcept
+PathogenVariant
+AnatomicalStructure
+TissueConcept
+CellTypeConcept
+BiologicalProcess
+BiomarkerConcept
+DiseaseScientificProfile
+PathogenScientificProfile
+VirusScientificProfileExtension
+PathogenHostScientificProfile
+TherapeuticScientificProfile
+ScientificDigitalTwin
+ScientificTwinSnapshot
+TwinState
+TwinStateModelArtifact
+TwinUpdatePolicyArtifact
+TwinValidationArtifact
+CausalAssumptionSet
+InterventionSemantics
+IdentifiabilityStatus
+TwinPerturbation
+TwinSimulationResult
 Cohort
 Dataset
 Biobank
@@ -288,5 +354,16 @@ UncertaintyBundle
 - EvidenceRecord != model prediction.
 - distinct database rows != independent evidence.
 - current representation != historical representation.
+- disease != pathogen.
+- pathogen != disease manifestation.
+- pathogen-only model != pathogen-host system.
+- scientific profile != predictive digital twin.
+- T0 profile is not claimed as a digital twin.
+- T3/T4 requires explicit predictive validation and uncertainty quantification.
+- historical twin cutoff != valid_at timestamp.
+- state-model structure/update policy may be knowledge-bearing and must carry provenance/watermark.
+- T4 perturbation != causal intervention unless causal assumptions/intervention semantics/identifiability requirements pass.
+- simulation result != clinical evidence.
+- therapeutic profile != patient-specific treatment recommendation.
 - candidate-universe membership requires provenance.
 - every frozen scientific artifact has a schema version and digest.

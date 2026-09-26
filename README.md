@@ -19,11 +19,14 @@ Forge Bio is a research platform for:
 - uncertainty and applicability reporting
 - sealed historical benchmarking
 - prospective shadow validation
+- evidence-backed disease/pathogen/therapeutic scientific profiles
+- time-indexed Scientific Digital Twins with explicit maturity/validation gates
 
 ## What Forge Bio is not
 
 Forge Bio is not:
 
+- a system that calls a static graph/profile a validated predictive digital twin
 - a patient diagnosis system
 - a treatment recommender
 - a dosing system
@@ -105,7 +108,9 @@ A positive V0 result is evidence about **disease–gene association prioritizati
 
 ## Pre-code status
 
-Current phase: **Pre-Code Hardening / BIG 0R3 → BIG 0F**
+Current phase: **Pre-Code Hardening / BIG 0R3 + BIG 0R4 → BIG 0F**
+
+BIG 0R4 is a parallel platform extension and does not block the B-TGT-E1 feasibility pilot.
 
 The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
@@ -127,6 +132,7 @@ Do not start production scientific code before that gate.
 - [Scientific Glossary](docs/GLOSSARY.md)
 - [Core Scientific Types](docs/CORE_TYPES.md)
 - [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
+- [Golden Scientific Twin World](docs/GOLDEN_TWIN_WORLD.md)
 - [Architecture Dependency Rules](docs/DEPENDENCY_RULES.md)
 - [Prohibited Dependency / Leakage Fixtures](docs/PROHIBITED_DEPENDENCY_FIXTURES.md)
 - [B-TGT-E1 Estimand Proposal](docs/BENCHMARK_ESTIMAND_V0.md)
@@ -138,6 +144,9 @@ Do not start production scientific code before that gate.
 - [MAR Schema](docs/schemas/MAR_SCHEMA.md)
 - [Machine-Verifiable JSON Schemas](schemas/README.md)
 - [Repository License](LICENSE)
+- [Disease / Pathogen / Therapeutic Profile Model](docs/DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [Forge Bio Scientific Twin Architecture](docs/SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [Scientific Twin JSON Schema](schemas/scientific-twin.v1.schema.json)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
 - [ADR-008 — Outcome Phenotype Matching](docs/adr/ADR-008-outcome-phenotype-matching.md)
@@ -147,6 +156,7 @@ Do not start production scientific code before that gate.
 - [ADR-012 — Historical Genetic Observability and Novelty Coverage](docs/adr/ADR-012-historical-genetic-observability.md)
 - [ADR-013 — Scientific Event Identity, Source Coupling, and Adaptive Reuse](docs/adr/ADR-013-event-identity-source-coupling.md)
 - [ADR-014 — Scientific Operating Mode vs Historical Data Policy](docs/adr/ADR-014-operating-mode-data-policy.md)
+- [ADR-015 — Scientific Digital Twin Semantics](docs/adr/ADR-015-scientific-digital-twin-semantics.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
@@ -166,3 +176,20 @@ The V0 primary genetic regime, H candidate procedure, strict novelty/maturation 
 Do **not** start production scientific code while any P0 blocker remains active.
 
 Once P0 is closed, run a final red-team review against the frozen commit. Only then declare **GO FOR CORE SCIENTIFIC CODE**.
+
+
+## Forge Bio Scientific Twins
+
+Forge Bio uses a project-defined **research Scientific Twin** maturity hierarchy rather than treating every model as a clinical/health digital twin:
+
+```text
+T0_PROFILE_ONLY
+→ T1_DYNAMIC_KNOWLEDGE_TWIN
+→ T2_MECHANISTIC_TWIN
+→ T3_VALIDATED_PREDICTIVE_TWIN
+→ T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
+```
+
+For infectious disease, the architecture distinguishes the pathogen from the disease and supports a **Pathogen–Host Scientific Twin** so viral/pathogen biology and host response are not collapsed into one object.
+
+T3/T4 claims require explicit validation, uncertainty quantification, and applicability limits. Simulation output remains a research hypothesis, not patient-specific medical advice.

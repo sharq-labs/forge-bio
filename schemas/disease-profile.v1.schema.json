@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/disease-profile.v1.schema.json",
+  "title": "Forge Bio Disease Scientific Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "schema_version",
+    "subject_entity_id",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "uncertainty_bundle_ref",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest",
+    "disease_id"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "disease-profile-v1"
+    },
+    "subject_entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contradiction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_gap_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncertainty_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "disease_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classification_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disease_family_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "subtype_relation_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "phenotype_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "manifestation_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_organ_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_tissue_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_cell_type_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "gene_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "protein_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "variant_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathway_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "biological_process_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "mechanism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "biomarker_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "epidemiology_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "population_context_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "risk_factor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "stage_model_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "progression_model_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_hypothesis_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "therapeutic_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

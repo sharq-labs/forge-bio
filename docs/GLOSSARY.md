@@ -22,6 +22,26 @@ This glossary defines terms that must not be used interchangeably.
 
 **HistoricalKnowledgeView** — the frozen, read-only capability containing only benchmark-approved model-visible scientific knowledge for cutoff T.
 
+**DiseaseScientificProfile** — versioned evidence-backed projection of disease identity, phenotypes, affected tissues/cells, molecular mechanisms, genetics, biomarkers, epidemiology, targets, therapeutic evidence, contradictions, gaps, and uncertainty.
+
+**PathogenScientificProfile** — versioned evidence-backed projection of a pathogen's taxonomy, genome/proteome, strains/variants, host range, tropism, host interactions, lifecycle, immune interactions, resistance, associated disease, and therapeutic evidence.
+
+**PathogenHostScientificProfile** — evidence-backed representation of interactions between a pathogen and host biological system, including receptors/factors, tissue/cell context, immunity, disease mechanisms, and target hypotheses.
+
+**TherapeuticScientificProfile** — versioned evidence-backed representation of a therapeutic entity's identity, modality, targets, mechanism, indication/regulatory history, efficacy/safety evidence, PK/PD evidence, interactions, resistance, and uncertainty.
+
+**ScientificDigitalTwin** — versioned research object built on scientific profiles and evidence state. It earns stronger twin maturity only through explicit dynamic/mechanistic/predictive capability and validation.
+
+**DigitalTwinMaturityLevel** — T0_PROFILE_ONLY, T1_DYNAMIC_KNOWLEDGE_TWIN, T2_MECHANISTIC_TWIN, T3_VALIDATED_PREDICTIVE_TWIN, or T4_VALIDATED_INTERVENTION_SIMULATION_TWIN. T0 is not claimed as a digital twin.
+
+**PathogenHostScientificTwin** — system-of-systems twin combining pathogen state and host biological context; preferred over a pathogen-only predictive twin when host response materially determines disease behavior.
+
+**TwinState** — immutable, versioned state of a ScientificDigitalTwin at a time/cutoff with evidence snapshots, model/parameter artifacts, uncertainty, watermark, and digest.
+
+**TwinValidationArtifact** — versioned verification/validation record supporting a twin maturity claim.
+
+**TwinPerturbation / TwinSimulationResult** — formal research simulation input/output. Simulation output is a hypothesis and is not clinical evidence.
+
 **GenomicVariant** — canonical allele identity against an explicit reference sequence with normalized location/reference/alternate state; an rsID or raw coordinate is only an external representation.
 
 **GenomicLocus** — versioned genomic interval/credible-set concept tied to a genome assembly and locus-definition policy.

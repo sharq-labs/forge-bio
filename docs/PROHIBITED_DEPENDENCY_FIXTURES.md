@@ -233,3 +233,77 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** RECONSTRUCTED_HISTORICAL or CONTAMINATED_MODERN_PRIOR is passed as if it were a ScientificOperatingMode/HistoricalDataPolicy interchangeably.
 
 **Expected:** configuration schema/runtime rejects the invalid enum combination.
+
+
+## F-39 — Static graph mislabeled predictive digital twin
+
+**Setup:** a static disease/pathogen graph has no dynamic state model or predictive validation but is labelled T3.
+
+**Expected:** maturity validation rejects the claim; artifact remains T0/T1 according to its actual capabilities.
+
+## F-40 — Disease and pathogen identity collapse
+
+**Setup:** a virus/pathogen entity is stored as the infectious disease itself.
+
+**Expected:** identity verification fails; pathogen and disease remain separate entities linked by evidence-backed claims.
+
+## F-41 — Pathogen-only model overclaims host-disease behavior
+
+**Setup:** pathogen state is modeled, but host receptor/immune/tissue state is absent; output is presented as a validated disease-behavior twin.
+
+**Expected:** applicability/claim validation fails; PathogenHostScientificTwin is required for that claim scope.
+
+## F-42 — Future evidence contaminates historical twin
+
+**Setup:** Twin(subject, T) imports a post-T mechanism, pathogen lineage, therapeutic event, or parameter fitted on post-T data.
+
+**Expected:** watermark/temporal verification fails closed.
+
+## F-43 — Mechanistic simulation promoted to predictive validation
+
+**Setup:** a T2 model reproduces fitted/training observations but has no held-out/future validation and is labelled T3.
+
+**Expected:** maturity remains T2.
+
+## F-44 — Intervention simulation promoted to efficacy evidence
+
+**Setup:** a computational perturbation produces a favorable simulated state and is stored as evidence that a treatment works.
+
+**Expected:** claim/evidence verification rejects the transformation; simulation remains a research hypothesis.
+
+## F-45 — Patient-specific treatment inference from platform twin
+
+**Setup:** a disease/pathogen/therapeutic twin is used to generate patient-specific treatment or dosing output under V1 Context of Use.
+
+**Expected:** Context-of-Use validation rejects execution.
+
+
+## F-46 — Future mechanism hidden in historical state-model topology
+
+**Setup:** Twin(subject, 2010) uses a state-model structure manually designed from a mechanism first established after 2010 while numeric parameters use only pre-2010 data.
+
+**Expected:** state-model artifact watermark exceeds cutoff or is UNKNOWN; STRICT_HISTORICAL twin construction fails closed.
+
+## F-47 — Predictive twin without MAP/MAR validation governance
+
+**Setup:** an artifact declares T3 but has no prediction spec, MAP, MAR, ValidationGeneration, or BenchmarkDesignProvenance.
+
+**Expected:** JSON Schema rejects the artifact.
+
+## F-48 — Non-identifiable T4 intervention
+
+**Setup:** a T4 artifact includes a perturbation but IdentifiabilityStatus is NOT_IDENTIFIED or UNKNOWN.
+
+**Expected:** JSON Schema rejects T4 maturity; output may remain exploratory T2/T3 simulation only.
+
+## F-49 — Twin prediction written back as evidence
+
+**Setup:** model prediction/simulation output is inserted into EvidenceRecord and later consumed as if independent biological evidence.
+
+**Expected:** dependency/claim verification rejects the cycle.
+
+## F-50 — Historical profile without cutoff
+
+**Setup:** a STRICT_HISTORICAL disease/pathogen/therapeutic profile omits cutoff T.
+
+**Expected:** profile JSON Schema rejects the artifact.

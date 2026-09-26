@@ -29,11 +29,14 @@ V1 is intended for:
 - evidence review
 - benchmark development
 - computational hypothesis generation for further investigation
+- evidence-backed disease/pathogen/therapeutic scientific profiles
+- Forge Bio Scientific Twin research models under explicit maturity/VVUQ gates
 
 V1 is not intended for:
 
 - patient diagnosis
 - patient-specific treatment selection
+- patient-specific digital-twin clinical decision support under V1
 - dosing
 - clinical decision support
 - prescribing
@@ -1060,3 +1063,115 @@ Normative decisions:
 - [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md)
 
 These policies must be represented in the QoI/MAP/MAR artifacts and their executable JSON Schemas.
+
+
+---
+
+## 38. Forge Bio Scientific Twin contract
+
+"Forge Bio Scientific Twin" is a project-defined research construct. It must not be represented as a patient/clinical health digital twin merely by terminology.
+
+### 38.1 Profile vs twin
+
+```text
+Scientific Profile
+    !=
+Validated Predictive Twin
+```
+
+T0_PROFILE_ONLY is a profile maturity state and is not called a digital twin in scientific claims.
+
+### 38.2 Twin maturity is not claim maturity
+
+```text
+DigitalTwinMaturityLevel
+    !=
+ClaimMaturityLevel
+```
+
+For example:
+- T3_VALIDATED_PREDICTIVE_TWIN does not automatically imply L3_SEALED_CONFIRMATORY;
+- L3 sealed benchmark confirmation does not automatically imply T3 twin maturity.
+
+Both ladders must be satisfied independently for any combined claim.
+
+### 38.3 Historical twin contract
+
+STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR twins require an explicit cutoff T.
+
+The transitive watermark includes:
+- profile/evidence snapshots;
+- identity/mapping artifacts;
+- state-variable definitions;
+- state-model structure/topology;
+- transition/mechanism rules;
+- update-policy artifact;
+- parameter artifacts;
+- preprocessing/feature artifacts;
+- pretrained representations;
+- manually selected biomedical priors.
+
+A state model designed later may not inherit an old watermark merely because its numeric parameters were fit on old data.
+
+### 38.4 Dependency isolation
+
+Historical twin construction cannot read:
+- FutureEvent/outcome storage;
+- lockbox outcomes;
+- evaluation-only identity bridges;
+- future validation labels/results;
+- unrestricted current/latest biomedical providers.
+
+Prediction/simulation output is not EvidenceRecord.
+
+### 38.5 T3 validation contract
+
+T3 requires the platform's existing validation governance:
+- frozen prediction target/horizon;
+- MAP;
+- MAR;
+- ValidationGeneration provenance;
+- BenchmarkDesignProvenance;
+- held-out/future evaluation;
+- uncertainty evaluation;
+- applicability/OOD evaluation;
+- failure analysis.
+
+A model that only reproduces fit/training data remains at most T2.
+
+### 38.6 T4 intervention-simulation contract
+
+T4 additionally requires:
+- CausalAssumptionSet;
+- InterventionSemantics;
+- IdentifiabilityStatus;
+- perturbation artifacts;
+- sensitivity artifacts;
+- uncertainty propagation.
+
+A favorable associational perturbation is not a causal intervention effect.
+
+Allowed maturity-supporting identifiability states are:
+- IDENTIFIED;
+- PARTIALLY_IDENTIFIED;
+- ASSUMPTION_DEPENDENT.
+
+NOT_IDENTIFIED or UNKNOWN cannot support T4.
+
+### 38.7 Clinical claim boundary
+
+Twin simulation output is a research hypothesis.
+
+It does not by itself establish:
+- therapeutic efficacy;
+- safety;
+- patient-specific treatment choice;
+- dose;
+- clinical utility.
+
+Patient-specific digital twins require a separate future Context of Use.
+
+Normative documents:
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
