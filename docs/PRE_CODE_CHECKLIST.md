@@ -27,6 +27,7 @@
 - [x] Context-of-Use schema exists.
 - [x] MAP schema exists.
 - [x] MAR schema exists.
+- [x] Machine-verifiable JSON Schemas exist for QoI/MAP/MAR.
 - [x] Core scientific enums/value objects are specified.
 - [x] Minimal golden synthetic biomedical world is specified.
 - [x] Architecture import/dependency rules are specified.
@@ -46,6 +47,14 @@
 
 ### Outcome integrity
 
+- [x] GenomicVariant / GenomicLocus / GenomeAssembly / ReferenceSequence are first-class identities.
+- [x] Phenotype / Cohort / Dataset / Biobank / Consortium / SampleSet are first-class identities.
+- [x] Variant normalization/liftover/allele harmonization is provenance-bearing.
+- [x] LD relation requires ancestry/reference-panel/version provenance.
+- [x] ScientificEventFamily / GeneticDiscoveryEventFamily primary-credit policy accepted.
+- [x] HistoricalGeneticSearchCoverage gates E1-NOVEL-STRICT.
+- [x] KNOWN_TO_RANKER_AT_T is distinct from KNOWN_PUBLICLY_AT_T.
+- [x] Historical genetic observability sensitivity policy accepted.
 - [x] OutcomeGeneAssignmentPolicy accepted.
 - [x] OutcomePhenotypeMatchPolicy accepted.
 - [x] GeneticReplicationPolicy accepted.
@@ -59,6 +68,10 @@
 - [x] Population/ancestry applicability fields are defined for relevant outcome classes.
 - [x] Validation-generation reuse/retirement policy is accepted.
 - [x] Exact Future Outcome snapshot/ledger commitment policy is accepted.
+- [x] Outcome event discovery/adjudication freeze-before-rank policy is accepted.
+- [x] Input/Outcome provider-coupling policy is accepted.
+- [x] Cross-anchor event reuse policy is accepted.
+- [x] Validation disclosure-level policy is accepted.
 
 ### Ascertainment and hindsight
 
@@ -70,17 +83,23 @@
 - [x] Ranking-team / outcome-adjudication / lockbox-custodian roles are defined.
 - [x] Sealed disease identity blinding policy is decided.
 - [x] Knowledge-historical vs technology-contemporaneous claims are explicitly separated.
+- [x] ScientificOperatingMode is separated from HistoricalDataPolicy.
 
 ### Feasibility and governance
 
 - [ ] Manual outcome feasibility pilot completed on heterogeneous events.
 - [ ] Pilot reports novelty ambiguity rate.
+- [ ] Pilot reports historical genetic-search coverage grade distribution.
+- [ ] Pilot reports variant/liftover/allele-harmonization ambiguity.
+- [ ] Pilot reports phenotype-match ambiguity.
+- [ ] Pilot reports event-family deduplication / locus-to-many-gene credit impact.
+- [ ] Pilot reports Past/Future provider-coupling risk.
 - [ ] Pilot reports locus-to-gene assignment dependence.
 - [ ] Pilot reports cohort/sample-overlap ambiguity.
 - [ ] Pilot reports retrospective-curation burden.
 - [ ] Pilot reports population/ancestry metadata coverage.
 - [ ] Pilot yields go/redesign/no-go recommendation for B-TGT-E1-v0.
-- [ ] ADR-005 licensing posture decided by project owner.
+- [x] ADR-005 licensing posture decided: commercial-later; repository Apache-2.0; provider-data licenses remain separate.
 - [x] Initial lockbox custodian/storage mechanism chosen.
 - [x] Authoritative scientific-spec change governance chosen (protected branch or equivalent reviewed process).
 
@@ -100,7 +119,9 @@
 - [ ] Candidate universe policy frozen.
 - [ ] Development/validation/sealed split frozen.
 - [ ] Sealed-case selection cannot be changed in response to outcomes.
-- [ ] Identity gold-set error rate reported.
+- [ ] Identity gold-set error rate reported, including variants/loci/phenotypes/cohorts/datasets.
+- [ ] Variant normalization/liftover/allele-orientation gold-set error rate reported.
+- [ ] Historical observability sensitivity universe frozen from as-of-T criteria.
 
 ### Statistics and controls
 
@@ -116,6 +137,9 @@
 - [ ] Negative-control suite frozen.
 - [ ] Temporal placebo control defined where feasible.
 - [ ] Outcome-source and gene-assignment sensitivity analyses frozen.
+- [ ] Input/outcome provider-coupling sensitivity frozen.
+- [ ] LD reference-panel / modern-evaluation-LD sensitivity frozen where applicable.
+- [ ] ScientificEventFamily credit sensitivity frozen.
 
 ### Outcome integrity and applicability
 
@@ -131,8 +155,9 @@
 ### Lockbox and reproducibility
 
 - [ ] MAP hash frozen.
-- [ ] Validation generation ID/status/access count frozen.
-- [ ] Exact Future Outcome source releases/snapshot/ledger/adjudication/identity-bridge commitment frozen.
+- [ ] Validation generation ID/status/access count/max-disclosure-level frozen.
+- [ ] Exact Future Outcome source releases/snapshot/ledger/event-family/adjudication/identity-bridge/provider-coupling commitment frozen.
+- [ ] Sealed outcome-event discovery completed before ranking reveal.
 - [ ] Lockbox credentials unavailable to ranking runtime/team path.
 - [ ] Ranking artifact commitment mechanism tested.
 - [ ] Append-only lockbox access log tested.
@@ -170,6 +195,10 @@ Before provider-scale implementation, manually adjudicate a small heterogeneous 
 - benchmark-disease vs future-phenotype relation;
 - replication allele/direction/LD/population comparability where applicable;
 - cohort/sample overlap;
+- historical genetic-search coverage;
+- variant build/normalization/liftover/allele ambiguity;
+- event-family deduplication and locus-to-many-gene credit;
+- Past/Future provider lineage/coupling;
 - retrospective curation;
 - ancestry/population metadata;
 - adjudicator disagreement;
@@ -216,3 +245,8 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [BENCHMARK_ESTIMAND_V0.md](BENCHMARK_ESTIMAND_V0.md)
 - [SCIENTIFIC_SPEC_GOVERNANCE.md](SCIENTIFIC_SPEC_GOVERNANCE.md)
 - [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md)
+- [../schemas/README.md](../schemas/README.md)
+- [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
+- [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
+- [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)
+- [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md)
