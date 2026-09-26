@@ -51,7 +51,11 @@
         "max_median_event_curation_minutes",
         "min_non_event_to_event_time_ratio",
         "max_non_event_to_event_time_ratio",
-        "min_source_family_count"
+        "min_source_family_count",
+        "minimum_scientifically_meaningful_effect",
+        "min_hypothesis_free_primary_positive_fraction",
+        "max_label_feature_method_coupling_fraction",
+        "min_high_specificity_positive_count"
       ],
       "properties": {
         "alpha": {
@@ -159,6 +163,23 @@
         "min_source_family_count": {
           "type": "integer",
           "minimum": 4
+        },
+        "minimum_scientifically_meaningful_effect": {
+          "const": 0.05
+        },
+        "min_hypothesis_free_primary_positive_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_label_feature_method_coupling_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_high_specificity_positive_count": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     },
