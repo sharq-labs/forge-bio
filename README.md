@@ -118,6 +118,8 @@ The high-level architecture is stable, but V1 is not frozen until every P0 item 
 
 Do not start production scientific code before that gate.
 
+Repository scope during this phase is specification-only: plans, ADRs, schemas, checklists, and runbooks. Runtime Python implementation, executable validators, test suites, and implementation CI are intentionally deferred until the pre-code gate is passed.
+
 ## Core documents
 
 - [Architecture V1 Candidate](docs/ARCHITECTURE_V1.md)
