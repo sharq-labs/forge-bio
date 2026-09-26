@@ -468,6 +468,8 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - SourceRecord
 - ScientificClaim
 - EvidenceRecord
+- ExtractionArtifact / ExtractionQualityCard
+- evidence extraction quality policy + source grounding
 - evidence method classes
 - source channels
 - evidence-family / independence semantics
@@ -481,6 +483,10 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - unchanged inputs reproduce identical manifest/content identities
 - every evidence item traces to raw source bytes
 - every transformation records code/config identity
+- non-native extraction retains source span/locator and extractor/version/config
+- automated extraction has task/domain-specific quality qualification
+- human curation disagreement/adjudication remains auditable
+- extractor confidence is not scientific evidence strength
 - literature is represented as a source channel, not a strength class
 - duplicate database propagation does not create false independent evidence
 - contradiction/comparability primitive exists before BIG 7; BIG 10 expands it rather than introducing it from scratch
@@ -1219,9 +1225,11 @@ Implementation order is governed by:
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
 - [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
 - [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
+- [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
 - [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
+- [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
