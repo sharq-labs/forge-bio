@@ -93,7 +93,7 @@ verification_status = VERIFIED only after proof verification
 
 The timestamp proof is stored separately from the source repository and must be independently verifiable.
 
-For a claim-valid BIG 0F evaluation, `scripts/verify_external_authorities.py` recreates the exact committed artifact bytes in a temporary verification workspace and executes the OpenTimestamps client against the supplied `.ots` proof. Missing client/proof, non-zero verification, or absence of a verified timestamp success result fails closed. A study-authored `verification_status = VERIFIED` field is not accepted as proof.
+For a claim-valid BIG 0F evaluation, the future external-authority verifier must recreate the exact committed artifact bytes and verify the supplied OpenTimestamps proof through an independent protocol-compatible verification path. Missing proof, failed verification, or absence of a verified timestamp success result fails closed. A study-authored `verification_status = VERIFIED` field is not accepted as proof.
 
 ## 5. OSF registration seal
 
@@ -135,9 +135,9 @@ Perform a dry run with synthetic/non-study content:
 2. generate a mock frame;
 3. externally seal the mock frame digest;
 4. obtain/use a mock verified beacon artifact whose publication time is after the mock frame seal;
-5. derive the sampling key through the frozen sampling code;
+5. derive the sampling key through the frozen sampling contract;
 6. create the canonical manifest;
-7. hash every component, including evaluator code, sampling code, pilot-result schema and policy schemas;
+7. hash every claim-bearing component, including the future evaluator/sampling implementations when they exist, plus pilot-result and policy schemas;
 8. create timestamp proof;
 9. verify timestamp proof independently;
 10. create a test OSF/public-registry registration as allowed by the service;
@@ -147,10 +147,10 @@ Perform a dry run with synthetic/non-study content:
 14. require both THIRD_PARTY_TIMESTAMP_SERVICE and PUBLIC_REGISTRY attestations over the same bundle digest;
 15. verify all component hashes;
 16. verify that a one-byte component modification fails;
-17. verify that evaluator/sampling/schema modification fails;
+17. once implementation exists, verify that evaluator/sampling/schema modification fails the committed identity check;
 18. verify that any manifest-field mutation fails schema and/or attested-digest verification;
 19. record both verified ExternalSealAttestation artifacts;
-20. run the code-backed OpenTimestamps verifier against the exact committed bytes and proof;
+20. run the independent OpenTimestamps verification procedure against the exact committed bytes and proof;
 21. fetch the OSF verification record independently and match the exact artifact digest;
 22. fetch the selected DRAND round independently and match its randomness to the sealed beacon artifact.
 
