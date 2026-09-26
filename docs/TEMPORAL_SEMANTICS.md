@@ -166,7 +166,7 @@ output.watermark =
          model/representation watermark)
 ```
 
-This applies to normalized records, mappings, graph projections, candidate universes, features, sampling distributions, embeddings, models, and rankings.
+This applies to normalized records, genomic harmonization/liftover artifacts, LD relations, mappings, graph projections, candidate universes, features, sampling distributions, embeddings, models, and rankings.
 
 Hidden side inputs are prohibited.
 
@@ -185,16 +185,34 @@ A 2026 knowledge-bearing assignment cannot inherit a 2008 watermark merely becau
 
 Strict mode evaluates the exact representation visible to the model, not only the age of its cited source.
 
-## 11. Operating policies
+## 11. Scientific operating mode and historical data policy
 
-### STRICT_ARCHIVED
-Archived releases or strong row-level availability evidence only.
+Two orthogonal axes are used.
 
-### RECONSTRUCTED_HISTORICAL
-A newer/current source is reconstructed using temporal evidence. Allowed only when explicitly labelled and supported by provider policy; a Reconstruction Fidelity Study is required where reference archives exist.
+### ScientificOperatingMode
 
-### CONTAMINATED_MODERN_PRIOR
-Historical explicit inputs plus a later/unknown-horizon model, mapping, ontology, or representation. Never presented as strict historical evidence.
+```text
+STRICT_HISTORICAL
+HISTORICAL_INPUT_MODERN_PRIOR
+CURRENT_DISCOVERY
+```
+
+This axis controls the scientific claim boundary.
+
+### HistoricalDataPolicy
+
+```text
+ARCHIVED_ONLY
+RECONSTRUCTED_ALLOWED
+```
+
+This axis controls how historical source state may be obtained.
+
+A strict run may use `RECONSTRUCTED_ALLOWED` only when all reconstruction-dependent fields pass the frozen Reconstruction Fidelity gate and all model-visible knowledge watermarks remain <= T.
+
+`CONTAMINATED_MODERN_PRIOR` is a run classification caused by later/unknown-horizon knowledge-bearing dependencies; it is not a HistoricalDataPolicy value.
+
+Normative decision: [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md).
 
 ## 11.1 Knowledge-historical vs technology-contemporaneous
 
@@ -231,4 +249,7 @@ Required:
 6. add a 2026 biomedical constant -> watermark becomes 2026 or UNKNOWN;
 7. replace historical text with current corrected text -> snapshot verification fails;
 8. derive a gene assignment in 2026 from a 2008 paper -> assignment watermark remains 2026/UNKNOWN, not 2008;
-9. change only generic compute infrastructure -> biomedical knowledge watermark remains unchanged.
+9. change only generic compute infrastructure -> biomedical knowledge watermark remains unchanged;
+10. change genome-build/liftover/reference-panel dependency -> affected harmonization/LD artifacts receive the changed dependency provenance/watermark;
+11. replace a historical LD/reference resource with a modern evaluation-only panel -> historical rank/features unchanged;
+12. inject a current rsID mapping into historical variant identity -> strict historical resolution rejects or taints the artifact.
