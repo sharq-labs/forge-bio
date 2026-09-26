@@ -41,6 +41,12 @@ This does **not** mean the scientific hypothesis is proven.
 | T4 causal/intervention semantics | PASS POLICY / FUTURE MODEL EVIDENCE | R4/R5 |
 | Disease/pathogen/therapeutic profiles | PASS | executable profile schemas |
 | Reproducibility / spec integrity CI | PASS | GitHub workflow + schema tests |
+| Source correction/retraction lifecycle | PASS | ADR-019 + temporal policy |
+| Benchmark exposure/exhaustion | PASS POLICY | ADR-019 + exposure ledger |
+| External sealing/preregistration attestation | PASS POLICY / OPERATIONAL OPEN | ADR-019 |
+| Prospective prediction-exposure independence | PASS POLICY / FUTURE EVIDENCE | ADR-019 |
+| Research-program attempt/selective-reporting ledger | PASS POLICY | ADR-019 |
+| Schema/provider/ontology drift | PASS POLICY | ADR-019 |
 | Licensing posture | PASS POLICY | ADR-005 |
 | Repository branch protection | OPEN OPERATIONAL | Issue #2 |
 | Independent final frozen-state review | OPEN OPERATIONAL | required before FROZEN V1 |
@@ -77,7 +83,9 @@ Before FROZEN V1:
 - require Spec Integrity status;
 - prevent direct/force-push bypass;
 - perform independent frozen-state red-team review;
-- freeze exact authoritative commit/digests.
+- freeze exact authoritative commit/digests;
+- verify required external seal attestations;
+- verify benchmark generation is not DEVELOPMENT_EXPOSED/EXHAUSTED for strongest-tier claims.
 
 ## 5. Stop rule
 
@@ -91,7 +99,7 @@ Core scientific implementation begins only when:
 
 ## 6. Current conclusion
 
-After BIG 0R3, BIG 0R4, BIG 0R5, and extraction-quality hardening:
+After BIG 0R3, BIG 0R4, BIG 0R5, extraction-quality hardening, and research-program lifecycle hardening:
 
 > **No currently known major architecture/specification gap remains unassigned to a policy, schema, test, or explicit future empirical gate.**
 
