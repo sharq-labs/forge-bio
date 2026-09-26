@@ -14,7 +14,8 @@
     "measurement_process_id",
     "provenance_ref",
     "knowledge_watermark",
-    "digest"
+    "digest",
+    "value_domain"
   ],
   "properties": {
     "observation_id": {
@@ -157,6 +158,15 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "value_domain": {
+      "enum": [
+        "ANY_REAL",
+        "NONNEGATIVE",
+        "POSITIVE",
+        "PROBABILITY",
+        "COUNT"
+      ]
     }
   },
   "allOf": [
@@ -302,6 +312,103 @@
           "normalization_artifact_id": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "const": "OBSERVED"
+          },
+          "value_domain": {
+            "const": "NONNEGATIVE"
+          }
+        },
+        "required": [
+          "value_state",
+          "value_domain"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "const": "OBSERVED"
+          },
+          "value_domain": {
+            "const": "POSITIVE"
+          }
+        },
+        "required": [
+          "value_state",
+          "value_domain"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "const": "OBSERVED"
+          },
+          "value_domain": {
+            "const": "PROBABILITY"
+          }
+        },
+        "required": [
+          "value_state",
+          "value_domain"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "const": "OBSERVED"
+          },
+          "value_domain": {
+            "const": "COUNT"
+          }
+        },
+        "required": [
+          "value_state",
+          "value_domain"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "integer",
+            "minimum": 0
           }
         }
       }
