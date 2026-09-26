@@ -37,7 +37,9 @@
     "external_authority_verifier_sha256",
     "curation_audit_schema_sha256",
     "power_input_derivation_contract_sha256",
-    "power_input_derivation_schema_sha256"
+    "power_input_derivation_schema_sha256",
+    "variance_source_registry_sha256",
+    "variance_source_registry_schema_sha256"
   ],
   "properties": {
     "seal_bundle_version": {
@@ -176,6 +178,14 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "power_input_derivation_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "variance_source_registry_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "variance_source_registry_schema_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
