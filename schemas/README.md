@@ -31,6 +31,11 @@ Files:
 - `endpoint-quality-rule.v1.schema.json`
 - `seal-bundle-manifest.v1.schema.json`
 - `big0f-pilot-result.v1.schema.json`
+- `big0f-threshold-manifest.v1.schema.json`
+- `big0f-adjudication-policy.v1.schema.json`
+- `big0f-nuisance-manifest.v1.schema.json`
+- `big0f-power-analysis.v1.schema.json`
+- `randomness-beacon.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
@@ -56,3 +61,12 @@ BIG 0F operational-prep contracts additionally provide:
 - endpoint-quality decision structure;
 - machine-readable pilot result;
 - deterministic GO / REDESIGN / NO_GO evaluation.
+
+
+Round 2 hostile-review closure adds executable cross-artifact enforcement:
+- `scripts/select_big0f_sample.py` — external-frame-seal + post-seal randomness selection;
+- `scripts/evaluate_endpoint_quality.py` — executable frozen endpoint criteria;
+- `scripts/validate_research_program.py` — one program-wide confirmatory alpha budget;
+- `config/big0f-thresholds.v1.json` — sealed decision thresholds/sensitivity variants;
+- `config/big0f-adjudication-policy.v1.json` — frozen primary assignment/ascertainment classes;
+- `config/big0f-nuisance-manifest.v1.json` — mandatory disease-specific attention/opportunity comparator.

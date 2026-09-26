@@ -108,6 +108,21 @@
 - [x] Cross-field scientific semantic validator exists.
 - [x] Hostile-review regression tests exist.
 - [x] Hostile-review regression suite passes on the current branch.
+- [x] Round 2 false-GO attacks are represented as permanent regression tests.
+- [x] Disease-specific content-free attention volume and momentum are mandatory in the primary nuisance comparator.
+- [x] BIG 0F model-evaluation mode is NUISANCE_ONLY; biological-model lift is not inspected in the pilot.
+- [x] V0 pilot primary subtype and metric are frozen as E1-NOVEL-STRICT / EVENT_RANK_PERCENTILE_V1.
+- [x] Primary positive ascertainment is restricted to hypothesis-free genome/exome/biobank-wide designs.
+- [x] OTHER_HIGH_SPECIFICITY_METHOD is closed for V0 primary credit.
+- [x] BIG 0F decision evaluator rejects non-finite values, incomplete cross-field state, and unstable threshold decisions.
+- [x] BIG 0F threshold sensitivity is recomputed from a frozen manifest rather than self-reported.
+- [x] INCONCLUSIVE is bounded and cannot be carried indefinitely.
+- [x] Power analysis is a separate code-sealed artifact and is deterministically revalidated.
+- [x] Disease sampling uses an externally sealed frame plus the first verified post-seal public randomness-beacon round.
+- [x] The exact frame-seal attestation artifact is committed into the BIG 0F root seal bundle.
+- [x] Decision engine, pilot-result schema, sampling code, policy manifests/schemas, and power engine are committed by the seal bundle.
+- [x] FROZEN endpoint-quality rules have an executable field/operator validator and event evaluator.
+- [x] Confirmatory attempts are cross-validated against one canonical program-wide alpha budget; renaming cannot reset the budget.
 - [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
 - [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
 - [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate.
@@ -173,6 +188,10 @@
 - [ ] Negative-control suite frozen.
 - [ ] Temporal placebo control defined where feasible.
 - [ ] Outcome-source and gene-assignment sensitivity analyses frozen.
+- [ ] Ambiguous-event tipping-point / best-worst-case sensitivity frozen.
+- [ ] Precision-weighted or hierarchical disease sensitivity frozen alongside equal-disease primary weighting.
+- [ ] Label/feature method-family coupling sensitivity frozen for confirmatory interpretation.
+- [ ] Disease-specific attention-volume survival is required for any biological-value headline claim.
 - [ ] Input/outcome provider-coupling sensitivity frozen.
 - [ ] LD reference-panel / modern-evaluation-LD sensitivity frozen where applicable.
 - [ ] ScientificEventFamily credit sensitivity frozen.

@@ -435,7 +435,7 @@ class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
                 "downstream_change_ref": "change-1",
             }],
             "attempt_ids": ["A1"],
-            "digest": "sha256:test",
+            "digest": "sha256:" + "1" * 64,
         }
         self.validate("benchmark-exposure-ledger.v1.schema.json", x)
 
@@ -443,8 +443,8 @@ class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
         x = {
             "attestation_id": "ES1",
             "schema_version": "external-seal-attestation-v1",
-            "artifact_digest": "sha256:abcdef12",
-            "artifact_type": "ranking",
+            "artifact_digest": "sha256:" + "a" * 64,
+            "artifact_type": "RANKING_ARTIFACT",
             "sealed_at": "2026-01-01T00:00:00Z",
             "external_registry_or_custodian_ref": "custodian-1",
             "authority_type": "INDEPENDENT_CUSTODIAN",
@@ -453,8 +453,10 @@ class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
             "independence_from_study_team": True,
             "verification_status": "VERIFIED",
             "verification_evidence_ref": "seal-proof-1",
+            "verified_at": "2026-01-01T00:01:00Z",
+            "independence_evidence_ref": "independence-proof-1",
             "provenance_ref": "prov-1",
-            "digest": "sha256:test",
+            "digest": "sha256:" + "b" * 64,
         }
         self.validate("external-seal-attestation.v1.schema.json", x)
 
@@ -477,21 +479,23 @@ class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
         x = {
             "attempt_id": "RA1",
             "schema_version": "research-program-attempt-v1",
-            "benchmark_family": "B-TGT",
+            "benchmark_family": "B-TGT-E1",
             "benchmark_generation": "G1",
             "attempt_tier": "DEVELOPMENT",
             "registered_at": "2026-01-01T00:00:00Z",
-            "map_digest": "sha256:abcdef12",
-            "endpoint": "E1",
+            "map_digest": "sha256:" + "c" * 64,
+            "research_program_id": "FORGE-BIO-B-TGT-E1-V0",
+            "result_recorded_at": "2026-01-02T00:00:00Z",
+            "endpoint": "E1-NOVEL-STRICT",
             "horizon": "5y",
-            "primary_metric": "recall@k",
+            "primary_metric": "EVENT_RANK_PERCENTILE_V1",
             "model_family": "baseline",
             "result_status": "NULL",
             "visibility": "INTERNAL",
             "disclosure_status": "SCHEDULED",
             "disclosure_due_at": "2026-12-31T00:00:00Z",
             "relationship_to_prior_attempts": "first attempt",
-            "digest": "sha256:test",
+            "digest": "sha256:" + "d" * 64,
         }
         self.validate("research-program-attempt.v1.schema.json", x)
 

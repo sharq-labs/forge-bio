@@ -29,6 +29,26 @@ class SealBundleV2Tests(unittest.TestCase):
         self.frame.write_text(json.dumps([f"D{i}" for i in range(30)]) + "\n", encoding="utf-8")
         frame_digest = sha256_file(self.frame)
 
+        self.frame_seal = self.root / "frame-seal.json"
+        self.frame_seal.write_text(json.dumps({
+            "attestation_id": "FRAME-SEAL-1",
+            "schema_version": "external-seal-attestation-v1",
+            "artifact_digest": frame_digest,
+            "artifact_type": "BIG0F_DISEASE_FRAME",
+            "sealed_at": "2026-09-26T10:00:30Z",
+            "verified_at": "2026-09-26T10:00:40Z",
+            "external_registry_or_custodian_ref": "ots-frame-proof",
+            "authority_type": "THIRD_PARTY_TIMESTAMP_SERVICE",
+            "attestation_method": "THIRD_PARTY_TIMESTAMP",
+            "signer_or_service_identity": "opentimestamps-calendar",
+            "independence_from_study_team": True,
+            "independence_evidence_ref": "external-service-proof",
+            "verification_status": "VERIFIED",
+            "verification_evidence_ref": "ots-proof",
+            "provenance_ref": "prov-frame",
+            "digest": "sha256:" + "7" * 64,
+        }, sort_keys=True) + "\n", encoding="utf-8")
+
         self.beacon = self.root / "beacon.json"
         self.beacon.write_text(json.dumps({
             "beacon_id": "DRAND-101",
@@ -42,6 +62,7 @@ class SealBundleV2Tests(unittest.TestCase):
             "frame_digest": frame_digest,
             "frame_sealed_at": "2026-09-26T10:00:30Z",
             "frame_seal_attestation_id": "FRAME-SEAL-1",
+            "frame_seal_attestation_digest": sha256_file(self.frame_seal),
             "selection_rule": "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL",
             "previous_round_id": "100",
             "previous_round_published_at": "2026-09-26T10:00:00Z",
@@ -73,6 +94,7 @@ class SealBundleV2Tests(unittest.TestCase):
             protocol_path=self.protocol,
             disease_frame_path=self.frame,
             randomness_beacon_path=self.beacon,
+            frame_seal_attestation_path=self.frame_seal,
             threshold_manifest_path=self.thresholds,
             adjudication_policy_path=self.adjudication,
             nuisance_manifest_path=self.nuisance,
@@ -92,6 +114,7 @@ class SealBundleV2Tests(unittest.TestCase):
         return {
             "protocol": self.protocol,
             "disease_frame": self.frame,
+            "frame_seal_attestation": self.frame_seal,
             "randomness_beacon": self.beacon,
             "threshold_manifest": self.thresholds,
             "adjudication_policy": self.adjudication,
@@ -139,6 +162,32 @@ class SealBundleV2Tests(unittest.TestCase):
         self.frame.write_text(json.dumps(["D-EVIL"]) + "\n", encoding="utf-8")
         errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
         self.assertTrue(any("disease_frame_sha256 mismatch" in e for e in errors))
+
+    def test_frame_seal_tamper_is_detected(self):
+        m = self.build()
+        frame_seal = json.loads(self.frame_seal.read_text(encoding="utf-8"))
+        frame_seal["sealed_at"] = "2026-09-26T09:59:00Z"
+        self.frame_seal.write_text(json.dumps(frame_seal) + "\n", encoding="utf-8")
+        errors = verify_manifest(m, attestation=self.attestation(m), component_paths=self.components())
+        self.assertTrue(any("frame_seal_attestation_sha256 mismatch" in e or "frame_sealed_at" in e for e in errors))
+
+    def test_project_controlled_frame_seal_is_rejected(self):
+        frame_seal = json.loads(self.frame_seal.read_text(encoding="utf-8"))
+        frame_seal["authority_type"] = "INDEPENDENT_CUSTODIAN"
+        frame_seal["attestation_method"] = "SIGNED_CUSTODIAN_ATTESTATION"
+        self.frame_seal.write_text(json.dumps(frame_seal) + "\n", encoding="utf-8")
+        beacon = json.loads(self.beacon.read_text(encoding="utf-8"))
+        beacon["frame_seal_attestation_digest"] = sha256_file(self.frame_seal)
+        self.beacon.write_text(json.dumps(beacon) + "\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.build()
+
+    def test_beacon_frame_seal_time_must_match_attestation(self):
+        beacon = json.loads(self.beacon.read_text(encoding="utf-8"))
+        beacon["frame_sealed_at"] = "2026-09-26T09:00:00Z"
+        self.beacon.write_text(json.dumps(beacon) + "\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.build()
 
     def test_decision_engine_tamper_is_detected(self):
         m = self.build()
