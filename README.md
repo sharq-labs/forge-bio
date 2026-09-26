@@ -139,7 +139,7 @@ Important unresolved P0 work is now limited mainly to evidence-bearing decisions
 - final primary E1 subtype and endpoint evidence-quality threshold;
 - manual outcome-feasibility pilot and its ambiguity/curation/lineage measurements.
 
-The V0 primary genetic regime, H candidate procedure, locus→gene policy, novelty policy, discoverability controls, analyst-hindsight governance, lockbox mechanism, schemas, core types, golden world, and dependency rules are now specified.
+The V0 primary genetic regime, H candidate procedure, strict novelty/maturation semantics, phenotype-match policy, locus→gene policy, genetic-replication policy, discoverability controls, validation-generation rules, immutable outcome-snapshot commitment, analyst-hindsight governance, lockbox mechanism, schemas, core types, golden world, and dependency rules are now specified.
 
 Do **not** start production scientific code while any P0 blocker remains active.
 
