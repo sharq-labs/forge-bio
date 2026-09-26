@@ -6,6 +6,7 @@ Files:
 - `qoi.v1.schema.json`
 - `map.v1.schema.json`
 - `mar.v1.schema.json`
+- `scientific-twin.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
