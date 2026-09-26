@@ -356,3 +356,34 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** a T3 model validated on one population/source/measurement regime is applied outside the frozen applicability domain and reported as validated.
 
 **Expected:** applicability audit marks extrapolation; validated-prediction claim fails.
+
+
+## F-59 — Ungrounded LLM extraction admitted as evidence
+
+**Setup:** LLM_EXTRACTED claim has no recoverable source locator/span.
+
+**Expected:** confirmatory EvidenceRecord admission fails.
+
+## F-60 — Automated extraction without quality qualification
+
+**Setup:** ML/LLM/RULE extraction has no ExtractionQualityCard.
+
+**Expected:** extraction schema rejects the artifact.
+
+## F-61 — Extractor confidence becomes evidence strength
+
+**Setup:** pipeline confidence is copied into biological evidence-strength ranking.
+
+**Expected:** scientific-contract/feature review rejects the field.
+
+## F-62 — Extractor update inherits old qualification
+
+**Setup:** prompt/model/rules/ontology/output schema materially change but prior quality card is reused.
+
+**Expected:** extractor-version/qualification check fails.
+
+## F-63 — Multiple extracted claims create fake independent evidence
+
+**Setup:** several statements extracted from one paper are assigned different IndependenceFamilies.
+
+**Expected:** source-lineage verification collapses them to the originating observation lineage.
