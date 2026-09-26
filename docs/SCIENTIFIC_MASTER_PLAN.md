@@ -269,6 +269,53 @@ Actual T2–T4 twin implementation is deferred until the relevant identity, evid
 
 ---
 
+# BIG 0R5 — Model Credibility & Quantitative Integrity
+
+## Goal
+
+Close fit-for-purpose model-credibility, quantitative-semantics, numerical-verification, and applicability gaps before advanced mechanistic/predictive models are allowed to influence scientific claims.
+
+BIG 0R5 is a platform-hardening layer. It does not delay the manual BIG 0F endpoint-feasibility pilot, but its contracts are mandatory before T2+ Scientific Twin claims or endpoint-calibrated probability claims.
+
+## Outputs
+
+- ADR-016 computational model credibility / numerical verification
+- ADR-017 quantitative measurement/effect semantics
+- MODEL_CREDIBILITY_POLICY.md
+- QUANTITATIVE_SEMANTICS.md
+- QuantityDefinition
+- QuantitativeObservation
+- EffectEstimate
+- MeasurementProcessArtifact
+- NumericalVerificationArtifact
+- CredibilityAssessmentArtifact
+- ModelDiscrepancyAssessment
+- ApplicabilityDomain / prediction risk-of-bias audit
+- executable schemas for quantitative/model-credibility artifacts
+- executable positive/negative contract tests
+
+## Acceptance
+
+- a numeric value without quantity/unit/scale/transform/context semantics cannot act as a scientific measurement;
+- incompatible dimensions/scales/transforms cannot be silently combined;
+- p-value alone cannot act as an effect estimate;
+- missing/censored observations cannot become numeric zero;
+- measurement/normalization/batch transforms carry provenance and cutoff;
+- numerical error is separated from measurement/parameter/model-form uncertainty;
+- T2+ numerical simulation records solver/method/tolerance/convergence evidence where applicable;
+- model credibility is explicitly Context-of-Use specific;
+- T3+ evaluation audits development/evaluation separation, applicability, and distribution shift;
+- probabilistic claims require held-out calibration plus a proper scoring rule;
+- material model/dependency change invalidates prior validation until re-assessed.
+
+## Gate
+
+R5 policy/schema completion is sufficient for pre-code hardening.
+
+Empirical adequacy is demonstrated later by the actual model/twin validation artifacts; the policy itself is not evidence that a future model is credible.
+
+---
+
 # BIG 0F — Benchmark Feasibility Pilot
 
 ## Goal
@@ -1119,7 +1166,7 @@ This is the ultimate long-term evidence.
 # 7. Current execution state
 
 ```text
-Current milestone: BIG 0R3 + BIG 0R4 (parallel platform hardening) → BIG 0F
+Current milestone: BIG 0R3 + BIG 0R4 + BIG 0R5 (parallel platform hardening) → BIG 0F
 Implementation status: not started
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
@@ -1170,7 +1217,11 @@ Implementation order is governed by:
 - [../schemas/README.md](../schemas/README.md)
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
+- [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+- [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
+- [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
