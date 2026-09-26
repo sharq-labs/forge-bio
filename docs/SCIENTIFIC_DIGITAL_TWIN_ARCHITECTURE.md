@@ -162,14 +162,51 @@ Examples of allowed model families include:
 
 The architecture does not mandate one mathematical formalism.
 
-Each state variable and parameter records:
+Each state variable and parameter references a QuantityDefinition and records:
 - meaning;
-- units where applicable;
+- dimension/unit where applicable;
+- scale/transform;
 - estimation method;
 - source evidence;
 - uncertainty;
 - temporal admissibility;
 - applicability domain.
+
+## 6.1 Numerical verification
+
+For models that use numerical solvers/simulation engines, T2+ requires a NumericalVerificationArtifact when applicable.
+
+It records:
+- solver/engine/version;
+- numerical method;
+- tolerances;
+- timestep/grid/resolution;
+- convergence/refinement evidence;
+- stochastic replication error where relevant;
+- invariant/residual checks;
+- numerical error estimate;
+- reproducibility tolerance.
+
+A plausible trajectory or solver-to-solver agreement is not sufficient by itself.
+
+Numerical uncertainty is reported separately from biological, measurement, parameter, and model-form uncertainty.
+
+## 6.2 Model credibility
+
+Twin maturity is not enough by itself.
+
+A T2+ model also receives a Context-of-Use-specific CredibilityAssessmentArtifact covering:
+- model influence on the research decision;
+- consequence if wrong;
+- verification adequacy;
+- numerical verification;
+- validation;
+- uncertainty;
+- applicability;
+- risk of bias;
+- model discrepancy.
+
+Normative policy: [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md).
 
 ## 7. Predictive validation
 
@@ -343,15 +380,20 @@ T3/T4 validation reuses the platform's existing governance rather than creating 
 Checks:
 - held-out/future predictive performance;
 - calibration where probabilities are emitted;
+- at least one proper scoring rule for probability claims;
 - external-source validation where possible;
-- subgroup/applicability behavior;
-- negative/null controls.
+- temporal/source/population/phenotype/measurement shift as applicable;
+- subgroup/applicability/OOD behavior;
+- negative/null controls;
+- prediction-study risk-of-bias audit.
 
 ### Uncertainty
 
 Distinguish at least:
 - measurement uncertainty;
+- sampling uncertainty;
 - parameter uncertainty;
+- numerical uncertainty;
 - model-form uncertainty;
 - evidence uncertainty;
 - mapping uncertainty;
