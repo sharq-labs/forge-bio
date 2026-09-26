@@ -14,7 +14,6 @@
     "alpha",
     "target_power",
     "minimum_scientifically_meaningful_effect",
-    "disease_level_sd",
     "simulation_replicates",
     "simulation_seed",
     "estimated_power",
@@ -28,7 +27,9 @@
     "go_eligible_variance_evidence",
     "variance_source_artifact_digests",
     "primary_planning_sd",
-    "scenario_results"
+    "scenario_results",
+    "primary_scenario_id",
+    "dependence_assumption_digest"
   ],
   "properties": {
     "power_analysis_id": {
@@ -51,10 +52,6 @@
     },
     "minimum_scientifically_meaningful_effect": {
       "const": 0.05
-    },
-    "disease_level_sd": {
-      "type": "number",
-      "exclusiveMinimum": 0
     },
     "simulation_replicates": {
       "type": "integer",
@@ -146,7 +143,8 @@
           "sd_value",
           "dependence_adjustment_applied",
           "estimated_power",
-          "required_confirmatory_disease_count"
+          "required_confirmatory_disease_count",
+          "source_artifact_digest"
         ],
         "properties": {
           "scenario_id": {
@@ -176,9 +174,21 @@
           "required_confirmatory_disease_count": {
             "type": "integer",
             "minimum": 1
+          },
+          "source_artifact_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
           }
         }
       }
+    },
+    "primary_scenario_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dependence_assumption_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   },
   "allOf": [
