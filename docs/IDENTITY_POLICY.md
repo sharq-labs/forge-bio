@@ -88,7 +88,10 @@ The bridge:
 - lives behind the evaluation boundary;
 - has its own version and digest;
 - cannot be imported by ranking/feature code;
-- is included in sensitivity analysis when materially outcome-changing.
+- is included in sensitivity analysis when materially outcome-changing;
+- reconciles identity but does not establish biological causality;
+- cannot convert a locus/variant association into a gene-level validation without OutcomeGeneAssignmentPolicy;
+- cannot broaden a failed match post hoc outside preregistered sensitivity rules.
 
 ## 7. Disease-as-of-T
 
@@ -213,3 +216,28 @@ Before confirmatory benchmarking, create a reviewed fixture covering:
 - ambiguous aliases
 
 Measure and retain resolution errors.
+
+## 15. Identity reconciliation vs outcome assignment
+
+Evaluation identity asks:
+
+> Are these historical and future identifiers representations of the same entity?
+
+Outcome assignment asks a different question:
+
+> Does the future evidence scientifically establish this gene/entity as the endpoint object?
+
+These operations are separate.
+
+Modern identifier reconciliation is allowed behind the evaluation boundary. Modern biological assignment (for example locus-to-gene inference) is not identity resolution and must follow the benchmark's outcome-assignment policy.
+
+## 16. Historical novelty mapping
+
+Historical novelty audits may use evaluation-side identity reconciliation to search for pre-T evidence.
+
+The audit result is provenance-bearing and may be:
+- NOVEL_CONFIRMED;
+- KNOWN_AT_T;
+- NOVELTY_AMBIGUOUS.
+
+Ambiguous mapping may not be coerced into novelty.

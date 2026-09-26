@@ -101,9 +101,30 @@ Models may not decide:
 
 - whether evidence is historically admissible
 - whether a future event counts as a validation endpoint
+- whether a locus/variant event establishes a gene-level outcome
 - whether a mapping is scientifically valid
 - whether missing evidence is negative
 - whether a candidate is clinically effective
+
+### 2.6 Outcome construction is governed scientific logic
+
+Future labels are not treated as raw truth merely because they are stored in the Future plane.
+
+Outcome construction must separately govern:
+- historical novelty;
+- locus/variant-to-gene assignment;
+- cohort/sample independence;
+- retrospective curation;
+- adjudicator blinding;
+- ascertainment/discoverability bias.
+
+The evaluation layer may use modern reconciliation for identity, but modern biomedical reasoning may not silently manufacture a stricter historical endpoint.
+
+### 2.7 Researcher hindsight is a leakage channel
+
+Technical lockbox isolation does not eliminate knowledge already known to present-day researchers.
+
+Confirmatory benchmark design therefore records BenchmarkDesignProvenance and role/exposure information. Strongest retrospective claims require the methodology to be frozen before outcome-aware changes and, where practical, before sealed disease identities are revealed to the ranking team.
 
 ---
 
@@ -425,6 +446,27 @@ raw record
 
 If any required knowledge-bearing dependency is UNKNOWN or later than T, the derived artifact is not admissible in STRICT_HISTORICAL mode.
 
+### 7.5 Observation time vs representation time
+
+A historical observation and a later structured representation of that observation carry separate temporal provenance.
+
+Example:
+
+```text
+paper_publicly_available = 2008
+structured_gene_assignment_created = 2026
+```
+
+The 2008 paper does not make the 2026 knowledge-bearing assignment historical.
+
+### 7.6 Knowledge-historical vs technology-contemporaneous
+
+STRICT_HISTORICAL guarantees a biomedical knowledge boundary.
+
+It does not, by itself, prove that the exact modern software stack, algorithms, compute, or infrastructure could have existed at T.
+
+Claims about contemporaneous technological feasibility require a separate study.
+
 ---
 
 ## 8. Identity model
@@ -443,8 +485,10 @@ Therefore identity is split into:
 **Evaluation bridge**
 
 - may use modern mappings
-- used only after ranking to match historical entities to later future events
+- used only after ranking to reconcile entity identity for later future events
 - never visible to feature generation or ranking
+- may not convert a locus/variant association into a causal-gene outcome merely by modern assignment
+- may not rescue a failed prediction through post-hoc broadening without a preregistered sensitivity analysis
 
 ### 8.2 Mapping uncertainty is preserved
 
@@ -531,6 +575,14 @@ Ground truth is not stored as one `is_correct` field.
 
 Future events must carry source lineage and an independence family. A post-cutoff database annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
 
+For genetic outcomes, the event ledger distinguishes locus/variant discovery from gene assignment. Gene-level positives retain assignment method, assignment evidence, assignment time, assignment knowledge watermark, and uncertainty.
+
+Independence lineage may include study, cohort, consortium, dataset/biobank, participant-overlap group, and meta-analysis parents. UNKNOWN overlap is not treated as independent replication.
+
+E1-NOVEL-STRICT outcomes require both `PreTGeneticState = NO_SIGNAL_OBSERVED` and `HistoricalNoveltyAudit = NOVEL_CONFIRMED`, so suggestive pre-T signals cannot be relabelled as de novo discovery.
+
+Future genetic outcomes also carry explicit phenotype-match and replication assessments. A related trait/risk factor is not silently promoted to the benchmark disease, and a repeated locus is not automatically independent replication.
+
 It is an immutable ledger of FutureEvents such as:
 
 - biological association
@@ -565,13 +617,20 @@ Label states include:
 
 ## 12. Benchmark families
 
-### 12.1 B-TGT — Target Discovery
+### 12.1 B-TGT — Target Program
 
-Primary question:
+B-TGT is an umbrella program for biological and eventual therapeutic-target prioritization.
 
-> Given only evidence available at T, can the system rank disease-specific target/intervention hypotheses that later receive predefined independent biological or mechanistic validation?
+The first V0 benchmark is explicitly narrower:
 
-This benchmark establishes biological prioritization signal.
+```text
+B-TGT-A1 / B-TGT-E1-v0
+Disease–Gene Association Prioritization
+```
+
+It asks whether temporally clean evidence can rank disease–gene associations that later receive predefined independent human genetic support.
+
+This V0 benchmark does **not** by itself establish causal therapeutic-target validity, intervention direction, or tractability. Stronger target-discovery language requires later mechanism/direction/causal-target endpoints.
 
 ### 12.2 B-REP — Drug Repurposing
 
@@ -591,6 +650,10 @@ Every confirmatory benchmark freezes:
 
 - Question of Interest
 - Context of Use
+- scientific estimand
+- zero-future-event disease policy
+- disease/genetic regime
+- primary endpoint subtype
 - cutoff
 - observation horizon
 - candidate universe
@@ -600,13 +663,27 @@ Every confirmatory benchmark freezes:
 - temporal policy
 - identity policy
 - endpoint definitions
+- pre-T genetic-state policy
+- phenotype-match policy
+- outcome gene-assignment policy
+- genetic-replication policy
 - label rules
 - matching rules
+- validation-generation identity/status
+- Future Outcome snapshot/ledger commitment
 - ranking algorithm
 - model/config versions
 - random seeds
 - primary and secondary metrics
+- candidate-universe-normalized companion metric
+- all-frame review-budget utility
+- discoverability/observation-propensity control
+- negative/null control plan
 - confidence-interval method
+- disease-family/block dependence sensitivity
+- multiplicity policy
+- historical novelty policy
+- BenchmarkDesignProvenance
 - success criteria
 - exclusions
 - subgroup analyses
@@ -624,6 +701,10 @@ SEALED_LOCKBOX
 
 A lockbox that has been repeatedly inspected is no longer an untouched lockbox.
 
+VALIDATION is also versioned into generations. Once a validation generation materially influences methodology, it is marked SPENT_FOR_MODEL_SELECTION rather than represented as untouched evidence.
+
+The exact Future Outcome snapshot/ledger/adjudication/identity-bridge artifacts are committed before sealed evaluation so labels cannot silently move after ranking freeze.
+
 ---
 
 ## 14. Metrics and success criterion
@@ -637,25 +718,26 @@ Important metrics may include:
 - enrichment@K vs random
 - candidate rank percentile
 - cumulative event recall
-- case-level bootstrap confidence intervals
+- all-frame observed-event yield per total review budget
+- event-bearing disease coverage
+- zero-event disease review burden
+- disease-level confidence intervals with disease-family/block sensitivity
 
 Hit@K may be reported descriptively but must not be the sole headline metric.
 
-The central product-value comparator is:
+The central scientific comparator is lift over the strongest preregistered non-biological explanation available for the endpoint.
 
-```text
-lift over research-attention baseline
-```
+For B-TGT-E1 this includes both research attention and discoverability/observation propensity.
 
 Examples:
 
 ```text
 ΔRecall@K vs historical research attention
-ΔNDCG@K vs historical research attention
-Enrichment@K over attention baseline
+ΔRecall@K vs discoverability control
+ΔNDCG@K vs attention/discoverability control
 ```
 
-A sophisticated model that only re-ranks what researchers were already studying has not demonstrated discovery value.
+A sophisticated model that only re-ranks what researchers were already studying — or what was simply easiest to measure next — has not demonstrated biological discovery value.
 
 ---
 
@@ -806,6 +888,11 @@ Eventually includes:
 - similarity-aware splits
 - external future-outcome sources
 - multiple historical cutoffs
+- outcome gene-assignment sensitivity
+- historical-novelty audit
+- discoverability/ascertainment controls
+- blinded outcome adjudication
+- benchmark null/placebo controls
 - ablation studies
 - calibration where meaningful
 - sealed lockbox
@@ -835,7 +922,7 @@ An LLM never controls temporal admission, labels, validation status, or scientif
 
 Before expensive graph/deep/multimodal development:
 
-> If deterministic and classical models cannot show credible lift over research-attention/evidence-count baselines on sealed historical cases, stop advanced modeling and investigate the data, endpoint definition, candidate universe, and scientific premise.
+> If deterministic and classical models cannot show credible lift over research-attention, evidence-count, and endpoint-appropriate discoverability controls on sealed historical cases, stop advanced modeling and investigate the data, endpoint definition, candidate universe, ascertainment process, and scientific premise.
 
 A clean negative result is preferable to an impressive contaminated demo.
 
@@ -855,11 +942,20 @@ The following are frozen unless superseded by ADR:
 8. Evidence method is distinct from source channel.
 9. Candidate universes are historical.
 10. Future ground truth is event-based and endpoint-specific.
-11. Research-attention baseline is mandatory.
+11. Research-attention and endpoint-appropriate discoverability controls are mandatory.
 12. Cutoff era is selected through provider audit.
-13. B-TGT precedes or accompanies B-REP as the biological foundation.
-14. No LLM/deep model requirement in V1.
-15. No clinical-treatment claims.
+13. Gene-level future outcomes separate identity reconciliation from locus-to-gene assignment.
+14. Strict novelty distinguishes no-observed-signal from suggestive pre-T genetics.
+15. Disease/trait phenotype matching is explicit.
+16. Genetic replication requires allele/direction/phenotype/lineage comparability.
+17. Historical novelty is audited independently for discovery claims.
+18. Researcher hindsight is governed separately from technical future-label isolation.
+19. Validation generations track adaptive reuse.
+20. Exact Future Outcome snapshots/ledgers are committed before sealed evaluation.
+21. The benchmark estimand and zero-event disease policy are frozen before sealed outcome access.
+22. B-TGT precedes or accompanies B-REP as the biological foundation.
+23. No LLM/deep model requirement in V1.
+24. No clinical-treatment claims.
 
 
 ---
@@ -875,6 +971,12 @@ The following documents are normative for implementation detail and close gaps i
 - [PROVIDER_QUALIFICATION.md](PROVIDER_QUALIFICATION.md) — field-level provider qualification and Reconstruction Fidelity Study.
 - [MODEL_TRAINING_POLICY.md](MODEL_TRAINING_POLICY.md) — nested temporal supervised training and leakage-safe tuning.
 - [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md) — P0/P1 go/no-go gates.
+- [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md) — active adversarial scientific-integrity blockers.
+- [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md) — locus/gene assignment and historical novelty.
+- [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md) — researcher hindsight, role separation, and blinding.
+- [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md) — disease/trait phenotype equivalence for future outcomes.
+- [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md) — strict novelty, maturation, and genetic replication semantics.
+- [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md) — validation reuse and immutable Future Outcome commitments.
 - [adr/](adr/) — explicit decisions that may change architecture.
 
 ### Freeze rule

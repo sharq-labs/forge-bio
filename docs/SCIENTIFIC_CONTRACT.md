@@ -118,7 +118,7 @@ Required evidence:
 
 Allowed claim:
 
-> On a preregistered sealed benchmark, the method outperformed predefined random and research-attention baselines for endpoint E.
+> On a preregistered sealed benchmark, the method outperformed predefined random, research-attention, and required discoverability/observation-propensity controls for endpoint E.
 
 Required evidence:
 
@@ -198,7 +198,7 @@ Every governed study defines a Question of Interest (QoI).
 
 Example:
 
-> Given only publicly available biomedical evidence admissible by cutoff T, can Forge Bio prioritize disease-specific therapeutic target hypotheses that later reach endpoint E within horizon H, with positive lift over historical research-attention baselines?
+> Given only publicly available biomedical evidence admissible by cutoff T, can Forge Bio prioritize disease-specific therapeutic target hypotheses that later reach endpoint E within horizon H, with positive lift over historical research-attention and endpoint-appropriate discoverability controls?
 
 Required QoI fields:
 
@@ -329,6 +329,15 @@ At minimum, the project treats the following as explicit threats:
 - publication-version leakage
 - similarity leakage across train/test entities
 - researcher hindsight encoded in hand-designed features
+- outcome-construction leakage
+- locus-to-gene assignment leakage
+- historical-novelty misclassification
+- ascertainment / discoverability bias
+- publication / selective-reporting bias
+- cohort/sample-overlap masquerading as replication
+- analyst/adjudicator outcome-aware bias
+- ancestry/population applicability bias
+- future-conditioned exclusion of zero-event diseases
 
 Every major benchmark MAR includes a leakage audit.
 
@@ -445,6 +454,14 @@ Ground truth is an event ledger.
 
 A future event counts as independent only when its lineage satisfies the benchmark's independence rule. A later annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
 
+Distinct publications or databases are not sufficient proof of independence. Where relevant, outcome lineage must retain cohort, consortium, dataset/biobank, meta-analysis parents, and participant-overlap state. UNKNOWN sample overlap is not interpreted as independent replication.
+
+For gene-level genetic outcomes, identity reconciliation and causal-gene assignment are separate operations. A modern identity bridge may reconcile identifiers, but it may not create a gene-level validation from a locus/variant event without passing the governed OutcomeGeneAssignmentPolicy.
+
+Disease/trait identity and phenotype applicability are also separate. A related biomarker, risk factor, intermediate phenotype, broader trait, or narrower trait is not automatically the same benchmark disease. OutcomePhenotypeMatchPolicy governs this relation.
+
+A later genetic record is not automatically replication. E1-REPLICATION requires a GeneticReplicationAssessment covering phenotype, locus/variant, allele harmonization, effect direction, LD relation where relevant, population, cohort independence, participant overlap, analysis compatibility, and heterogeneity.
+
 Benchmarks derive labels for a named endpoint.
 
 Examples of distinct endpoints:
@@ -533,21 +550,27 @@ They are not silently edited out of the study history.
 
 ---
 
-## 16. Baseline contract
+## 16. Baseline and ascertainment-control contract
 
 Every advanced ranking result is compared to at least:
 
 - random
 - historical research attention / publication popularity
+- attention momentum / research-growth velocity
 - evidence-volume popularity
 - candidate popularity / graph-degree control where applicable
 - deterministic transparent evidence ranking
+- a historical discoverability / observation-propensity control for endpoints whose future observation depends materially on study opportunity
+
+The discoverability control may include only defensible as-of-T nuisance predictors such as prior study availability, cohort/sample-size trajectory, phenotype measurability proxies, annotation density, or prior-association momentum.
+
+These variables are benchmark controls first; they are not automatically ranker features.
 
 The scientific value question is:
 
-> Does the method add signal beyond what the field was already studying?
+> Does the method add biological prioritization signal beyond what the field was already studying and beyond what was simply easiest or most likely to be measured next?
 
-Beating random alone is insufficient.
+Beating random or cumulative publication count alone is insufficient.
 
 ---
 
@@ -558,6 +581,8 @@ Beating random alone is insufficient.
 Targets within one disease are not independent samples.
 
 Primary confidence intervals should resample at the disease/challenge level unless a justified alternative is preregistered.
+
+Related diseases may themselves share genes, pathways, cohorts, consortia, controls, or publication ecosystems. Confirmatory studies therefore include a preregistered disease-family/block or other cluster-aware dependence sensitivity. If the signal materially weakens, that limitation is part of the primary interpretation.
 
 ### 17.2 Unknown labels
 
@@ -574,6 +599,30 @@ A probability is displayed only when:
 - applicability conditions are satisfied
 
 Otherwise the output remains a score/rank with explicit uncertainty, not a fake probability.
+
+### 17.4 Estimand and zero-event diseases
+
+Every primary benchmark defines the target estimand before sealed outcome access.
+
+At minimum it freezes:
+- target disease population;
+- disease weighting;
+- candidate weighting;
+- zero-future-event disease policy;
+- macro vs micro aggregation;
+- outcome observability requirements;
+- primary endpoint subtype;
+- primary K/review budget and normalized companion metric.
+
+Diseases may not be removed after outcome inspection merely because the chosen metric is undefined when no qualifying future event occurs.
+
+The conditional event-ranking estimand must be accompanied by an all-frame observed-event review-budget utility that includes zero-event diseases without treating non-observation as biological failure.
+
+### 17.5 Multiplicity
+
+The MAP freezes one primary endpoint/subtype, one primary metric, and one primary review budget/K.
+
+Secondary endpoints, cutoffs, subgroups, and sensitivity analyses require a preregistered multiplicity/reporting policy.
 
 ---
 
@@ -658,6 +707,7 @@ A frozen Model Analysis Plan or equivalent study plan contains:
 QoI
 Context of Use
 scientific assumptions
+scientific estimand
 cutoff
 observation horizon
 candidate universe
@@ -667,13 +717,27 @@ identity policy
 features
 model specification
 baselines
-endpoint
+discoverability control
+endpoint family
+primary endpoint subtype
+pre-T genetic-state policy
+outcome gene-assignment policy
+outcome phenotype-match policy
+genetic replication policy
+historical novelty policy
 matching rules
+zero-event disease policy
+validation generation
+Future Outcome snapshot/ledger commitment
 primary/secondary metrics
+all-frame review-budget utility
+dependence-sensitivity method
+multiplicity policy
 success criteria
 uncertainty strategy
 planned sensitivity analyses
 validation plan
+benchmark design provenance
 holdout access rules
 stop conditions
 ```
@@ -740,7 +804,7 @@ Do not patch over missing history with modern annotations.
 
 ### Gate B — Baseline value
 
-If transparent models do not beat research-attention/evidence-count baselines on development data, investigate the scientific premise before adding complexity.
+If transparent models do not beat research-attention, evidence-count, and endpoint-appropriate discoverability controls on development data, investigate the scientific premise before adding complexity.
 
 ### Gate C — Sealed confirmation
 
@@ -771,7 +835,7 @@ The system ranks hypotheses for qualified scientific investigation; experimental
 
 The first benchmark is intentionally narrow and is defined in [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md).
 
-B-TGT-E1-v0 predicts disease–gene target-association prioritization and evaluates later independent human genetic support. It does **not** claim to validate intervention direction, clinical efficacy, or treatment success.
+B-TGT-A1 / B-TGT-E1-v0 predicts **disease–gene association prioritization** and evaluates later independent human genetic support. It does **not** by itself claim therapeutic-target validation, intervention direction, causal target status, clinical efficacy, or treatment success.
 
 The endpoint-quality threshold, H, primary K, success threshold, and coverage thresholds are development-time decisions that must be frozen in the MAP before sealed evaluation.
 
@@ -809,7 +873,124 @@ A model evaluated at T_eval may train on historical anchor challenges t_i only w
 
 ---
 
-## 30. Readiness rule
+## 30. Outcome-construction and novelty contract
+
+Temporal cleanliness of model inputs does not guarantee correctness of future labels.
+
+For B-TGT gene-level outcomes:
+
+- locus/variant discovery and gene assignment are distinct;
+- modern learned locus-to-gene scores are not unqualified strict-historical ground truth;
+- assignment method, evidence, availability, knowledge horizon, and uncertainty are provenance;
+- every candidate relevant to novelty has an explicit PreTGeneticState;
+- E1-NOVEL-STRICT requires PreTGeneticState = NO_SIGNAL_OBSERVED plus HistoricalNoveltyAudit = NOVEL_CONFIRMED;
+- suggestive pre-T genetics followed by stronger post-T evidence is E1-MATURATION, not de novo novelty;
+- disease/trait phenotype matching is explicit and risk-factor/surrogate relations are not silently promoted to the primary disease endpoint;
+- E1-REPLICATION requires a governed GeneticReplicationAssessment rather than a repeated label;
+- unresolved novelty, phenotype match, replication, or assignment becomes AMBIGUOUS/INCONCLUSIVE rather than a rescued positive.
+
+Normative decisions:
+- [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md)
+- [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md)
+- [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md)
+
+---
+
+## 31. Researcher-hindsight and adjudication contract
+
+A sealed database does not erase modern biomedical knowledge from researchers.
+
+Confirmatory studies maintain BenchmarkDesignProvenance and:
+- separate ranking/model development from outcome adjudication where organizationally possible;
+- record researcher exposure to sealed diseases and future outcomes;
+- freeze feature families/algorithm/config before sealed outcome reveal;
+- keep sealed disease identities hidden from the ranking methodology team for the strongest retrospective claim when operationally possible.
+
+For the **strongest L3 SEALED_CONFIRMATORY tier**, sealed outcome adjudicators must be blinded to model rank/order. If rank/order is visible during sealed adjudication, the tier is automatically downgraded.
+
+A technically sealed benchmark with outcome-aware design may be downgraded to exploratory evidence.
+
+Normative decisions:
+- [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md)
+- [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md)
+
+### 31.1 Validation-generation contract
+
+VALIDATION is versioned into generations.
+
+If validation results materially influence features, model class, endpoint design, hyperparameters, thresholds, disease selection, or candidate selection, that generation becomes SPENT_FOR_MODEL_SELECTION.
+
+A spent generation remains reportable but is not called untouched validation.
+
+### 31.2 Future Outcome commitment contract
+
+Before sealed evaluation, freeze/commit the exact:
+- future outcome source releases;
+- Future Outcome snapshot/digest;
+- outcome-ledger digest;
+- adjudication-batch digest;
+- evaluation identity-bridge digest;
+- phenotype-match, gene-assignment, and replication policy versions.
+
+Changing these artifacts creates a new evaluation generation rather than silently changing ground truth.
+
+---
+
+## 32. Discoverability and reporting-bias contract
+
+Future biomedical evidence is not assumed to be observed at random.
+
+The benchmark must consider whether later support is driven by:
+- research intensity;
+- sample-size/statistical-power growth;
+- phenotype measurability;
+- annotation density;
+- funding/study opportunity;
+- selective publication/reporting.
+
+Where material, MARs report sensitivity to these processes and compare against a historical discoverability/observation-propensity control.
+
+---
+
+## 33. Population/ancestry applicability contract
+
+Evidence and outcomes retain population/ancestry metadata where scientifically relevant and available.
+
+A result derived from a historically ancestry-skewed evidence base is not silently generalized to populations not adequately represented in the evaluation.
+
+Missing ancestry/applicability information is reported as UNKNOWN or NOT_ASSESSED.
+
+---
+
+## 34. Knowledge-historical vs technology-contemporaneous claims
+
+Forge Bio distinguishes:
+
+```text
+KNOWLEDGE_HISTORICAL
+    model-visible biomedical knowledge is admissible by T
+
+TECHNOLOGY_CONTEMPORANEOUS
+    the complete computational method could realistically have been implemented/run with technology available at T
+```
+
+STRICT_HISTORICAL establishes the first property unless a study explicitly evaluates the second.
+
+The platform must not claim "this exact system could have run in year T" merely because its biomedical knowledge watermark is <= T.
+
+---
+
+## 35. Red-team gap authority
+
+[SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEAM_GAPS.md) records active scientific-integrity blockers discovered by adversarial review.
+
+Any ACTIVE P0 blocker in that register is a hard stop for production scientific implementation unless:
+- it is closed with evidence;
+- or it is explicitly superseded by an accepted ADR that preserves the intended claim boundary.
+
+---
+
+## 36. Readiness rule
 
 [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md) is the operational go/no-go authority.
 

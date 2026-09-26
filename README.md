@@ -58,14 +58,36 @@ The Historical Knowledge plane and Future Outcome plane are isolated. A confirma
 
 Beating random is insufficient.
 
-The central question is whether the platform shows reproducible lift over **historical research attention** and other trivial popularity/evidence-volume baselines.
+The central question is whether the platform shows reproducible lift over **historical research attention**, **historical discoverability / observation opportunity**, and other trivial popularity/evidence-volume baselines.
+
+A model that mainly predicts what researchers were about to study or what was easiest to measure has not demonstrated biological discovery value.
 
 ## Initial benchmark families
 
-- **B-TGT — Target Discovery:** establishes biological prioritization signal.
+- **B-TGT — Target Program:** umbrella program for biological/target prioritization. Its first benchmark is intentionally narrower than "target discovery".
 - **B-REP — Drug Repurposing:** tests whether biological signal translates into therapeutic prioritization.
 
-The first proposed benchmark is **B-TGT-E1-v0**, a narrow disease–gene target-association benchmark evaluated against later independent human genetic support. It does not claim intervention-direction or clinical validation.
+The first proposed benchmark is **B-TGT-A1 / B-TGT-E1-v0 — Disease–Gene Association Prioritization**, evaluated against later independent human genetic support.
+
+E1 is explicitly split into:
+- **E1-NOVEL-STRICT** — no observed pre-T genetic signal after adequate audit, followed by qualifying post-T support;
+- **E1-MATURATION** — a suggestive pre-T signal later becomes qualifying;
+- **E1-REPLICATION** — genuine independent replication under allele/direction/phenotype/lineage rules;
+- **E1-CROSSMODAL** — pre-T non-genetic evidence anticipating later genetics.
+
+The benchmark also governs:
+- locus→gene assignment;
+- disease/trait phenotype matching;
+- pre-T signal-state auditing;
+- replication comparability;
+- cohort/sample independence;
+- discoverability bias;
+- zero-event disease review burden;
+- validation-set reuse;
+- immutable Future Outcome snapshots;
+- researcher hindsight.
+
+A positive V0 result is evidence about **disease–gene association prioritization**, not therapeutic-target validation or clinical efficacy.
 
 ## Pre-code status
 
@@ -87,15 +109,38 @@ Do not start production scientific code before that gate.
 - [Provider Qualification](docs/PROVIDER_QUALIFICATION.md)
 - [Model Training Policy](docs/MODEL_TRAINING_POLICY.md)
 - [Pre-Code Readiness Checklist](docs/PRE_CODE_CHECKLIST.md)
+- [Scientific Red-Team Gap Register](docs/SCIENTIFIC_RED_TEAM_GAPS.md)
+- [Scientific Glossary](docs/GLOSSARY.md)
+- [Core Scientific Types](docs/CORE_TYPES.md)
+- [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
+- [Architecture Dependency Rules](docs/DEPENDENCY_RULES.md)
+- [Prohibited Dependency / Leakage Fixtures](docs/PROHIBITED_DEPENDENCY_FIXTURES.md)
+- [B-TGT-E1 Estimand Proposal](docs/BENCHMARK_ESTIMAND_V0.md)
+- [Scientific Specification Governance](docs/SCIENTIFIC_SPEC_GOVERNANCE.md)
+- [Lockbox Policy](docs/LOCKBOX_POLICY.md)
+- [QoI Schema](docs/schemas/QOI_SCHEMA.md)
+- [Context-of-Use Schema](docs/schemas/CONTEXT_OF_USE_SCHEMA.md)
+- [MAP Schema](docs/schemas/MAP_SCHEMA.md)
+- [MAR Schema](docs/schemas/MAR_SCHEMA.md)
+- [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
+- [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
+- [ADR-008 — Outcome Phenotype Matching](docs/adr/ADR-008-outcome-phenotype-matching.md)
+- [ADR-009 — Genetic Replication and Pre-T Signal State](docs/adr/ADR-009-genetic-replication-and-signal-state.md)
+- [ADR-010 — Validation Generations and Outcome Snapshot Commitment](docs/adr/ADR-010-validation-generations-and-outcome-freeze.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
 
-The readiness checklist is authoritative. At present, the remaining owner/research decisions include:
+The readiness checklist and red-team gap register are authoritative.
 
-- licensing posture
-- final B-TGT-E1 evidence-quality rule
-- candidate H values / feasibility procedure
-- lockbox custody mechanism
+Important unresolved P0 work is now limited mainly to evidence-bearing decisions that require real feasibility data or explicit ownership choice:
+- licensing posture (ADR-005 owner decision);
+- final frozen B-TGT-E1 estimand after feasibility evidence;
+- final primary E1 subtype and endpoint evidence-quality threshold;
+- manual outcome-feasibility pilot and its ambiguity/curation/lineage measurements.
 
-Once P0 is closed, the next step is a final red-team review. Only then do we declare **GO FOR BIG 0 CODE**.
+The V0 primary genetic regime, H candidate procedure, strict novelty/maturation semantics, phenotype-match policy, locus→gene policy, genetic-replication policy, discoverability controls, validation-generation rules, immutable outcome-snapshot commitment, analyst-hindsight governance, lockbox mechanism, schemas, core types, golden world, and dependency rules are now specified.
+
+Do **not** start production scientific code while any P0 blocker remains active.
+
+Once P0 is closed, run a final red-team review against the frozen commit. Only then declare **GO FOR CORE SCIENTIFIC CODE**.

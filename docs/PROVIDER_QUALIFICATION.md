@@ -41,6 +41,10 @@ record_history_capability
 availability_semantics
 retrospective_curation_risk
 identity_mapping_risk
+outcome_ascertainment_risk
+locus_to_gene_dependency
+population_ancestry_coverage
+representation_derivation_time_semantics
 ontology_dependency
 derived_model_dependency
 coverage_scope
@@ -123,6 +127,9 @@ unknown_fraction
 identity_resolution_fraction
 archive_fidelity
 outcome_window_length
+retrospective_curation_fraction
+population_ancestry_metadata_fraction
+assignment_dependency_fraction
 license_status
 ```
 
@@ -181,6 +188,10 @@ No cutoff becomes authoritative until the provider audit documents:
 - acceptable UNKNOWN fractions;
 - outcome observation horizon;
 - disease/candidate identity coverage;
+- outcome ascertainment/discoverability risks;
+- representation-derivation timing;
+- locus-to-gene assignment dependencies where applicable;
+- population/ancestry coverage where relevant;
 - reconstruction dependencies.
 
 "2010" remains a working hypothesis until this gate is passed.
@@ -197,3 +208,33 @@ Changing provider/release/field qualification requires:
 - new dataset snapshot IDs;
 - affected benchmark reclassification;
 - an ADR if semantics change.
+
+
+## 13. Future outcome provider qualification
+
+Future outcome sources are qualified independently from Past providers.
+
+A source may be excellent for current discovery and still be unsuitable as benchmark ground truth because of:
+- retrospective curation;
+- opaque gene assignment;
+- selective reporting;
+- unstable historical coverage;
+- missing cohort/sample lineage;
+- unknown first-public availability;
+- poor population/ancestry metadata.
+
+Outcome-provider qualification records whether the source is acceptable for:
+- event discovery;
+- historical novelty audit;
+- gene-assignment evidence;
+- independent replication;
+- negative/failure evidence;
+- censoring/coverage accounting.
+
+## 14. Representation-time rule
+
+Provider records that expose modern structured annotations over older primary observations must preserve both layers.
+
+A field is not HISTORICAL_SAFE merely because it points to an old publication.
+
+If the structured derivation itself depends on later knowledge, the field's watermark follows that derivation.

@@ -14,9 +14,10 @@ For each training anchor t_i:
 
 1. build features only from a HistoricalKnowledgeView as-of t_i;
 2. construct the candidate universe as-of t_i;
-3. derive the training endpoint from events in (t_i, t_i + H];
+3. derive the training endpoint from events in (t_i, t_i + H] using the same governed endpoint subtype, PreTGeneticState, novelty, phenotype-match, gene-assignment, replication, and independence policies required by the benchmark;
 4. require t_i + H <= T_eval for strict training of a model evaluated at T_eval;
-5. exclude or censor examples whose outcome window is incomplete.
+5. exclude or censor examples whose outcome window is incomplete according to the frozen policy;
+6. preserve zero-event disease/challenge cases according to the benchmark estimand rather than dropping them for convenience.
 
 Conceptually:
 
@@ -63,9 +64,13 @@ Depending on the benchmark, prevent inappropriate overlap through:
 
 The MAP freezes the split policy.
 
+Where the endpoint is vulnerable to research-opportunity bias, validation also stratifies or controls for historical research intensity/discoverability. Model performance must not be interpreted as biological generalization if it collapses outside high-attention strata.
+
 ## 5. Hyperparameter tuning
 
 Hyperparameters may be tuned only using development/validation challenges whose labels are permitted by the training policy.
+
+Validation data are versioned into generations. When validation results materially influence feature/model/endpoint/hyperparameter/threshold selection, the generation becomes SPENT_FOR_MODEL_SELECTION and may not be described later as untouched validation.
 
 SEALED_LOCKBOX labels never participate in:
 - feature selection;
@@ -88,6 +93,10 @@ Confirmatory runs use:
 - preregistered generic feature families; or
 - feature sets frozen from development work before lockbox opening.
 
+For E1-CROSSMODAL, the tested arm must exclude pre-T genetic features or isolate them through a preregistered ablation so the result cannot be explained by genetic-signal maturation.
+
+Feature definitions and disease selections influenced by known future successes are documented in BenchmarkDesignProvenance.
+
 ## 8. Pretrained models
 
 A pretrained artifact is strict-historical only if its training knowledge horizon is known and <= the anchor/cutoff required by the MAP.
@@ -105,7 +114,10 @@ Every trained model records:
 - training challenge IDs;
 - training anchor dates;
 - training dataset IDs;
-- endpoint/horizon;
+- endpoint family/subtype and horizon;
+- estimand/version;
+- PreTGeneticState, novelty, phenotype-match, gene-assignment, and replication policy versions;
+- validation-generation IDs/statuses used during selection;
 - split policy;
 - seeds;
 - knowledge watermark;
@@ -113,4 +125,9 @@ Every trained model records:
 
 ## 10. Failure condition
 
-If any training example uses a label whose qualifying event is after T_eval, the strict confirmatory model is contaminated and the run must fail closed.
+A strict confirmatory model fails closed if:
+- any training example uses a qualifying event after T_eval;
+- a gene-level label depends on an ungoverned modern assignment;
+- a purported E1-NOVEL-STRICT label has a pre-T SUGGESTIVE/QUALIFYING/AMBIGUOUS state or bypasses HistoricalNoveltyAudit;
+- a training label bypasses required phenotype-match or genetic-replication adjudication;
+- future-conditioned filtering changes the training population outside the frozen estimand.
