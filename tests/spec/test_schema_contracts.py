@@ -72,6 +72,11 @@ class ScientificTwinSchemaTests(unittest.TestCase):
     def test_valid_t0_profile_only(self) -> None:
         self.validator.validate(self.base())
 
+    def test_research_twin_terminology_scope_is_required(self) -> None:
+        x = self.base()
+        x.pop("terminology_scope")
+        self.assert_invalid(x)
+
     def test_t1_requires_dynamic_state_and_update_policy(self) -> None:
         x = self.base()
         x["maturity_level"] = "T1_DYNAMIC_KNOWLEDGE_TWIN"
@@ -171,6 +176,18 @@ class ProfileSchemaTests(unittest.TestCase):
         therapeutic = self.common("therapeutic-profile-v1", "T1")
         therapeutic.update({"therapeutic_entity_id": "T1", "therapeutic_modality": "SMALL_MOLECULE"})
         self.validate("therapeutic-profile.v1.schema.json", therapeutic)
+
+        virus = {
+            "extension_id": "VX1",
+            "schema_version": "virus-profile-extension-v1",
+            "pathogen_id": "P1",
+            "scientific_operating_mode": "CURRENT_DISCOVERY",
+            "historical_data_policy": "ARCHIVED_ONLY",
+            "provenance_ref": "prov-1",
+            "knowledge_watermark": "DATED(2026-09-26)",
+            "digest": "sha256:test",
+        }
+        self.validate("virus-profile-extension.v1.schema.json", virus)
 
     def test_historical_profile_requires_cutoff(self) -> None:
         disease = self.common("disease-profile-v1", "D1")
