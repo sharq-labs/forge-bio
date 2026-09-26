@@ -86,12 +86,20 @@ G4 = Gene Four
 - no qualifying pre-T genetics after novelty audit
 - gene-level positive may be accepted under assignment policy
 
-### F2 — E1-REPLICATION candidate
+### F2 — E1-MATURATION candidate
 - disease D1
 - gene G2
-- independent cohort replicates association in 2012
 - pre-T suggestive signal E-H2 exists
-- subtype = E1-REPLICATION, not E1-NOVEL
+- larger post-T study crosses the endpoint threshold in 2012
+- this is E1-MATURATION, not E1-NOVEL-STRICT
+
+### F2b — E1-REPLICATION candidate
+- disease D1
+- gene G2
+- a separate post-T cohort reproduces the pre-existing association
+- phenotype/locus/allele/direction handling is compatible
+- cohort/sample independence passes
+- subtype = E1-REPLICATION
 
 ### F3 — modern-assignment trap
 - disease D1
@@ -112,6 +120,28 @@ G4 = Gene Four
 - D2 has no qualifying E1 event in (T,T+H]
 - D2 remains in the frozen disease sampling frame
 - metric engine follows the frozen zero-event estimand policy rather than deleting D2 post hoc
+- D2 contributes to all-frame review-budget accounting without being labelled biologically negative
+
+### F7 — phenotype mismatch trap
+- benchmark disease = D1
+- future GWAS is for a related biomarker/risk-factor phenotype, not D1
+- relation = RISK_FACTOR
+- event does not qualify for the primary D1 endpoint
+
+### F8 — replication direction-conflict trap
+- same locus/compatible variant relation as a pre-T signal
+- post-T effect direction is inconsistent after allele harmonization
+- verdict = DIRECTION_CONFLICT, not REPLICATED
+
+### F9 — moving outcome snapshot trap
+- outcome provider release R1 is committed before evaluation
+- release R2 later changes a mapping/adjudicated event
+- R2 cannot silently replace R1 in the same benchmark generation
+
+### F10 — spent validation generation
+- validation generation V1 is inspected and methodology changes
+- V1 status becomes SPENT_FOR_MODEL_SELECTION
+- V1 is not described as untouched validation thereafter
 
 ## 6. Candidate universe at T
 
@@ -136,11 +166,16 @@ Universe order and digest must be deterministic.
 5. F3 cannot become strict gene-level POSITIVE through modern L2G alone;
 6. duplicate F4 records count as one independence family;
 7. F5 overlap is not independent replication;
-8. E1-NOVEL and E1-REPLICATION remain distinguishable;
-9. D2 is not silently removed because it has zero future events;
-10. replacing a generic hashing implementation must not move a biomedical watermark;
-11. converting an old paper with a 2026 knowledge-bearing annotation carries the 2026/UNKNOWN derivation watermark;
-12. ranking/config digest is deterministic across repeated runs.
+8. E1-NOVEL-STRICT, E1-MATURATION, and E1-REPLICATION remain distinguishable;
+9. suggestive pre-T genetics cannot qualify as E1-NOVEL-STRICT;
+10. D2 is not silently removed because it has zero future events and appears in all-frame utility accounting;
+11. F7 risk-factor phenotype cannot qualify as an exact disease endpoint;
+12. F8 direction conflict cannot count as replication;
+13. F9 provider release change cannot mutate the committed outcome snapshot in-place;
+14. F10 validation reuse marks the generation spent;
+15. replacing a generic hashing implementation must not move a biomedical watermark;
+16. converting an old paper with a 2026 knowledge-bearing annotation carries the 2026/UNKNOWN derivation watermark;
+17. ranking/config digest is deterministic across repeated runs.
 
 ## 8. Expected role in implementation
 
