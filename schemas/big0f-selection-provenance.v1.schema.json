@@ -13,8 +13,13 @@
     "digest"
   ],
   "properties": {
-    "selection_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "big0f-selection-provenance-v1"},
+    "selection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-selection-provenance-v1"
+    },
     "candidate_pairs": {
       "type": "array",
       "minItems": 16,
@@ -33,15 +38,31 @@
         ],
         "properties": {
           "cutoff": {
-            "enum": ["2005-12-31", "2008-12-31", "2011-12-31", "2014-12-31"]
+            "enum": [
+              "2005-12-31",
+              "2008-12-31",
+              "2011-12-31",
+              "2014-12-31"
+            ]
           },
-          "horizon": {"enum": ["3y", "5y", "7y", "10y"]},
-          "provider_availability_pass": {"type": "boolean"},
+          "horizon": {
+            "enum": [
+              "3y",
+              "5y",
+              "7y",
+              "10y"
+            ]
+          },
+          "provider_availability_pass": {
+            "type": "boolean"
+          },
           "provider_availability_evidence_digest": {
             "type": "string",
             "pattern": "^sha256:[0-9a-fA-F]{64}$"
           },
-          "observation_window_pass": {"type": "boolean"},
+          "observation_window_pass": {
+            "type": "boolean"
+          },
           "observation_window_evidence_digest": {
             "type": "string",
             "pattern": "^sha256:[0-9a-fA-F]{64}$"
@@ -51,10 +72,24 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["event_id", "disease_id"],
+              "required": [
+                "event_id",
+                "disease_id",
+                "event_provenance_digest"
+              ],
               "properties": {
-                "event_id": {"type": "string", "minLength": 1},
-                "disease_id": {"type": "string", "minLength": 1}
+                "event_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "disease_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "event_provenance_digest": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-fA-F]{64}$"
+                }
               }
             }
           }
@@ -66,13 +101,19 @@
       "minItems": 12,
       "maxItems": 15,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "selected_event_ids": {
       "type": "array",
       "maxItems": 150,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "digest": {
       "type": "string",
