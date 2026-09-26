@@ -468,8 +468,10 @@ class HostileReviewRegressionTests(unittest.TestCase):
 
     def test_alpha_allocations_cannot_exceed_program_budget(self) -> None:
         x = {
-            "budget_id": "B1", "schema_version": "confirmatory-program-budget-v1",
-            "benchmark_family": "B-TGT", "familywise_alpha": 0.05,
+            "budget_id": "CPB-FORGE-BIO-B-TGT-E1-V0",
+            "schema_version": "confirmatory-program-budget-v1",
+            "benchmark_family": "B-TGT-E1",
+            "familywise_alpha": 0.05,
             "allocation_method": "FIXED_SPLIT",
             "max_confirmatory_generations": 2,
             "generation_allocations": [
@@ -478,7 +480,9 @@ class HostileReviewRegressionTests(unittest.TestCase):
             ],
             "development_results_can_support_confirmatory_claim": False,
             "post_failure_policy": "stop or prospectively validate",
-            "digest": "sha256:abcdef12",
+            "research_program_id": "FORGE-BIO-B-TGT-E1-V0",
+            "program_scope_lock": "RENAMING_BENCHMARK_ENDPOINT_FRAME_OR_MODEL_DOES_NOT_RESET_BUDGET",
+            "digest": "sha256:" + "e" * 64,
         }
         validator("confirmatory-program-budget.v1.schema.json").validate(x)
         self.assertTrue(validate_semantics("confirmatory_program_budget", x))
