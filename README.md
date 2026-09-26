@@ -150,6 +150,7 @@ Do not start production scientific code before that gate.
 - [Model Credibility Policy](docs/MODEL_CREDIBILITY_POLICY.md)
 - [Quantitative Semantics](docs/QUANTITATIVE_SEMANTICS.md)
 - [Evidence Extraction Quality Policy](docs/EVIDENCE_EXTRACTION_POLICY.md)
+- [Benchmark & Source Lifecycle Policy](docs/BENCHMARK_LIFECYCLE_POLICY.md)
 - [Scientific Twin JSON Schema](schemas/scientific-twin.v1.schema.json)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
@@ -164,6 +165,7 @@ Do not start production scientific code before that gate.
 - [ADR-016 — Model Credibility & Numerical Verification](docs/adr/ADR-016-model-credibility-numerical-verification.md)
 - [ADR-017 — Quantitative Semantics](docs/adr/ADR-017-quantitative-semantics.md)
 - [ADR-018 — Evidence Extraction Quality](docs/adr/ADR-018-evidence-extraction-quality.md)
+- [ADR-019 — Source & Benchmark Lifecycle](docs/adr/ADR-019-source-benchmark-lifecycle.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
