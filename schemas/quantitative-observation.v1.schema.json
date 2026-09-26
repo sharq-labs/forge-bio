@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/quantitative-observation.v1.schema.json",
+  "title": "Forge Bio Quantitative Observation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "observation_id",
+    "schema_version",
+    "quantity_definition_id",
+    "value_state",
+    "measurement_scale",
+    "transform",
+    "measurement_process_id",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest"
+  ],
+  "properties": {
+    "observation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "quantitative-observation-v1"
+    },
+    "quantity_definition_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "value_state": {
+      "enum": [
+        "OBSERVED",
+        "MISSING",
+        "BELOW_DETECTION",
+        "ABOVE_DETECTION",
+        "RIGHT_CENSORED",
+        "LEFT_CENSORED",
+        "INTERVAL_CENSORED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "value": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "unit_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dimension_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "unit_required": {
+      "type": "boolean"
+    },
+    "measurement_scale": {
+      "enum": [
+        "NOMINAL",
+        "ORDINAL",
+        "INTERVAL",
+        "RATIO",
+        "PROBABILITY",
+        "COUNT",
+        "RATE",
+        "LOG_RATIO",
+        "STANDARDIZED"
+      ]
+    },
+    "transform": {
+      "enum": [
+        "NONE",
+        "LN",
+        "LOG10",
+        "LOG2",
+        "Z_SCORE",
+        "MIN_MAX",
+        "RANK",
+        "CUSTOM"
+      ]
+    },
+    "transform_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reference_value": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "detection_limit": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "standard_error": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "confidence_interval_low": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "confidence_interval_high": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "sample_size": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "measurement_process_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalization_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "batch_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "const": "OBSERVED"
+          }
+        },
+        "required": [
+          "value_state"
+        ]
+      },
+      "then": {
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "value_state": {
+            "enum": [
+              "MISSING",
+              "NOT_APPLICABLE"
+            ]
+          }
+        },
+        "required": [
+          "value_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "value": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "unit_required": {
+            "const": true
+          }
+        },
+        "required": [
+          "unit_required"
+        ]
+      },
+      "then": {
+        "required": [
+          "unit_id",
+          "dimension_id"
+        ],
+        "properties": {
+          "unit_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dimension_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "transform": {
+            "const": "CUSTOM"
+          }
+        },
+        "required": [
+          "transform"
+        ]
+      },
+      "then": {
+        "required": [
+          "transform_artifact_id"
+        ],
+        "properties": {
+          "transform_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
