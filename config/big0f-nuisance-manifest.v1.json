@@ -18,6 +18,5 @@
     "PROVIDER_COVERAGE"
   ],
   "disease_specific_attention_semantics": "CONTENT_FREE_COUNTS_AND_MOMENTUM_ONLY",
-  "semantic_evidence_features_forbidden": true,
-  "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  "semantic_evidence_features_forbidden": true
 }
