@@ -56,3 +56,19 @@ BIG 0F operational-prep contracts additionally provide:
 - endpoint-quality decision structure;
 - machine-readable pilot result;
 - deterministic GO / REDESIGN / NO_GO evaluation.
+
+- `endpoint-event-input.v1.schema.json`
+- `big0f-threshold-manifest.v1.schema.json`
+- `big0f-adjudication-policy.v1.schema.json`
+- `big0f-nuisance-manifest.v1.schema.json`
+- `big0f-power-analysis.v1.schema.json`
+- `randomness-beacon.v1.schema.json`
+- `research-program-ledger.v1.schema.json`
+
+Round 2 hostile-review enforcement additionally requires:
+- `scripts/evaluate_endpoint_quality.py` for executable endpoint-quality adjudication;
+- dual external attestations over the same BIG 0F seal-bundle digest;
+- first verified public randomness-beacon round after frame sealing;
+- nuisance-only pilot model evaluation;
+- a single program-wide confirmatory alpha budget that cannot reset by renaming;
+- confirmatory ambiguity/weighting/method-family sensitivities.
