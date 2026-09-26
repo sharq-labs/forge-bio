@@ -47,7 +47,28 @@
     },
     "tolerances": {
       "type": "object",
-      "minProperties": 1
+      "additionalProperties": false,
+      "required": [
+        "relative_tolerance"
+      ],
+      "properties": {
+        "relative_tolerance": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.1
+        },
+        "absolute_tolerance": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "tolerance_justification": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "discretization_ref": {
       "type": [
