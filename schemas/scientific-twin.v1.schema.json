@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/scientific-twin.v1.schema.json",
+  "title": "Forge Bio Scientific Digital Twin v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "twin_id",
+    "schema_version",
+    "twin_family",
+    "subject_entity_ids",
+    "maturity_level",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "profile_snapshot_ids",
+    "evidence_snapshot_ids",
+    "update_policy_id",
+    "verification_artifact_ids",
+    "validation_artifact_ids",
+    "uncertainty_bundle_ref",
+    "applicability_domain_ref",
+    "knowledge_watermark",
+    "digest"
+  ],
+  "properties": {
+    "twin_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "scientific-twin-v1"
+    },
+    "twin_family": {
+      "enum": [
+        "DISEASE_TWIN",
+        "PATHOGEN_TWIN",
+        "PATHOGEN_HOST_TWIN",
+        "THERAPEUTIC_TWIN"
+      ]
+    },
+    "subject_entity_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "maturity_level": {
+      "enum": [
+        "T0_PROFILE_ONLY",
+        "T1_DYNAMIC_KNOWLEDGE_TWIN",
+        "T2_MECHANISTIC_TWIN",
+        "T3_VALIDATED_PREDICTIVE_TWIN",
+        "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN"
+      ]
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "profile_snapshot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence_snapshot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "state_definition_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state_model_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "parameter_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "update_policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verification_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validation_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uncertainty_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "applicability_domain_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
