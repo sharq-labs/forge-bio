@@ -29,6 +29,11 @@ required = [
     ROOT / "schemas" / "model-credibility.v1.schema.json",
     ROOT / "schemas" / "extraction-artifact.v1.schema.json",
     ROOT / "schemas" / "extraction-quality-card.v1.schema.json",
+    ROOT / "schemas" / "source-lifecycle-event.v1.schema.json",
+    ROOT / "schemas" / "benchmark-exposure-ledger.v1.schema.json",
+    ROOT / "schemas" / "external-seal-attestation.v1.schema.json",
+    ROOT / "schemas" / "prediction-exposure-event.v1.schema.json",
+    ROOT / "schemas" / "research-program-attempt.v1.schema.json",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
@@ -115,6 +120,16 @@ for required_doc in [
 ]:
     if not required_doc.exists():
         errors.append(f"missing extraction assurance contract: {required_doc.relative_to(ROOT)}")
+
+
+
+# Research-program lifecycle integrity checks
+for required_doc in [
+    ROOT / "docs" / "BENCHMARK_LIFECYCLE_POLICY.md",
+    ROOT / "docs" / "adr" / "ADR-019-source-benchmark-lifecycle.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing lifecycle integrity contract: {required_doc.relative_to(ROOT)}")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")
