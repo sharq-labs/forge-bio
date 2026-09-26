@@ -354,6 +354,31 @@ def validate_confirmatory_program_budget(x: dict[str, Any]) -> list[str]:
     return e
 
 
+def validate_research_program_ledger(x: dict[str, Any]) -> list[str]:
+    e: list[str] = []
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("research-program ledger must use the canonical program ID")
+    if x.get("confirmatory_program_budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+        e.append("research-program ledger must link the canonical confirmatory budget")
+    attempts = x.get("attempts") or []
+    attempt_ids = [a.get("attempt_id") for a in attempts]
+    attempt_indexes = [a.get("attempt_index") for a in attempts]
+    if len(attempt_ids) != len(set(attempt_ids)):
+        e.append("research-program attempt IDs must be unique")
+    if len(attempt_indexes) != len(set(attempt_indexes)):
+        e.append("research-program attempt indexes must be unique")
+    confirmatory = [a for a in attempts if a.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"}]
+    generations = [a.get("allocation_generation_id") for a in confirmatory]
+    if len(generations) != len(set(generations)):
+        e.append("confirmatory/prospective attempts may not reuse one allocation generation as independent attempts")
+    alpha = sum(float(a.get("allocated_alpha") or 0) for a in confirmatory)
+    if alpha > 0.05 + 1e-12:
+        e.append("research-program ledger spends more than the single 0.05 alpha budget")
+    if len(generations) > 2:
+        e.append("research-program ledger exceeds maximum confirmatory generations")
+    return e
+
+
 VALIDATORS = {
     "map": validate_map,
     "scientific_twin": validate_twin,
@@ -366,6 +391,7 @@ VALIDATORS = {
     "external_seal": validate_external_seal,
     "research_program_attempt": validate_research_program_attempt,
     "confirmatory_program_budget": validate_confirmatory_program_budget,
+    "research_program_ledger": validate_research_program_ledger,
 }
 
 
