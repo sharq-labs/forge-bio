@@ -264,7 +264,7 @@ Normative policy: [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-
 
 ## 12. Historical novelty audit
 
-E1-NOVEL requires an evaluation-side HistoricalNoveltyAudit.
+E1-NOVEL-STRICT requires an evaluation-side HistoricalNoveltyAudit plus `PreTGeneticState = NO_SIGNAL_OBSERVED`.
 
 The audit may use sources that are never exposed to ranking/features.
 
