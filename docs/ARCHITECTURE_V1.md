@@ -185,6 +185,19 @@ Core concepts include:
 
 - DiseaseConcept
 - PhenotypeConcept
+- OrganismTaxon
+- PathogenConcept
+- VirusConcept
+- BacteriumConcept
+- FungusConcept
+- ParasiteConcept
+- StrainConcept
+- PathogenVariant
+- AnatomicalStructure
+- TissueConcept
+- CellTypeConcept
+- BiologicalProcess
+- BiomarkerConcept
 - Gene
 - GenomeAssembly
 - ReferenceSequence
@@ -209,7 +222,34 @@ Core concepts include:
 - SampleSet
 - LDReferencePanel
 
-### 4.2 Target is a role
+### 4.2 Scientific profiles and twins
+
+Disease, pathogen, pathogen–host, and therapeutic knowledge is exposed through versioned Scientific Profiles.
+
+Profiles are evidence-backed projections, not truth tables.
+
+A **Scientific Digital Twin** is a separate higher-level artifact with explicit maturity:
+
+```text
+T0_PROFILE_ONLY
+T1_DYNAMIC_KNOWLEDGE_TWIN
+T2_MECHANISTIC_TWIN
+T3_VALIDATED_PREDICTIVE_TWIN
+T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
+```
+
+T0 is not claimed as a digital twin. T3/T4 require predictive validation, uncertainty quantification, and applicability limits.
+
+For infectious disease, the preferred mechanistic abstraction is a PathogenHostScientificTwin when host biology materially determines disease behavior.
+
+Patient-specific digital twins are outside V1 Context of Use.
+
+Normative documents:
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+
+### 4.3 Target is a role
 
 `Target` is not treated as a universal primitive entity.
 
@@ -226,7 +266,7 @@ TargetHypothesis
 
 A gene, protein, protein complex, pathway component, or other biological entity becomes a target only relative to a disease, mechanism, direction, and context.
 
-### 4.3 Hypothesis classes
+### 4.4 Hypothesis classes
 
 Initial candidate classes:
 
@@ -1025,14 +1065,19 @@ The following are frozen unless superseded by ADR:
 22. B-TGT precedes or accompanies B-REP as the biological foundation.
 23. No LLM/deep model requirement in V1.
 24. No clinical-treatment claims.
-25. Genomic variant/locus identity is reference/assembly/allele aware; rsIDs are external identifiers.
+25. Static profiles/graphs are not called predictive digital twins.
+26. Twin maturity is explicit and validated; T3/T4 require held-out/future predictive evidence and uncertainty quantification.
+27. Disease, pathogen, and pathogen–host systems are distinct.
+28. Patient-specific twins are outside V1 Context of Use.
+29. Genomic variant/locus identity is reference/assembly/allele aware; rsIDs are external identifiers.
 26. Harmonization/liftover/LD relations are provenance-bearing scientific derivations.
 27. Strict novelty is gated by historical genetic-search coverage.
 28. KNOWN_TO_RANKER_AT_T and KNOWN_PUBLICLY_AT_T are distinct.
 29. ScientificEventFamily identity prevents duplicated manifestations/locus-to-many-gene inflation.
 30. Past/Future provider coupling is measured and sensitivity-tested.
 31. Cross-anchor event reuse is explicitly bounded.
-32. ScientificOperatingMode and HistoricalDataPolicy are orthogonal.
+36. ScientificOperatingMode and HistoricalDataPolicy are orthogonal.
+37. Scientific profiles/twins are time-indexed and obey HistoricalKnowledgeView/watermark semantics.
 
 
 ---
@@ -1058,7 +1103,10 @@ The following documents are normative for implementation detail and close gaps i
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md) — historical search coverage, public-vs-ranker knowledge, and observability.
 - [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md) — event-family identity, provider coupling, cross-anchor reuse, and validation disclosure.
 - [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md) — operating mode vs historical data policy.
-- [../schemas/README.md](../schemas/README.md) — executable QoI/MAP/MAR schemas.
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md) — scientific profile/twin maturity and claim boundaries.
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md) — disease/pathogen/therapeutic profile contracts.
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md) — dynamic/mechanistic/predictive twin architecture.
+- [../schemas/README.md](../schemas/README.md) — executable QoI/MAP/MAR/twin schemas.
 - [adr/](adr/) — explicit decisions that may change architecture.
 
 ### Freeze rule
