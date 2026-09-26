@@ -178,7 +178,7 @@ criticality: CRITICAL | REQUIRED | OPTIONAL
 
 Current availability is not accepted as evidence of historical reconstructability.
 
-Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. Required-field availability, coverage distribution, source-family count/IDs, and ancestry metadata coverage are deterministically re-derived from that artifact before GO can be evaluated. Provider-coupling and ancestry adequacy assertions must carry immutable evidence digests.
+Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. Required-field availability, coverage distribution, source-family count/IDs, and ancestry metadata coverage are deterministically re-derived from that artifact before GO can be evaluated. Provider-coupling and ancestry adequacy assertions must carry immutable evidence digests, and the evaluator requires the actual evidence files whose SHA-256 values exactly match those digests.
 
 ### Required-field availability score
 
@@ -422,8 +422,9 @@ A GO-capable pilot evaluation requires all of the following machine-verifiable a
 
 - selection provenance for the full cutoff/horizon grid, deterministic disease expansion, raw event universe, and capped event IDs;
 - the fitted nuisance-only run with exact frozen feature families and immutable feature/model/preprocessing digests;
-- a field-level provider audit artifact;
-- a second-adjudicator independence attestation bound to role-registry and independence-evidence digests;
+- a field-level provider audit artifact plus the exact provider evidence files referenced by digest;
+- a second-adjudicator independence attestation bound to actual role-registry and independence-evidence files by SHA-256;
+- a case-level curation audit from which event/non-event burden metrics are re-derived;
 - a power artifact deterministically rebuilt from the bound nuisance-run ranks;
 - real external-authority verification: OpenTimestamps proof verification for timestamp-service attestations, an independently fetched OSF record containing the exact committed digest for public-registry attestations, and an independently fetched DRAND round matching the sealed randomness.
 
