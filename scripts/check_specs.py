@@ -60,6 +60,7 @@ required = [
     ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json",
     ROOT / "schemas" / "big0f-provider-audit.v1.schema.json",
     ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json",
+    ROOT / "schemas" / "big0f-curation-audit.v1.schema.json",
     ROOT / "schemas" / "randomness-beacon.v1.schema.json",
     ROOT / "config" / "big0f-thresholds.v1.json",
     ROOT / "config" / "big0f-adjudication-policy.v1.json",
