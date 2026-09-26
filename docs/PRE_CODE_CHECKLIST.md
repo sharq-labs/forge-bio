@@ -225,6 +225,58 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 - [ ] Simulation output is labelled a research hypothesis, not clinical evidence.
 - [ ] No patient-specific treatment or dosing recommendation is produced.
 
+## Platform extension — BIG 0R5 model credibility & quantitative integrity
+
+These are non-blocking for the manual BIG 0F endpoint-feasibility pilot, but mandatory before T2+ Scientific Twin claims, probabilistic endpoint claims, or model-supported intervention simulation.
+
+### Policy/schema readiness
+
+- [x] Context-of-Use-specific model credibility policy exists.
+- [x] Quantitative semantics policy exists.
+- [x] QuantityDefinition schema exists.
+- [x] QuantitativeObservation schema exists.
+- [x] EffectEstimate schema exists.
+- [x] MeasurementProcessArtifact schema exists.
+- [x] NumericalVerificationArtifact schema exists.
+- [x] CredibilityAssessmentArtifact schema exists.
+- [x] Numeric missing/censoring/unit/transform fail-closed rules are defined.
+- [x] Model discrepancy is separated from parameter/numerical/measurement uncertainty.
+- [x] T3 applicability/shift and prediction-risk audit requirements are defined.
+- [x] Validation invalidation after material dependency change is defined.
+- [x] Executable positive/negative schema tests exist.
+
+### Before any numerical T2+ claim
+
+- [ ] Solver/engine/version recorded.
+- [ ] Method/tolerances/discretization or timestep recorded.
+- [ ] Convergence/refinement study completed where applicable.
+- [ ] Stochastic replicate / Monte Carlo error assessed where applicable.
+- [ ] Residual/invariant checks completed.
+- [ ] Numerical error estimate reported.
+- [ ] Reproducibility tolerance frozen.
+
+### Before any T3 probability claim
+
+- [ ] Endpoint/horizon frozen.
+- [ ] Held-out calibration evaluated.
+- [ ] Proper scoring rule frozen and reported.
+- [ ] Temporal/source/population/measurement shift assessed as applicable.
+- [ ] Prediction risk-of-bias audit completed.
+- [ ] Applicability domain frozen.
+- [ ] Out-of-domain outputs explicitly labelled extrapolation.
+
+### Before any model credibility conclusion
+
+- [ ] Research decision and model influence classified.
+- [ ] Consequence-if-wrong classified.
+- [ ] Verification adequacy assessed.
+- [ ] Numerical verification adequacy assessed.
+- [ ] Validation adequacy assessed.
+- [ ] Uncertainty adequacy assessed.
+- [ ] Applicability adequacy assessed.
+- [ ] Model discrepancy/residual risk documented.
+- [ ] Credibility conclusion is CoU-specific.
+
 ## Sample-size / feasibility rule
 
 Before freezing the sealed benchmark, use only development-visible information to estimate:
@@ -306,6 +358,10 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [../schemas/README.md](../schemas/README.md)
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
+- [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
+- [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
+- [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
