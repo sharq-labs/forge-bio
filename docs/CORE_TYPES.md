@@ -338,6 +338,8 @@ TransformDefinition
 QuantitativeObservation
 EffectEstimate
 MeasurementProcessArtifact
+ExtractionArtifact
+ExtractionQualityCard
 NumericalVerificationArtifact
 ModelDiscrepancyAssessment
 ApplicabilityDomain
@@ -407,6 +409,9 @@ UncertaintyBundle
 - T4 perturbation != causal intervention unless causal assumptions/intervention semantics/identifiability requirements pass.
 - numeric value != scientific measurement without quantity/unit/scale/transform/context semantics.
 - p-value != effect estimate.
+- extractor confidence != scientific evidence strength.
+- extracted claim != independent observation.
+- extraction representation change != new IndependenceFamily.
 - numerical solver agreement != biological validation.
 - numerical error != parameter uncertainty != model-form uncertainty != measurement uncertainty.
 - calibration != model correctness.
