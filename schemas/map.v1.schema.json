@@ -26,7 +26,8 @@
   ],
   "properties": {
     "map_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "schema_version": {
       "const": "map-v1"
@@ -39,7 +40,8 @@
       ]
     },
     "created_at": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "frozen_at": {
       "type": [
@@ -54,16 +56,20 @@
       ]
     },
     "qoi_ref": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "context_of_use_ref": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "estimand_ref": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "benchmark": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "benchmark_id",
         "generation",
@@ -107,11 +113,11 @@
         "sealed_lockbox_id": {
           "type": "string"
         }
-      },
-      "additionalProperties": false
+      }
     },
     "providers": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "past_snapshot_ids",
         "future_outcome_source_ids",
@@ -143,48 +149,465 @@
             "type": "string"
           }
         }
-      },
-      "additionalProperties": false
+      }
     },
     "policies": {
       "type": "object",
-      "additionalProperties": {
-        "type": [
-          "string",
-          "boolean",
-          "number",
-          "array",
-          "object"
-        ]
+      "additionalProperties": false,
+      "required": [
+        "scientific_operating_mode",
+        "historical_data_policy",
+        "temporal_policy_version",
+        "identity_policy_version",
+        "evidence_schema_version",
+        "endpoint_policy_version",
+        "endpoint_primary_subtype",
+        "outcome_gene_assignment_policy_version",
+        "historical_novelty_policy_version",
+        "pre_t_genetic_state_policy_version",
+        "outcome_phenotype_match_policy_version",
+        "genetic_replication_policy_version",
+        "genomic_identity_policy_version",
+        "variant_harmonization_policy_version",
+        "ld_policy_version",
+        "historical_genetic_coverage_policy_version",
+        "genetic_observability_policy_version",
+        "scientific_event_family_policy_version",
+        "provider_coupling_policy_version",
+        "cross_anchor_event_reuse_policy_version",
+        "independence_policy_version",
+        "adjudication_policy_version",
+        "zero_event_policy_version",
+        "multiplicity_policy_version"
+      ],
+      "properties": {
+        "scientific_operating_mode": {
+          "enum": [
+            "STRICT_HISTORICAL",
+            "HISTORICAL_INPUT_MODERN_PRIOR",
+            "CURRENT_DISCOVERY"
+          ]
+        },
+        "historical_data_policy": {
+          "enum": [
+            "ARCHIVED_ONLY",
+            "RECONSTRUCTED_ALLOWED"
+          ]
+        },
+        "temporal_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "endpoint_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "endpoint_primary_subtype": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome_gene_assignment_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "historical_novelty_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pre_t_genetic_state_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome_phenotype_match_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "genetic_replication_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "genomic_identity_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variant_harmonization_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ld_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "historical_genetic_coverage_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "genetic_observability_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scientific_event_family_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider_coupling_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cross_anchor_event_reuse_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "independence_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adjudication_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zero_event_policy_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "multiplicity_policy_version": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "model": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "algorithm_id",
+        "model_version",
+        "feature_set_id",
+        "config_hash",
+        "random_seeds",
+        "knowledge_watermark",
+        "preprocessing_artifact_ids"
+      ],
+      "properties": {
+        "algorithm_id": {
+          "type": "string"
+        },
+        "model_version": {
+          "type": "string"
+        },
+        "feature_set_id": {
+          "type": "string"
+        },
+        "config_hash": {
+          "type": "string"
+        },
+        "random_seeds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "knowledge_watermark": {
+          "type": "string"
+        },
+        "preprocessing_artifact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "feature_selection_artifact_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
     },
     "baselines": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "primary_comparator_id",
+        "baseline_ids",
+        "discoverability_control_id"
+      ],
+      "properties": {
+        "primary_comparator_id": {
+          "type": "string"
+        },
+        "baseline_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "discoverability_control_id": {
+          "type": "string"
+        }
+      }
     },
     "statistics": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "primary_metric_id",
+        "primary_k_or_budget",
+        "normalized_companion_metric_id",
+        "ci_method",
+        "resampling_unit",
+        "multiplicity_policy",
+        "success_threshold",
+        "all_frame_utility_metric_id",
+        "dependence_sensitivity_method"
+      ],
+      "properties": {
+        "primary_metric_id": {
+          "type": "string"
+        },
+        "primary_k_or_budget": {
+          "type": "string"
+        },
+        "normalized_companion_metric_id": {
+          "type": "string"
+        },
+        "ci_method": {
+          "type": "string"
+        },
+        "resampling_unit": {
+          "type": "string"
+        },
+        "multiplicity_policy": {
+          "type": "string"
+        },
+        "success_threshold": {
+          "type": "string"
+        },
+        "all_frame_utility_metric_id": {
+          "type": "string"
+        },
+        "dependence_sensitivity_method": {
+          "type": "string"
+        }
+      }
     },
     "outcome_commitment": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "future_outcome_source_release_ids",
+        "future_outcome_snapshot_ids",
+        "future_outcome_snapshot_digest",
+        "outcome_ledger_digest",
+        "adjudication_batch_digest",
+        "evaluation_identity_bridge_digest",
+        "scientific_event_family_ledger_digest",
+        "provider_coupling_assessment_digest",
+        "outcome_event_discovery_frozen_at"
+      ],
+      "properties": {
+        "future_outcome_source_release_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "future_outcome_snapshot_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "future_outcome_snapshot_digest": {
+          "type": "string"
+        },
+        "outcome_ledger_digest": {
+          "type": "string"
+        },
+        "adjudication_batch_digest": {
+          "type": "string"
+        },
+        "evaluation_identity_bridge_digest": {
+          "type": "string"
+        },
+        "scientific_event_family_ledger_digest": {
+          "type": "string"
+        },
+        "provider_coupling_assessment_digest": {
+          "type": "string"
+        },
+        "outcome_event_discovery_frozen_at": {
+          "type": "string"
+        }
+      }
     },
     "coverage_gates": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "max_temporal_unknown_fraction",
+        "min_identity_resolution_fraction",
+        "min_outcome_coverage_fraction",
+        "max_novelty_ambiguity_fraction",
+        "max_assignment_ambiguity_fraction",
+        "min_lineage_completeness_fraction",
+        "min_historical_genetic_coverage_grade",
+        "max_variant_harmonization_ambiguity_fraction"
+      ],
+      "properties": {
+        "max_temporal_unknown_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_identity_resolution_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_outcome_coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_novelty_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_assignment_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_lineage_completeness_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_historical_genetic_coverage_grade": {
+          "enum": [
+            "HIGH",
+            "MODERATE",
+            "LOW"
+          ]
+        },
+        "max_variant_harmonization_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
     },
     "planned_analyses": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "subgroup_analyses",
+        "sensitivity_analyses",
+        "source_ablations",
+        "negative_controls"
+      ],
+      "properties": {
+        "subgroup_analyses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sensitivity_analyses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_ablations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "negative_controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "governance": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": false,
+      "required": [
+        "benchmark_design_provenance_id",
+        "ranking_team",
+        "outcome_adjudication_role",
+        "lockbox_custodian_role",
+        "permitted_lockbox_accesses",
+        "sealed_disease_blinding_policy",
+        "sealed_outcome_adjudicator_blinding_required",
+        "validation_generation_status",
+        "validation_access_count",
+        "validation_max_disclosure_level",
+        "deviation_policy"
+      ],
+      "properties": {
+        "benchmark_design_provenance_id": {
+          "type": "string"
+        },
+        "ranking_team": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outcome_adjudication_role": {
+          "type": "string"
+        },
+        "lockbox_custodian_role": {
+          "type": "string"
+        },
+        "permitted_lockbox_accesses": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sealed_disease_blinding_policy": {
+          "type": "string"
+        },
+        "sealed_outcome_adjudicator_blinding_required": {
+          "type": "boolean"
+        },
+        "validation_generation_status": {
+          "enum": [
+            "ACTIVE",
+            "SPENT_FOR_MODEL_SELECTION",
+            "RETIRED"
+          ]
+        },
+        "validation_access_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "validation_max_disclosure_level": {
+          "enum": [
+            "AGGREGATE_ONLY",
+            "SUBGROUP",
+            "PER_CASE",
+            "FULL_LABEL"
+          ]
+        },
+        "deviation_policy": {
+          "type": "string"
+        }
+      }
     },
     "stop_conditions": {
       "type": "array",
