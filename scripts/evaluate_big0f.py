@@ -10,8 +10,9 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.build_seal_bundle import manifest_digest, verify_manifest
+from scripts.build_seal_bundle import canonical_json_bytes, manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
+from scripts.verify_external_authorities import verify_drand_beacon, verify_external_attestation
 from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
 from scripts.verify_big0f_provenance import (
     ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
@@ -391,9 +392,11 @@ def _verified_context_from_files(
     disease_frame_path: Path,
     randomness_beacon_path: Path,
     frame_seal_attestation_path: Path,
+    frame_seal_ots_proof_path: Path | None,
     threshold_manifest_path: Path,
     seal_bundle_manifest_path: Path,
     seal_attestation_paths: list[Path],
+    seal_bundle_ots_proof_path: Path | None,
     power_analysis_path: Path,
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
@@ -418,6 +421,24 @@ def _verified_context_from_files(
     if bundle_digest != result["seal_bundle_digest"]:
         raise ValueError("pilot seal_bundle_digest does not match seal-bundle manifest")
 
+    frame_attestation = load_json_strict(frame_seal_attestation_path)
+    _validate_schema(frame_attestation, ATTESTATION_SCHEMA_PATH)
+    frame_semantic_errors = validate_external_seal(frame_attestation)
+    if frame_semantic_errors:
+        raise ValueError("frame external seal attestation invalid: " + " | ".join(frame_semantic_errors))
+    frame_external_errors = verify_external_attestation(
+        frame_attestation,
+        disease_frame_path.read_bytes(),
+        ots_proof_path=frame_seal_ots_proof_path,
+    )
+    if frame_external_errors:
+        raise ValueError("frame external authority verification failed: " + " | ".join(frame_external_errors))
+
+    beacon_for_authority_check = load_json_strict(randomness_beacon_path)
+    beacon_authority_errors = verify_drand_beacon(beacon_for_authority_check)
+    if beacon_authority_errors:
+        raise ValueError("randomness beacon external verification failed: " + " | ".join(beacon_authority_errors))
+
     if len(seal_attestation_paths) < 2:
         raise ValueError("BIG 0F requires both third-party timestamp and public-registry attestations")
 
@@ -441,6 +462,7 @@ def _verified_context_from_files(
         "provider_audit_schema": PROVIDER_AUDIT_SCHEMA_PATH,
         "adjudicator_independence_schema": ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
         "provenance_verifier": ROOT / "scripts" / "verify_big0f_provenance.py",
+        "external_authority_verifier": ROOT / "scripts" / "verify_external_authorities.py",
         "power_engine": power_engine_path,
     }
 
@@ -459,6 +481,16 @@ def _verified_context_from_files(
             raise ValueError("BIG 0F seal attestation must target BIG0F_SEAL_BUNDLE")
         if attestation["artifact_digest"] != bundle_digest:
             raise ValueError("external attestation does not match sealed bundle digest")
+        external_authority_errors = verify_external_attestation(
+            attestation,
+            canonical_json_bytes(seal_manifest),
+            ots_proof_path=seal_bundle_ots_proof_path,
+        )
+        if external_authority_errors:
+            raise ValueError(
+                "bundle external authority verification failed: "
+                + " | ".join(external_authority_errors)
+            )
         sealed_at = __import__("datetime").datetime.fromisoformat(
             attestation["sealed_at"].replace("Z", "+00:00")
         )
@@ -634,9 +666,11 @@ def main() -> int:
     ap.add_argument("--disease-frame", type=Path, required=True)
     ap.add_argument("--randomness-beacon", type=Path, required=True)
     ap.add_argument("--frame-seal-attestation", type=Path, required=True)
+    ap.add_argument("--frame-seal-ots-proof", type=Path)
     ap.add_argument("--threshold-manifest", type=Path, default=DEFAULT_THRESHOLD_PATH)
     ap.add_argument("--seal-bundle-manifest", type=Path, required=True)
     ap.add_argument("--seal-attestation", type=Path, action="append", required=True)
+    ap.add_argument("--seal-bundle-ots-proof", type=Path)
     ap.add_argument("--power-analysis", type=Path, required=True)
     ap.add_argument("--adjudication-policy", type=Path, required=True)
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
@@ -657,9 +691,11 @@ def main() -> int:
         disease_frame_path=args.disease_frame,
         randomness_beacon_path=args.randomness_beacon,
         frame_seal_attestation_path=args.frame_seal_attestation,
+        frame_seal_ots_proof_path=args.frame_seal_ots_proof,
         threshold_manifest_path=args.threshold_manifest,
         seal_bundle_manifest_path=args.seal_bundle_manifest,
         seal_attestation_paths=args.seal_attestation,
+        seal_bundle_ots_proof_path=args.seal_bundle_ots_proof,
         power_analysis_path=args.power_analysis,
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,
