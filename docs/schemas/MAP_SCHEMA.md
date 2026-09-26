@@ -4,7 +4,7 @@
 
 The MAP is frozen before confirmatory execution.
 
-Executable companion: [MAP JSON Schema](../../../schemas/map.v1.schema.json). The runtime must reject configuration drift from the frozen MAP hash.
+Executable companion: [MAP JSON Schema](../../schemas/map.v1.schema.json). The runtime must reject configuration drift from the frozen MAP hash.
 
 ## Required top-level structure
 
