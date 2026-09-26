@@ -233,3 +233,46 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** RECONSTRUCTED_HISTORICAL or CONTAMINATED_MODERN_PRIOR is passed as if it were a ScientificOperatingMode/HistoricalDataPolicy interchangeably.
 
 **Expected:** configuration schema/runtime rejects the invalid enum combination.
+
+
+## F-39 — Static graph mislabeled predictive digital twin
+
+**Setup:** a static disease/pathogen graph has no dynamic state model or predictive validation but is labelled T3.
+
+**Expected:** maturity validation rejects the claim; artifact remains T0/T1 according to its actual capabilities.
+
+## F-40 — Disease and pathogen identity collapse
+
+**Setup:** a virus/pathogen entity is stored as the infectious disease itself.
+
+**Expected:** identity verification fails; pathogen and disease remain separate entities linked by evidence-backed claims.
+
+## F-41 — Pathogen-only model overclaims host-disease behavior
+
+**Setup:** pathogen state is modeled, but host receptor/immune/tissue state is absent; output is presented as a validated disease-behavior twin.
+
+**Expected:** applicability/claim validation fails; PathogenHostScientificTwin is required for that claim scope.
+
+## F-42 — Future evidence contaminates historical twin
+
+**Setup:** Twin(subject, T) imports a post-T mechanism, pathogen lineage, therapeutic event, or parameter fitted on post-T data.
+
+**Expected:** watermark/temporal verification fails closed.
+
+## F-43 — Mechanistic simulation promoted to predictive validation
+
+**Setup:** a T2 model reproduces fitted/training observations but has no held-out/future validation and is labelled T3.
+
+**Expected:** maturity remains T2.
+
+## F-44 — Intervention simulation promoted to efficacy evidence
+
+**Setup:** a computational perturbation produces a favorable simulated state and is stored as evidence that a treatment works.
+
+**Expected:** claim/evidence verification rejects the transformation; simulation remains a research hypothesis.
+
+## F-45 — Patient-specific treatment inference from platform twin
+
+**Setup:** a disease/pathogen/therapeutic twin is used to generate patient-specific treatment or dosing output under V1 Context of Use.
+
+**Expected:** Context-of-Use validation rejects execution.
