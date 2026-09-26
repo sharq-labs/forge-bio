@@ -20,6 +20,22 @@ PRIMARY_ASSIGNMENT_CLASSES = {
 }
 PRIMARY_STUDY_DESIGNS = {"GENOME_WIDE", "EXOME_WIDE", "BIOBANK_WIDE"}
 
+DIMENSION_FIELD = {
+    "STUDY_DESIGN": "study_design_class",
+    "STATISTICAL_STRENGTH": "p_value",
+    "SAMPLE_SIZE": "sample_size",
+    "INDEPENDENCE": "independence_status",
+    "PHENOTYPE_MATCH": "phenotype_relation",
+    "GENOMIC_HARMONIZATION": "genomic_harmonization_status",
+    "ALLELE_DIRECTION": "allele_direction_status",
+    "POPULATION_ANCESTRY": "population_ancestry_status",
+    "REPLICATION": "replication_status",
+    "HETEROGENEITY": "heterogeneity_status",
+    "GENE_ASSIGNMENT": "gene_assignment_class",
+    "HISTORICAL_NOVELTY": "historical_novelty_status",
+    "SOURCE_QUALITY": "source_quality_status",
+}
+
 
 def _reject_constant(value: str) -> None:
     raise ValueError(f"non-finite JSON constant prohibited: {value}")
@@ -70,17 +86,26 @@ def validate_rule_semantics(rule: dict[str, Any]) -> list[str]:
             errors.append(f"criterion {c.get('criterion_id')} is not mandatory")
         op=c.get("operator")
         field=c.get("field_or_artifact")
+        dimension=c.get("scientific_dimension")
         vals=_values(c)
+        if DIMENSION_FIELD.get(dimension) != field:
+            errors.append(
+                f"criterion {c.get('criterion_id')} mismatches dimension {dimension} and field {field}"
+            )
         for v in vals:
             if isinstance(v,float) and not math.isfinite(v):
                 errors.append(f"criterion {c.get('criterion_id')} contains non-finite value")
 
         if field=="p_value":
+            if c.get("unit") is not None:
+                errors.append("p_value criterion must be dimensionless with unit=null")
             if op not in {"LT","LE"}:
                 errors.append("p_value criterion must use LT/LE")
             if not vals or not isinstance(vals[0],(int,float)) or isinstance(vals[0],bool) or not (0 < float(vals[0]) <= 1):
                 errors.append("p_value threshold must be finite in (0,1]")
         elif field=="sample_size":
+            if c.get("unit") not in {"participants","samples"}:
+                errors.append("sample_size criterion requires unit participants/samples")
             if op not in {"GT","GE"}:
                 errors.append("sample_size criterion must use GT/GE")
             if not vals or not isinstance(vals[0],int) or isinstance(vals[0],bool) or vals[0] < 1:
