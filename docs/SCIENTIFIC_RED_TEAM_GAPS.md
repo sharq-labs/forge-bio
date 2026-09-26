@@ -632,3 +632,36 @@ MeasurementProcessArtifact and normalization/batch provenance are explicit; futu
 **Status:** CLOSED-POLICY
 
 Credibility is explicitly CoU-specific. "Validated model" without the validated target/domain/use is prohibited language.
+
+
+## Final evidence-extraction closure ledger
+
+### RX-01 — Source quality could be undermined by extraction error
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+ExtractionArtifact now preserves source grounding, extractor/version/config, horizon/watermark, output schema, abstention, review state, and provenance.
+
+### RX-02 — Automated extractor confidence could masquerade as evidence strength
+
+**Status:** CLOSED-POLICY
+
+Extractor confidence is a pipeline-quality signal only. Scientific evidence strength remains method/source/context based.
+
+### RX-03 — LLM/ML/rule extractor changes could inherit old validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Material model/training-data/prompt/rule/ontology/output-schema changes create a new extractor version and trigger task-specific requalification.
+
+### RX-04 — Human curation quality under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Human workflows retain reviewer identity, disagreement, adjudication, and changes from machine output. Independent-review requirements can be frozen per task.
+
+### RX-05 — Extracted statements could inflate independence
+
+**Status:** CLOSED-POLICY
+
+Extraction never creates a new biological observation. Multiple claims from one originating observation retain shared source/IndependenceFamily lineage.
