@@ -155,7 +155,7 @@ BIG 0F also cannot legitimately estimate the variance of biological incremental 
 
 ### Frozen design
 
-A single analyst-entered SD is prohibited.
+A single analyst-entered SD is prohibited. The frozen normative contract is [BIG_0F_POWER_INPUT_DERIVATION.md](BIG_0F_POWER_INPUT_DERIVATION.md).
 
 Before adjudication, a **Power Input Derivation Contract** must define:
 
@@ -169,7 +169,7 @@ Before adjudication, a **Power Input Derivation Contract** must define:
 - the rule for zero-event diseases;
 - how many untouched confirmatory diseases are actually available.
 
-The contract may use nuisance-only and structural pilot outputs, but it may not use observed biological-model lift.
+The contract may use nuisance-only and structural pilot outputs for sensitivity, but nuisance-rank dispersion is not GO-eligible variance evidence. GO-capable power requires at least one independent DEVELOPMENT source measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. It may not use observed BIG 0F biological-model lift.
 
 The primary confirmatory design must achieve target power under the sealed conservative planning scenario. If scientifically plausible sealed variance/dependence scenarios produce materially different feasibility conclusions, BIG 0F returns REDESIGN or INCONCLUSIVE rather than selecting the favorable scenario.
 
@@ -196,6 +196,8 @@ Free scalar SD, missing derivation provenance, or post-result scenario choice ->
 ### Problem
 
 A nuisance manifest can name a strong comparator while the model actually executed uses fewer/weaker nuisance features.
+
+Normative detail: [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md).
 
 ### Required Nuisance Execution Artifact
 
@@ -265,6 +267,8 @@ If independent verification cannot be performed, the artifact remains UNVERIFIED
 ### Problem
 
 GO-critical states can collapse rich evidence into self-declared scalars or IDs.
+
+Normative detail: [BIG_0F_EVIDENCE_BINDING_CONTRACT.md](BIG_0F_EVIDENCE_BINDING_CONTRACT.md).
 
 ### Provider Audit Artifact
 

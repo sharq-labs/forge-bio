@@ -10,24 +10,125 @@
     "operational_capacity_rule_id",
     "event_case_records",
     "non_event_case_records",
-    "digest"
+    "digest",
+    "non_event_duplicate_review_min_fraction",
+    "non_event_duplicate_review_min_count_floor",
+    "non_event_review_summary",
+    "event_case_set_digest",
+    "non_event_case_set_digest",
+    "duplicate_review_selection_digest"
   ],
   "properties": {
-    "audit_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "big0f-curation-audit-v1"},
-    "operational_capacity_rule_id": {"type": "string", "minLength": 1},
+    "audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-curation-audit-v1"
+    },
+    "operational_capacity_rule_id": {
+      "type": "string",
+      "minLength": 1
+    },
     "event_case_records": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["case_id", "minutes", "provenance_digest"],
+        "required": [
+          "case_id",
+          "minutes",
+          "provenance_digest",
+          "historical_search_status",
+          "source_family_ids_used",
+          "duplicate_reviewed",
+          "duplicate_review_outcome"
+        ],
         "properties": {
-          "case_id": {"type": "string", "minLength": 1},
-          "minutes": {"type": "number", "minimum": 0},
-          "provenance_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
-        }
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "provenance_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "historical_search_status": {
+            "enum": [
+              "RESOLVED",
+              "UNKNOWN",
+              "AMBIGUOUS",
+              "UNUSABLE"
+            ]
+          },
+          "source_family_ids_used": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "duplicate_reviewed": {
+            "type": "boolean"
+          },
+          "duplicate_review_outcome": {
+            "enum": [
+              "AGREE",
+              "DISAGREE",
+              "NOT_REVIEWED"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": true
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "duplicate_review_outcome": {
+                  "enum": [
+                    "AGREE",
+                    "DISAGREE"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": false
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "duplicate_review_outcome": {
+                  "const": "NOT_REVIEWED"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "non_event_case_records": {
@@ -36,14 +137,173 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["case_id", "minutes", "provenance_digest"],
+        "required": [
+          "case_id",
+          "minutes",
+          "provenance_digest",
+          "historical_search_status",
+          "source_family_ids_used",
+          "duplicate_reviewed",
+          "duplicate_review_outcome"
+        ],
         "properties": {
-          "case_id": {"type": "string", "minLength": 1},
-          "minutes": {"type": "number", "minimum": 0},
-          "provenance_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "provenance_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "historical_search_status": {
+            "enum": [
+              "RESOLVED",
+              "UNKNOWN",
+              "AMBIGUOUS",
+              "UNUSABLE"
+            ]
+          },
+          "source_family_ids_used": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "duplicate_reviewed": {
+            "type": "boolean"
+          },
+          "duplicate_review_outcome": {
+            "enum": [
+              "AGREE",
+              "DISAGREE",
+              "NOT_REVIEWED"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": true
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "duplicate_review_outcome": {
+                  "enum": [
+                    "AGREE",
+                    "DISAGREE"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": false
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "duplicate_review_outcome": {
+                  "const": "NOT_REVIEWED"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "non_event_duplicate_review_min_fraction": {
+      "const": 0.3
+    },
+    "non_event_duplicate_review_min_count_floor": {
+      "const": 30
+    },
+    "non_event_review_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_review_count",
+        "duplicate_review_fraction",
+        "disagreement_fraction",
+        "agreement_statistic",
+        "confusion_matrix_digest",
+        "unknown_fraction",
+        "ambiguous_fraction"
+      ],
+      "properties": {
+        "duplicate_review_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_review_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "disagreement_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "agreement_statistic": {
+          "enum": [
+            "COHEN_KAPPA",
+            "GWET_AC1",
+            "GWET_AC2",
+            "PERCENT_AGREEMENT"
+          ]
+        },
+        "confusion_matrix_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "unknown_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ambiguous_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
         }
       }
     },
-    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+    "event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "non_event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "duplicate_review_selection_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
   }
 }

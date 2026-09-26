@@ -14,7 +14,6 @@
     "alpha",
     "target_power",
     "minimum_scientifically_meaningful_effect",
-    "disease_level_sd",
     "simulation_replicates",
     "simulation_seed",
     "estimated_power",
@@ -22,7 +21,16 @@
     "required_high_specificity_positive_count",
     "input_provenance_ids",
     "engine_sha256",
-    "digest"
+    "digest",
+    "power_input_derivation_contract_digest",
+    "variance_source_class",
+    "go_eligible_variance_evidence",
+    "variance_source_artifact_digests",
+    "primary_planning_sd",
+    "scenario_results",
+    "primary_scenario_id",
+    "dependence_assumption_digest",
+    "variance_source_registry_digest"
   ],
   "properties": {
     "power_analysis_id": {
@@ -45,10 +53,6 @@
     },
     "minimum_scientifically_meaningful_effect": {
       "const": 0.05
-    },
-    "disease_level_sd": {
-      "type": "number",
-      "exclusiveMinimum": 0
     },
     "simulation_replicates": {
       "type": "integer",
@@ -89,7 +93,10 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "sd_derivation_method": {
-      "const": "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
+      "enum": [
+        "INDEPENDENT_DEVELOPMENT_SAME_ESTIMAND_BOOTSTRAP_UPPER95_V1",
+        "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
+      ]
     },
     "nuisance_run_id": {
       "type": "string",
@@ -98,6 +105,141 @@
     "nuisance_run_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_input_derivation_contract_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "variance_source_class": {
+      "enum": [
+        "INDEPENDENT_DEVELOPMENT_SAME_ESTIMAND",
+        "PILOT_NUISANCE_PROXY_ONLY"
+      ]
+    },
+    "go_eligible_variance_evidence": {
+      "type": "boolean"
+    },
+    "variance_source_artifact_digests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-fA-F]{64}$"
+      }
+    },
+    "primary_planning_sd": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "scenario_results": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scenario_id",
+          "scenario_role",
+          "sd_value",
+          "dependence_adjustment_applied",
+          "estimated_power",
+          "required_confirmatory_disease_count",
+          "source_artifact_digest"
+        ],
+        "properties": {
+          "scenario_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenario_role": {
+            "enum": [
+              "PRIMARY_CONSERVATIVE",
+              "INDEPENDENT_SOURCE",
+              "DEPENDENCE_SENSITIVITY",
+              "PILOT_NUISANCE_PROXY"
+            ]
+          },
+          "sd_value": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "dependence_adjustment_applied": {
+            "type": "boolean"
+          },
+          "estimated_power": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "required_confirmatory_disease_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_artifact_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
+        }
+      }
+    },
+    "primary_scenario_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dependence_assumption_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "variance_source_registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "variance_source_class": {
+            "const": "INDEPENDENT_DEVELOPMENT_SAME_ESTIMAND"
+          }
+        },
+        "required": [
+          "variance_source_class"
+        ]
+      },
+      "then": {
+        "properties": {
+          "go_eligible_variance_evidence": {
+            "const": true
+          },
+          "sd_derivation_method": {
+            "const": "INDEPENDENT_DEVELOPMENT_SAME_ESTIMAND_BOOTSTRAP_UPPER95_V1"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "variance_source_class": {
+            "const": "PILOT_NUISANCE_PROXY_ONLY"
+          }
+        },
+        "required": [
+          "variance_source_class"
+        ]
+      },
+      "then": {
+        "properties": {
+          "go_eligible_variance_evidence": {
+            "const": false
+          },
+          "sd_derivation_method": {
+            "const": "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -35,6 +35,15 @@ Files:
 - `big0f-adjudication-policy.v1.schema.json`
 - `big0f-nuisance-manifest.v1.schema.json`
 - `big0f-power-analysis.v1.schema.json`
+- `big0f-power-input-derivation.v1.schema.json`
+- `big0f-variance-source-registry.v1.schema.json`
+- `big0f-selection-provenance.v1.schema.json`
+- `big0f-nuisance-run.v1.schema.json`
+- `big0f-provider-audit-scope.v1.schema.json`
+- `big0f-provider-audit.v1.schema.json`
+- `big0f-curation-audit.v1.schema.json`
+- `big0f-adjudicator-independence.v1.schema.json`
+- `research-program-ledger.v1.schema.json`
 - `randomness-beacon.v1.schema.json`
 
 Rules:
@@ -70,3 +79,4 @@ Round 2 hostile-review closure adds cross-artifact implementation requirements:
 - `config/big0f-thresholds.v1.json` — sealed decision thresholds/sensitivity variants;
 - `config/big0f-adjudication-policy.v1.json` — frozen primary assignment/ascertainment classes;
 - `config/big0f-nuisance-manifest.v1.json` — mandatory disease-specific attention/opportunity comparator.
+- `config/big0f-power-input-derivation.v1.json` — frozen fail-closed variance/power-input policy.

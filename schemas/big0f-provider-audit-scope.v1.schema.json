@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-provider-audit-scope.v1.schema.json",
+  "title": "Forge Bio BIG 0F Provider Audit Scope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scope_id",
+    "schema_version",
+    "frozen_at",
+    "disease_ids",
+    "source_family_kinds",
+    "required_fields",
+    "digest"
+  ],
+  "properties": {
+    "scope_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "big0f-provider-audit-scope-v1"},
+    "frozen_at": {"type": "string", "format": "date-time"},
+    "disease_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "source_family_kinds": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "PRIMARY_PUBLICATION_METADATA",
+          "GWAS_HISTORICAL",
+          "IDENTITY_ONTOLOGY",
+          "HISTORICAL_GENE_MODEL_ANNOTATION"
+        ]
+      },
+      "allOf": [
+        {"contains": {"const": "PRIMARY_PUBLICATION_METADATA"}, "minContains": 1},
+        {"contains": {"const": "GWAS_HISTORICAL"}, "minContains": 1},
+        {"contains": {"const": "IDENTITY_ONTOLOGY"}, "minContains": 1},
+        {"contains": {"const": "HISTORICAL_GENE_MODEL_ANNOTATION"}, "minContains": 1}
+      ]
+    },
+    "required_fields": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "source_family_kind",
+          "criticality",
+          "primary_decision_use"
+        ],
+        "properties": {
+          "field_id": {"type": "string", "minLength": 1},
+          "source_family_kind": {
+            "enum": [
+              "PRIMARY_PUBLICATION_METADATA",
+              "GWAS_HISTORICAL",
+              "IDENTITY_ONTOLOGY",
+              "HISTORICAL_GENE_MODEL_ANNOTATION"
+            ]
+          },
+          "criticality": {"enum": ["CRITICAL", "REQUIRED", "OPTIONAL"]},
+          "primary_decision_use": {"type": "boolean"}
+        }
+      }
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+  }
+}
