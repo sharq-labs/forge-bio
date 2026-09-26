@@ -135,18 +135,37 @@ def build_manifest(
 def verify_manifest(
     manifest: dict[str, Any],
     *,
-    attestation: dict[str, Any],
+    attestations: list[dict[str, Any]],
     component_paths: dict[str, Path],
 ) -> list[str]:
     errors = _validate(manifest, SCHEMA_PATH)
-    errors.extend(f"attestation {e}" for e in _validate(attestation, ATTESTATION_SCHEMA_PATH))
 
+    if len(attestations) < 2:
+        errors.append("BIG 0F requires dual external attestations")
     actual_digest = manifest_digest(manifest)
-    if attestation.get("verification_status") != "VERIFIED":
-        errors.append("external attestation is not VERIFIED")
-    if attestation.get("artifact_digest") != actual_digest:
+    required_authorities = {"THIRD_PARTY_TIMESTAMP_SERVICE", "PUBLIC_REGISTRY"}
+    observed_authorities: set[str] = set()
+
+    for index, attestation in enumerate(attestations):
+        errors.extend(
+            f"attestation[{index}] {e}"
+            for e in _validate(attestation, ATTESTATION_SCHEMA_PATH)
+        )
+        if attestation.get("verification_status") != "VERIFIED":
+            errors.append(f"attestation[{index}] is not VERIFIED")
+        if attestation.get("artifact_digest") != actual_digest:
+            errors.append(
+                f"attestation[{index}] digest mismatch: "
+                f"{attestation.get('artifact_digest')!r} != {actual_digest!r}"
+            )
+        authority = attestation.get("authority_type")
+        if isinstance(authority, str):
+            observed_authorities.add(authority)
+
+    missing_authorities = sorted(required_authorities - observed_authorities)
+    if missing_authorities:
         errors.append(
-            f"manifest digest does not match externally attested digest: {attestation.get('artifact_digest')!r} != {actual_digest!r}"
+            "dual seal missing required authority types: " + ",".join(missing_authorities)
         )
 
     checks = {
@@ -210,7 +229,12 @@ def main() -> int:
     ap.add_argument("--created-by-role", choices=["INDEPENDENT_CUSTODIAN", "PREREGISTRATION_OPERATOR"], required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--verify", action="store_true")
-    ap.add_argument("--attestation-record", type=_path)
+    ap.add_argument(
+        "--attestation-record",
+        type=_path,
+        action="append",
+        help="Repeat for timestamp-service and public-registry attestations",
+    )
     args = ap.parse_args()
 
     component_paths = {
@@ -231,11 +255,15 @@ def main() -> int:
     }
 
     if args.verify:
-        if args.attestation_record is None:
-            ap.error("--attestation-record is required with --verify")
+        if not args.attestation_record or len(args.attestation_record) < 2:
+            ap.error("--verify requires two --attestation-record values")
         manifest = _load_json(args.output)
-        attestation = _load_json(args.attestation_record)
-        errors = verify_manifest(manifest, attestation=attestation, component_paths=component_paths)
+        attestations = [_load_json(path) for path in args.attestation_record]
+        errors = verify_manifest(
+            manifest,
+            attestations=attestations,
+            component_paths=component_paths,
+        )
         if errors:
             for err in errors:
                 print(err)
