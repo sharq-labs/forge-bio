@@ -11,7 +11,8 @@
     "required_field_cells",
     "provider_coupling",
     "ancestry_population_audit",
-    "digest"
+    "digest",
+    "audit_scope_manifest_digest"
   ],
   "properties": {
     "audit_id": {
@@ -234,7 +235,9 @@
       "required": [
         "adequacy",
         "case_records",
-        "evidence_digests"
+        "evidence_digests",
+        "adequacy_rule_id",
+        "adequacy_rule_digest"
       ],
       "properties": {
         "adequacy": {
@@ -283,10 +286,22 @@
             "type": "string",
             "pattern": "^sha256:[0-9a-fA-F]{64}$"
           }
+        },
+        "adequacy_rule_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adequacy_rule_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
         }
       }
     },
     "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "audit_scope_manifest_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
