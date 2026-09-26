@@ -1,6 +1,6 @@
 # ADR-003 — Knowledge Watermark vs Implementation Provenance
 
-**Status:** Proposed for freeze before coding
+**Status:** Accepted — pre-code V1
 
 ## Decision
 
@@ -21,3 +21,6 @@ Generic algorithms may be written today and remain non-knowledge-bearing. Domain
 ## Consequences
 
 STRICT_HISTORICAL refuses UNKNOWN and post-cutoff knowledge. Code commit/library/container data remain implementation provenance, not the biomedical watermark.
+
+
+Genomic harmonization, liftover, reference-panel/LD derivations, feature preprocessing artifacts, and source-specific normalization are subject to the same watermark/provenance rule when knowledge-bearing.
