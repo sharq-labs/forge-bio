@@ -77,7 +77,9 @@ prohibited_claim_language:
 ```
 
 
-## Scientific digital twin extension
+## Forge Bio Scientific Twin extension
+
+"Forge Bio Scientific Twin" is a project-defined research construct and is not, by terminology alone, a patient/clinical health digital twin.
 
 Allowed V1 research uses include:
 - evidence-backed disease/pathogen/therapeutic profiles;
