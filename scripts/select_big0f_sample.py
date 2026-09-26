@@ -55,8 +55,13 @@ def select(disease_ids: list[str], beacon: dict[str, Any], frame_digest: str, ta
         raise ValueError("invalid randomness beacon artifact: " + " | ".join(e.message for e in errors))
     if beacon["frame_digest"] != frame_digest:
         raise ValueError("beacon artifact is not bound to this disease-frame digest")
-    if _ts(beacon["published_at"]) <= _ts(beacon["frame_sealed_at"]):
+    frame_sealed = _ts(beacon["frame_sealed_at"])
+    if beacon["selection_rule"] != "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL":
+        raise ValueError("BIG 0F requires the first verified beacon round after frame sealing")
+    if _ts(beacon["published_at"]) <= frame_sealed:
         raise ValueError("randomness beacon must be published after the disease frame was externally sealed")
+    if _ts(beacon["previous_round_published_at"]) > frame_sealed:
+        raise ValueError("selected beacon is not the first verified round after the frame seal")
     if target_n < 1 or target_n > len(disease_ids):
         raise ValueError("invalid target_n")
     key = derive_sampling_key(frame_digest, beacon["randomness_hex"])
