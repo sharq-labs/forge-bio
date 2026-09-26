@@ -105,35 +105,35 @@
 - [x] Biomedical-domain dependencies default to knowledge-bearing/UNKNOWN unless explicitly qualified.
 - [x] Primary outcomes cannot rely solely on the same curation pipeline used as historical input.
 - [x] Cross-disease shared-control/study lineage is included in dependence sensitivity.
-- [x] Cross-field scientific semantic validator exists.
-- [x] Hostile-review regression tests exist.
-- [x] Hostile-review regression suite passes on the current branch.
-- [x] Round 2 false-GO attacks are represented as permanent regression tests.
+- [x] Cross-field scientific semantic rules are specified.
+- [x] Hostile-review attack cases are documented as future regression-test requirements.
+- [ ] Implement and run the hostile-review regression suite when coding begins.
+- [x] Round 2 false-GO attacks are preserved as permanent implementation/test requirements.
 - [x] Disease-specific content-free attention volume and momentum are mandatory in the primary nuisance comparator.
 - [x] BIG 0F model-evaluation mode is NUISANCE_ONLY; biological-model lift is not inspected in the pilot.
 - [x] V0 pilot primary subtype and metric are frozen as E1-NOVEL-STRICT / EVENT_RANK_PERCENTILE_V1.
 - [x] Primary positive ascertainment is restricted to hypothesis-free genome/exome/biobank-wide designs.
 - [x] OTHER_HIGH_SPECIFICITY_METHOD is closed for V0 primary credit.
-- [x] BIG 0F decision evaluator rejects non-finite values, incomplete cross-field state, and unstable threshold decisions.
-- [x] BIG 0F threshold sensitivity is recomputed from a frozen manifest rather than self-reported.
+- [x] BIG 0F decision contract requires rejection of non-finite values, incomplete cross-field state, and unstable threshold decisions.
+- [x] BIG 0F threshold-sensitivity recomputation from a frozen manifest is specified; self-reporting is prohibited.
 - [x] INCONCLUSIVE is bounded and cannot be carried indefinitely.
-- [x] Power analysis is a separate code-sealed artifact and is deterministically revalidated.
+- [x] Power-analysis artifact and deterministic revalidation requirements are specified.
 - [x] Disease sampling uses an externally sealed frame plus the first verified post-seal public randomness-beacon round.
 - [x] The exact frame-seal attestation artifact is committed into the BIG 0F root seal bundle.
-- [x] Decision engine, pilot-result schema, sampling code, policy manifests/schemas, and power engine are committed by the seal bundle.
-- [x] FROZEN endpoint-quality rules have an executable field/operator validator and event evaluator.
-- [x] Confirmatory attempts are cross-validated against one canonical program-wide alpha budget; renaming cannot reset the budget.
+- [x] Future decision, sampling, and power implementations plus governing schemas/manifests must be committed by the seal bundle before use.
+- [x] FROZEN endpoint-quality field/operator and event-evaluation semantics are specified.
+- [x] Confirmatory attempts must be checked against one canonical program-wide alpha budget; renaming cannot reset the budget.
 - [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
 - [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
 - [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate.
 - [ ] Independent custodian assigned.
-- [x] Local canonical seal-bundle build/verify/tamper dry run is executable and tested.
+- [ ] Implement and run the local canonical seal-bundle build/verify/tamper dry run before BIG 0F.
 - [ ] External OpenTimestamps/OSF seal mechanism dry-run tested end-to-end with synthetic artifacts.
 
 ### Feasibility and governance
 
-- [x] BIG 0F pilot result has an executable machine schema.
-- [x] BIG 0F GO/REDESIGN/NO_GO decision rules are executable and deterministic.
+- [x] BIG 0F pilot result has a machine-readable schema.
+- [x] BIG 0F GO/REDESIGN/NO_GO decision rules are specified deterministically; executable implementation is deferred.
 - [ ] Manual outcome feasibility pilot completed on heterogeneous events.
 - [ ] Pilot reports novelty ambiguity rate.
 - [ ] Pilot reports historical genetic-search coverage grade distribution.
@@ -237,7 +237,7 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 - [x] Static profile/graph is prohibited from claiming predictive twin maturity.
 - [x] Patient-specific digital twins are excluded from V1 Context of Use.
 - [x] Scientific Twin JSON Schema exists.
-- [x] Disease/Pathogen/Virus/PathogenHost/Therapeutic executable profile schemas exist.
+- [x] Disease/Pathogen/Virus/PathogenHost/Therapeutic machine-readable profile schemas exist.
 - [x] Twin schema enforces inherited T1/T2/T3/T4 maturity prerequisites.
 - [x] Historical twin/profile schemas require explicit cutoff T.
 - [x] Twin state-model structure/update policy are knowledge-bearing provenance/watermark dependencies.
@@ -245,7 +245,7 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 - [x] Scientific Contract includes twin maturity, temporal, validation, causal, and clinical claim boundaries.
 - [x] T3 reuses MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance governance.
 - [x] T4 requires causal assumptions/intervention semantics/identifiability/sensitivity artifacts.
-- [x] Executable positive/negative schema contract tests exist.
+- [ ] Implement positive/negative schema contract tests when coding begins.
 
 ### Before any T2 mechanistic-twin claim
 
@@ -298,7 +298,7 @@ These are non-blocking for the manual BIG 0F endpoint-feasibility pilot, but man
 - [x] Model discrepancy is separated from parameter/numerical/measurement uncertainty.
 - [x] T3 applicability/shift and prediction-risk audit requirements are defined.
 - [x] Validation invalidation after material dependency change is defined.
-- [x] Executable positive/negative schema tests exist.
+- [ ] Implement positive/negative quantitative schema tests when coding begins.
 
 ### Before any numerical T2+ claim
 
@@ -342,7 +342,7 @@ These are non-blocking for the manual BIG 0F endpoint-feasibility pilot, but man
 - [x] Extraction does not create a new IndependenceFamily.
 - [x] Human-review disagreement/adjudication remains explicit.
 - [x] Material extractor/model/prompt/rule/ontology/schema change triggers requalification.
-- [x] Executable extraction schemas/tests exist.
+- [x] Extraction schemas exist; executable extraction tests are deferred to implementation.
 
 Before provider-scale automated extraction:
 - [ ] Gold set frozen for each extraction task/domain.
@@ -364,7 +364,7 @@ Before provider-scale automated extraction:
 - [x] Prospective PredictionExposureEvent contract exists.
 - [x] Self-fulfilling research-attention risk is explicitly separated from independent prospective validation.
 - [x] Schema/provider/ontology drift is versioned rather than in-place rewritten.
-- [x] Executable lifecycle/exposure schema tests exist.
+- [x] Lifecycle/exposure schemas exist; executable lifecycle tests are deferred to implementation.
 
 Before strongest L3/L6:
 - [ ] Benchmark generation is ACTIVE_CONFIRMATORY.
