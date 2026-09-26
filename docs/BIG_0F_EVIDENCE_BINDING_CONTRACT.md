@@ -12,7 +12,7 @@ A GO-capable provider audit must include all four mandatory source-family kinds:
 
 Four arbitrary providers or four `OTHER` entries do not satisfy this requirement.
 
-The complete provider audit scope—diseases, mandatory source families, and required fields—is frozen by an audit-scope manifest digest before availability is inspected. Every source-family release and every required-field audit cell must carry an immutable provenance/evidence digest.
+The complete provider audit scope—diseases, mandatory source families, and required fields—is frozen using `schemas/big0f-provider-audit-scope.v1.schema.json` and committed by digest before availability is inspected. Every source-family release and every required-field audit cell must carry an immutable provenance/evidence digest.
 
 Required-field availability, coverage summaries, source-family counts, provider coupling, and ancestry coverage must be regenerable from the bound audit artifact.
 
