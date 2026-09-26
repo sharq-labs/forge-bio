@@ -19,6 +19,8 @@ from scripts.select_big0f_sample import (
 ROOT = Path(__file__).resolve().parents[1]
 SELECTION_SCHEMA_PATH = ROOT / "schemas" / "big0f-selection-provenance.v1.schema.json"
 NUISANCE_RUN_SCHEMA_PATH = ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json"
+PROVIDER_AUDIT_SCHEMA_PATH = ROOT / "schemas" / "big0f-provider-audit.v1.schema.json"
+ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH = ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json"
 
 CUTOFF_ORDER = ["2005-12-31", "2008-12-31", "2011-12-31", "2014-12-31"]
 HORIZON_ORDER = ["3y", "5y", "7y", "10y"]
@@ -129,6 +131,90 @@ def verify_nuisance_run(
         derive_nuisance_metrics(run)
     except Exception as exc:
         errors.append(f"cannot derive nuisance metrics: {exc}")
+    return errors
+
+
+def derive_provider_metrics(audit: dict[str, Any]) -> dict[str, Any]:
+    required = [
+        cell for cell in audit["required_field_cells"]
+        if cell["criticality"] in {"CRITICAL", "REQUIRED"}
+    ]
+    if not required:
+        raise ValueError("provider audit has no CRITICAL/REQUIRED field cells")
+
+    def available(cell: dict[str, Any]) -> bool:
+        return bool(
+            cell["historical_release_obtainable"]
+            and cell["release_version_identifiable"]
+            and cell["field_existed_at_t"]
+            and cell["value_reconstructable"]
+        )
+
+    availability = sum(available(cell) for cell in required) / len(required)
+    coverage = {grade: 0 for grade in ("HIGH", "MODERATE", "LOW", "UNKNOWN")}
+    for cell in required:
+        coverage[cell["coverage_grade"]] += 1
+    coverage = {grade: count / len(required) for grade, count in coverage.items()}
+
+    ancestry_records = audit["ancestry_population_audit"]["case_records"]
+    if not ancestry_records:
+        raise ValueError("provider audit has no ancestry/population case records")
+    ancestry_coverage = (
+        sum(bool(row["metadata_available"]) for row in ancestry_records)
+        / len(ancestry_records)
+    )
+    return {
+        "source_family_ids": [row["source_family_id"] for row in audit["source_families"]],
+        "required_field_availability_fraction": availability,
+        "historical_search_coverage_distribution": coverage,
+        "provider_coupling_risk": audit["provider_coupling"]["risk"],
+        "ancestry_metadata_coverage_fraction": ancestry_coverage,
+        "ancestry_population_metadata_adequacy": audit["ancestry_population_audit"]["adequacy"],
+    }
+
+
+def verify_provider_audit(audit: dict[str, Any]) -> list[str]:
+    errors = _validate_schema(audit, PROVIDER_AUDIT_SCHEMA_PATH)
+    if errors:
+        return errors
+    if audit["digest"] != canonical_digest(audit):
+        errors.append("provider-audit canonical digest mismatch")
+
+    source_ids = [row["source_family_id"] for row in audit["source_families"]]
+    if len(source_ids) != len(set(source_ids)):
+        errors.append("provider audit contains duplicate source_family_id values")
+    required_kinds = {
+        "PRIMARY_PUBLICATION_METADATA",
+        "GWAS_HISTORICAL",
+        "IDENTITY_ONTOLOGY",
+        "HISTORICAL_GENE_MODEL_ANNOTATION",
+    }
+    actual_kinds = {row["family_kind"] for row in audit["source_families"]}
+    if not required_kinds.issubset(actual_kinds):
+        errors.append(
+            "provider audit is missing one or more mandatory source-family kinds: "
+            + ", ".join(sorted(required_kinds - actual_kinds))
+        )
+
+    source_set = set(source_ids)
+    for cell in audit["required_field_cells"]:
+        if cell["source_family_id"] not in source_set:
+            errors.append(
+                f"provider field cell references unknown source family {cell['source_family_id']}"
+            )
+    try:
+        derive_provider_metrics(audit)
+    except Exception as exc:
+        errors.append(f"cannot derive provider metrics: {exc}")
+    return errors
+
+
+def verify_adjudicator_independence(attestation: dict[str, Any]) -> list[str]:
+    errors = _validate_schema(attestation, ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH)
+    if errors:
+        return errors
+    if attestation["digest"] != canonical_digest(attestation):
+        errors.append("adjudicator-independence canonical digest mismatch")
     return errors
 
 
