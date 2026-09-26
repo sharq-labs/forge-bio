@@ -307,3 +307,52 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** a STRICT_HISTORICAL disease/pathogen/therapeutic profile omits cutoff T.
 
 **Expected:** profile JSON Schema rejects the artifact.
+
+
+## F-51 — Unitless value used where physical unit is required
+
+**Setup:** a concentration-like observation is marked OBSERVED with unit_required=true but no unit/dimension.
+
+**Expected:** quantitative schema rejects the artifact.
+
+## F-52 — Missing observation coerced to zero
+
+**Setup:** value_state=MISSING while value=0 is supplied as an observed measurement.
+
+**Expected:** quantitative schema rejects the artifact / implementation fails closed.
+
+## F-53 — Custom transform without transform provenance
+
+**Setup:** transform=CUSTOM with no TransformArtifact reference.
+
+**Expected:** quantitative schema rejects the artifact.
+
+## F-54 — Numerically unverified mechanistic simulation declared adequate
+
+**Setup:** NumericalVerificationArtifact has convergence_study=FAIL/UNKNOWN while verdict=ADEQUATE.
+
+**Expected:** schema rejects ADEQUATE verdict.
+
+## F-55 — Universal credibility claim
+
+**Setup:** model is described as "validated" without ContextOfUse or research decision/influence/consequence semantics.
+
+**Expected:** CredibilityAssessment schema/policy rejects the claim.
+
+## F-56 — High-risk predictive evaluation labelled adequate despite high risk of bias
+
+**Setup:** credibility conclusion=ADEQUATE_FOR_COU while prediction_risk_of_bias=HIGH.
+
+**Expected:** schema rejects the conclusion.
+
+## F-57 — Recalibrated/changed model inherits old validation
+
+**Setup:** preprocessing, parameters, state-model structure, measurement model, or output-changing solver configuration changes while old validation digest is reused.
+
+**Expected:** validation scope/digest check fails; new validation generation required.
+
+## F-58 — Out-of-domain prediction reported as validated
+
+**Setup:** a T3 model validated on one population/source/measurement regime is applied outside the frozen applicability domain and reported as validated.
+
+**Expected:** applicability audit marks extrapolation; validated-prediction claim fails.
