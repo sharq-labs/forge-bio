@@ -10,7 +10,8 @@
     "status",
     "thresholds",
     "sensitivity_variants",
-    "max_inconclusive_evaluations"
+    "max_inconclusive_evaluations",
+    "threshold_metadata"
   ],
   "properties": {
     "manifest_id": {
@@ -220,6 +221,44 @@
     "frozen_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "threshold_metadata": {
+      "type": "object",
+      "minProperties": 29,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rationale",
+          "provenance_refs",
+          "decision_role"
+        ],
+        "properties": {
+          "rationale": {
+            "type": "string",
+            "minLength": 20
+          },
+          "provenance_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "decision_role": {
+            "enum": [
+              "DESIGN",
+              "GO_REDESIGN",
+              "REDESIGN_NO_GO",
+              "POWER",
+              "FEASIBILITY",
+              "SENSITIVITY"
+            ]
+          }
+        }
+      }
     }
   }
 }
