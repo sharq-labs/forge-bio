@@ -723,7 +723,7 @@ The previous statement that no major design gap remained is not used after this 
 | HR-07 | Strict novelty may be power maturation | EMPIRICAL-OPEN — pre-T cohort reuse + power-maturation audit in BIG 0F |
 | HR-08 | Positive-only historical audit can be asymmetric | CLOSED-POLICY / EMPIRICAL-OPEN — seeded non-event audit required |
 | HR-09 | Disease frame can be chosen with hindsight | CLOSED-POLICY / OPERATIONAL-OPEN — mechanical frame + sealed seed |
-| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-IN-PROGRESS — semantic validator + hostile regression suite; CI must pass |
+| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-TEST — JSON Schema + semantic validator + hostile regression suite pass in CI |
 | HR-11 | Knowledge-bearingness was too self-declared | CLOSED-POLICY — biomedical-domain dependencies default UNKNOWN/knowledge-bearing |
 | HR-12 | Same curation pipeline can feed Past and Future | CLOSED-POLICY / EMPIRICAL-OPEN — primary-source/independent outcome path required |
 | HR-13 | External seals / null reporting were self-attestable | CLOSED-SCHEMA / OPERATIONAL-OPEN — approved external authority types + disclosure schedule |
@@ -742,3 +742,13 @@ BIG 0F-0 is complete only when HR-10 regression tests pass and HR-06/HR-09 opera
 BIG 0F then determines whether HR-01, HR-04, HR-07, HR-08, HR-12, HR-14, HR-19 and related feasibility risks are scientifically tolerable.
 
 No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
+
+
+### Post-BIG 0F-0 sharp consistency findings
+
+| ID | Finding | Status |
+|---|---|---|
+| HR-21 | Cutoff/horizon feasibility procedure had an unspecified selection order | CLOSED-POLICY — deterministic T/H order; no post-hoc expansion |
+| HR-22 | GO/REDESIGN thresholds had ambiguous denominators/statistic semantics | CLOSED-POLICY — field-availability formula, critical fields, agreement statistic, and sensitivity reporting defined |
+| HR-23 | Nuisance+biology arm could win through larger learner/tuning capacity | CLOSED-POLICY — primary comparison is nested and capacity/tuning-budget matched |
+| HR-24 | "External seal" lacked an operational implementation candidate | PARTIAL-OPERATIONAL — dual OpenTimestamps + OSF Registration runbook identified; dry run and independent custodian remain open |

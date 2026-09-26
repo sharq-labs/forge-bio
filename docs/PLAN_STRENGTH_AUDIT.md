@@ -67,10 +67,10 @@ A positive result against random or a single popularity baseline is insufficient
 | Primary comparator | FIXED IN POLICY | Combined Nuisance Model |
 | Confirmatory statistics | BIG 0F-0 HARDENING | alpha/MDE/power after pilot counts |
 | Research-program multiplicity | BIG 0F-0 HARDENING | ConfirmatoryProgramBudget |
-| Disease sampling hindsight | BIG 0F-0 POLICY FIXED | sealed frame/random seed |
+| Disease sampling hindsight | POLICY FIXED / SEAL OPEN | deterministic T/H ordering + sealed frame/random seed |
 | Independent adjudication | OPERATIONAL OPEN | second reviewer |
-| Lockbox custody independence | OPERATIONAL OPEN | independent custodian |
-| Schema scientific invariants | BIG 0F-0 HARDENING | hostile regression suite |
+| Lockbox custody independence | OPERATIONAL OPEN | dual-seal mechanism identified; independent custodian + dry run still required |
+| Schema scientific invariants | PASS-TEST | hostile regression suite passes in CI |
 | Historical provider availability | EMPIRICAL OPEN | mini provider audit |
 | Ground-truth ambiguity | EMPIRICAL OPEN | BIG 0F |
 | Nuisance-model headroom | EMPIRICAL OPEN | development-only pilot analysis |
@@ -142,3 +142,15 @@ The project is currently in **critical-path repair**, not final architecture com
 Do not add more Digital Twin / pathogen / therapeutic complexity until the B-TGT-E1 critical path passes BIG 0F and demonstrates that biological signal could exist beyond the Combined Nuisance Model.
 
 The next score must come from an independent re-review, not from the project author.
+
+
+## 9. Sharp consistency pass after BIG 0F-0
+
+A post-hardening consistency pass found four additional degrees of freedom and closed them at policy level:
+
+1. **Cutoff/horizon selection order** — candidate T/H ordering is now deterministic and sealed; no post-hoc choice from the 2005–2014 / 3–10y grid.
+2. **Pilot threshold semantics** — field-availability denominator, critical-field behavior, agreement-statistic choice, and threshold sensitivity are explicit.
+3. **Comparator-capacity confounding** — nuisance-only and nuisance+evidence arms use the same learner/tuning/search budget in the primary nested comparison.
+4. **External seal ambiguity** — the operational candidate is a dual seal using an independent timestamp proof plus an OSF research registration; dry-run verification and independent custody remain open.
+
+These closures do not raise the project score automatically. They reduce known design degrees of freedom before independent re-review.

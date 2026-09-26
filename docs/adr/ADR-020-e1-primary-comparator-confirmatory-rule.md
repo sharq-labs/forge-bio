@@ -60,7 +60,9 @@ A strong attention correlation in author-named assignments is treated as evidenc
 
 The primary comparator is not the strongest single baseline.
 
-Forge Bio must be evaluated incrementally over a preregistered **Combined Nuisance Model** built only from as-of-T non-biological / discoverability variables.
+Forge Bio must be evaluated incrementally over a preregistered **Combined Nuisance Model** built from as-of-T variables intended to capture research attention, measurement opportunity, genomic detectability/architecture, pleiotropy, and other alternative explanations for future discovery.
+
+"Nuisance" does **not** mean "non-biological". Gene geometry, LD architecture, variant opportunity, and pleiotropy are biological/genomic properties. They are placed in the comparator because they can predict future discovery without demonstrating Forge Bio's disease-specific hypothesis-evidence contribution.
 
 Required nuisance families where historically reconstructable:
 
@@ -86,16 +88,21 @@ The exact variables and historical sources are frozen before confirmatory evalua
 The primary scientific contrast is:
 
 ```text
-Performance(Nuisance + Biological Signal)
+Performance(Ascertainment/Opportunity Comparator + Disease-Specific Hypothesis Evidence)
 -
-Performance(Nuisance Only)
+Performance(Ascertainment/Opportunity Comparator Only)
 ```
 
 Both models:
 - use the same candidate universe;
 - use the same temporal training protocol;
-- use matched model-capacity constraints where practical;
-- use the same development/validation generations.
+- use the same development/validation generations;
+- use the same learner family whenever scientifically possible;
+- use the exact same nuisance feature block;
+- use the same hyperparameter search space, tuning budget, early-stopping rules, random-seed policy, and preprocessing family;
+- differ only by the addition of the preregistered disease-specific hypothesis-evidence feature block in the primary nested comparison.
+
+If the biological arm uses a materially more expressive learner or larger tuning budget, that comparison is secondary unless an equivalently expressive nuisance-only comparator is also run.
 
 Beating random or any single attention baseline is insufficient for a biological-predictive-value claim.
 
@@ -165,3 +172,26 @@ A positive B-TGT-E1 result can support a biological-predictive-value claim only 
 3. incremental lift is positive under the frozen confirmatory decision rule;
 4. power/precision are adequate for the prespecified effect;
 5. confirmatory-generation multiplicity is respected.
+
+
+## 10. Comparator fairness and over-control
+
+The Combined Nuisance Model is an **alternative-explanation comparator**, not a claim that all its inputs are scientifically uninteresting or non-biological.
+
+The MAP classifies every nuisance feature family as one of:
+
+```text
+ATTENTION
+MEASUREMENT_OPPORTUNITY
+GENOMIC_DETECTABILITY
+GENOMIC_ARCHITECTURE
+PLEIOTROPY
+PROVIDER_COVERAGE
+OTHER_PREREGISTERED_ALTERNATIVE_EXPLANATION
+```
+
+A feature that is itself part of Forge Bio's intended disease-specific biological hypothesis signal must not be moved into the nuisance block merely because doing so lowers measured lift.
+
+Conversely, a feature chosen because it strongly predicts outcome discovery on development data cannot be omitted from nuisance without a frozen scientific justification.
+
+BIG 0F reports sensitivity to plausible nuisance-block definitions so the confirmatory block can be frozen without outcome-driven cherry-picking.

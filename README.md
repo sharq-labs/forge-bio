@@ -142,6 +142,7 @@ Do not start production scientific code before that gate.
 - [B-TGT-E1 Estimand Proposal](docs/BENCHMARK_ESTIMAND_V0.md)
 - [Scientific Specification Governance](docs/SCIENTIFIC_SPEC_GOVERNANCE.md)
 - [Lockbox Policy](docs/LOCKBOX_POLICY.md)
+- [External Seal Runbook](docs/EXTERNAL_SEAL_RUNBOOK.md)
 - [QoI Schema](docs/schemas/QOI_SCHEMA.md)
 - [Context-of-Use Schema](docs/schemas/CONTEXT_OF_USE_SCHEMA.md)
 - [MAP Schema](docs/schemas/MAP_SCHEMA.md)

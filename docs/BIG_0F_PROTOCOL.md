@@ -6,17 +6,31 @@
 
 ## 1. Pilot cutoff and horizon
 
-Choose the first cutoff/horizon pair that passes the mini provider-availability audit using only source availability and observation-window coverage.
+Cutoff/horizon selection is deterministic and sealed before event adjudication.
 
-Model lift is not inspected for this choice.
-
-Candidate cutoffs remain within the predeclared 2005–2014 feasibility range.
-
-Candidate horizons remain:
+The candidate cutoff order is:
 
 ```text
-3y / 5y / 7y / 10y
+2005-12-31
+2008-12-31
+2011-12-31
+2014-12-31
 ```
+
+The candidate horizon order is:
+
+```text
+3y
+5y
+7y
+10y
+```
+
+Evaluate candidate pairs lexicographically in the order above and choose the **first pair** that passes only the preregistered provider-availability, observation-window, and minimum event-count feasibility criteria.
+
+Model lift, biological-model rankings, nuisance-model lift, or ambiguity outcomes are not inspected to choose T/H.
+
+If none pass, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
 
 ## 2. Disease sampling
 
@@ -96,7 +110,11 @@ Agreement is reported for:
 - event-family identity;
 - sample-overlap verdict.
 
-Report percent agreement and Cohen's kappa where the category structure makes kappa meaningful.
+Report percent agreement plus a chance-corrected agreement statistic.
+
+Cohen's kappa is used only when category prevalence/balance makes it interpretable. For strongly imbalanced categorical decisions, also report a prevalence-robust agreement statistic (for example Gwet's AC1/AC2 or a preregistered equivalent) and the full confusion matrix.
+
+The GO/REDESIGN threshold is applied to the **preregistered primary agreement statistic for each adjudication task**, not automatically to kappa for every task.
 
 One frozen rule revision is allowed after disagreement review. The revised rules are then re-tested on a new held-out subset of the pilot cases.
 
@@ -138,9 +156,29 @@ retrospectively curated?
 mapping needed?
 license/access constraint?
 coverage fraction?
+criticality: CRITICAL | REQUIRED | OPTIONAL
 ```
 
 Current availability is not accepted as evidence of historical reconstructability.
+
+### Required-field availability score
+
+The GO/REDESIGN/NO-GO "archived required-field availability" metric is computed as:
+
+```text
+available_required_field_cells
+/
+all_required_field_cells
+```
+
+across the sealed disease/source sample.
+
+Rules:
+- CRITICAL fields are not averaged away: any missing CRITICAL field required to determine the primary endpoint forces the affected case to AMBIGUOUS/UNUSABLE;
+- REQUIRED fields enter the denominator equally unless a weighting scheme was frozen before audit;
+- OPTIONAL fields do not improve the availability score;
+- source families and fields are enumerated before the first audit;
+- no field may be reclassified after seeing its availability rate without a versioned REDESIGN.
 
 ## 8. Assignment-attention audit
 
@@ -164,9 +202,12 @@ Report:
 - primary-eligible high-specificity fraction;
 - author-named fraction;
 - nearest-gene fraction;
-- Spearman correlation between assigned-gene pre-T attention rank and assignment class-specific positive status;
+- pre-T attention-rank distribution by assignment class;
+- a preregistered association statistic comparing attention rank with probability of receiving an attention-sensitive assignment, using the event set plus a frozen matched comparison sample where required;
 - event yield after removing non-primary assignment classes;
 - locus-level one-credit sensitivity.
+
+A raw correlation computed only among already-positive author-named genes is not sufficient to establish attention circularity.
 
 ## 9. Power-maturation audit
 
@@ -186,6 +227,16 @@ A development-only power-maturation baseline is constructed from historically av
 ## 10. Combined Nuisance headroom
 
 On pilot-only DEVELOPMENT data, build a nuisance comparator using as-of-T features from the frozen nuisance families.
+
+The primary nested development comparison uses:
+- the same learner family;
+- the same nuisance feature block;
+- the same preprocessing;
+- the same tuning/search budget;
+- the same early-stopping rule;
+- the same random-seed policy.
+
+The augmented arm differs only by adding the preregistered disease-specific hypothesis-evidence feature block.
 
 This is not a performance result.
 
@@ -228,7 +279,7 @@ NO-GO if any remains true after one allowed rule clarification/revision:
 
 - archived/as-of-T required-field availability < 70%;
 - unresolved/AMBIGUOUS fraction across primary endpoint adjudication > 40%;
-- second-adjudicator kappa < 0.60 on either primary gene-assignment class or phenotype match;
+- preregistered primary agreement statistic < 0.60 on either primary gene-assignment class or phenotype match;
 - simulation-based confirmatory power < 0.80 at alpha 0.05 for the frozen scientifically meaningful effect even after using all feasible untouched confirmatory diseases/cutoff resources;
 - no plausible untouched disease pool remains after excluding pilot contamination;
 - high-specificity assignment yields too few positives to support the planned confirmatory test and locus-level redesign is not feasible.
@@ -238,12 +289,12 @@ NO-GO if any remains true after one allowed rule clarification/revision:
 REDESIGN if any occurs:
 
 - author-named + nearest-gene assignments > 50% of candidate gene-level positives;
-- absolute Spearman correlation between pre-T attention rank and author-named positive assignment > 0.30;
+- preregistered attention/assignment association exceeds the sealed REDESIGN threshold (default absolute standardized association 0.30 until BIG 0F v1 is sealed);
 - primary-eligible high-specificity assignments < 50% of gene-level positives;
 - strict novelty is dominated by pre-T cohort reuse / power maturation;
 - same curation pipeline materially dominates both inputs and outcomes;
 - unresolved ambiguity is >20% and <=40%;
-- second-adjudicator kappa is >=0.60 and <0.70;
+- preregistered primary agreement statistic is >=0.60 and <0.70;
 - archived required-field availability is >=70% and <90%;
 - Combined Nuisance already ranks the median positive in the top 1% of its disease candidate universe, leaving little plausible headroom.
 
@@ -260,7 +311,7 @@ GO requires all:
 
 - archived required-field availability >= 90%;
 - unresolved/AMBIGUOUS fraction <= 20%;
-- second-adjudicator kappa >= 0.70 for primary assignment and phenotype match;
+- preregistered primary agreement statistic >= 0.70 for primary assignment and phenotype match;
 - high-specificity primary-eligible assignment fraction >= 50%;
 - no material unmitigated Past/Future curation coupling;
 - sample-overlap / lineage ambiguity within the frozen acceptable policy;
@@ -291,3 +342,24 @@ A changed design requires:
 - a new protocol version;
 - a new externally sealed seed/frame;
 - untouched development cases for the revised pilot where the change could have learned from outcomes.
+
+
+## 14. Threshold provenance
+
+Numeric pilot thresholds are decision rules, not universal scientific constants.
+
+Before external sealing, every threshold receives:
+
+```text
+threshold_id
+metric_definition
+direction
+value
+rationale
+sensitivity_range
+decision_consequence
+```
+
+The MAR must report a sensitivity table around each threshold that materially changes GO/REDESIGN/NO-GO.
+
+If the conclusion flips under a small scientifically plausible threshold change, the correct outcome is REDESIGN / INCONCLUSIVE rather than selectively choosing the favorable threshold.
