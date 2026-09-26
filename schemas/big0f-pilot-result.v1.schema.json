@@ -51,7 +51,7 @@
     },
     "seal_attestation_ids": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 2,
       "uniqueItems": true,
       "items": {
         "type": "string",
