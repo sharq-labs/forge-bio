@@ -32,7 +32,7 @@ Model lift, biological-model rankings, nuisance-model lift, or ambiguity outcome
 
 If none pass, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
 
-Machine-enforcement requirement for the future implementation: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair, and evidence digests for provider availability and observation-window feasibility. The future evaluator must reconstruct the first passing pair; a later favorable pair cannot be declared manually.
+Machine-enforcement requirement for the future implementation: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair with per-event provenance digests, and evidence digests for provider availability and observation-window feasibility. The future evaluator must reconstruct the first passing pair; a later favorable pair cannot be declared manually.
 
 ## 2. Disease sampling
 
