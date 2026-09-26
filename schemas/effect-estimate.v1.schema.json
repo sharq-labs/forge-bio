@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/effect-estimate.v1.schema.json",
+  "title": "Forge Bio Effect Estimate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "effect_id",
+    "schema_version",
+    "estimand_id",
+    "effect_measure_kind",
+    "estimate",
+    "scale",
+    "transform",
+    "reference_group_ref",
+    "comparison_group_ref",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "effect_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "effect-estimate-v1"
+    },
+    "estimand_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effect_measure_kind": {
+      "enum": [
+        "DIFFERENCE",
+        "RATIO",
+        "ODDS_RATIO",
+        "RISK_RATIO",
+        "HAZARD_RATIO",
+        "REGRESSION_COEFFICIENT",
+        "STANDARDIZED_EFFECT",
+        "CORRELATION",
+        "PROBABILITY",
+        "OTHER"
+      ]
+    },
+    "estimate": {
+      "type": "number"
+    },
+    "scale": {
+      "enum": [
+        "NATURAL",
+        "LOG",
+        "LOG2",
+        "LOG10",
+        "STANDARDIZED",
+        "PROBABILITY",
+        "OTHER"
+      ]
+    },
+    "transform": {
+      "enum": [
+        "NONE",
+        "LN",
+        "LOG2",
+        "LOG10",
+        "CUSTOM"
+      ]
+    },
+    "transform_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reference_group_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "comparison_group_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unit_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "standard_error": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "confidence_interval_low": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "confidence_interval_high": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "p_value": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "sample_size": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "population_context_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "transform": {
+            "const": "CUSTOM"
+          }
+        },
+        "required": [
+          "transform"
+        ]
+      },
+      "then": {
+        "required": [
+          "transform_artifact_id"
+        ],
+        "properties": {
+          "transform_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
