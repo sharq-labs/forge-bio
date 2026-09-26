@@ -18,6 +18,8 @@ Files:
 - `measurement-process.v1.schema.json`
 - `numerical-verification.v1.schema.json`
 - `model-credibility.v1.schema.json`
+- `extraction-artifact.v1.schema.json`
+- `extraction-quality-card.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
