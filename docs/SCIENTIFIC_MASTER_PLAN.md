@@ -208,6 +208,60 @@ BIG 0F does not start until these policy/schema artifacts are internally consist
 
 ---
 
+# BIG 0R4 — Disease, Pathogen, Therapeutic & Scientific Digital Twin Semantics
+
+## Goal
+
+Define complete scientific profiles for diseases, pathogens/viruses, pathogen–host systems, and therapeutics, then define strict maturity rules for when a dynamic/mechanistic/predictive model may be called a Scientific Digital Twin.
+
+This milestone is a **platform extension** and does not block the B-TGT-E1 BIG 0F feasibility pilot once BIG 0R3 remains satisfied.
+
+## Outputs
+
+- DiseaseScientificProfile
+- PathogenScientificProfile
+- VirusScientificProfileExtension
+- PathogenHostScientificProfile
+- TherapeuticScientificProfile
+- first-class pathogen / strain / tissue / cell-type / biological-process / biomarker identity kinds
+- ScientificDigitalTwin
+- TwinState / ScientificTwinSnapshot
+- TwinStateModel
+- TwinValidationArtifact
+- TwinPerturbation / TwinSimulationResult
+- DigitalTwinMaturityLevel
+- executable scientific-twin JSON Schema
+- ADR-015 twin terminology/claim boundary
+- VVUQ contract
+
+## Twin maturity
+
+```text
+T0_PROFILE_ONLY
+T1_DYNAMIC_KNOWLEDGE_TWIN
+T2_MECHANISTIC_TWIN
+T3_VALIDATED_PREDICTIVE_TWIN
+T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
+```
+
+## Acceptance
+
+- disease and pathogen are distinct identities;
+- infectious-disease modeling can represent pathogen + host biology explicitly;
+- a static profile/graph cannot claim T1+ twin maturity;
+- T3/T4 requires held-out/future predictive validation and uncertainty quantification;
+- simulation output is a research hypothesis, not clinical evidence;
+- patient-specific twins remain outside V1 Context of Use;
+- historical Twin(subject, T) obeys HistoricalKnowledgeView, watermark, preprocessing, and parameter-fit cutoffs.
+
+## Gate
+
+Architecture/schema completion is sufficient for BIG 0R4.
+
+Actual T2–T4 twin implementation is deferred until the relevant identity, evidence, provider, mechanism, therapeutic, and validation layers exist.
+
+---
+
 # BIG 0F — Benchmark Feasibility Pilot
 
 ## Goal
@@ -830,6 +884,45 @@ If it does not, it remains a present-day exploratory feature rather than a core 
 
 ---
 
+# BIG 16A — Scientific Digital Twin Engine
+
+## Goal
+
+Instantiate validated disease/pathogen/pathogen-host/therapeutic twins after the scientific evidence and modality layers are mature enough to support them.
+
+## Initial implementation order
+
+1. T1 Dynamic Knowledge Twins
+2. T2 Mechanistic Twins for narrowly defined systems
+3. T3 Predictive Twins only after held-out/future validation
+4. T4 Intervention Simulation Twins only after T3-level predictive validity and sensitivity/VVUQ requirements are met
+
+## Required inputs
+
+- canonical identity and scientific profiles
+- evidence/provenance ledger
+- temporal snapshots
+- mechanism/state model
+- parameter provenance
+- uncertainty model
+- validation target
+- applicability domain
+
+## Acceptance
+
+- every twin has an explicit maturity level
+- TwinState history is immutable/versioned
+- historical twins cannot ingest future evidence through model parameters or calibration
+- T3 prediction claims reproduce on held-out/future data
+- T4 simulations report assumptions, uncertainty, sensitivity, and applicability
+- no patient-specific diagnosis/treatment/dosing functionality
+
+## Scientific gate
+
+A plausible simulation is not enough. If predictive validation fails, the twin remains T1/T2 and the failure is reported.
+
+---
+
 # BIG 17 — Research Workbench & Controlled Automation
 
 ## Goal
@@ -1018,7 +1111,7 @@ This is the ultimate long-term evidence.
 # 7. Current execution state
 
 ```text
-Current milestone: BIG 0R3 → BIG 0F
+Current milestone: BIG 0R3 + BIG 0R4 (parallel platform hardening) → BIG 0F
 Implementation status: not started
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
@@ -1067,6 +1160,9 @@ Implementation order is governed by:
 - [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)
 - [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md)
 - [../schemas/README.md](../schemas/README.md)
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
