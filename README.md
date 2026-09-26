@@ -68,7 +68,7 @@ The Historical Knowledge plane and Future Outcome plane are isolated. A confirma
 
 Beating random is insufficient.
 
-The central question is whether the platform shows reproducible lift over **historical research attention**, **historical discoverability / observation opportunity**, and other trivial popularity/evidence-volume baselines.
+The central question is whether pre-T biological evidence provides reproducible **incremental lift over a Combined Nuisance Model** containing historical research attention, discoverability, genomic architecture, cross-trait pleiotropy, historical observability, and source/measurement opportunity.
 
 A model that mainly predicts what researchers were about to study or what was easiest to measure has not demonstrated biological discovery value.
 
@@ -104,13 +104,15 @@ The benchmark also governs:
 - immutable Future Outcome snapshots;
 - researcher hindsight.
 
-A positive V0 result is evidence about **disease–gene association prioritization**, not therapeutic-target validation or clinical efficacy.
+A positive V0 result is evidence about **disease–gene association prioritization beyond the frozen nuisance comparator**, not therapeutic-target validation or clinical efficacy.
+
+Primary gene-level positives use high-specificity outcome-assignment classes. AUTHOR_NAMED / NEAREST_GENE / positional-only mappings are secondary sensitivity labels unless they independently satisfy the frozen high-specificity rule.
 
 ## Pre-code status
 
-Current phase: **Pre-Code Hardening / BIG 0R3 + BIG 0R4 + BIG 0R5 → BIG 0F**
+Current phase: **BIG 0F-0 Critical-Path Hardening → BIG 0F**
 
-BIG 0R4 and BIG 0R5 are parallel platform-hardening extensions and do not block the B-TGT-E1 manual feasibility pilot.
+BIG 0R4/BIG 0R5 platform-extension work is frozen/deferred while BIG 0F-0 repairs the B-TGT-E1 critical path identified by independent hostile review.
 
 The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
@@ -130,6 +132,7 @@ Do not start production scientific code before that gate.
 - [Pre-Code Readiness Checklist](docs/PRE_CODE_CHECKLIST.md)
 - [Scientific Red-Team Gap Register](docs/SCIENTIFIC_RED_TEAM_GAPS.md)
 - [Plan Strength Audit](docs/PLAN_STRENGTH_AUDIT.md)
+- [BIG 0F V0 Pilot Protocol](docs/BIG_0F_PROTOCOL.md)
 - [Scientific Glossary](docs/GLOSSARY.md)
 - [Core Scientific Types](docs/CORE_TYPES.md)
 - [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
@@ -166,17 +169,25 @@ Do not start production scientific code before that gate.
 - [ADR-017 — Quantitative Semantics](docs/adr/ADR-017-quantitative-semantics.md)
 - [ADR-018 — Evidence Extraction Quality](docs/adr/ADR-018-evidence-extraction-quality.md)
 - [ADR-019 — Source & Benchmark Lifecycle](docs/adr/ADR-019-source-benchmark-lifecycle.md)
+- [ADR-020 — E1 Endpoint, Nuisance Comparator & Confirmatory Rule](docs/adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
+- [ADR-021 — BIG 0F Pilot Protocol](docs/adr/ADR-021-big-0f-pilot-protocol.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
 
 The readiness checklist and red-team gap register are authoritative.
 
-Important unresolved P0 work is now limited to evidence-bearing feasibility decisions:
+Current P0 work is **not** limited to empirical feasibility. BIG 0F-0 also contains critical protocol/operational gates identified by independent hostile review.
+
+Important remaining P0 work includes:
 - final frozen B-TGT-E1 estimand after feasibility evidence;
 - final primary E1 subtype and endpoint evidence-quality threshold;
 - manual outcome-feasibility pilot and its ambiguity/coverage/curation/lineage measurements;
-- pilot GO / REDESIGN / NO-GO verdict.
+- pilot GO / REDESIGN / NO-GO verdict;
+- hostile-review regression suite passing on the current branch;
+- externally sealed BIG 0F frame/seed/protocol before adjudication;
+- assignment of an independent second adjudicator;
+- independent custodian / third-party sealing mechanism.
 
 ADR-005 is decided: commercial-later engineering posture; repository code/docs Apache-2.0; provider-data licenses remain source-specific.
 
