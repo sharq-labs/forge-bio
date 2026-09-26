@@ -1314,3 +1314,79 @@ Rules:
 - UNKNOWN/UNQUALIFIED extraction quality is refused for confirmatory evidence generation.
 
 Normative policy: [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md).
+
+
+---
+
+## 42. Source lifecycle, benchmark exhaustion, and prospective independence contract
+
+### 42.1 Source lifecycle
+
+Historical reconstruction resolves source lifecycle state as-of-T.
+
+Later correction/retraction/withdrawal events:
+- do not retroactively rewrite the historical view;
+- are recorded in current/evaluation metadata;
+- trigger fragility sensitivity when the historical result materially depended on affected evidence.
+
+Frozen snapshots are immutable; newer provider/ontology/schema representations create new derivation artifacts.
+
+### 42.2 Benchmark exposure lifecycle
+
+Every confirmatory benchmark generation has a BenchmarkExposureLedger.
+
+Generation states:
+
+```text
+ACTIVE_CONFIRMATORY
+DEVELOPMENT_EXPOSED
+EXHAUSTED
+RETIRED
+```
+
+A generation cannot remain ACTIVE_CONFIRMATORY after evaluation feedback materially changes endpoint, features, model, thresholds, disease/candidate selection, adjudication, or provider/source selection.
+
+EXHAUSTED generations cannot support a new strongest-tier confirmatory claim.
+
+### 42.3 Research-program attempt ledger
+
+Repeated benchmark generations, endpoints, horizons, disease subsets, and model families are logged.
+
+Selective reporting of only favorable attempts is prohibited.
+
+### 42.4 External seal
+
+For strongest confirmatory/prospective claims, required frozen artifact digests receive an ExternalSealAttestation through an independent custodian or third-party timestamp/registration mechanism.
+
+Internal Git history is necessary provenance but is not treated as sufficient external evidence of sequencing on its own.
+
+### 42.5 Prospective prediction exposure
+
+Prospective predictions record whether they were private, limited, collaborator-shared, or public.
+
+Later evidence is classified:
+
+```text
+UNEXPOSED_PROSPECTIVE
+EXPOSURE_POSSIBLE
+EXPOSURE_CONFIRMED
+UNKNOWN_EXPOSURE
+```
+
+Evidence that may have been induced by public Forge Bio predictions is not automatically counted as clean independent prospective confirmation.
+
+### 42.6 L3 / L6 claim gates
+
+Strongest L3 requires:
+- ACTIVE_CONFIRMATORY benchmark generation;
+- exposure ledger;
+- required external seals;
+- no adaptive feedback into the frozen method.
+
+L6 additionally requires:
+- prospectively registered prediction artifact;
+- exposure classification;
+- independent outcome collection/assessment;
+- disclosure of any prediction-to-research influence risk.
+
+Normative policy: [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md).
