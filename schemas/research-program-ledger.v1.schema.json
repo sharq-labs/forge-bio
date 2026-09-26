@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/research-program-ledger.v1.schema.json",
+  "title": "Forge Bio Research Program Ledger v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ledger_id",
+    "schema_version",
+    "research_program_id",
+    "confirmatory_program_budget_id",
+    "attempts",
+    "digest"
+  ],
+  "properties": {
+    "ledger_id": {
+      "const": "RPL-FORGE-BIO-B-TGT-E1-V0"
+    },
+    "schema_version": {
+      "const": "research-program-ledger-v1"
+    },
+    "research_program_id": {
+      "const": "FORGE-BIO-B-TGT-E1-V0"
+    },
+    "confirmatory_program_budget_id": {
+      "const": "CPB-FORGE-BIO-B-TGT-E1-V0"
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "attempt_id",
+          "attempt_tier",
+          "attempt_index",
+          "allocation_generation_id",
+          "allocated_alpha",
+          "result_status"
+        ],
+        "properties": {
+          "attempt_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attempt_tier": {
+            "enum": [
+              "DEVELOPMENT",
+              "CONFIRMATORY",
+              "PROSPECTIVE"
+            ]
+          },
+          "attempt_index": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "allocation_generation_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "allocated_alpha": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "exclusiveMinimum": 0,
+            "maximum": 0.05
+          },
+          "result_status": {
+            "enum": [
+              "POSITIVE",
+              "NULL",
+              "NEGATIVE",
+              "INCONCLUSIVE",
+              "FAILED_EXECUTION"
+            ]
+          }
+        }
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

@@ -91,7 +91,8 @@
       "items": {
         "type": "string",
         "minLength": 1
-      }
+      },
+      "uniqueItems": true
     },
     "external_seal_attestation_id": {
       "type": [
@@ -101,7 +102,17 @@
     },
     "digest": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "max_aggregate_disclosures": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "max_subgroup_disclosures": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
     }
   },
   "allOf": [
@@ -124,9 +135,6 @@
                 "anyOf": [
                   {
                     "properties": {
-                      "audience_role": {
-                        "const": "RANKING_TEAM"
-                      },
                       "disclosure_level": {
                         "enum": [
                           "PER_CASE",
@@ -135,8 +143,17 @@
                       }
                     },
                     "required": [
-                      "audience_role",
                       "disclosure_level"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "exposure_kind": {
+                        "const": "LABEL_REVEAL"
+                      }
+                    },
+                    "required": [
+                      "exposure_kind"
                     ]
                   },
                   {
@@ -153,8 +170,17 @@
                 ]
               }
             }
+          },
+          "external_seal_attestation_id": {
+            "type": "string",
+            "minLength": 1
           }
-        }
+        },
+        "required": [
+          "external_seal_attestation_id",
+          "max_aggregate_disclosures",
+          "max_subgroup_disclosures"
+        ]
       }
     }
   ]

@@ -53,6 +53,11 @@ def validate_map(x: dict[str, Any]) -> list[str]:
 
     tier = gov.get("study_tier")
     if tier in {"CONFIRMATORY", "PROSPECTIVE"}:
+        if mode != "STRICT_HISTORICAL":
+            e.append("confirmatory/prospective MAP requires STRICT_HISTORICAL operating mode")
+        fidelity = x.get("providers", {}).get("reconstruction_fidelity_verdicts") or []
+        if any(v not in {"PASS", "NOT_APPLICABLE"} for v in fidelity):
+            e.append("confirmatory/prospective MAP requires PASS/NOT_APPLICABLE reconstruction fidelity")
         ranking = set(gov.get("ranking_team") or [])
         adjud = gov.get("outcome_adjudication_role")
         cust = gov.get("lockbox_custodian_role")
@@ -75,6 +80,35 @@ def validate_map(x: dict[str, Any]) -> list[str]:
             e.append("confirmatory/prospective tier cannot begin after per-case/full-label disclosure")
         if not gov.get("external_seal_attestation_id"):
             e.append("confirmatory/prospective tier requires external seal attestation")
+        required_nuisance = {
+            "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+            "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+            "GENE_LENGTH",
+            "LD_ARCHITECTURE",
+            "CROSS_TRAIT_PLEIOTROPY",
+            "GENETIC_OBSERVABILITY",
+            "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        }
+        observed_nuisance = set(baselines.get("nuisance_feature_family_ids") or [])
+        missing_nuisance = sorted(required_nuisance - observed_nuisance)
+        if missing_nuisance:
+            e.append("confirmatory Combined Nuisance missing mandatory families: " + ",".join(missing_nuisance))
+        if not str(baselines.get("combined_nuisance_model_id", "")).startswith("CNM-"):
+            e.append("combined nuisance model ID must identify a CNM artifact")
+        comparison = x.get("comparison_design", {})
+        if comparison.get("capacity_parity_required") is not True:
+            e.append("confirmatory primary comparison requires capacity parity")
+        for key in (
+            "learner_family_id",
+            "nuisance_feature_block_digest",
+            "preprocessing_artifact_id",
+            "hyperparameter_search_space_digest",
+            "tuning_budget_id",
+            "early_stopping_policy_id",
+            "random_seed_policy_id",
+        ):
+            if not comparison.get(key):
+                e.append(f"confirmatory comparison missing {key}")
         if gov.get("permitted_lockbox_accesses", 99) > 1:
             e.append("confirmatory/prospective tier permits at most one lockbox opening")
 
@@ -85,8 +119,8 @@ def validate_map(x: dict[str, Any]) -> list[str]:
         if gates.get("min_outcome_coverage_fraction", 0) <= 0:
             e.append("confirmatory outcome coverage gate is vacuous")
 
-    if not isinstance(stats.get("alpha"), (int, float)) or not 0 < stats["alpha"] <= 0.1:
-        e.append("alpha must be numeric in (0, 0.1]")
+    if not isinstance(stats.get("alpha"), (int, float)) or stats["alpha"] != 0.05:
+        e.append("confirmatory alpha must equal frozen 0.05")
     if not isinstance(stats.get("power_target"), (int, float)) or stats["power_target"] < 0.8:
         e.append("power target must be at least 0.80")
     if not isinstance(stats.get("success_threshold_numeric"), (int, float)):
@@ -216,39 +250,85 @@ def validate_model_credibility(x: dict[str, Any]) -> list[str]:
 def validate_benchmark_exposure_ledger(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     if x.get("lifecycle_status") == "ACTIVE_CONFIRMATORY":
-        for ev in x.get("exposure_events") or []:
+        events = x.get("exposure_events") or []
+        aggregate_count = 0
+        subgroup_count = 0
+        for ev in events:
             if ev.get("downstream_change_ref"):
                 e.append("ACTIVE_CONFIRMATORY cannot survive evaluation-driven downstream change")
-            if ev.get("audience_role") == "RANKING_TEAM" and ev.get("disclosure_level") in {"PER_CASE", "FULL_LABEL"}:
-                e.append("ACTIVE_CONFIRMATORY cannot reveal per-case/full labels to ranking team")
+            if ev.get("disclosure_level") in {"PER_CASE", "FULL_LABEL"}:
+                e.append("ACTIVE_CONFIRMATORY cannot reveal per-case/full labels to any audience")
+            if ev.get("exposure_kind") == "LABEL_REVEAL":
+                e.append("ACTIVE_CONFIRMATORY cannot contain a label-reveal event")
+            if ev.get("disclosure_level") == "AGGREGATE_ONLY":
+                aggregate_count += 1
+            if ev.get("disclosure_level") == "SUBGROUP":
+                subgroup_count += 1
+        if not x.get("external_seal_attestation_id"):
+            e.append("ACTIVE_CONFIRMATORY requires an external seal")
+        if aggregate_count > x.get("max_aggregate_disclosures", -1):
+            e.append("aggregate disclosure count exceeds frozen active-generation budget")
+        if subgroup_count > x.get("max_subgroup_disclosures", -1):
+            e.append("subgroup disclosure count exceeds frozen active-generation budget")
     return e
 
 
 def validate_external_seal(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
-    if x.get("verification_status") == "VERIFIED":
-        if x.get("independence_from_study_team") is not True:
-            e.append("verified external seal must be independent")
-        if x.get("authority_type") not in {"INDEPENDENT_CUSTODIAN", "THIRD_PARTY_TIMESTAMP_SERVICE", "PUBLIC_REGISTRY"}:
-            e.append("verified seal authority is not external")
-        try:
-            _parse_datetime(x["sealed_at"])
-        except Exception:
-            e.append("sealed_at is not a valid timestamp")
-        if not x.get("verification_evidence_ref"):
-            e.append("verified seal requires verification evidence")
+    if x.get("verification_status") != "VERIFIED":
+        e.append("claim-valid external seal must be VERIFIED")
+        return e
+    if x.get("independence_from_study_team") is not True:
+        e.append("verified external seal must be independent")
+    authority = x.get("authority_type")
+    method = x.get("attestation_method")
+    expected = {
+        "INDEPENDENT_CUSTODIAN": "SIGNED_CUSTODIAN_ATTESTATION",
+        "THIRD_PARTY_TIMESTAMP_SERVICE": "THIRD_PARTY_TIMESTAMP",
+        "PUBLIC_REGISTRY": "PUBLIC_PREREGISTRATION",
+    }
+    if authority not in expected:
+        e.append("verified seal authority is not recognized")
+    elif method != expected[authority]:
+        e.append("attestation method does not match authority type")
+    try:
+        sealed = _parse_datetime(x["sealed_at"])
+        verified = _parse_datetime(x["verified_at"])
+        if sealed > verified:
+            e.append("sealed_at cannot be later than verified_at")
+    except Exception:
+        e.append("seal timestamps are invalid")
+    if not x.get("verification_evidence_ref") or not x.get("independence_evidence_ref"):
+        e.append("verified seal requires verification and independence evidence")
+    digest = x.get("artifact_digest", "")
+    if not isinstance(digest, str) or len(digest) != 71 or not digest.startswith("sha256:"):
+        e.append("external seal requires a full sha256 digest")
     return e
 
 
 def validate_research_program_attempt(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     try:
-        _parse_datetime(x["registered_at"])
-        _parse_datetime(x["disclosure_due_at"])
+        registered = _parse_datetime(x["registered_at"])
+        result_time = _parse_datetime(x["result_recorded_at"])
+        disclosure_due = _parse_datetime(x["disclosure_due_at"])
+        if registered > result_time:
+            e.append("research attempt must be registered before result recording")
+        if result_time > disclosure_due:
+            e.append("disclosure due date cannot precede result recording")
     except Exception:
-        e.append("attempt registration/disclosure dates must be valid timestamps")
-    if x.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"} and not x.get("external_seal_attestation_id"):
-        e.append("confirmatory/prospective attempt requires external seal")
+        e.append("attempt registration/result/disclosure dates must be valid timestamps")
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("attempt must belong to the fixed Forge Bio B-TGT-E1 research program")
+    if x.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"}:
+        if not x.get("external_seal_attestation_id"):
+            e.append("confirmatory/prospective attempt requires external seal")
+        if x.get("confirmatory_program_budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+            e.append("confirmatory/prospective attempt must link the single program-wide budget")
+        if not x.get("allocation_generation_id"):
+            e.append("confirmatory/prospective attempt requires an allocation generation")
+        if not isinstance(x.get("allocated_alpha"), (int, float)) or not 0 < x["allocated_alpha"] <= 0.05:
+            e.append("confirmatory/prospective attempt requires allocated alpha in (0, 0.05]")
     if x.get("disclosure_status") not in {"SCHEDULED", "PUBLIC"}:
         e.append("every attempt requires scheduled/public disclosure")
     return e
@@ -257,11 +337,45 @@ def validate_research_program_attempt(x: dict[str, Any]) -> list[str]:
 def validate_confirmatory_program_budget(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     allocations = x.get("generation_allocations") or []
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("confirmatory budget research_program_id is not the canonical program")
+    if x.get("budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+        e.append("confirmatory budget ID is not canonical")
+    if x.get("familywise_alpha") != 0.05:
+        e.append("familywise alpha must equal 0.05")
     if len(allocations) > x.get("max_confirmatory_generations", 0):
         e.append("generation allocations exceed confirmatory-generation budget")
+    generation_ids = [a.get("generation_id") for a in allocations]
+    if len(generation_ids) != len(set(generation_ids)):
+        e.append("generation IDs must be unique within the program-wide alpha budget")
     total = sum(float(a.get("allocated_alpha", 0)) for a in allocations)
-    if total > float(x.get("familywise_alpha", 0)) + 1e-12:
-        e.append("allocated alpha exceeds familywise alpha budget")
+    if total > 0.05 + 1e-12:
+        e.append("allocated alpha exceeds the single program-wide 0.05 budget")
+    return e
+
+
+def validate_research_program_ledger(x: dict[str, Any]) -> list[str]:
+    e: list[str] = []
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("research-program ledger must use the canonical program ID")
+    if x.get("confirmatory_program_budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+        e.append("research-program ledger must link the canonical confirmatory budget")
+    attempts = x.get("attempts") or []
+    attempt_ids = [a.get("attempt_id") for a in attempts]
+    attempt_indexes = [a.get("attempt_index") for a in attempts]
+    if len(attempt_ids) != len(set(attempt_ids)):
+        e.append("research-program attempt IDs must be unique")
+    if len(attempt_indexes) != len(set(attempt_indexes)):
+        e.append("research-program attempt indexes must be unique")
+    confirmatory = [a for a in attempts if a.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"}]
+    generations = [a.get("allocation_generation_id") for a in confirmatory]
+    if len(generations) != len(set(generations)):
+        e.append("confirmatory/prospective attempts may not reuse one allocation generation as independent attempts")
+    alpha = sum(float(a.get("allocated_alpha") or 0) for a in confirmatory)
+    if alpha > 0.05 + 1e-12:
+        e.append("research-program ledger spends more than the single 0.05 alpha budget")
+    if len(generations) > 2:
+        e.append("research-program ledger exceeds maximum confirmatory generations")
     return e
 
 
@@ -277,6 +391,7 @@ VALIDATORS = {
     "external_seal": validate_external_seal,
     "research_program_attempt": validate_research_program_attempt,
     "confirmatory_program_budget": validate_confirmatory_program_budget,
+    "research_program_ledger": validate_research_program_ledger,
 }
 
 

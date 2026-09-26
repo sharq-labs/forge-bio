@@ -41,7 +41,7 @@
     },
     "provider_audit_ref": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "criteria": {
       "type": "array",
@@ -76,8 +76,7 @@
               "HETEROGENEITY",
               "GENE_ASSIGNMENT",
               "HISTORICAL_NOVELTY",
-              "SOURCE_QUALITY",
-              "OTHER"
+              "SOURCE_QUALITY"
             ]
           },
           "field_or_artifact": {
@@ -138,6 +137,30 @@
           }
         },
         "allOf": [
+          {
+            "if": {
+              "properties": {
+                "operator": {
+                  "const": "REQUIRE"
+                }
+              },
+              "required": [
+                "operator"
+              ]
+            },
+            "then": {
+              "properties": {
+                "required": {
+                  "const": true
+                }
+              },
+              "not": {
+                "required": [
+                  "value"
+                ]
+              }
+            }
+          },
           {
             "if": {
               "properties": {
@@ -239,16 +262,13 @@
       ]
     },
     "phenotype_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "ADR-008"
     },
     "gene_assignment_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "BIG0F-ADJUDICATION-V1"
     },
     "genomic_harmonization_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "ADR-011"
     },
     "frozen_at": {
       "type": [
@@ -282,6 +302,146 @@
           "frozen_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "independence_requirement": {
+            "const": "REQUIRED"
+          },
+          "criteria": {
+            "minItems": 11,
+            "allOf": [
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "STUDY_DESIGN"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "STATISTICAL_STRENGTH"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "SAMPLE_SIZE"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "INDEPENDENCE"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "PHENOTYPE_MATCH"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "GENOMIC_HARMONIZATION"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "ALLELE_DIRECTION"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "POPULATION_ANCESTRY"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "GENE_ASSIGNMENT"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "HISTORICAL_NOVELTY"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
+                      "const": "SOURCE_QUALITY"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              }
+            ]
           }
         }
       }

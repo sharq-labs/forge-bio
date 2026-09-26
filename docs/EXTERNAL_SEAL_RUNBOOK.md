@@ -21,13 +21,22 @@ seal_bundle_version
 protocol_version
 protocol_sha256
 disease_frame_sha256
-random_seed_commitment_sha256
+randomness_beacon_id
+randomness_beacon_sha256
+derived_sampling_key_commitment_sha256
 candidate_cutoff_order
 candidate_horizon_order
 sampling_algorithm_version
 threshold_manifest_sha256
 adjudication_policy_sha256
 nuisance_feature_manifest_sha256
+decision_engine_sha256
+pilot_result_schema_sha256
+sampling_code_sha256
+threshold_manifest_schema_sha256
+adjudication_policy_schema_sha256
+nuisance_manifest_schema_sha256
+power_analysis_schema_sha256
 created_at
 created_by_role
 ```
@@ -36,7 +45,9 @@ Do not rely on filenames alone.
 
 The externally attested manifest digest is the root commitment. Verification must compare against that independently stored/registered digest; recomputing a fresh digest from the manifest under test is not sufficient.
 
-The plaintext random seed may be held by the independent custodian. The public/time-stamped bundle may contain only its cryptographic commitment if revealing the seed would compromise blinding.
+The study team does **not** choose a random seed.
+
+The disease frame is externally sealed first. A verified public randomness-beacon round published after that frame seal is then bound to the frame. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
 
 ## 3. Canonicalization
 
@@ -48,7 +59,8 @@ Before hashing:
 - explicit null representation;
 - no timestamps generated during canonicalization;
 - no unordered sets;
-- line endings normalized.
+- manifest JSON strings are NFC-normalized;
+- component files are hashed as **exact raw bytes**; line-ending changes therefore change their digests.
 
 Compute SHA-256 for:
 - every component;
@@ -107,19 +119,23 @@ Perform a dry run with synthetic/non-study content:
 
 1. generate a mock protocol file;
 2. generate a mock frame;
-3. generate a mock seed;
-4. create the canonical manifest;
-5. hash every component;
-6. create timestamp proof;
-7. verify timestamp proof independently;
-8. create a test registration or documented registry dry run as allowed by the service;
-9. reconstruct the bundle from stored artifacts;
-10. validate the complete manifest against `schemas/seal-bundle-manifest.v1.schema.json`;
-11. compare the canonical manifest SHA-256 against the **externally attested digest** (not a digest recomputed from a potentially modified manifest);
-12. verify all component hashes;
-13. verify that a one-byte component modification fails;
-14. verify that any manifest-field mutation (protocol version, sampling algorithm, extra field, etc.) fails schema and/or attested-digest verification;
-15. record an ExternalSealAttestation fixture.
+3. externally seal the mock frame digest;
+4. obtain/use a mock verified beacon artifact whose publication time is after the mock frame seal;
+5. derive the sampling key through the frozen sampling code;
+6. create the canonical manifest;
+7. hash every component, including evaluator code, sampling code, pilot-result schema and policy schemas;
+8. create timestamp proof;
+9. verify timestamp proof independently;
+10. create a test OSF/public-registry registration as allowed by the service;
+11. reconstruct the bundle from stored artifacts;
+12. validate the complete manifest against `schemas/seal-bundle-manifest.v1.schema.json`;
+13. read the expected manifest digest from the independently stored attestation record — never from a caller-supplied command-line digest;
+14. require both THIRD_PARTY_TIMESTAMP_SERVICE and PUBLIC_REGISTRY attestations over the same bundle digest;
+15. verify all component hashes;
+16. verify that a one-byte component modification fails;
+17. verify that evaluator/sampling/schema modification fails;
+18. verify that any manifest-field mutation fails schema and/or attested-digest verification;
+19. record both verified ExternalSealAttestation artifacts.
 
 Only after this dry run succeeds may the checklist item "seal mechanism identified and tested" be closed.
 
@@ -128,14 +144,14 @@ Only after this dry run succeeds may the checklist item "seal mechanism identifi
 The following must occur **before first case adjudication**:
 
 ```text
-protocol freeze
-→ frame freeze
-→ seed commitment
-→ threshold manifest freeze
-→ nuisance-family manifest freeze
-→ canonical bundle digest
-→ external timestamp/registration
-→ verification
+protocol + threshold + adjudication + nuisance freeze
+→ disease frame freeze
+→ external frame timestamp/registration
+→ later public randomness-beacon round
+→ deterministic sample-order derivation
+→ canonical bundle including evaluator/sampling/schema digests
+→ dual external timestamp + public registration of bundle digest
+→ independent verification
 → adjudication begins
 ```
 

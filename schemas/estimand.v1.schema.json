@@ -54,16 +54,13 @@
       "const": "ASCERTAINMENT_OPPORTUNITY_PLUS_DISEASE_EVIDENCE_MINUS_ASCERTAINMENT_OPPORTUNITY_ONLY"
     },
     "horizon_selection_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "BIG0F-FIRST-PASSING-T_H-V1"
     },
     "subtype_selection_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "E1-NOVEL-STRICT-OR-REDESIGN-V1"
     },
     "primary_metric_selection_policy_ref": {
-      "type": "string",
-      "minLength": 1
+      "const": "EVENT-RANK-PERCENTILE-V1"
     },
     "all_frame_utility_metric_id": {
       "const": "OBSERVED_EVENT_YIELD_AT_TOTAL_REVIEW_BUDGET"
@@ -138,17 +135,10 @@
             ]
           },
           "primary_endpoint_subtype": {
-            "type": "string",
-            "enum": [
-              "E1-NOVEL-STRICT",
-              "E1-MATURATION",
-              "E1-REPLICATION",
-              "E1-CROSSMODAL"
-            ]
+            "const": "E1-NOVEL-STRICT"
           },
           "primary_metric_id": {
-            "type": "string",
-            "minLength": 1
+            "const": "EVENT_RANK_PERCENTILE_V1"
           }
         }
       }

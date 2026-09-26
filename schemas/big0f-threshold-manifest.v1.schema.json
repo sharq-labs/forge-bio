@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-threshold-manifest.v1.schema.json",
+  "title": "Forge Bio BIG 0F Threshold Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "schema_version",
+    "status",
+    "thresholds",
+    "sensitivity_variants",
+    "max_inconclusive_evaluations",
+    "digest"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-threshold-manifest-v1"
+    },
+    "status": {
+      "const": "FROZEN"
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alpha",
+        "min_disease_count",
+        "max_disease_count",
+        "min_candidate_event_count",
+        "max_candidate_event_count",
+        "max_ambiguity_go",
+        "max_ambiguity_redesign",
+        "min_agreement_go",
+        "min_agreement_redesign",
+        "min_required_field_availability_go",
+        "min_required_field_availability_redesign",
+        "min_primary_eligible_fraction",
+        "max_author_nearest_fraction",
+        "max_abs_attention_association",
+        "max_pre_t_cohort_reuse_fraction",
+        "max_nuisance_median_rank_fraction",
+        "max_nuisance_top1_positive_fraction",
+        "min_ancestry_metadata_coverage_fraction",
+        "max_event_family_deduplication_fraction",
+        "max_locus_to_many_gene_credit_impact_fraction",
+        "max_median_event_curation_minutes",
+        "min_non_event_to_event_time_ratio",
+        "max_non_event_to_event_time_ratio",
+        "min_source_family_count",
+        "minimum_scientifically_meaningful_effect",
+        "min_hypothesis_free_primary_positive_fraction",
+        "max_label_feature_method_coupling_fraction",
+        "min_high_specificity_positive_count"
+      ],
+      "properties": {
+        "alpha": {
+          "const": 0.05
+        },
+        "min_disease_count": {
+          "const": 12
+        },
+        "max_disease_count": {
+          "const": 15
+        },
+        "min_candidate_event_count": {
+          "const": 60
+        },
+        "max_candidate_event_count": {
+          "const": 150
+        },
+        "max_ambiguity_go": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_ambiguity_redesign": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_agreement_go": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_agreement_redesign": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_required_field_availability_go": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_required_field_availability_redesign": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_primary_eligible_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_author_nearest_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_abs_attention_association": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_pre_t_cohort_reuse_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_nuisance_median_rank_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_nuisance_top1_positive_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_ancestry_metadata_coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_event_family_deduplication_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_locus_to_many_gene_credit_impact_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_median_event_curation_minutes": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min_non_event_to_event_time_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_non_event_to_event_time_ratio": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min_source_family_count": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "minimum_scientifically_meaningful_effect": {
+          "const": 0.05
+        },
+        "min_hypothesis_free_primary_positive_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_label_feature_method_coupling_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_high_specificity_positive_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "sensitivity_variants": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "variant_id",
+          "overrides"
+        ],
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "overrides": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "max_inconclusive_evaluations": {
+      "const": 2
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

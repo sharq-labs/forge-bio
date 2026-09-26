@@ -28,7 +28,14 @@
     "high_specificity_positive_count",
     "applicability_metrics",
     "curation_metrics",
-    "threshold_sensitivity_stable"
+    "seal_bundle_digest",
+    "threshold_manifest_digest",
+    "adjudication_policy_digest",
+    "nuisance_manifest_digest",
+    "first_adjudication_at",
+    "source_family_count",
+    "source_family_ids",
+    "prior_inconclusive_count"
   ],
   "properties": {
     "pilot_id": {
@@ -44,7 +51,7 @@
     },
     "seal_attestation_ids": {
       "type": "array",
-      "minItems": 1,
+      "minItems": 2,
       "uniqueItems": true,
       "items": {
         "type": "string",
@@ -52,8 +59,12 @@
       }
     },
     "cutoff": {
-      "type": "string",
-      "format": "date"
+      "enum": [
+        "2005-12-31",
+        "2008-12-31",
+        "2011-12-31",
+        "2014-12-31"
+      ]
     },
     "horizon": {
       "enum": [
@@ -65,11 +76,13 @@
     },
     "disease_count": {
       "type": "integer",
-      "minimum": 1
+      "minimum": 12,
+      "maximum": 15
     },
     "candidate_event_count": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "maximum": 150
     },
     "event_bearing_disease_count": {
       "type": "integer",
@@ -82,7 +95,11 @@
         "primary_eligible_fraction",
         "author_named_fraction",
         "nearest_gene_fraction",
-        "attention_assignment_association"
+        "attention_assignment_association",
+        "attention_assignment_ci_low",
+        "attention_assignment_ci_high",
+        "hypothesis_free_primary_positive_fraction",
+        "label_feature_method_coupling_fraction"
       ],
       "properties": {
         "primary_eligible_fraction": {
@@ -103,6 +120,26 @@
         "attention_assignment_association": {
           "type": "number",
           "minimum": -1,
+          "maximum": 1
+        },
+        "attention_assignment_ci_low": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "attention_assignment_ci_high": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "hypothesis_free_primary_positive_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "label_feature_method_coupling_fraction": {
+          "type": "number",
+          "minimum": 0,
           "maximum": 1
         }
       }
@@ -161,7 +198,35 @@
         },
         "historical_search_coverage_distribution": {
           "type": "object",
-          "minProperties": 1
+          "additionalProperties": false,
+          "required": [
+            "HIGH",
+            "MODERATE",
+            "LOW",
+            "UNKNOWN"
+          ],
+          "properties": {
+            "HIGH": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "MODERATE": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "LOW": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "UNKNOWN": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
         },
         "provider_coupling_risk": {
           "enum": [
@@ -189,7 +254,8 @@
         },
         "locus_to_many_gene_credit_impact": {
           "type": "number",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 1
         },
         "pre_t_cohort_reuse_fraction": {
           "type": "number",
@@ -206,7 +272,15 @@
         "primary_assignment_agreement",
         "phenotype_agreement",
         "duplicate_review_count",
-        "adjudicated_event_case_count"
+        "adjudicated_event_case_count",
+        "primary_assignment_agreement_statistic",
+        "phenotype_agreement_statistic",
+        "second_adjudicator_id",
+        "second_adjudicator_independence_attestation_id",
+        "second_adjudicator_blinded_to_rankings",
+        "second_adjudicator_blinded_to_first_review",
+        "rule_revision_count",
+        "heldout_retest_completed"
       ],
       "properties": {
         "duplicate_review_fraction": {
@@ -231,6 +305,42 @@
         "adjudicated_event_case_count": {
           "type": "integer",
           "minimum": 0
+        },
+        "primary_assignment_agreement_statistic": {
+          "enum": [
+            "COHEN_KAPPA",
+            "GWET_AC1",
+            "GWET_AC2"
+          ]
+        },
+        "phenotype_agreement_statistic": {
+          "enum": [
+            "COHEN_KAPPA",
+            "GWET_AC1",
+            "GWET_AC2"
+          ]
+        },
+        "second_adjudicator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "second_adjudicator_independence_attestation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "second_adjudicator_blinded_to_rankings": {
+          "const": true
+        },
+        "second_adjudicator_blinded_to_first_review": {
+          "const": true
+        },
+        "rule_revision_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "heldout_retest_completed": {
+          "type": "boolean"
         }
       }
     },
@@ -241,13 +351,15 @@
         "alpha",
         "target_power",
         "estimated_power",
-        "minimum_scientifically_meaningful_effect"
+        "minimum_scientifically_meaningful_effect",
+        "power_analysis_artifact_id",
+        "power_analysis_digest",
+        "required_confirmatory_disease_count",
+        "required_high_specificity_positive_count"
       ],
       "properties": {
         "alpha": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "maximum": 0.1
+          "const": 0.05
         },
         "target_power": {
           "type": "number",
@@ -262,6 +374,22 @@
         "minimum_scientifically_meaningful_effect": {
           "type": "number",
           "exclusiveMinimum": 0
+        },
+        "power_analysis_artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "power_analysis_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "required_confirmatory_disease_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "required_high_specificity_positive_count": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     },
@@ -349,7 +477,8 @@
         "median_minutes_per_event_case",
         "symmetric_non_event_audit_complete",
         "non_event_case_count",
-        "median_minutes_per_non_event_case"
+        "median_minutes_per_non_event_case",
+        "operational_capacity_rule_id"
       ],
       "properties": {
         "retrospective_curation_burden_assessment": {
@@ -373,11 +502,48 @@
         "median_minutes_per_non_event_case": {
           "type": "number",
           "minimum": 0
+        },
+        "operational_capacity_rule_id": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
-    "threshold_sensitivity_stable": {
-      "type": "boolean"
+    "seal_bundle_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "threshold_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudication_policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "first_adjudication_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_family_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_family_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "prior_inconclusive_count": {
+      "type": "integer",
+      "minimum": 0
     }
   }
 }

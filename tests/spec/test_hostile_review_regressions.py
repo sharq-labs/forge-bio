@@ -93,12 +93,23 @@ def valid_map() -> dict:
             "feature_selection_artifact_id": None,
         },
         "baselines": {
-            "primary_comparator_id": "NUISANCE-COMBINED",
-            "combined_nuisance_model_id": "NUISANCE-COMBINED",
+            "primary_comparator_id": "CNM-B-TGT-E1-V0",
+            "combined_nuisance_model_id": "CNM-B-TGT-E1-V0",
             "baseline_ids": ["RANDOM", "ATTENTION", "PLEIOTROPY", "GENOMIC_ARCH"],
             "discoverability_control_id": "DISC1",
             "nuisance_feature_family_ids": [
-                "ATTENTION", "GENE_LENGTH", "CROSS_TRAIT_PLEIOTROPY", "GENETIC_OBSERVABILITY"
+                "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+                "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+                "GLOBAL_GENE_POPULARITY",
+                "ANNOTATION_DENSITY",
+                "GENE_LENGTH",
+                "VARIANT_OPPORTUNITY",
+                "REGIONAL_GENE_DENSITY",
+                "LD_ARCHITECTURE",
+                "CROSS_TRAIT_PLEIOTROPY",
+                "GENETIC_OBSERVABILITY",
+                "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+                "PROVIDER_COVERAGE"
             ],
         },
         "statistics": {
@@ -122,6 +133,20 @@ def valid_map() -> dict:
             "power_analysis_artifact_id": "POWER1",
             "success_threshold_numeric": 0.0,
             "confirmatory_generation_budget_id": "BUDGET1",
+        },
+        "comparison_design": {
+            "primary_comparison_semantics": "NESTED_ADD_DISEASE_SPECIFIC_EVIDENCE_ONLY",
+            "capacity_parity_required": True,
+            "learner_family_id": "LEARNER-V1",
+            "nuisance_feature_block_id": "NUISANCE-BLOCK-V1",
+            "nuisance_feature_block_digest": "sha256:" + "a" * 64,
+            "biological_feature_block_id": "BIO-BLOCK-V1",
+            "biological_feature_block_digest": "sha256:" + "b" * 64,
+            "preprocessing_artifact_id": "PREP-V1",
+            "hyperparameter_search_space_digest": "sha256:" + "c" * 64,
+            "tuning_budget_id": "TUNE-V1",
+            "early_stopping_policy_id": "STOP-V1",
+            "random_seed_policy_id": "SEEDPOL-V1",
         },
         "outcome_commitment": {
             "future_outcome_source_release_ids": ["REL1"],

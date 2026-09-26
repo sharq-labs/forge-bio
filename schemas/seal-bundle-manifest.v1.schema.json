@@ -1,29 +1,50 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/seal-bundle-manifest.v1.schema.json",
-  "title": "Forge Bio BIG 0F Seal Bundle Manifest v1",
+  "title": "Forge Bio BIG 0F Seal Bundle Manifest v2",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "seal_bundle_version",
+    "created_at",
+    "created_by_role",
     "protocol_version",
     "protocol_sha256",
     "disease_frame_sha256",
-    "random_seed_commitment_sha256",
+    "randomness_beacon_id",
+    "randomness_beacon_sha256",
+    "derived_sampling_key_commitment_sha256",
     "candidate_cutoff_order",
     "candidate_horizon_order",
     "sampling_algorithm_version",
     "threshold_manifest_sha256",
     "adjudication_policy_sha256",
-    "nuisance_feature_manifest_sha256"
+    "nuisance_feature_manifest_sha256",
+    "decision_engine_sha256",
+    "pilot_result_schema_sha256",
+    "sampling_code_sha256",
+    "threshold_manifest_schema_sha256",
+    "adjudication_policy_schema_sha256",
+    "nuisance_manifest_schema_sha256",
+    "power_analysis_schema_sha256",
+    "power_engine_sha256"
   ],
   "properties": {
     "seal_bundle_version": {
-      "const": "big0f-seal-bundle-v1"
+      "const": "big0f-seal-bundle-v2"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by_role": {
+      "enum": [
+        "INDEPENDENT_CUSTODIAN",
+        "PREREGISTRATION_OPERATOR"
+      ]
     },
     "protocol_version": {
-      "type": "string",
-      "minLength": 1
+      "const": "BIG-0F-v0"
     },
     "protocol_sha256": {
       "type": "string",
@@ -33,7 +54,15 @@
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "random_seed_commitment_sha256": {
+    "randomness_beacon_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "randomness_beacon_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "derived_sampling_key_commitment_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
@@ -54,7 +83,7 @@
       ]
     },
     "sampling_algorithm_version": {
-      "const": "seeded-permutation-v1"
+      "const": "external-beacon-hash-sort-v1"
     },
     "threshold_manifest_sha256": {
       "type": "string",
@@ -65,6 +94,38 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "nuisance_feature_manifest_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "decision_engine_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "pilot_result_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "sampling_code_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "threshold_manifest_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudication_policy_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_manifest_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_analysis_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_engine_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }

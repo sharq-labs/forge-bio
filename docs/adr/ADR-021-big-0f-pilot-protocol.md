@@ -17,11 +17,12 @@ Pilot cases may not be hand-picked famous examples.
 
 Before adjudication:
 
-1. choose candidate cutoff T from the predeclared feasibility range;
-2. construct an as-of-T disease frame mechanically from the frozen disease vocabulary/regime rules;
-3. externally seal the frame digest and random seed;
-4. draw diseases reproducibly;
-5. include all qualifying candidate outcome events for sampled diseases within the pilot horizon, or apply a frozen random event-sampling rule when volume is excessive.
+1. evaluate cutoff/horizon pairs in the fixed lexicographic order from BIG_0F_PROTOCOL;
+2. construct an as-of-T disease frame mechanically from frozen vocabulary/regime rules;
+3. externally timestamp/register the frame digest;
+4. obtain a verified public randomness-beacon round **after** the frame seal;
+5. derive the disease order with the frozen external-beacon hash-sort algorithm;
+6. include all qualifying candidate outcome events for sampled diseases within the pilot horizon, subject only to the frozen 150-event cap rule.
 
 Manual showcase cases may be examined separately and cannot influence GO/REDESIGN/NO-GO.
 
@@ -29,16 +30,15 @@ Manual showcase cases may be examined separately and cannot influence GO/REDESIG
 
 The pilot freezes a target size before adjudication.
 
-Initial planning range:
+Frozen V0 rule:
 
 ```text
-8–15 diseases
-60–150 candidate outcome events
+start with 12 diseases
+expand deterministically up to 15 only if <60 candidate events
+retain 60–150 candidate events under the frozen cap rule
 ```
 
-This is a planning range, not a claim that the upper count is available.
-
-The actual frozen N is chosen from a pre-pilot source-availability count without inspecting event labels/ambiguity decisions.
+The team does not hand-select N after seeing event quality or ambiguity.
 
 ## 4. Independent adjudication
 
@@ -56,10 +56,7 @@ Report percent agreement plus a chance-corrected agreement statistic when mathem
 
 Disagreement remains visible and is adjudicated under a frozen rule.
 
-If no independent adjudicator is available:
-- BIG 0F may proceed as DEVELOPMENT;
-- strongest claim ceiling is explicitly reduced;
-- the missing independence is not marked "passed".
+An independent second adjudicator is a **start gate** for BIG 0F scientific adjudication. If no independent adjudicator is available, case review does not begin.
 
 ## 5. Pilot contamination rule
 
@@ -86,7 +83,7 @@ This tests whether the historical audit can be applied symmetrically enough to a
 
 ## 7. Mini provider-availability audit
 
-Before GO, audit at least 3–4 candidate source families for:
+Before GO, audit at least 4 candidate source families for:
 - archived/as-of-T availability;
 - field-level historical availability;
 - version/release identifiers;
@@ -107,7 +104,9 @@ assignment_class_distribution
 author_named_fraction
 nearest_gene_fraction
 primary_eligible_assignment_fraction
-attention_vs_assignment_rank_correlation
+attention_assignment_association_with_ci
+hypothesis_free_primary_positive_fraction
+label_feature_method_coupling_fraction
 phenotype_ambiguity
 novelty_ambiguity
 historical_search_coverage
@@ -123,11 +122,12 @@ second_adjudicator_agreement
 symmetric_non_event_audit_cost
 archived_source_field_availability
 combined_nuisance_model_headroom
+nuisance_top1_positive_fraction
 ```
 
 ## 9. Power simulation input
 
-BIG 0F produces:
+BIG 0F runs the **nuisance-only** arm and produces:
 - event-bearing disease count;
 - event count distribution;
 - candidate-universe sizes;

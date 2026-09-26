@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/randomness-beacon.v1.schema.json",
+  "title": "Forge Bio External Randomness Beacon v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "beacon_id",
+    "schema_version",
+    "source",
+    "round_id",
+    "published_at",
+    "randomness_hex",
+    "verification_status",
+    "verification_evidence_ref",
+    "frame_digest",
+    "frame_sealed_at",
+    "frame_seal_attestation_id",
+    "digest",
+    "selection_rule",
+    "previous_round_id",
+    "previous_round_published_at"
+  ],
+  "properties": {
+    "beacon_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "randomness-beacon-v1"
+    },
+    "source": {
+      "enum": [
+        "DRAND",
+        "NIST_RANDOMNESS_BEACON"
+      ]
+    },
+    "round_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "randomness_hex": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "verification_status": {
+      "const": "VERIFIED"
+    },
+    "verification_evidence_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frame_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_sealed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "frame_seal_attestation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_rule": {
+      "const": "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL"
+    },
+    "previous_round_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previous_round_published_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

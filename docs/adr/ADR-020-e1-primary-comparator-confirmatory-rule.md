@@ -19,13 +19,14 @@ The primary B-TGT-E1-v0 gene-level endpoint uses a **high-specificity assignment
 Initial eligible assignment classes:
 
 ```text
-DIRECT_CODING_OR_LOF
+HYPOTHESIS_FREE_CODING_OR_LOF
 HIGH_CONFIDENCE_FINE_MAPPING
 PREREGISTERED_COLOCALIZATION
-OTHER_HIGH_SPECIFICITY_METHOD
 ```
 
-The exact evidence rule for each class is frozen in the MAP after BIG 0F feasibility measurement.
+The class definitions are frozen **before BIG 0F adjudication** in `config/big0f-adjudication-policy.v1.json`.
+
+A primary gene-level positive additionally requires hypothesis-free study ascertainment (GENOME_WIDE, EXOME_WIDE, or BIOBANK_WIDE). Targeted candidate-gene studies are secondary only. `OTHER_HIGH_SPECIFICITY_METHOD` is not an open primary class in V0.
 
 The following do **not** qualify for the primary gene-level label by themselves:
 
@@ -36,6 +37,7 @@ POSITIONAL_PROXIMITY_ONLY
 GENERIC_DATABASE_GENE_FIELD
 MODERN_L2G_ONLY
 CURRENT_CURATED_TARGET_ONLY
+TARGETED_CANDIDATE_GENE_CODING
 ```
 
 They may be reported as secondary/sensitivity assignments.
@@ -50,7 +52,7 @@ BIG 0F must report:
 
 - share of future events by assignment class;
 - fraction relying on AUTHOR_NAMED / NEAREST_GENE;
-- Spearman rank correlation between pre-T attention rank and each assignment class;
+- a preregistered attention/assignment association with confidence interval using the frozen event + matched-comparison design;
 - event yield after retaining only primary-eligible assignment classes;
 - sensitivity of headline conclusions to locus-level one-credit scoring.
 
@@ -67,7 +69,9 @@ Forge Bio must be evaluated incrementally over a preregistered **Combined Nuisan
 Required nuisance families where historically reconstructable:
 
 ```text
-research attention / publication volume
+disease-specific attention volume (content-free disease–gene publication/study counts)
+disease-specific attention momentum (content-free count velocity)
+global research attention / publication volume
 attention momentum
 global gene popularity
 gene annotation density
@@ -81,7 +85,9 @@ disease historical sample-size trajectory
 provider/source coverage
 ```
 
-The exact variables and historical sources are frozen before confirmatory evaluation.
+The mandatory nuisance **families** are frozen before BIG 0F in `config/big0f-nuisance-manifest.v1.json`. The disease-specific attention terms are content-free counts/momentum and may not encode semantic evidence strength.
+
+If a mandatory family cannot be historically reconstructed, the result is REDESIGN; the family is not silently dropped from the headline comparator.
 
 ## 5. Primary incremental estimand
 
@@ -97,20 +103,20 @@ Both models:
 - use the same candidate universe;
 - use the same temporal training protocol;
 - use the same development/validation generations;
-- use the same learner family whenever scientifically possible;
+- use the same learner family;
 - use the exact same nuisance feature block;
 - use the same hyperparameter search space, tuning budget, early-stopping rules, random-seed policy, and preprocessing family;
 - differ only by the addition of the preregistered disease-specific hypothesis-evidence feature block in the primary nested comparison.
 
-If the biological arm uses a materially more expressive learner or larger tuning budget, that comparison is secondary unless an equivalently expressive nuisance-only comparator is also run.
+The primary comparison is invalid if learner family, preprocessing, hyperparameter search space, tuning budget, early stopping, or seed policy differs between arms. These parity commitments are first-class MAP fields.
 
 Beating random or any single attention baseline is insufficient for a biological-predictive-value claim.
 
 ## 6. Primary metric direction
 
-BIG 0F evaluates feasibility of an event-rank-percentile primary metric because sparse events can make Recall@K highly discrete.
+B-TGT-E1-v0 fixes `EVENT_RANK_PERCENTILE_V1` as its primary metric. BIG 0F evaluates whether enough events exist to make that metric scientifically useful; it does not choose a different primary metric after inspecting the pilot.
 
-Candidate primary form:
+Primary form:
 
 ```text
 DiseaseMacroMean(
@@ -120,7 +126,7 @@ DiseaseMacroMean(
 
 with the paired incremental contrast above.
 
-Recall@K and normalized Recall@x% remain mandatory secondary metrics unless BIG 0F supports keeping one as primary.
+Recall@K and normalized Recall@x% remain mandatory secondary metrics.
 
 ## 7. Confirmatory decision rule
 
@@ -150,7 +156,7 @@ one-sided alpha = 0.05
 target power >= 0.80
 ```
 
-These are planning defaults, not frozen scientific values until BIG 0F supplies realistic event counts/effect variability.
+For V0, one-sided alpha = 0.05 and the minimum scientifically meaningful rank-fraction effect = 0.05 are frozen before adjudication. BIG 0F supplies variance/event-count inputs for power, not permission to tune the effect threshold from biological-model performance.
 
 ## 8. Research-program multiplicity
 
@@ -194,4 +200,4 @@ A feature that is itself part of Forge Bio's intended disease-specific biologica
 
 Conversely, a feature chosen because it strongly predicts outcome discovery on development data cannot be omitted from nuisance without a frozen scientific justification.
 
-BIG 0F reports sensitivity to plausible nuisance-block definitions so the confirmatory block can be frozen without outcome-driven cherry-picking.
+BIG 0F does **not** compare the Forge biological arm against nuisance. It runs nuisance-only headroom diagnostics under the already-frozen nuisance family manifest. The eventual confirmatory nuisance block cannot omit mandatory disease-specific attention volume/momentum because doing so improves apparent biological lift.

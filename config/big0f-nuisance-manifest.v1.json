@@ -1,0 +1,23 @@
+{
+  "manifest_id": "BIG0F-NUISANCE-V1",
+  "schema_version": "big0f-nuisance-manifest-v1",
+  "status": "FROZEN",
+  "pilot_model_evaluation_mode": "NUISANCE_ONLY",
+  "mandatory_feature_families": [
+    "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+    "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+    "GLOBAL_GENE_POPULARITY",
+    "ANNOTATION_DENSITY",
+    "GENE_LENGTH",
+    "VARIANT_OPPORTUNITY",
+    "REGIONAL_GENE_DENSITY",
+    "LD_ARCHITECTURE",
+    "CROSS_TRAIT_PLEIOTROPY",
+    "GENETIC_OBSERVABILITY",
+    "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+    "PROVIDER_COVERAGE"
+  ],
+  "disease_specific_attention_semantics": "CONTENT_FREE_COUNTS_AND_MOMENTUM_ONLY",
+  "semantic_evidence_features_forbidden": true,
+  "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

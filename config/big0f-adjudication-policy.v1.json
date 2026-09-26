@@ -1,0 +1,28 @@
+{
+  "policy_id": "BIG0F-ADJUDICATION-V1",
+  "schema_version": "big0f-adjudication-policy-v1",
+  "status": "FROZEN",
+  "primary_endpoint_subtype": "E1-NOVEL-STRICT",
+  "primary_metric_id": "EVENT_RANK_PERCENTILE_V1",
+  "primary_gene_assignment_classes": [
+    "HYPOTHESIS_FREE_CODING_OR_LOF",
+    "HIGH_CONFIDENCE_FINE_MAPPING",
+    "PREREGISTERED_COLOCALIZATION"
+  ],
+  "secondary_gene_assignment_classes": [
+    "AUTHOR_NAMED",
+    "NEAREST_GENE",
+    "POSITIONAL_PROXIMITY_ONLY",
+    "GENERIC_DATABASE_GENE_FIELD",
+    "MODERN_L2G_ONLY",
+    "TARGETED_CANDIDATE_GENE_CODING"
+  ],
+  "primary_study_ascertainment_classes": [
+    "GENOME_WIDE",
+    "EXOME_WIDE",
+    "BIOBANK_WIDE"
+  ],
+  "other_high_specificity_method_allowed": false,
+  "label_feature_method_coupling_sensitivity_required": true,
+  "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+}

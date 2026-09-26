@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-nuisance-manifest.v1.schema.json",
+  "title": "Forge Bio BIG 0F Nuisance Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "schema_version",
+    "status",
+    "pilot_model_evaluation_mode",
+    "mandatory_feature_families",
+    "disease_specific_attention_semantics",
+    "semantic_evidence_features_forbidden",
+    "digest"
+  ],
+  "properties": {
+    "manifest_id": {
+      "const": "BIG0F-NUISANCE-V1"
+    },
+    "schema_version": {
+      "const": "big0f-nuisance-manifest-v1"
+    },
+    "status": {
+      "const": "FROZEN"
+    },
+    "pilot_model_evaluation_mode": {
+      "const": "NUISANCE_ONLY"
+    },
+    "mandatory_feature_families": {
+      "const": [
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+        "GLOBAL_GENE_POPULARITY",
+        "ANNOTATION_DENSITY",
+        "GENE_LENGTH",
+        "VARIANT_OPPORTUNITY",
+        "REGIONAL_GENE_DENSITY",
+        "LD_ARCHITECTURE",
+        "CROSS_TRAIT_PLEIOTROPY",
+        "GENETIC_OBSERVABILITY",
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        "PROVIDER_COVERAGE"
+      ]
+    },
+    "disease_specific_attention_semantics": {
+      "const": "CONTENT_FREE_COUNTS_AND_MOMENTUM_ONLY"
+    },
+    "semantic_evidence_features_forbidden": {
+      "const": true
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}
