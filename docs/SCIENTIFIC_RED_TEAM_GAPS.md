@@ -723,7 +723,7 @@ The previous statement that no major design gap remained is not used after this 
 | HR-07 | Strict novelty may be power maturation | EMPIRICAL-OPEN — pre-T cohort reuse + power-maturation audit in BIG 0F |
 | HR-08 | Positive-only historical audit can be asymmetric | CLOSED-POLICY / EMPIRICAL-OPEN — seeded non-event audit required |
 | HR-09 | Disease frame can be chosen with hindsight | CLOSED-POLICY / OPERATIONAL-OPEN — mechanical frame + sealed seed |
-| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-IN-PROGRESS — semantic validator + hostile regression suite; CI must pass |
+| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-TEST — JSON Schema + semantic validator + hostile regression suite pass in CI |
 | HR-11 | Knowledge-bearingness was too self-declared | CLOSED-POLICY — biomedical-domain dependencies default UNKNOWN/knowledge-bearing |
 | HR-12 | Same curation pipeline can feed Past and Future | CLOSED-POLICY / EMPIRICAL-OPEN — primary-source/independent outcome path required |
 | HR-13 | External seals / null reporting were self-attestable | CLOSED-SCHEMA / OPERATIONAL-OPEN — approved external authority types + disclosure schedule |
