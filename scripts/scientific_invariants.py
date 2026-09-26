@@ -53,6 +53,11 @@ def validate_map(x: dict[str, Any]) -> list[str]:
 
     tier = gov.get("study_tier")
     if tier in {"CONFIRMATORY", "PROSPECTIVE"}:
+        if mode != "STRICT_HISTORICAL":
+            e.append("confirmatory/prospective MAP requires STRICT_HISTORICAL operating mode")
+        fidelity = x.get("providers", {}).get("reconstruction_fidelity_verdicts") or []
+        if any(v not in {"PASS", "NOT_APPLICABLE"} for v in fidelity):
+            e.append("confirmatory/prospective MAP requires PASS/NOT_APPLICABLE reconstruction fidelity")
         ranking = set(gov.get("ranking_team") or [])
         adjud = gov.get("outcome_adjudication_role")
         cust = gov.get("lockbox_custodian_role")
@@ -75,6 +80,35 @@ def validate_map(x: dict[str, Any]) -> list[str]:
             e.append("confirmatory/prospective tier cannot begin after per-case/full-label disclosure")
         if not gov.get("external_seal_attestation_id"):
             e.append("confirmatory/prospective tier requires external seal attestation")
+        required_nuisance = {
+            "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+            "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+            "GENE_LENGTH",
+            "LD_ARCHITECTURE",
+            "CROSS_TRAIT_PLEIOTROPY",
+            "GENETIC_OBSERVABILITY",
+            "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        }
+        observed_nuisance = set(baselines.get("nuisance_feature_family_ids") or [])
+        missing_nuisance = sorted(required_nuisance - observed_nuisance)
+        if missing_nuisance:
+            e.append("confirmatory Combined Nuisance missing mandatory families: " + ",".join(missing_nuisance))
+        if not str(baselines.get("combined_nuisance_model_id", "")).startswith("CNM-"):
+            e.append("combined nuisance model ID must identify a CNM artifact")
+        comparison = x.get("comparison_design", {})
+        if comparison.get("capacity_parity_required") is not True:
+            e.append("confirmatory primary comparison requires capacity parity")
+        for key in (
+            "learner_family_id",
+            "nuisance_feature_block_digest",
+            "preprocessing_artifact_id",
+            "hyperparameter_search_space_digest",
+            "tuning_budget_id",
+            "early_stopping_policy_id",
+            "random_seed_policy_id",
+        ):
+            if not comparison.get(key):
+                e.append(f"confirmatory comparison missing {key}")
         if gov.get("permitted_lockbox_accesses", 99) > 1:
             e.append("confirmatory/prospective tier permits at most one lockbox opening")
 
@@ -85,8 +119,8 @@ def validate_map(x: dict[str, Any]) -> list[str]:
         if gates.get("min_outcome_coverage_fraction", 0) <= 0:
             e.append("confirmatory outcome coverage gate is vacuous")
 
-    if not isinstance(stats.get("alpha"), (int, float)) or not 0 < stats["alpha"] <= 0.1:
-        e.append("alpha must be numeric in (0, 0.1]")
+    if not isinstance(stats.get("alpha"), (int, float)) or stats["alpha"] != 0.05:
+        e.append("confirmatory alpha must equal frozen 0.05")
     if not isinstance(stats.get("power_target"), (int, float)) or stats["power_target"] < 0.8:
         e.append("power target must be at least 0.80")
     if not isinstance(stats.get("success_threshold_numeric"), (int, float)):
@@ -226,17 +260,34 @@ def validate_benchmark_exposure_ledger(x: dict[str, Any]) -> list[str]:
 
 def validate_external_seal(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
-    if x.get("verification_status") == "VERIFIED":
-        if x.get("independence_from_study_team") is not True:
-            e.append("verified external seal must be independent")
-        if x.get("authority_type") not in {"INDEPENDENT_CUSTODIAN", "THIRD_PARTY_TIMESTAMP_SERVICE", "PUBLIC_REGISTRY"}:
-            e.append("verified seal authority is not external")
-        try:
-            _parse_datetime(x["sealed_at"])
-        except Exception:
-            e.append("sealed_at is not a valid timestamp")
-        if not x.get("verification_evidence_ref"):
-            e.append("verified seal requires verification evidence")
+    if x.get("verification_status") != "VERIFIED":
+        e.append("claim-valid external seal must be VERIFIED")
+        return e
+    if x.get("independence_from_study_team") is not True:
+        e.append("verified external seal must be independent")
+    authority = x.get("authority_type")
+    method = x.get("attestation_method")
+    expected = {
+        "INDEPENDENT_CUSTODIAN": "SIGNED_CUSTODIAN_ATTESTATION",
+        "THIRD_PARTY_TIMESTAMP_SERVICE": "THIRD_PARTY_TIMESTAMP",
+        "PUBLIC_REGISTRY": "PUBLIC_PREREGISTRATION",
+    }
+    if authority not in expected:
+        e.append("verified seal authority is not recognized")
+    elif method != expected[authority]:
+        e.append("attestation method does not match authority type")
+    try:
+        sealed = _parse_datetime(x["sealed_at"])
+        verified = _parse_datetime(x["verified_at"])
+        if sealed > verified:
+            e.append("sealed_at cannot be later than verified_at")
+    except Exception:
+        e.append("seal timestamps are invalid")
+    if not x.get("verification_evidence_ref") or not x.get("independence_evidence_ref"):
+        e.append("verified seal requires verification and independence evidence")
+    digest = x.get("artifact_digest", "")
+    if not isinstance(digest, str) or len(digest) != 71 or not digest.startswith("sha256:"):
+        e.append("external seal requires a full sha256 digest")
     return e
 
 
