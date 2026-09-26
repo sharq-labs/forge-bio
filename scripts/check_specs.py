@@ -27,6 +27,8 @@ required = [
     ROOT / "schemas" / "measurement-process.v1.schema.json",
     ROOT / "schemas" / "numerical-verification.v1.schema.json",
     ROOT / "schemas" / "model-credibility.v1.schema.json",
+    ROOT / "schemas" / "extraction-artifact.v1.schema.json",
+    ROOT / "schemas" / "extraction-quality-card.v1.schema.json",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
@@ -113,3 +115,12 @@ for required_doc in [
 ]:
     if not required_doc.exists():
         errors.append(f"missing R5 scientific contract: {required_doc.relative_to(ROOT)}")
+
+
+# Evidence extraction assurance checks
+for required_doc in [
+    ROOT / "docs" / "EVIDENCE_EXTRACTION_POLICY.md",
+    ROOT / "docs" / "adr" / "ADR-018-evidence-extraction-quality.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing extraction assurance contract: {required_doc.relative_to(ROOT)}")
