@@ -23,7 +23,9 @@
     "residual_risks",
     "conclusion",
     "provenance_ref",
-    "digest"
+    "digest",
+    "model_execution_kind",
+    "external_validation_status"
   ],
   "properties": {
     "assessment_id": {
@@ -147,6 +149,54 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "model_execution_kind": {
+      "enum": [
+        "STATIC",
+        "ANALYTIC",
+        "NUMERICAL_DETERMINISTIC",
+        "NUMERICAL_STOCHASTIC",
+        "HYBRID"
+      ]
+    },
+    "numerical_verification_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sensitivity_analysis_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "identifiability_assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_discrepancy_assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "transportability_assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "external_validation_status": {
+      "enum": [
+        "NOT_APPLICABLE",
+        "NOT_RUN",
+        "INTERNAL_ONLY",
+        "EXTERNAL_SOURCE",
+        "EXTERNAL_TEAM"
+      ]
     }
   },
   "allOf": [
@@ -186,6 +236,78 @@
               "NOT_APPLICABLE",
               "ADEQUATE"
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model_execution_kind": {
+            "enum": [
+              "NUMERICAL_DETERMINISTIC",
+              "NUMERICAL_STOCHASTIC",
+              "HYBRID"
+            ]
+          }
+        },
+        "required": [
+          "model_execution_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "numerical_verification_artifact_id"
+        ],
+        "properties": {
+          "numerical_verification_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "numerical_verification_adequacy": {
+            "enum": [
+              "ADEQUATE",
+              "CONDITIONAL"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "conclusion": {
+            "const": "ADEQUATE_FOR_COU"
+          }
+        },
+        "required": [
+          "conclusion"
+        ]
+      },
+      "then": {
+        "required": [
+          "model_discrepancy_assessment_id",
+          "sensitivity_analysis_artifact_id",
+          "transportability_assessment_id"
+        ],
+        "properties": {
+          "model_discrepancy_assessment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sensitivity_analysis_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transportability_assessment_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limitations": {
+            "minItems": 1
+          },
+          "residual_risks": {
+            "minItems": 1
           }
         }
       }
