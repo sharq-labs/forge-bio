@@ -52,6 +52,7 @@ EntityKind
     BIOLOGICAL_PROCESS
     BIOMARKER
     GENE
+    GENE_MODEL_RELEASE
     GENOME_ASSEMBLY
     REFERENCE_SEQUENCE
     GENOMIC_VARIANT
@@ -295,6 +296,7 @@ KnowledgeWatermark
 EntityId
 EntityRevision
 ExternalIdentifierAssignment
+GeneModelRelease
 GenomeAssembly
 ReferenceSequence
 GenomicVariant
@@ -386,6 +388,7 @@ UncertaintyBundle
 - LabelState is endpoint-specific.
 - gene != protein != target.
 - locus/variant event != gene assignment.
+- gene geometry/length/window != timeless gene identity; it depends on GeneModelRelease.
 - rsID/coordinate string != canonical variant identity.
 - LD relation is population/reference-panel/version dependent.
 - harmonization/liftover is a provenance-bearing derivation.
