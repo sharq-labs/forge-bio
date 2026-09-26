@@ -106,7 +106,7 @@
 - [x] Cross-disease shared-control/study lineage is included in dependence sensitivity.
 - [x] Cross-field scientific semantic validator exists.
 - [x] Hostile-review regression tests exist.
-- [ ] Hostile-review regression suite passes on the current branch.
+- [x] Hostile-review regression suite passes on the current branch.
 - [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
 - [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
 - [ ] Independent custodian / third-party seal mechanism identified and tested.
