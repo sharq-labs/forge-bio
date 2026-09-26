@@ -13,7 +13,10 @@
     "digest",
     "ledger_sequence",
     "previous_ledger_digest",
-    "external_anchor_attestation_id"
+    "external_anchor_attestation_id",
+    "external_anchor_attestation_digest",
+    "cumulative_confirmatory_alpha_spent",
+    "generation_state_transitions"
   ],
   "properties": {
     "ledger_id": {
@@ -105,6 +108,59 @@
     "external_anchor_attestation_id": {
       "type": "string",
       "minLength": 1
+    },
+    "external_anchor_attestation_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "cumulative_confirmatory_alpha_spent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.05
+    },
+    "generation_state_transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "generation_id",
+          "from_state",
+          "to_state",
+          "transitioned_at",
+          "evidence_digest"
+        ],
+        "properties": {
+          "generation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_state": {
+            "enum": [
+              "PLANNED",
+              "ACTIVE",
+              "SPENT",
+              "RETIRED"
+            ]
+          },
+          "to_state": {
+            "enum": [
+              "PLANNED",
+              "ACTIVE",
+              "SPENT",
+              "RETIRED"
+            ]
+          },
+          "transitioned_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
+        }
+      }
     }
   },
   "allOf": [
