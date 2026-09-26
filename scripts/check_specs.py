@@ -58,6 +58,8 @@ required = [
     ROOT / "schemas" / "big0f-power-analysis.v1.schema.json",
     ROOT / "schemas" / "big0f-selection-provenance.v1.schema.json",
     ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json",
+    ROOT / "schemas" / "big0f-provider-audit.v1.schema.json",
+    ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json",
     ROOT / "schemas" / "randomness-beacon.v1.schema.json",
     ROOT / "config" / "big0f-thresholds.v1.json",
     ROOT / "config" / "big0f-adjudication-policy.v1.json",
@@ -70,6 +72,7 @@ required = [
     ROOT / "tests" / "spec" / "test_endpoint_quality_executor.py",
     ROOT / "tests" / "spec" / "test_research_program_validator.py",
     ROOT / "tests" / "spec" / "test_round2_hostile_regressions.py",
+    ROOT / "tests" / "spec" / "test_big0f_false_go_closure.py",
 ]
 for path in required:
     if not path.exists():
