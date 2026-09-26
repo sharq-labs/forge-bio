@@ -154,3 +154,27 @@ A post-hardening consistency pass found four additional degrees of freedom and c
 4. **External seal ambiguity** — the operational candidate is a dual seal using an independent timestamp proof plus an OSF research registration; dry-run verification and independent custody remain open.
 
 These closures do not raise the project score automatically. They reduce known design degrees of freedom before independent re-review.
+
+
+## 10. Operational-prep closure
+
+After critical-path design hardening, the remaining transition risk was that BIG 0F execution could still be manual and mutable.
+
+The operational-prep layer therefore adds:
+- a machine-readable structure-frozen estimand distinct from the final confirmatory instance;
+- a machine-readable endpoint-quality rule whose values remain empirical-open until provider audit;
+- deterministic seal-bundle hashing and seed commitment;
+- one-byte tamper detection;
+- a machine-readable pilot-result artifact;
+- deterministic GO / REDESIGN / NO_GO evaluation.
+
+These tools do not close human-independence or external-registration gates.
+
+The following remain genuinely external/empirical:
+- independent second adjudicator;
+- independent custodian;
+- external OpenTimestamps/OSF dry run and real seal;
+- manual provider/outcome pilot;
+- final endpoint-quality values;
+- exact confirmatory estimand instance;
+- BIG 0F empirical measurements and decision.
