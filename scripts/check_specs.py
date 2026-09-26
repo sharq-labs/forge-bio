@@ -69,10 +69,12 @@ required = [
     ROOT / "scripts" / "validate_research_program.py",
     ROOT / "scripts" / "simulate_big0f_power.py",
     ROOT / "scripts" / "verify_big0f_provenance.py",
+    ROOT / "scripts" / "verify_external_authorities.py",
     ROOT / "tests" / "spec" / "test_endpoint_quality_executor.py",
     ROOT / "tests" / "spec" / "test_research_program_validator.py",
     ROOT / "tests" / "spec" / "test_round2_hostile_regressions.py",
     ROOT / "tests" / "spec" / "test_big0f_false_go_closure.py",
+    ROOT / "tests" / "spec" / "test_external_authority_verifier.py",
 ]
 for path in required:
     if not path.exists():
