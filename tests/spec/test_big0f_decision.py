@@ -16,6 +16,8 @@ CTX = EvaluationContext(
     decision_engine_sealed=True,
     pilot_schema_sealed=True,
     sampling_code_sealed=True,
+    selection_provenance_verified=True,
+    nuisance_run_verified=True,
 )
 
 
@@ -85,6 +87,11 @@ class Big0FDecisionTests(unittest.TestCase):
         x["event_bearing_disease_count"] = 13
         with self.assertRaises(ValueError):
             decide(x)
+
+    def test_low_event_bearing_disease_fraction_cannot_go(self):
+        x = pilot_result()
+        x["event_bearing_disease_count"] = 2
+        self.assertEqual("REDESIGN", decide(x))
 
     def test_high_spec_cannot_exceed_candidate_events(self):
         x = pilot_result()
