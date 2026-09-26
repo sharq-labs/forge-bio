@@ -13,6 +13,7 @@ Forge Bio uses immutable internal entity IDs and provenance-bearing external ide
 - DiseaseConcept
 - PhenotypeConcept
 - Gene
+- GeneModelRelease
 - Protein
 - ProteinComplex
 - PathwayConcept
@@ -195,7 +196,27 @@ HistoricalDiseaseConcept
 
 Present-day subtype structure is not model-visible unless admissible by T.
 
-## 11. Gene / protein / target separation
+## 11. Gene model release identity
+
+Gene coordinates, transcript boundaries, gene length, and positional windows are release-dependent scientific representations.
+
+```text
+GeneModelRelease
+    gene_model_release_id
+    provider
+    release_id
+    genome_assembly_id
+    release_time
+    availability_attestation
+    knowledge_watermark
+    digest
+```
+
+Any nuisance feature using gene length, gene span, nearest-gene distance, regional gene density, or variant opportunity must cite an admissible GeneModelRelease as-of-T.
+
+Current annotation may not silently define historical gene geometry.
+
+## 20. Gene / protein / target separation
 
 Never equate:
 
