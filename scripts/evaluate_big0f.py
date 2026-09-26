@@ -14,10 +14,15 @@ from scripts.build_seal_bundle import manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
 from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
 from scripts.verify_big0f_provenance import (
+    ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
     NUISANCE_RUN_SCHEMA_PATH,
+    PROVIDER_AUDIT_SCHEMA_PATH,
     SELECTION_SCHEMA_PATH,
     derive_nuisance_metrics,
+    derive_provider_metrics,
+    verify_adjudicator_independence,
     verify_nuisance_run,
+    verify_provider_audit,
     verify_selection_provenance,
 )
 
@@ -53,6 +58,8 @@ class EvaluationContext:
     sampling_code_sealed: bool
     selection_provenance_verified: bool
     nuisance_run_verified: bool
+    provider_audit_verified: bool
+    adjudicator_independence_verified: bool
 
 
 def _reject_constant(value: str) -> None:
@@ -129,6 +136,8 @@ def _reference_context_missing(context: EvaluationContext | None) -> list[str]:
         "sampling_code_sealed",
         "selection_provenance_verified",
         "nuisance_run_verified",
+        "provider_audit_verified",
+        "adjudicator_independence_verified",
     ):
         if not getattr(context, field):
             missing.append(f"{field} is false")
@@ -390,6 +399,8 @@ def _verified_context_from_files(
     nuisance_manifest_path: Path,
     selection_provenance_path: Path,
     nuisance_run_path: Path,
+    provider_audit_path: Path,
+    adjudicator_independence_path: Path,
     sampling_code_path: Path,
     power_engine_path: Path,
 ) -> EvaluationContext:
@@ -427,6 +438,8 @@ def _verified_context_from_files(
         "power_analysis_schema": POWER_SCHEMA_PATH,
         "selection_provenance_schema": SELECTION_SCHEMA_PATH,
         "nuisance_run_schema": NUISANCE_RUN_SCHEMA_PATH,
+        "provider_audit_schema": PROVIDER_AUDIT_SCHEMA_PATH,
+        "adjudicator_independence_schema": ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
         "provenance_verifier": ROOT / "scripts" / "verify_big0f_provenance.py",
         "power_engine": power_engine_path,
     }
@@ -503,6 +516,51 @@ def _verified_context_from_files(
     if selection_errors:
         raise ValueError("selection provenance failed deterministic verification: " + " | ".join(selection_errors))
 
+    provider_audit = load_json_strict(provider_audit_path)
+    if provider_audit.get("audit_id") != result["provider_audit_id"]:
+        raise ValueError("provider-audit ID mismatch")
+    if provider_audit.get("digest") != result["provider_audit_digest"]:
+        raise ValueError("provider-audit canonical digest mismatch")
+    provider_errors = verify_provider_audit(provider_audit)
+    if provider_errors:
+        raise ValueError("provider audit failed deterministic verification: " + " | ".join(provider_errors))
+    derived_provider = derive_provider_metrics(provider_audit)
+    if derived_provider["source_family_ids"] != result["source_family_ids"]:
+        raise ValueError("pilot source_family_ids do not match provider audit")
+    if len(derived_provider["source_family_ids"]) != result["source_family_count"]:
+        raise ValueError("pilot source_family_count does not match provider audit")
+    if abs(
+        derived_provider["required_field_availability_fraction"]
+        - result["provider_metrics"]["required_field_availability_fraction"]
+    ) > 1e-12:
+        raise ValueError("provider required-field availability does not match audit cells")
+    if derived_provider["historical_search_coverage_distribution"] != result["provider_metrics"]["historical_search_coverage_distribution"]:
+        raise ValueError("provider historical-search coverage distribution does not match audit cells")
+    if derived_provider["provider_coupling_risk"] != result["provider_metrics"]["provider_coupling_risk"]:
+        raise ValueError("provider coupling risk does not match provider audit")
+    if abs(
+        derived_provider["ancestry_metadata_coverage_fraction"]
+        - result["applicability_metrics"]["ancestry_metadata_coverage_fraction"]
+    ) > 1e-12:
+        raise ValueError("ancestry metadata coverage does not match provider audit")
+    if derived_provider["ancestry_population_metadata_adequacy"] != result["applicability_metrics"]["ancestry_population_metadata_adequacy"]:
+        raise ValueError("ancestry/population adequacy does not match provider audit")
+
+    adjudicator_independence = load_json_strict(adjudicator_independence_path)
+    if adjudicator_independence.get("attestation_id") != result["adjudication_metrics"]["second_adjudicator_independence_attestation_id"]:
+        raise ValueError("second-adjudicator independence attestation ID mismatch")
+    if adjudicator_independence.get("digest") != result["adjudicator_independence_attestation_digest"]:
+        raise ValueError("second-adjudicator independence attestation digest mismatch")
+    adjudicator_errors = verify_adjudicator_independence(adjudicator_independence)
+    if adjudicator_errors:
+        raise ValueError("second-adjudicator independence verification failed: " + " | ".join(adjudicator_errors))
+    if adjudicator_independence["adjudicator_id"] != result["adjudication_metrics"]["second_adjudicator_id"]:
+        raise ValueError("second-adjudicator identity mismatch")
+    if adjudicator_independence["blinded_to_rankings"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_rankings"]:
+        raise ValueError("second-adjudicator ranking blinding mismatch")
+    if adjudicator_independence["blinded_to_first_review"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_first_review"]:
+        raise ValueError("second-adjudicator first-review blinding mismatch")
+
     nuisance_run = load_json_strict(nuisance_run_path)
     if nuisance_run.get("run_id") != result["nuisance_run_id"]:
         raise ValueError("nuisance-run ID mismatch")
@@ -564,6 +622,8 @@ def _verified_context_from_files(
         sampling_code_sealed=True,
         selection_provenance_verified=True,
         nuisance_run_verified=True,
+        provider_audit_verified=True,
+        adjudicator_independence_verified=True,
     )
 
 
@@ -582,6 +642,8 @@ def main() -> int:
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
     ap.add_argument("--selection-provenance", type=Path, required=True)
     ap.add_argument("--nuisance-run", type=Path, required=True)
+    ap.add_argument("--provider-audit", type=Path, required=True)
+    ap.add_argument("--adjudicator-independence", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
     ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
@@ -603,6 +665,8 @@ def main() -> int:
         nuisance_manifest_path=args.nuisance_manifest,
         selection_provenance_path=args.selection_provenance,
         nuisance_run_path=args.nuisance_run,
+        provider_audit_path=args.provider_audit,
+        adjudicator_independence_path=args.adjudicator_independence,
         sampling_code_path=args.sampling_code,
         power_engine_path=args.power_engine,
     )
