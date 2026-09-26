@@ -13,6 +13,13 @@ from jsonschema import Draft202012Validator, FormatChecker
 from scripts.build_seal_bundle import manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
 from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
+from scripts.verify_big0f_provenance import (
+    NUISANCE_RUN_SCHEMA_PATH,
+    SELECTION_SCHEMA_PATH,
+    derive_nuisance_metrics,
+    verify_nuisance_run,
+    verify_selection_provenance,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +51,8 @@ class EvaluationContext:
     decision_engine_sealed: bool
     pilot_schema_sealed: bool
     sampling_code_sealed: bool
+    selection_provenance_verified: bool
+    nuisance_run_verified: bool
 
 
 def _reject_constant(value: str) -> None:
@@ -118,6 +127,8 @@ def _reference_context_missing(context: EvaluationContext | None) -> list[str]:
         "decision_engine_sealed",
         "pilot_schema_sealed",
         "sampling_code_sealed",
+        "selection_provenance_verified",
+        "nuisance_run_verified",
     ):
         if not getattr(context, field):
             missing.append(f"{field} is false")
@@ -153,6 +164,9 @@ def _evaluate_once(
 
     if metrics["event_bearing_disease_count"] > metrics["disease_count"]:
         raise ValueError("event-bearing disease count exceeds total disease count")
+    event_bearing_fraction = metrics["event_bearing_disease_count"] / metrics["disease_count"]
+    if event_bearing_fraction < thresholds["min_event_bearing_disease_fraction"]:
+        redesign.append("event-bearing disease fraction below sealed diversity minimum")
     if metrics["adjudication_metrics"]["adjudicated_event_case_count"] > metrics["candidate_event_count"]:
         raise ValueError("adjudicated event cases exceed candidate events")
     if metrics["high_specificity_positive_count"] > metrics["candidate_event_count"]:
@@ -374,6 +388,8 @@ def _verified_context_from_files(
     power_analysis_path: Path,
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
+    selection_provenance_path: Path,
+    nuisance_run_path: Path,
     sampling_code_path: Path,
     power_engine_path: Path,
 ) -> EvaluationContext:
@@ -409,6 +425,9 @@ def _verified_context_from_files(
         "adjudication_policy_schema": ADJUDICATION_SCHEMA_PATH,
         "nuisance_manifest_schema": NUISANCE_SCHEMA_PATH,
         "power_analysis_schema": POWER_SCHEMA_PATH,
+        "selection_provenance_schema": SELECTION_SCHEMA_PATH,
+        "nuisance_run_schema": NUISANCE_RUN_SCHEMA_PATH,
+        "provenance_verifier": ROOT / "scripts" / "verify_big0f_provenance.py",
         "power_engine": power_engine_path,
     }
 
@@ -460,6 +479,57 @@ def _verified_context_from_files(
     if seal_manifest["protocol_sha256"] != result["protocol_digest"]:
         raise ValueError("pilot protocol digest does not match sealed protocol")
 
+    selection_provenance = load_json_strict(selection_provenance_path)
+    selection_digest = sha256_file(selection_provenance_path)
+    if selection_digest != result["selection_provenance_digest"]:
+        raise ValueError("selection provenance digest mismatch")
+    if selection_provenance.get("selection_id") != result["selection_provenance_id"]:
+        raise ValueError("selection provenance ID mismatch")
+
+    disease_ids = json.loads(disease_frame_path.read_text(encoding="utf-8"), parse_constant=_reject_constant)
+    if not isinstance(disease_ids, list) or not all(isinstance(x, str) and x for x in disease_ids):
+        raise ValueError("disease frame must be a JSON array of non-empty string IDs")
+    beacon = load_json_strict(randomness_beacon_path)
+    frame_seal = load_json_strict(frame_seal_attestation_path)
+    selection_errors = verify_selection_provenance(
+        selection_provenance,
+        thresholds=threshold_manifest["thresholds"],
+        result=result,
+        disease_ids=disease_ids,
+        beacon=beacon,
+        frame_digest=sha256_file(disease_frame_path),
+        frame_seal_attestation=frame_seal,
+        frame_seal_attestation_digest=sha256_file(frame_seal_attestation_path),
+    )
+    if selection_errors:
+        raise ValueError("selection provenance failed deterministic verification: " + " | ".join(selection_errors))
+
+    nuisance_run = load_json_strict(nuisance_run_path)
+    nuisance_run_digest = sha256_file(nuisance_run_path)
+    if nuisance_run_digest != result["nuisance_run_digest"]:
+        raise ValueError("nuisance-run file digest mismatch")
+    if nuisance_run.get("run_id") != result["nuisance_run_id"]:
+        raise ValueError("nuisance-run ID mismatch")
+    if nuisance_run.get("digest") != result["nuisance_run_digest"]:
+        raise ValueError("pilot nuisance_run_digest must equal the nuisance-run canonical digest")
+
+    selected_event_ids = set(selection_provenance["selected_event_ids"])
+    selected_disease_ids = set(selection_provenance["selected_disease_ids"])
+    nuisance_errors = verify_nuisance_run(
+        nuisance_run,
+        nuisance_manifest=nuisance_manifest,
+        nuisance_manifest_digest=nuisance_digest,
+        selected_event_ids=selected_event_ids,
+        selected_disease_ids=selected_disease_ids,
+        expected_positive_count=result["high_specificity_positive_count"],
+    )
+    if nuisance_errors:
+        raise ValueError("nuisance run failed deterministic verification: " + " | ".join(nuisance_errors))
+    derived_nuisance = derive_nuisance_metrics(nuisance_run)
+    for key in ("median_positive_rank_fraction", "top_1pct_fraction", "top_5pct_fraction"):
+        if abs(derived_nuisance[key] - result["nuisance_headroom_metrics"][key]) > 1e-12:
+            raise ValueError(f"nuisance headroom metric mismatch for {key}")
+
     power = load_json_strict(power_analysis_path)
     _validate_schema(power, POWER_SCHEMA_PATH)
     if seal_manifest["power_engine_sha256"] != sha256_file(power_engine_path):
@@ -467,6 +537,7 @@ def _verified_context_from_files(
     power_recompute_errors = verify_power_artifact(
         power,
         engine_sha256=sha256_file(power_engine_path),
+        nuisance_run=nuisance_run,
     )
     if power_recompute_errors:
         raise ValueError("power artifact failed deterministic recomputation: " + " | ".join(power_recompute_errors))
@@ -495,6 +566,8 @@ def _verified_context_from_files(
         decision_engine_sealed=True,
         pilot_schema_sealed=True,
         sampling_code_sealed=True,
+        selection_provenance_verified=True,
+        nuisance_run_verified=True,
     )
 
 
@@ -511,6 +584,8 @@ def main() -> int:
     ap.add_argument("--power-analysis", type=Path, required=True)
     ap.add_argument("--adjudication-policy", type=Path, required=True)
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
+    ap.add_argument("--selection-provenance", type=Path, required=True)
+    ap.add_argument("--nuisance-run", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
     ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
@@ -530,6 +605,8 @@ def main() -> int:
         power_analysis_path=args.power_analysis,
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,
+        selection_provenance_path=args.selection_provenance,
+        nuisance_run_path=args.nuisance_run,
         sampling_code_path=args.sampling_code,
         power_engine_path=args.power_engine,
     )
