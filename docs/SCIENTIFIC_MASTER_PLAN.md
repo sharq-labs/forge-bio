@@ -230,8 +230,12 @@ This milestone is a **platform extension** and does not block the B-TGT-E1 BIG 0
 - TwinValidationArtifact
 - TwinPerturbation / TwinSimulationResult
 - DigitalTwinMaturityLevel
-- executable scientific-twin JSON Schema
+- executable disease/pathogen/virus/pathogen-host/therapeutic profile JSON Schemas
+- executable scientific-twin JSON Schema with maturity-specific requirements
 - ADR-015 twin terminology/claim boundary
+- temporal provenance for state-model structure/update policy/parameters
+- MAP/MAR/ValidationGeneration integration for T3/T4
+- causal-assumption/intervention/identifiability contract for T4
 - VVUQ contract
 
 ## Twin maturity
@@ -252,7 +256,10 @@ T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
 - T3/T4 requires held-out/future predictive validation and uncertainty quantification;
 - simulation output is a research hypothesis, not clinical evidence;
 - patient-specific twins remain outside V1 Context of Use;
-- historical Twin(subject, T) obeys HistoricalKnowledgeView, watermark, preprocessing, and parameter-fit cutoffs.
+- historical Twin(subject, T) records explicit cutoff T and obeys HistoricalKnowledgeView, state-model/update-policy watermark, preprocessing, and parameter-fit cutoffs;
+- executable schema rejects T2/T3/T4 artifacts missing inherited maturity prerequisites;
+- T3 reuses MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance;
+- T4 requires causal assumptions, intervention semantics, identifiability, perturbation and sensitivity artifacts.
 
 ## Gate
 
@@ -377,7 +384,7 @@ Initial identity classes:
 - cohorts / datasets / biobanks / consortia / sample sets
 - LD reference panels
 
-Drug/chemical identity is added later in BIG 14.
+Drug/chemical identity is added later in BIG 12.
 
 ## Outputs
 
@@ -902,7 +909,8 @@ Instantiate validated disease/pathogen/pathogen-host/therapeutic twins after the
 - canonical identity and scientific profiles
 - evidence/provenance ledger
 - temporal snapshots
-- mechanism/state model
+- mechanism/state-model artifact with structural knowledge provenance/watermark
+- update-policy artifact with provenance/watermark
 - parameter provenance
 - uncertainty model
 - validation target
@@ -912,9 +920,9 @@ Instantiate validated disease/pathogen/pathogen-host/therapeutic twins after the
 
 - every twin has an explicit maturity level
 - TwinState history is immutable/versioned
-- historical twins cannot ingest future evidence through model parameters or calibration
-- T3 prediction claims reproduce on held-out/future data
-- T4 simulations report assumptions, uncertainty, sensitivity, and applicability
+- historical twins cannot ingest future evidence through model structure/topology, update policies, parameters, preprocessing, or calibration
+- T3 prediction claims are governed by MAP/MAR/ValidationGeneration and reproduce on held-out/future data
+- T4 simulations require causal assumptions/intervention semantics/identifiability and report uncertainty, sensitivity, and applicability
 - no patient-specific diagnosis/treatment/dosing functionality
 
 ## Scientific gate
