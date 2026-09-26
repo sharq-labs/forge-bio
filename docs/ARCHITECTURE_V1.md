@@ -953,7 +953,7 @@ src/forge_bio/
 └── interfaces/
 ```
 
-Cross-cutting architecture rules are enforced with tests/import contracts.
+Cross-cutting architecture rules must be enforced with tests/import contracts once implementation begins.
 
 ---
 
