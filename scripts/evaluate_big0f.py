@@ -16,12 +16,15 @@ from scripts.verify_external_authorities import verify_drand_beacon, verify_exte
 from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
 from scripts.verify_big0f_provenance import (
     ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
+    CURATION_AUDIT_SCHEMA_PATH,
     NUISANCE_RUN_SCHEMA_PATH,
     PROVIDER_AUDIT_SCHEMA_PATH,
     SELECTION_SCHEMA_PATH,
+    derive_curation_metrics,
     derive_nuisance_metrics,
     derive_provider_metrics,
     verify_adjudicator_independence,
+    verify_curation_audit,
     verify_nuisance_run,
     verify_provider_audit,
     verify_selection_provenance,
@@ -61,6 +64,7 @@ class EvaluationContext:
     nuisance_run_verified: bool
     provider_audit_verified: bool
     adjudicator_independence_verified: bool
+    curation_audit_verified: bool
 
 
 def _reject_constant(value: str) -> None:
@@ -139,6 +143,7 @@ def _reference_context_missing(context: EvaluationContext | None) -> list[str]:
         "nuisance_run_verified",
         "provider_audit_verified",
         "adjudicator_independence_verified",
+        "curation_audit_verified",
     ):
         if not getattr(context, field):
             missing.append(f"{field} is false")
@@ -407,6 +412,7 @@ def _verified_context_from_files(
     adjudicator_independence_path: Path,
     adjudicator_role_registry_path: Path,
     adjudicator_independence_evidence_path: Path,
+    curation_audit_path: Path,
     sampling_code_path: Path,
     power_engine_path: Path,
 ) -> EvaluationContext:
@@ -464,6 +470,7 @@ def _verified_context_from_files(
         "nuisance_run_schema": NUISANCE_RUN_SCHEMA_PATH,
         "provider_audit_schema": PROVIDER_AUDIT_SCHEMA_PATH,
         "adjudicator_independence_schema": ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
+        "curation_audit_schema": CURATION_AUDIT_SCHEMA_PATH,
         "provenance_verifier": ROOT / "scripts" / "verify_big0f_provenance.py",
         "external_authority_verifier": ROOT / "scripts" / "verify_external_authorities.py",
         "power_engine": power_engine_path,
@@ -609,6 +616,31 @@ def _verified_context_from_files(
     if adjudicator_independence["blinded_to_first_review"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_first_review"]:
         raise ValueError("second-adjudicator first-review blinding mismatch")
 
+    curation_audit = load_json_strict(curation_audit_path)
+    if curation_audit.get("audit_id") != result["curation_audit_id"]:
+        raise ValueError("curation-audit ID mismatch")
+    if curation_audit.get("digest") != result["curation_audit_digest"]:
+        raise ValueError("curation-audit canonical digest mismatch")
+    curation_errors = verify_curation_audit(
+        curation_audit,
+        total_event_cases=result["adjudication_metrics"]["adjudicated_event_case_count"],
+        max_median_event_curation_minutes=threshold_manifest["thresholds"]["max_median_event_curation_minutes"],
+    )
+    if curation_errors:
+        raise ValueError("curation audit failed deterministic verification: " + " | ".join(curation_errors))
+    derived_curation = derive_curation_metrics(
+        curation_audit,
+        total_event_cases=result["adjudication_metrics"]["adjudicated_event_case_count"],
+        max_median_event_curation_minutes=threshold_manifest["thresholds"]["max_median_event_curation_minutes"],
+    )
+    for key, expected in derived_curation.items():
+        actual = result["curation_metrics"][key]
+        if isinstance(expected, float):
+            if abs(float(actual) - expected) > 1e-12:
+                raise ValueError(f"curation metric mismatch for {key}")
+        elif actual != expected:
+            raise ValueError(f"curation metric mismatch for {key}")
+
     nuisance_run = load_json_strict(nuisance_run_path)
     if nuisance_run.get("run_id") != result["nuisance_run_id"]:
         raise ValueError("nuisance-run ID mismatch")
@@ -672,6 +704,7 @@ def _verified_context_from_files(
         nuisance_run_verified=True,
         provider_audit_verified=True,
         adjudicator_independence_verified=True,
+        curation_audit_verified=True,
     )
 
 
@@ -697,6 +730,7 @@ def main() -> int:
     ap.add_argument("--adjudicator-independence", type=Path, required=True)
     ap.add_argument("--adjudicator-role-registry", type=Path, required=True)
     ap.add_argument("--adjudicator-independence-evidence", type=Path, required=True)
+    ap.add_argument("--curation-audit", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
     ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
@@ -725,6 +759,7 @@ def main() -> int:
         adjudicator_independence_path=args.adjudicator_independence,
         adjudicator_role_registry_path=args.adjudicator_role_registry,
         adjudicator_independence_evidence_path=args.adjudicator_independence_evidence,
+        curation_audit_path=args.curation_audit,
         sampling_code_path=args.sampling_code,
         power_engine_path=args.power_engine,
     )
