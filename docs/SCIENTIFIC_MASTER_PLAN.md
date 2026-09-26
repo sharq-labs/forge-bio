@@ -163,6 +163,51 @@ Freeze what the system is allowed to claim and define the core scientific types 
 
 ---
 
+# BIG 0R3 — Genetics Identity & Benchmark Integrity Hardening
+
+## Goal
+
+Close genetics-specific semantic gaps before collecting the manual feasibility pilot.
+
+## Outputs
+
+- first-class GenomeAssembly / ReferenceSequence / GenomicVariant / GenomicLocus identity
+- first-class Phenotype / Cohort / Dataset / Biobank / Consortium / SampleSet identity
+- variant normalization, liftover, allele-harmonization provenance
+- LDRelation + reference-panel/ancestry provenance
+- HistoricalGeneticSearchCoverage
+- GeneticObservabilityAtT sensitivity policy
+- KNOWN_TO_RANKER_AT_T vs KNOWN_PUBLICLY_AT_T
+- ScientificEventFamily / GeneticDiscoveryEventFamily
+- one-event-family primary-credit policy
+- ProviderLineage + InputOutcomeCouplingAssessment
+- CrossAnchorEventReusePolicy
+- validation disclosure levels
+- ScientificOperatingMode vs HistoricalDataPolicy separation
+- machine-verifiable QoI/MAP/MAR JSON Schemas
+- repaired ADR status/amendment chain
+- repository LICENSE + CODEOWNERS
+
+## Acceptance
+
+- rsID/coordinate strings cannot act as canonical variant identity
+- genome-build/allele/LD transformations are provenance-bearing and fail closed when ambiguous
+- phenotype/cohort/dataset aliases cannot create false disease/sample independence
+- low historical search coverage cannot become E1-NOVEL-STRICT
+- public pre-T knowledge missed by the ranker is classified as provider coverage failure
+- one locus/event family cannot silently create multiple primary event credits
+- same scientific event cannot receive unbounded repeated weight across rolling anchors
+- Past/Future provider coupling is measured
+- operating-mode enums are non-overlapping
+- ADR-001..006 status chain is internally consistent
+- executable schemas parse and match normative fields
+
+## Gate
+
+BIG 0F does not start until these policy/schema artifacts are internally consistent.
+
+---
+
 # BIG 0F — Benchmark Feasibility Pilot
 
 ## Goal
@@ -174,13 +219,19 @@ This is a scientific feasibility exercise, not a model-performance experiment.
 ## Manual pilot
 
 Adjudicate a small heterogeneous set of future genetic events and measure:
+- canonical variant/locus resolution and genome-build/allele harmonization ambiguity;
+- LD/reference-panel dependence where proxy matching is used;
+- historical genetic-search coverage grade;
+- historical genetic observability grade;
 - pre-T genetic state: no-observed-signal vs suggestive vs qualifying vs ambiguous;
 - historical novelty at T;
 - locus-level versus gene-level evidence;
 - gene-assignment method and knowledge horizon;
 - benchmark disease vs future phenotype relation;
 - replication allele/direction/LD/population comparability where applicable;
-- cohort/sample overlap;
+- cohort/sample overlap and SampleSet identity resolution;
+- ScientificEventFamily deduplication / locus-to-many-gene credit impact;
+- Past/Future provider-lineage coupling;
 - retrospective curation burden;
 - ancestry/population metadata availability;
 - adjudicator disagreement;
@@ -261,11 +312,16 @@ Represent biomedical identity without using names or present-day mappings as hid
 Initial identity classes:
 
 - diseases
+- phenotypes
 - genes
 - proteins
 - protein complexes
 - pathways
 - publications/studies
+- genome assemblies / reference sequences
+- genomic variants / loci
+- cohorts / datasets / biobanks / consortia / sample sets
+- LD reference panels
 
 Drug/chemical identity is added later in BIG 14.
 
@@ -277,7 +333,9 @@ Drug/chemical identity is added later in BIG 14.
 - historical model-visible mapping layer
 - modern evaluation bridge
 - ambiguity representation
-- disease-as-of-T representation
+- disease/phenotype-as-of-T representation
+- genomic normalization/liftover identity artifacts
+- canonical cohort/dataset/SampleSet lineage
 
 ## Acceptance
 
@@ -345,6 +403,8 @@ Build ground truth as endpoint-specific future events isolated from historical r
 - GeneticReplicationAssessment implementation
 - HistoricalNoveltyAudit workflow
 - cohort/dataset/sample-overlap lineage
+- ScientificEventFamily / GeneticDiscoveryEventFamily ledger
+- provider-lineage/input-outcome coupling assessment
 - blinded outcome-adjudication workflow
 - POSITIVE / NEGATIVE_CONFIRMED / UNKNOWN / RIGHT_CENSORED / COMPETING_EVENT / CONFLICTED states
 - evaluation-only modern identity bridge
@@ -378,9 +438,9 @@ Make Forge Bio measurable before building a sophisticated ranker.
 - HistoricalKnowledgeView
 - historical candidate-universe builder
 - DEVELOPMENT / versioned VALIDATION / SEALED_LOCKBOX tiers
-- validation-generation lifecycle and access count
+- validation-generation lifecycle, access count, and disclosure level
 - ranking artifact sealing/hashing
-- exact Future Outcome snapshot/ledger commitment
+- exact Future Outcome snapshot/ledger/event-family/provider-coupling commitment
 - lockbox access ledger
 - metric engine including all-frame review-budget utility
 - disease-level bootstrap + disease-family/block sensitivity
@@ -493,7 +553,7 @@ No LLM, PLM, GNN, current graph, or future-trained representation.
 - all-frame observed-event review-budget utility reported
 - disease-family/block CI sensitivity reported
 - null/placebo controls do not reproduce the claimed signal
-- strict novelty, phenotype-match, locus-to-gene, replication, and outcome-source sensitivities pass
+- strict novelty/search-coverage, phenotype-match, genomic-harmonization/LD, locus-to-gene, replication, event-family-credit, provider-coupling, observability, and outcome-source sensitivities pass
 - exact Future Outcome snapshot commitment matches the frozen MAP
 - strongest L3 outcome adjudication is rank-blinded
 - results reported even if negative
@@ -870,9 +930,10 @@ It should contain:
 - research-attention baseline
 - attention-momentum/discoverability baseline
 - deterministic scientific baseline
-- explicit E1 endpoint subtype + PreTGeneticState
+- explicit E1 endpoint subtype + PreTGeneticState + HistoricalGeneticSearchCoverage
 - scientific estimand + zero-event disease policy + all-frame utility
-- OutcomeGeneAssignmentPolicy + OutcomePhenotypeMatchPolicy + GeneticReplicationPolicy + HistoricalNoveltyAudit
+- genomic identity/harmonization/LD policy + OutcomeGeneAssignmentPolicy + OutcomePhenotypeMatchPolicy + GeneticReplicationPolicy + HistoricalNoveltyAudit
+- ScientificEventFamily credit + ProviderLineage/InputOutcomeCoupling + GeneticObservabilityAtT
 - validation-generation lifecycle + exact Future Outcome snapshot commitment
 - MAP + MAR
 - temporal leakage and benchmark-falsification suite
@@ -912,7 +973,7 @@ If no: change cutoff/source design.
 
 ## Gate 2 — Benchmark validity
 
-Do temporal leakage tests, candidate-universe tests, strict-novelty state rules, phenotype matching, outcome gene-assignment rules, genetic replication rules, historical-novelty audits, ascertainment controls, zero-event/all-frame estimand rules, validation-generation governance, exact outcome commitments, analyst-hindsight governance, and label semantics survive verification?
+Do temporal leakage tests, genomic identity/harmonization/LD tests, candidate-universe/observability tests, strict-novelty coverage rules, phenotype matching, outcome gene-assignment rules, genetic replication rules, event-family/provider-coupling rules, cross-anchor reuse controls, historical-novelty audits, ascertainment controls, zero-event/all-frame estimand rules, validation-generation governance, exact outcome commitments, analyst-hindsight governance, and label semantics survive verification?
 
 If no: do not model.
 
@@ -957,7 +1018,7 @@ This is the ultimate long-term evidence.
 # 7. Current execution state
 
 ```text
-Current milestone: BIG 0
+Current milestone: BIG 0R3 → BIG 0F
 Implementation status: not started
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
@@ -1001,6 +1062,11 @@ Implementation order is governed by:
 - [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md)
 - [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md)
 - [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md)
+- [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
+- [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
+- [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)
+- [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md)
+- [../schemas/README.md](../schemas/README.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
