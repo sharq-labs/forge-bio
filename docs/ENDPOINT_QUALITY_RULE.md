@@ -58,3 +58,15 @@ The frozen artifact uses:
 This template closes the **decision structure**, not the empirical threshold values.
 
 The checklist item for final endpoint evidence quality remains open until BIG 0F provides the provider/outcome feasibility evidence needed to freeze the values.
+
+
+## Executable criterion rule
+
+Comparison operators are executable, not descriptive placeholders:
+
+- `GT / GE / LT / LE` require a numeric operand;
+- `EQ / NE` require a scalar operand;
+- `IN / NOT_IN` require a non-empty primitive list;
+- `REQUIRE` asserts presence/availability and does not require a comparison operand.
+
+A FROZEN rule with a missing or unusable comparison operand is schema-invalid.
