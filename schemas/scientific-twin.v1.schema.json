@@ -76,7 +76,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "format": "date"
     },
     "profile_snapshot_ids": {
       "type": "array",
@@ -206,8 +207,74 @@
       "minLength": 1
     },
     "knowledge_watermark": {
-      "type": "string",
-      "minLength": 1
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "NON_KNOWLEDGE_BEARING",
+            "DATED",
+            "UNKNOWN"
+          ]
+        },
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "DATED"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "date"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "NON_KNOWLEDGE_BEARING",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "date": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     },
     "created_at": {
       "type": [
@@ -224,6 +291,27 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "credibility_assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_execution_kind": {
+      "enum": [
+        "STATIC_GRAPH",
+        "ANALYTIC",
+        "NUMERICAL_DETERMINISTIC",
+        "NUMERICAL_STOCHASTIC",
+        "HYBRID"
+      ]
+    },
+    "numerical_verification_artifact_id": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "allOf": [
@@ -272,7 +360,9 @@
       "then": {
         "required": [
           "state_definition_id",
-          "update_policy_artifact_id"
+          "update_policy_artifact_id",
+          "credibility_assessment_id",
+          "model_execution_kind"
         ],
         "properties": {
           "state_definition_id": {
@@ -283,6 +373,10 @@
             "minItems": 1
           },
           "update_policy_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credibility_assessment_id": {
             "type": "string",
             "minLength": 1
           }
@@ -307,7 +401,9 @@
       "then": {
         "required": [
           "state_model_artifact_id",
-          "parameter_artifact_ids"
+          "parameter_artifact_ids",
+          "credibility_assessment_id",
+          "model_execution_kind"
         ],
         "properties": {
           "state_model_artifact_id": {
@@ -319,6 +415,10 @@
           },
           "verification_artifact_ids": {
             "minItems": 1
+          },
+          "credibility_assessment_id": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
@@ -343,7 +443,9 @@
           "map_id",
           "mar_ids",
           "validation_generation_id",
-          "benchmark_design_provenance_id"
+          "benchmark_design_provenance_id",
+          "credibility_assessment_id",
+          "model_execution_kind"
         ],
         "properties": {
           "prediction_spec_id": {
@@ -367,6 +469,10 @@
           },
           "validation_artifact_ids": {
             "minItems": 1
+          },
+          "credibility_assessment_id": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
@@ -411,6 +517,33 @@
               "PARTIALLY_IDENTIFIED",
               "ASSUMPTION_DEPENDENT"
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "model_execution_kind": {
+            "enum": [
+              "NUMERICAL_DETERMINISTIC",
+              "NUMERICAL_STOCHASTIC",
+              "HYBRID"
+            ]
+          }
+        },
+        "required": [
+          "model_execution_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "numerical_verification_artifact_id"
+        ],
+        "properties": {
+          "numerical_verification_artifact_id": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
