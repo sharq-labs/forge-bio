@@ -38,6 +38,20 @@ required = [
     ROOT / "schemas" / "confirmatory-program-budget.v1.schema.json",
     ROOT / "schemas" / "estimand.v1.schema.json",
     ROOT / "schemas" / "endpoint-quality-rule.v1.schema.json",
+    ROOT / "schemas" / "endpoint-event-input.v1.schema.json",
+    ROOT / "schemas" / "big0f-threshold-manifest.v1.schema.json",
+    ROOT / "schemas" / "big0f-adjudication-policy.v1.schema.json",
+    ROOT / "schemas" / "big0f-nuisance-manifest.v1.schema.json",
+    ROOT / "schemas" / "big0f-power-analysis.v1.schema.json",
+    ROOT / "schemas" / "randomness-beacon.v1.schema.json",
+    ROOT / "schemas" / "research-program-ledger.v1.schema.json",
+    ROOT / "config" / "big0f-thresholds.v1.json",
+    ROOT / "config" / "big0f-adjudication-policy.v1.json",
+    ROOT / "config" / "big0f-nuisance-manifest.v1.json",
+    ROOT / "scripts" / "evaluate_endpoint_quality.py",
+    ROOT / "scripts" / "select_big0f_sample.py",
+    ROOT / "scripts" / "simulate_big0f_power.py",
+    ROOT / "tests" / "spec" / "test_endpoint_quality_executor.py",
     ROOT / "schemas" / "seal-bundle-manifest.v1.schema.json",
     ROOT / "schemas" / "big0f-pilot-result.v1.schema.json",
     ROOT / "scripts" / "build_seal_bundle.py",
@@ -180,6 +194,38 @@ for phrase in [
 ]:
     if phrase not in checklist:
         errors.append(f"readiness checklist missing operational-prep closure: {phrase}")
+
+
+
+# Round 2 hostile-review closure checks
+for phrase in [
+    "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+    "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+    "NUISANCE_ONLY",
+    "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL",
+]:
+    found = any(
+        phrase in p.read_text(encoding="utf-8")
+        for p in [
+            ROOT / "docs" / "BIG_0F_PROTOCOL.md",
+            ROOT / "config" / "big0f-nuisance-manifest.v1.json",
+            ROOT / "schemas" / "randomness-beacon.v1.schema.json",
+        ]
+    )
+    if not found:
+        errors.append(f"Round 2 closure phrase missing: {phrase}")
+
+endpoint_executor = ROOT / "scripts" / "evaluate_endpoint_quality.py"
+if not endpoint_executor.exists():
+    errors.append("endpoint-quality rule must have an executable fail-closed evaluator")
+
+map_schema_text = (ROOT / "schemas" / "map.v1.schema.json").read_text(encoding="utf-8")
+for phrase in [
+    "AMBIGUOUS_EVENT_BEST_WORST_TIPPING_POINT_V1",
+    "METHOD_FAMILY_STRATIFIED_LABEL_FEATURE_SENSITIVITY_V1",
+]:
+    if phrase not in map_schema_text:
+        errors.append(f"confirmatory MAP missing Round 2 sensitivity contract: {phrase}")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")
