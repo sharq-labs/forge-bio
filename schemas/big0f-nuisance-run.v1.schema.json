@@ -26,7 +26,8 @@
     "tuning_budget_id",
     "early_stopping_rule_id",
     "random_seed_policy_id",
-    "feature_family_records"
+    "feature_family_records",
+    "eligible_positive_event_set_digest"
   ],
   "properties": {
     "run_id": {
@@ -115,7 +116,8 @@
             "minimum": 1
           }
         }
-      }
+      },
+      "uniqueItems": true
     },
     "digest": {
       "type": "string",
@@ -195,6 +197,10 @@
           }
         }
       }
+    },
+    "eligible_positive_event_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }
