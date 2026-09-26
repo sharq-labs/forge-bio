@@ -139,6 +139,12 @@ Perform a dry run with synthetic/non-study content:
 18. verify that any manifest-field mutation fails schema and/or attested-digest verification;
 19. record both verified ExternalSealAttestation artifacts.
 
+The standalone seal-bundle verifier must itself require both:
+- a THIRD_PARTY_TIMESTAMP_SERVICE attestation; and
+- a PUBLIC_REGISTRY attestation
+
+over the exact same bundle digest. A single valid attestation is insufficient even if the later BIG 0F evaluator would independently reject it.
+
 Only after this dry run succeeds may the checklist item "seal mechanism identified and tested" be closed.
 
 ## 8. Seal timing
