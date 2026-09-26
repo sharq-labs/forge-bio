@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/seal-bundle-manifest.v1.schema.json",
+  "title": "Forge Bio BIG 0F Seal Bundle Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "seal_bundle_version",
+    "protocol_version",
+    "protocol_sha256",
+    "disease_frame_sha256",
+    "random_seed_commitment_sha256",
+    "candidate_cutoff_order",
+    "candidate_horizon_order",
+    "sampling_algorithm_version",
+    "threshold_manifest_sha256",
+    "adjudication_policy_sha256",
+    "nuisance_feature_manifest_sha256"
+  ],
+  "properties": {
+    "seal_bundle_version": {
+      "const": "big0f-seal-bundle-v1"
+    },
+    "protocol_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protocol_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "disease_frame_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "random_seed_commitment_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "candidate_cutoff_order": {
+      "const": [
+        "2005-12-31",
+        "2008-12-31",
+        "2011-12-31",
+        "2014-12-31"
+      ]
+    },
+    "candidate_horizon_order": {
+      "const": [
+        "3y",
+        "5y",
+        "7y",
+        "10y"
+      ]
+    },
+    "sampling_algorithm_version": {
+      "const": "seeded-permutation-v1"
+    },
+    "threshold_manifest_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudication_policy_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_feature_manifest_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}
