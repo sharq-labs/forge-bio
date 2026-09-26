@@ -14,6 +14,8 @@ from scripts.verify_big0f_provenance import (
     CUTOFF_ORDER,
     HORIZON_ORDER,
     canonical_digest,
+    derive_curation_metrics,
+    verify_curation_audit,
     verify_nuisance_run,
     verify_selection_provenance,
 )
@@ -250,6 +252,37 @@ class Big0FFalseGoClosureTests(unittest.TestCase):
             nuisance_run=run,
         )
         self.assertTrue(any("disease_level_sd" in e or "digest" in e for e in errors))
+
+    def test_curation_burden_is_derived_from_case_records(self):
+        audit = {
+            "audit_id": "CURATION-1",
+            "schema_version": "big0f-curation-audit-v1",
+            "operational_capacity_rule_id": "CURATION-CAPACITY-V1",
+            "event_case_records": [
+                {"case_id": f"E{i}", "minutes": 121.0, "provenance_digest": "sha256:" + "1" * 64}
+                for i in range(60)
+            ],
+            "non_event_case_records": [
+                {"case_id": f"N{i}", "minutes": 30.0, "provenance_digest": "sha256:" + "2" * 64}
+                for i in range(60)
+            ],
+        }
+        audit["digest"] = canonical_digest(audit)
+        self.assertEqual(
+            [],
+            verify_curation_audit(
+                audit,
+                total_event_cases=60,
+                max_median_event_curation_minutes=120,
+            ),
+        )
+        metrics = derive_curation_metrics(
+            audit,
+            total_event_cases=60,
+            max_median_event_curation_minutes=120,
+        )
+        self.assertEqual("EXCESSIVE", metrics["retrospective_curation_burden_assessment"])
+        self.assertTrue(metrics["symmetric_non_event_audit_complete"])
 
 
 if __name__ == "__main__":
