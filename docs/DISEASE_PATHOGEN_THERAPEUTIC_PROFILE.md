@@ -6,6 +6,13 @@ The scientific profile layer defines what Forge Bio can know about a disease, pa
 
 Every field below is represented through identity + claim/evidence + provenance + uncertainty. A profile field is not automatically a fact merely because one provider contains it.
 
+Executable companions:
+- [Disease Profile JSON Schema](../schemas/disease-profile.v1.schema.json)
+- [Pathogen Profile JSON Schema](../schemas/pathogen-profile.v1.schema.json)
+- [Virus Profile Extension JSON Schema](../schemas/virus-profile-extension.v1.schema.json)
+- [Pathogen–Host Profile JSON Schema](../schemas/pathogen-host-profile.v1.schema.json)
+- [Therapeutic Profile JSON Schema](../schemas/therapeutic-profile.v1.schema.json)
+
 ---
 
 ## 1. DiseaseScientificProfile
@@ -321,7 +328,7 @@ TherapeuticScientificProfile@T
 PathogenHostScientificProfile@T
 ```
 
-Historical profile materialization obeys:
+Historical profile materialization records an explicit cutoff T and obeys:
 - HistoricalKnowledgeView;
 - identity policy;
 - availability attestations;
@@ -329,6 +336,8 @@ Historical profile materialization obeys:
 - provider qualification.
 
 Modern-only profile fields may appear in CURRENT_DISCOVERY but not silently in STRICT_HISTORICAL.
+
+Profile schemas require an explicit cutoff for STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR materializations.
 
 ---
 
