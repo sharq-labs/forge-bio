@@ -12,15 +12,17 @@ A GO-capable provider audit must include all four mandatory source-family kinds:
 
 Four arbitrary providers or four `OTHER` entries do not satisfy this requirement.
 
-Every source-family release and every required-field audit cell must carry an immutable provenance/evidence digest.
+The complete provider audit scope—diseases, mandatory source families, and required fields—is frozen by an audit-scope manifest digest before availability is inspected. Every source-family release and every required-field audit cell must carry an immutable provenance/evidence digest.
 
 Required-field availability, coverage summaries, source-family counts, provider coupling, and ancestry coverage must be regenerable from the bound audit artifact.
 
 ## Applicability / ancestry
 
-Each ancestry/population case record must identify its metadata source and provenance digest. Adequacy is a derived decision under the frozen rule, not a free scalar assertion.
+Each ancestry/population case record must identify its metadata source and provenance digest. The adequacy rule itself has a frozen ID and digest. Adequacy is a derived decision under that frozen rule, not a free scalar assertion.
 
 ## Symmetric event/non-event curation audit
+
+The exact event case set, non-event case set, and duplicate-review selection are each committed by digest before burden summaries are accepted.
 
 Both event and non-event case records must store:
 - minutes;
