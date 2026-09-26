@@ -155,6 +155,7 @@ class Round2HostileRegressionTests(unittest.TestCase):
     def test_duplicate_generation_ids_are_rejected_semantically(self):
         x = self.budget()
         x["generation_allocations"][1]["generation_id"] = "G1"
+        x["generation_allocations"][1]["status"] = "ACTIVE"
         validator("confirmatory-program-budget.v1.schema.json").validate(x)
         self.assertTrue(validate_confirmatory_program_budget(x))
 
