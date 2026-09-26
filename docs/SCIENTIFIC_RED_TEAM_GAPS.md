@@ -752,3 +752,27 @@ No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
 | HR-22 | GO/REDESIGN thresholds had ambiguous denominators/statistic semantics | CLOSED-POLICY — field-availability formula, critical fields, agreement statistic, and sensitivity reporting defined |
 | HR-23 | Nuisance+biology arm could win through larger learner/tuning capacity | CLOSED-POLICY — primary comparison is nested and capacity/tuning-budget matched |
 | HR-24 | "External seal" lacked an operational implementation candidate | PARTIAL-OPERATIONAL — dual OpenTimestamps + OSF Registration runbook identified; dry run and independent custodian remain open |
+
+
+## Round 2 hostile review closure ledger
+
+| ID | Round 2 finding | Status |
+|---|---|---|
+| R2-01 | Disease-specific attention missing from primary nuisance comparator | CLOSED-POLICY/SCHEMA — content-free disease-specific volume + momentum mandatory |
+| R2-02 | BIG 0F false-GO paths / NaN / missing adjudication / weak cross-field bounds | CLOSED-TEST — evaluator validates schema, finite values, counts, ambiguity union, power, ancestry, curation, nuisance saturation, and inconclusive budget |
+| R2-03 | Decision code / schemas / manifests not externally committed | CLOSED-DESIGN — seal bundle v2 commits evaluator, result schema, policy schemas, sampling code, and power engine |
+| R2-04 | Seed grinding before commitment | CLOSED-DESIGN — first verified public randomness round after frame seal |
+| R2-05 | Pilot inspected augmented biological arm | CLOSED-POLICY — pilot is NUISANCE_ONLY |
+| R2-06 | Alpha budget reset by renaming | CLOSED-SCHEMA/SEMANTIC — canonical research_program_id + program-wide budget/ledger |
+| R2-07 | Primary-positive ascertainment could be candidate-gene driven | CLOSED-POLICY — hypothesis-free genome/exome/biobank-wide ascertainment required |
+| R2-08 | Comparator capacity/tuning parity not machine represented | CLOSED-SCHEMA — confirmatory MAP requires nested parity contract |
+| R2-09 | Endpoint-quality rule not executable | CLOSED-IMPLEMENTATION — fail-closed endpoint-quality executor + known-field registry |
+| R2-10 | Ambiguous-event exclusion sensitivity missing | CLOSED-PLAN / EXECUTION-OPEN — confirmatory MAP requires best/worst/tipping-point sensitivity |
+| R2-11 | Equal disease weighting sensitivity missing | CLOSED-PLAN / EXECUTION-OPEN — hierarchical or precision-weighted sensitivity required |
+| R2-12 | Label/feature shared-method-family coupling | CLOSED-PLAN/GATE — pilot gate + confirmatory stratified sensitivity required |
+| R2-13 | INCONCLUSIVE could defer forever | CLOSED — V0 limit forces REDESIGN |
+| R2-14 | Dual seal only prose-level | CLOSED-DESIGN — verifier requires timestamp-service + public-registry attestations over same digest |
+| R2-15 | Operational independence / real external seals | OPERATIONAL-OPEN — cannot be self-closed by code |
+| R2-16 | Empirical BIG 0F measurements | EMPIRICAL-OPEN — requires real pilot data |
+
+No design-only closure converts R2-15/R2-16 into PASS.
