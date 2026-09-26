@@ -94,7 +94,14 @@ def main() -> int:
     args = ap.parse_args()
     data = json.loads(args.pilot_result.read_text(encoding="utf-8"))
     result = evaluate(data)
-    print(json.dumps({"decision": result.decision, "reasons": result.reasons}, indent=2))
+    declared = data.get("decision")
+    payload = {"decision": result.decision, "reasons": result.reasons}
+    if declared is not None and declared != result.decision:
+        payload["declared_decision"] = declared
+        payload["error"] = "declared decision does not match frozen deterministic rules"
+        print(json.dumps(payload, indent=2))
+        return 2
+    print(json.dumps(payload, indent=2))
     return 0
 
 
