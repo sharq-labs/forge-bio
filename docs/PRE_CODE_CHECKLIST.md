@@ -109,7 +109,9 @@
 - [x] Hostile-review regression suite passes on the current branch.
 - [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
 - [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
-- [ ] Independent custodian / third-party seal mechanism identified and tested.
+- [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate.
+- [ ] Independent custodian assigned.
+- [ ] External seal mechanism dry-run tested end-to-end with synthetic artifacts.
 
 ### Feasibility and governance
 
