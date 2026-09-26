@@ -28,7 +28,6 @@
     "high_specificity_positive_count",
     "applicability_metrics",
     "curation_metrics",
-    "threshold_sensitivity_stable",
     "seal_bundle_digest",
     "threshold_manifest_digest",
     "adjudication_policy_digest",
@@ -509,9 +508,6 @@
           "minLength": 1
         }
       }
-    },
-    "threshold_sensitivity_stable": {
-      "type": "boolean"
     },
     "seal_bundle_digest": {
       "type": "string",
