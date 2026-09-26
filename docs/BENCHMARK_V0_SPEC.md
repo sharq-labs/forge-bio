@@ -252,6 +252,23 @@ evaluation_bridge_version
 
 Current learned locus-to-gene models, modern QTL resources, current curated target databases, or later therapeutic knowledge may not silently create strict historical gene-level ground truth.
 
+Canonical assignment classes used by BIG 0F-0 include:
+
+```text
+DIRECT_CODING_OR_LOF
+HIGH_CONFIDENCE_FINE_MAPPING
+PREREGISTERED_COLOCALIZATION
+OTHER_HIGH_SPECIFICITY_METHOD
+AUTHOR_NAMED
+NEAREST_GENE
+POSITIONAL_PROXIMITY_ONLY
+GENERIC_DATABASE_GENE_FIELD
+MODERN_L2G_ONLY
+OTHER
+```
+
+Only the frozen high-specificity classes may create a primary gene-level positive.
+
 Identity reconciliation may establish that two identifiers refer to the same entity. It may not manufacture causal-gene evidence.
 
 Normative policy: [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md).
