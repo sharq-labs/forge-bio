@@ -34,6 +34,13 @@ required = [
     ROOT / "schemas" / "external-seal-attestation.v1.schema.json",
     ROOT / "schemas" / "prediction-exposure-event.v1.schema.json",
     ROOT / "schemas" / "research-program-attempt.v1.schema.json",
+    ROOT / "schemas" / "gene-model-release.v1.schema.json",
+    ROOT / "schemas" / "confirmatory-program-budget.v1.schema.json",
+    ROOT / "scripts" / "scientific_invariants.py",
+    ROOT / "tests" / "spec" / "test_hostile_review_regressions.py",
+    ROOT / "docs" / "BIG_0F_PROTOCOL.md",
+    ROOT / "docs" / "adr" / "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+    ROOT / "docs" / "adr" / "ADR-021-big-0f-pilot-protocol.md",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
@@ -130,6 +137,21 @@ for required_doc in [
 ]:
     if not required_doc.exists():
         errors.append(f"missing lifecycle integrity contract: {required_doc.relative_to(ROOT)}")
+
+
+# BIG 0F-0 critical-path checks
+benchmark_spec = (ROOT / "docs" / "BENCHMARK_V0_SPEC.md").read_text(encoding="utf-8")
+for phrase in [
+    "Combined Nuisance Model",
+    "AUTHOR_NAMED",
+    "DEVELOPMENT_EXPOSED",
+]:
+    if phrase not in benchmark_spec:
+        errors.append(f"benchmark spec missing BIG 0F-0 contract: {phrase}")
+
+audit = (ROOT / "docs" / "PLAN_STRENGTH_AUDIT.md").read_text(encoding="utf-8")
+if "No currently known major architecture/specification gap remains" in audit:
+    errors.append("PLAN_STRENGTH_AUDIT still contains superseded no-known-gap conclusion")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")
