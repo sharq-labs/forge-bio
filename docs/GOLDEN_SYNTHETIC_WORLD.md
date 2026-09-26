@@ -79,11 +79,12 @@ G4 = Gene Four
 
 ## 5. Future events
 
-### F1 — E1-NOVEL candidate
+### F1 — E1-NOVEL-STRICT candidate
 - disease D1
 - post-T locus discovered in 2012
 - direct coding evidence establishes G1 in 2013
 - no qualifying pre-T genetics after novelty audit
+- HistoricalGeneticSearchCoverage = HIGH
 - gene-level positive may be accepted under assignment policy
 
 ### F2 — E1-MATURATION candidate
@@ -139,9 +140,56 @@ G4 = Gene Four
 - R2 cannot silently replace R1 in the same benchmark generation
 
 ### F10 — spent validation generation
-- validation generation V1 is inspected and methodology changes
+- validation generation V1 is inspected at PER_CASE disclosure and methodology changes
 - V1 status becomes SPENT_FOR_MODEL_SELECTION
 - V1 is not described as untouched validation thereafter
+
+### F11 — same variant across assemblies
+- one biological allele appears on GRCh37 and GRCh38 coordinates
+- harmonization resolves both to one canonical GenomicVariant
+- raw coordinate strings do not create two variant identities
+
+### F12 — ambiguous allele orientation
+- a strand/orientation ambiguity cannot be resolved defensibly
+- strict replication matching returns AMBIGUOUS/INCONCLUSIVE rather than forcing an allele direction
+
+### F13 — LD reference-panel dependence
+- variants V1/V2 exceed the proxy threshold in one population/reference panel but not another
+- LDRelation keeps population/panel/release provenance
+- MODERN_EVALUATION_LD cannot enter historical rank/features
+
+### F14 — low historical genetic coverage
+- D1/GX has no observed pre-T signal
+- HistoricalGeneticSearchCoverage = LOW
+- PreTGeneticState = AMBIGUOUS, not NO_SIGNAL_OBSERVED
+- candidate cannot qualify E1-NOVEL-STRICT
+
+### F15 — public pre-T evidence missed by ranker
+- a qualifying pre-T paper was public before T
+- historical ranker provider missed it
+- KNOWN_PUBLICLY_AT_T = true
+- KNOWN_TO_RANKER_AT_T = false
+- this is provider coverage failure, not novelty
+
+### F16 — one discovery, many manifestations/genes
+- one locus discovery appears as preprint, journal paper, and two database rows
+- modern assignment links the locus to G1/G2/G3
+- one ScientificEventFamily is created
+- primary event credit is at most one, not four records or three gene hits
+
+### F17 — repeated rolling-anchor event
+- the same future event falls inside multiple overlapping historical training windows
+- CrossAnchorEventReusePolicy bounds its total training weight
+- effective sample size reflects grouped event-family credit
+
+### F18 — shared curation pipeline
+- Past inputs and Future outcome source use the same curation-pipeline family
+- InputOutcomeCouplingAssessment marks material coupling
+- external-source/same-pipeline-exclusion sensitivity is required
+
+### F19 — outcome search after rank reveal
+- a sealed rank is revealed before outcome event discovery is complete
+- strongest L3 status is automatically downgraded
 
 ## 6. Candidate universe at T
 
@@ -175,7 +223,16 @@ Universe order and digest must be deterministic.
 14. F10 validation reuse marks the generation spent;
 15. replacing a generic hashing implementation must not move a biomedical watermark;
 16. converting an old paper with a 2026 knowledge-bearing annotation carries the 2026/UNKNOWN derivation watermark;
-17. ranking/config digest is deterministic across repeated runs.
+17. ranking/config digest is deterministic across repeated runs;
+18. F11 assembly representations resolve to one canonical variant;
+19. F12 unresolved allele orientation fails closed;
+20. F13 LD proxy status changes only through an explicit reference-panel artifact and never changes historical features;
+21. F14 low search coverage cannot become NO_SIGNAL_OBSERVED;
+22. F15 is classified as provider coverage failure rather than future novelty;
+23. F16 counts one ScientificEventFamily primary credit;
+24. F17 cross-anchor total event-family training credit stays within policy;
+25. F18 triggers provider-coupling sensitivity;
+26. F19 cannot earn strongest L3 confirmation.
 
 ## 8. Expected role in implementation
 
