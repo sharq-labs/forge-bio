@@ -182,6 +182,15 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 - [x] Static profile/graph is prohibited from claiming predictive twin maturity.
 - [x] Patient-specific digital twins are excluded from V1 Context of Use.
 - [x] Scientific Twin JSON Schema exists.
+- [x] Disease/Pathogen/Virus/PathogenHost/Therapeutic executable profile schemas exist.
+- [x] Twin schema enforces inherited T1/T2/T3/T4 maturity prerequisites.
+- [x] Historical twin/profile schemas require explicit cutoff T.
+- [x] Twin state-model structure/update policy are knowledge-bearing provenance/watermark dependencies.
+- [x] Profile/twin dependency wall is defined.
+- [x] Scientific Contract includes twin maturity, temporal, validation, causal, and clinical claim boundaries.
+- [x] T3 reuses MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance governance.
+- [x] T4 requires causal assumptions/intervention semantics/identifiability/sensitivity artifacts.
+- [x] Executable positive/negative schema contract tests exist.
 
 ### Before any T2 mechanistic-twin claim
 
@@ -189,12 +198,15 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 - [ ] Parameter units/meaning/provenance are complete.
 - [ ] Model assumptions and applicability domain are documented.
 - [ ] Mechanistic verification tests pass.
-- [ ] Historical twin parameters obey cutoff/watermark rules when used as-of-T.
+- [ ] Historical twin state-model structure, update policy, parameters, preprocessing, and representations obey cutoff/watermark rules when used as-of-T.
 
 ### Before any T3 predictive-twin claim
 
 - [ ] Prediction target/horizon frozen.
+- [ ] MAP is frozen for the twin prediction target/horizon.
 - [ ] Held-out or future validation completed.
+- [ ] MAR records the actual twin validation execution.
+- [ ] ValidationGeneration and BenchmarkDesignProvenance are recorded.
 - [ ] Predictive metrics and calibration reported where applicable.
 - [ ] Uncertainty quantification evaluated.
 - [ ] Applicability/OOD behavior evaluated.
@@ -204,6 +216,9 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 ### Before any T4 intervention-simulation claim
 
 - [ ] T3 predictive validity is established for the relevant state/target.
+- [ ] CausalAssumptionSet is explicit and versioned.
+- [ ] InterventionSemantics are explicit and versioned.
+- [ ] IdentifiabilityStatus is IDENTIFIED, PARTIALLY_IDENTIFIED, or ASSUMPTION_DEPENDENT.
 - [ ] Perturbation semantics are explicit and versioned.
 - [ ] Sensitivity analysis completed.
 - [ ] Model-form/parameter uncertainty propagated.
