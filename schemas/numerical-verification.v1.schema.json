@@ -18,7 +18,8 @@
     "invariant_or_residual_checks",
     "reproducibility_tolerance",
     "verdict",
-    "digest"
+    "digest",
+    "numerical_problem_type"
   ],
   "properties": {
     "verification_id": {
@@ -117,6 +118,21 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "numerical_problem_type": {
+      "enum": [
+        "ANALYTIC",
+        "DISCRETE_EXACT",
+        "CONTINUOUS_NUMERICAL",
+        "STOCHASTIC_NUMERICAL",
+        "HYBRID_NUMERICAL"
+      ]
+    },
+    "not_applicable_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "allOf": [
@@ -144,6 +160,60 @@
               "PASS",
               "NOT_APPLICABLE"
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verdict": {
+            "const": "ADEQUATE"
+          },
+          "numerical_problem_type": {
+            "enum": [
+              "CONTINUOUS_NUMERICAL",
+              "STOCHASTIC_NUMERICAL",
+              "HYBRID_NUMERICAL"
+            ]
+          }
+        },
+        "required": [
+          "verdict",
+          "numerical_problem_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "convergence_study_status": {
+            "const": "PASS"
+          },
+          "numerical_error_estimate": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "convergence_study_status": {
+            "const": "NOT_APPLICABLE"
+          }
+        },
+        "required": [
+          "convergence_study_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "not_applicable_reason"
+        ],
+        "properties": {
+          "not_applicable_reason": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
