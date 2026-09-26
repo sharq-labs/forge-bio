@@ -45,7 +45,9 @@ May access:
 - HistoricalNoveltyAudit sources;
 - OutcomeGeneAssignmentPolicy evidence.
 
-Should be blinded to model rank/order when adjudicating borderline outcomes.
+For strongest L3 SEALED_CONFIRMATORY work, **must be blinded to model rank/order for all sealed outcome adjudication**.
+
+If sealed adjudication occurs with rank/order visible, the evaluation is automatically downgraded from the strongest confirmatory tier.
 
 Responsibilities:
 - construct/adjudicate FutureEvents;
@@ -87,11 +89,15 @@ Before any sealed outcome release:
 2. verify MAP digest;
 3. verify benchmark generation;
 4. verify CandidateUniverse digest;
-5. verify ranking artifact digest;
-6. record access actor/time/reason;
-7. unlock only the evaluation-required artifact;
-8. run evaluation without feeding sealed errors back into the frozen method;
-9. append access/result event to custody log.
+5. verify validation-generation identity/status;
+6. verify Future Outcome snapshot/ledger/adjudication/identity-bridge commitments;
+7. verify ranking artifact digest;
+8. verify sealed adjudication blinding status;
+9. record access actor/time/reason;
+10. unlock only the evaluation-required artifact;
+11. join the two immutable artifacts: sealed ranking + committed Future Outcome snapshot;
+12. run evaluation without feeding sealed errors back into the frozen method;
+13. append access/result event to custody log.
 
 ## 5. Access log
 
@@ -113,14 +119,42 @@ resulting_status
 
 The log is append-only.
 
-## 6. Generation retirement
+## 6. Validation-generation lifecycle
+
+VALIDATION is not infinitely reusable.
+
+Each validation generation records:
+- case-set digest;
+- outcome-snapshot digest;
+- access count;
+- ACTIVE / SPENT_FOR_MODEL_SELECTION / RETIRED status.
+
+If validation results materially influence feature, model, endpoint, hyperparameter, threshold, disease, or candidate selection, the generation becomes SPENT_FOR_MODEL_SELECTION.
+
+Spent validation results remain reportable but are not described as untouched evidence.
+
+## 7. Sealed generation retirement
 
 If individual sealed errors/outcomes are inspected and methodology changes in response:
 - current generation becomes SPENT_FOR_CONFIRMATORY_REUSE;
 - results already obtained remain part of scientific history;
 - a new independent sealed generation is required for another strongest-tier confirmatory claim.
 
-## 7. Implementation verification deferred to P1
+## 8. Future Outcome commitment
+
+Before the ranking/outcome join, custody verifies immutable commitments for:
+- future outcome source releases;
+- Future Outcome snapshot digest;
+- outcome-ledger digest;
+- adjudication-batch digest;
+- evaluation identity-bridge digest;
+- phenotype-match policy;
+- gene-assignment policy;
+- replication policy.
+
+A changed provider release, adjudication batch, or evaluation bridge is a new evaluation generation.
+
+## 9. Implementation verification deferred to P1
 
 P0 chooses the custody mechanism and roles.
 
