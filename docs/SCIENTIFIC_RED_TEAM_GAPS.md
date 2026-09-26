@@ -494,3 +494,78 @@ No result may be described as historical biological discovery signal if a plausi
 - shared Past/Future curation pipeline behavior.
 
 Those explanations must be controlled, stratified, falsified, or retained explicitly as limitations.
+
+
+## BIG 0R4 scientific-twin closure ledger
+
+### R4-01 — Twin maturity text not machine-enforced
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+The Scientific Twin JSON Schema now uses maturity-specific conditional requirements:
+- T1 requires dynamic state + update-policy artifact;
+- T2 requires state-model artifact + parameters + verification;
+- T3 requires prediction spec + MAP + MAR + ValidationGeneration + BenchmarkDesignProvenance + validation artifact;
+- T4 inherits T3 and adds perturbation/sensitivity/causal/intervention/identifiability requirements.
+
+Executable positive/negative schema tests enforce these cases.
+
+### R4-02 — Historical twin had no explicit cutoff
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR twin/profile artifacts require explicit cutoff T. `valid_at` is not a substitute.
+
+### R4-03 — Future knowledge hidden in state-model structure
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+TwinStateModelArtifact and TwinUpdatePolicyArtifact are knowledge-bearing unless proven otherwise. Their structure, biomedical priors, transition rules, provenance, and watermarks join the twin's transitive watermark.
+
+### R4-04 — Parallel validation regime
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T3/T4 reuse MAP, MAR, ValidationGeneration, BenchmarkDesignProvenance, and lockbox/outcome commitments where applicable.
+
+### R4-05 — Missing profile/twin dependency wall
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+DEPENDENCY_RULES now prohibits historical profile/twin construction from importing FutureEvent, lockbox readers, evaluation-only bridges, future validation labels, or unrestricted current/latest providers.
+
+### R4-06 — Profiles were Markdown-only
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+Executable schemas now exist for Disease, Pathogen, Virus extension, PathogenHost, and Therapeutic profiles.
+
+### R4-07 — T4 associational simulation could masquerade as intervention
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T4 requires CausalAssumptionSet, InterventionSemantics, IdentifiabilityStatus, perturbation artifacts, sensitivity artifacts, and uncertainty propagation. NOT_IDENTIFIED/UNKNOWN cannot support T4.
+
+### R4-08 — Digital-twin terminology could overclaim clinical meaning
+
+**Status:** CLOSED-POLICY
+
+"Forge Bio Scientific Twin" is explicitly a project-defined research construct. Patient/clinical digital-twin claims require a future separate Context of Use.
+
+### R4-09 — Twin maturity confused with scientific claim maturity
+
+**Status:** CLOSED-POLICY
+
+DigitalTwinMaturityLevel T0–T4 and ClaimMaturityLevel L0–L6 are independent ladders. T3 does not imply L3 and vice versa.
+
+### R4-10 — Spec CI only checked file shape
+
+**Status:** CLOSED-TEST-HARNESS
+
+Spec Integrity now executes JSON Schema positive/negative tests, including invalid T1/T2/T3/T4 and missing historical cutoff cases.
+
+### R4-11 — Repository enforcement
+
+**Status:** OPEN-OPERATIONAL
+
+Branch protection / required independent review remains unresolved under GitHub Issue #2 and blocks FROZEN V1, though it does not block BIG 0F exploratory feasibility work.
