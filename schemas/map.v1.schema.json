@@ -22,7 +22,8 @@
     "coverage_gates",
     "planned_analyses",
     "governance",
-    "stop_conditions"
+    "stop_conditions",
+    "comparison_design"
   ],
   "properties": {
     "map_id": {
@@ -429,11 +430,11 @@
         },
         "combined_nuisance_model_id": {
           "type": "string",
-          "minLength": 1
+          "pattern": "^CNM-[A-Z0-9._:-]{2,127}$"
         },
         "nuisance_feature_family_ids": {
           "type": "array",
-          "minItems": 4,
+          "minItems": 7,
           "uniqueItems": true,
           "items": {
             "enum": [
@@ -448,9 +449,48 @@
               "CROSS_TRAIT_PLEIOTROPY",
               "GENETIC_OBSERVABILITY",
               "DISEASE_SAMPLE_SIZE_TRAJECTORY",
-              "PROVIDER_COVERAGE"
+              "PROVIDER_COVERAGE",
+              "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+              "DISEASE_SPECIFIC_ATTENTION_MOMENTUM"
             ]
-          }
+          },
+          "allOf": [
+            {
+              "contains": {
+                "const": "DISEASE_SPECIFIC_ATTENTION_VOLUME"
+              }
+            },
+            {
+              "contains": {
+                "const": "DISEASE_SPECIFIC_ATTENTION_MOMENTUM"
+              }
+            },
+            {
+              "contains": {
+                "const": "GENE_LENGTH"
+              }
+            },
+            {
+              "contains": {
+                "const": "LD_ARCHITECTURE"
+              }
+            },
+            {
+              "contains": {
+                "const": "CROSS_TRAIT_PLEIOTROPY"
+              }
+            },
+            {
+              "contains": {
+                "const": "GENETIC_OBSERVABILITY"
+              }
+            },
+            {
+              "contains": {
+                "const": "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+              }
+            }
+          ]
         }
       }
     },
@@ -525,9 +565,7 @@
           ]
         },
         "alpha": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "maximum": 0.1
+          "const": 0.05
         },
         "minimum_scientifically_meaningful_effect": {
           "type": "number",
@@ -812,6 +850,72 @@
       "type": "array",
       "items": {
         "type": "string"
+      }
+    },
+    "comparison_design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_comparison_semantics",
+        "capacity_parity_required",
+        "learner_family_id",
+        "nuisance_feature_block_id",
+        "nuisance_feature_block_digest",
+        "biological_feature_block_id",
+        "biological_feature_block_digest",
+        "preprocessing_artifact_id",
+        "hyperparameter_search_space_digest",
+        "tuning_budget_id",
+        "early_stopping_policy_id",
+        "random_seed_policy_id"
+      ],
+      "properties": {
+        "primary_comparison_semantics": {
+          "const": "NESTED_ADD_DISEASE_SPECIFIC_EVIDENCE_ONLY"
+        },
+        "capacity_parity_required": {
+          "const": true
+        },
+        "learner_family_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nuisance_feature_block_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nuisance_feature_block_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "biological_feature_block_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "biological_feature_block_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "preprocessing_artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hyperparameter_search_space_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "tuning_budget_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "early_stopping_policy_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "random_seed_policy_id": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   },
