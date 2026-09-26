@@ -297,6 +297,29 @@ Before provider-scale automated extraction:
 - [ ] Manual-review burden measured.
 - [ ] QUALIFIED/CONDITIONAL verdict frozen.
 
+## Platform extension — Research-program lifecycle integrity
+
+- [x] SourceLifecycleEvent contract exists.
+- [x] Historical source lifecycle is resolved as-of-T.
+- [x] Later corrections/retractions trigger fragility sensitivity rather than retroactive historical rewriting.
+- [x] BenchmarkExposureLedger contract exists.
+- [x] Benchmark generation states ACTIVE_CONFIRMATORY / DEVELOPMENT_EXPOSED / EXHAUSTED / RETIRED are defined.
+- [x] ResearchProgramAttempt ledger is required.
+- [x] ExternalSealAttestation contract exists.
+- [x] Prospective PredictionExposureEvent contract exists.
+- [x] Self-fulfilling research-attention risk is explicitly separated from independent prospective validation.
+- [x] Schema/provider/ontology drift is versioned rather than in-place rewritten.
+- [x] Executable lifecycle/exposure schema tests exist.
+
+Before strongest L3/L6:
+- [ ] Benchmark generation is ACTIVE_CONFIRMATORY.
+- [ ] Exposure ledger is complete.
+- [ ] ResearchProgramAttempt ledger is complete.
+- [ ] Required external seals verify successfully.
+- [ ] Prospective prediction exposure status is classified.
+- [ ] Source lifecycle state is resolved for outcome-defining evidence.
+- [ ] Independent final frozen-state review completed.
+
 ## Sample-size / feasibility rule
 
 Before freezing the sealed benchmark, use only development-visible information to estimate:
@@ -384,6 +407,8 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 - [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md)
 - [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
+- [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md)
+- [adr/ADR-019-source-benchmark-lifecycle.md](adr/ADR-019-source-benchmark-lifecycle.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
