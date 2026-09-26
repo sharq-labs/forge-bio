@@ -92,12 +92,14 @@ Before any sealed outcome release:
 5. verify validation-generation identity/status;
 6. verify Future Outcome snapshot/ledger/adjudication/identity-bridge commitments;
 7. verify ranking artifact digest;
-8. verify sealed adjudication blinding status;
-9. record access actor/time/reason;
-10. unlock only the evaluation-required artifact;
-11. join the two immutable artifacts: sealed ranking + committed Future Outcome snapshot;
-12. run evaluation without feeding sealed errors back into the frozen method;
-13. append access/result event to custody log.
+8. verify benchmark exposure lifecycle is ACTIVE_CONFIRMATORY for strongest-tier claims;
+9. verify required ExternalSealAttestation(s);
+10. verify sealed adjudication blinding status;
+11. record access actor/time/reason;
+12. unlock only the evaluation-required artifact;
+13. join the two immutable artifacts: sealed ranking + committed Future Outcome snapshot;
+14. run evaluation without feeding sealed errors back into the frozen method;
+15. append access/result event to custody and BenchmarkExposure ledgers.
 
 ## 5. Access log
 
@@ -134,12 +136,25 @@ If validation results materially influence feature, model, endpoint, hyperparame
 
 Spent validation results remain reportable but are not described as untouched evidence.
 
-## 7. Sealed generation retirement
+## 7. Sealed generation retirement and benchmark exhaustion
 
 If individual sealed errors/outcomes are inspected and methodology changes in response:
-- current generation becomes SPENT_FOR_CONFIRMATORY_REUSE;
+- current generation becomes DEVELOPMENT_EXPOSED / SPENT_FOR_CONFIRMATORY_REUSE;
 - results already obtained remain part of scientific history;
 - a new independent sealed generation is required for another strongest-tier confirmatory claim.
+
+Repeated exposure is tracked by a BenchmarkExposureLedger.
+
+Generation lifecycle:
+
+```text
+ACTIVE_CONFIRMATORY
+DEVELOPMENT_EXPOSED
+EXHAUSTED
+RETIRED
+```
+
+EXHAUSTED generations may be used for regression/development history but not a fresh strongest-tier confirmatory claim.
 
 ## 8. Future Outcome commitment
 
@@ -173,3 +188,16 @@ P1 must verify actual operational controls:
 - ranking-runtime denial;
 - recovery procedure;
 - branch/spec governance enforcement.
+
+
+## 10. External sealing and prospective exposure
+
+For strongest confirmatory/prospective work, required digests are externally attested through an independent custodian or timestamp/registration mechanism.
+
+Internal repository hashes remain necessary but are not treated as sufficient evidence of study sequencing on their own.
+
+Prospective PredictionExposureEvents record whether predictions were private, collaborator-shared, or public.
+
+If a prediction could plausibly influence later research activity, resulting evidence is classified by exposure risk and is not automatically counted as clean independent prospective confirmation.
+
+Normative policy: [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md).
