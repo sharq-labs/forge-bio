@@ -293,8 +293,12 @@ TherapeuticScientificProfile
 ScientificDigitalTwin
 ScientificTwinSnapshot
 TwinState
-TwinStateModel
+TwinStateModelArtifact
+TwinUpdatePolicyArtifact
 TwinValidationArtifact
+CausalAssumptionSet
+InterventionSemantics
+IdentifiabilityStatus
 TwinPerturbation
 TwinSimulationResult
 Cohort
@@ -356,6 +360,9 @@ UncertaintyBundle
 - scientific profile != predictive digital twin.
 - T0 profile is not claimed as a digital twin.
 - T3/T4 requires explicit predictive validation and uncertainty quantification.
+- historical twin cutoff != valid_at timestamp.
+- state-model structure/update policy may be knowledge-bearing and must carry provenance/watermark.
+- T4 perturbation != causal intervention unless causal assumptions/intervention semantics/identifiability requirements pass.
 - simulation result != clinical evidence.
 - therapeutic profile != patient-specific treatment recommendation.
 - candidate-universe membership requires provenance.
