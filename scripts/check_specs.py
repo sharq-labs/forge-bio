@@ -21,6 +21,12 @@ required = [
     ROOT / "schemas" / "virus-profile-extension.v1.schema.json",
     ROOT / "schemas" / "pathogen-host-profile.v1.schema.json",
     ROOT / "schemas" / "therapeutic-profile.v1.schema.json",
+    ROOT / "schemas" / "quantity-definition.v1.schema.json",
+    ROOT / "schemas" / "quantitative-observation.v1.schema.json",
+    ROOT / "schemas" / "effect-estimate.v1.schema.json",
+    ROOT / "schemas" / "measurement-process.v1.schema.json",
+    ROOT / "schemas" / "numerical-verification.v1.schema.json",
+    ROOT / "schemas" / "model-credibility.v1.schema.json",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
@@ -96,3 +102,14 @@ if errors:
     sys.exit(1)
 
 print("SPEC INTEGRITY CHECK PASSED")
+
+
+# BIG 0R5 credibility/quantitative contract checks
+for required_doc in [
+    ROOT / "docs" / "MODEL_CREDIBILITY_POLICY.md",
+    ROOT / "docs" / "QUANTITATIVE_SEMANTICS.md",
+    ROOT / "docs" / "adr" / "ADR-016-model-credibility-numerical-verification.md",
+    ROOT / "docs" / "adr" / "ADR-017-quantitative-semantics.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing R5 scientific contract: {required_doc.relative_to(ROOT)}")
