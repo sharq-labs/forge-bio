@@ -1320,6 +1320,9 @@ The next implementation work must start only after the BIG 0F false-GO closure c
 The current hostile-review closure contract is:
 
 - [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
+- [BIG_0F_POWER_INPUT_DERIVATION.md](BIG_0F_POWER_INPUT_DERIVATION.md)
+- [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md)
+- [BIG_0F_EVIDENCE_BINDING_CONTRACT.md](BIG_0F_EVIDENCE_BINDING_CONTRACT.md)
 
 Implementation order is governed by:
 
