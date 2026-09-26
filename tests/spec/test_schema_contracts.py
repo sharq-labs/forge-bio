@@ -384,5 +384,89 @@ class ExtractionQualitySchemaTests(unittest.TestCase):
         self.assert_invalid("extraction-quality-card.v1.schema.json", x)
 
 
+class ResearchProgramLifecycleSchemaTests(unittest.TestCase):
+    def validate(self, schema_name: str, instance: dict) -> None:
+        Draft202012Validator(load(schema_name)).validate(instance)
+
+    def test_valid_source_retraction_event(self) -> None:
+        x = {
+            "event_id": "SL1",
+            "schema_version": "source-lifecycle-event-v1",
+            "source_artifact_id": "S1",
+            "event_type": "RETRACTED",
+            "event_public_time": "2025-01-01",
+            "reason": "publisher retraction",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.validate("source-lifecycle-event.v1.schema.json", x)
+
+    def test_valid_exhausted_benchmark_ledger(self) -> None:
+        x = {
+            "ledger_id": "BL1",
+            "schema_version": "benchmark-exposure-ledger-v1",
+            "benchmark_generation_id": "BG1",
+            "lifecycle_status": "EXHAUSTED",
+            "exposure_events": [{
+                "exposure_time": "2026-01-01",
+                "exposure_kind": "FULL_LABEL" if False else "LABEL_REVEAL",
+                "disclosure_level": "FULL_LABEL",
+                "audience": "development team",
+                "downstream_change_ref": "change-1",
+            }],
+            "attempt_ids": ["A1"],
+            "digest": "sha256:test",
+        }
+        self.validate("benchmark-exposure-ledger.v1.schema.json", x)
+
+    def test_valid_external_seal(self) -> None:
+        x = {
+            "attestation_id": "ES1",
+            "schema_version": "external-seal-attestation-v1",
+            "artifact_digest": "sha256:abc",
+            "artifact_type": "ranking",
+            "sealed_at": "2026-01-01T00:00:00Z",
+            "external_registry_or_custodian_ref": "custodian-1",
+            "attestation_method": "signed timestamp",
+            "signer_or_service_identity": "independent-custodian",
+            "verification_status": "VERIFIED",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.validate("external-seal-attestation.v1.schema.json", x)
+
+    def test_valid_prediction_exposure(self) -> None:
+        x = {
+            "event_id": "PE1",
+            "schema_version": "prediction-exposure-event-v1",
+            "prediction_artifact_id": "PRED1",
+            "exposure_time": "2026-01-01",
+            "exposure_scope": "PUBLIC_RELEASE",
+            "audience": "public",
+            "target_visibility": "FULL",
+            "contamination_risk": "HIGH",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.validate("prediction-exposure-event.v1.schema.json", x)
+
+    def test_valid_null_research_attempt(self) -> None:
+        x = {
+            "attempt_id": "RA1",
+            "schema_version": "research-program-attempt-v1",
+            "benchmark_family": "B-TGT",
+            "benchmark_generation": "G1",
+            "endpoint": "E1",
+            "horizon": "5y",
+            "primary_metric": "recall@k",
+            "model_family": "baseline",
+            "result_status": "NULL",
+            "visibility": "INTERNAL",
+            "relationship_to_prior_attempts": "first attempt",
+            "digest": "sha256:test",
+        }
+        self.validate("research-program-attempt.v1.schema.json", x)
+
+
 if __name__ == "__main__":
     unittest.main()
