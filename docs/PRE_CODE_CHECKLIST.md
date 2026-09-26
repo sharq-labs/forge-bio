@@ -195,6 +195,9 @@
 - [ ] Input/outcome provider-coupling sensitivity frozen.
 - [ ] LD reference-panel / modern-evaluation-LD sensitivity frozen where applicable.
 - [ ] ScientificEventFamily credit sensitivity frozen.
+- [ ] Ambiguous-event best/worst/tipping-point sensitivity executed.
+- [ ] Hierarchical or precision-weighted disease sensitivity executed.
+- [ ] Label/feature method-family stratified sensitivity executed.
 
 ### Outcome integrity and applicability
 
