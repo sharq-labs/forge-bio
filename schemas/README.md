@@ -36,8 +36,10 @@ Files:
 - `big0f-nuisance-manifest.v1.schema.json`
 - `big0f-power-analysis.v1.schema.json`
 - `big0f-power-input-derivation.v1.schema.json`
+- `big0f-variance-source-registry.v1.schema.json`
 - `big0f-selection-provenance.v1.schema.json`
 - `big0f-nuisance-run.v1.schema.json`
+- `big0f-provider-audit-scope.v1.schema.json`
 - `big0f-provider-audit.v1.schema.json`
 - `big0f-curation-audit.v1.schema.json`
 - `big0f-adjudicator-independence.v1.schema.json`
