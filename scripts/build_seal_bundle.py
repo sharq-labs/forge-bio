@@ -99,6 +99,11 @@ def build_manifest(
     frame_sealed = datetime.fromisoformat(beacon["frame_sealed_at"].replace("Z", "+00:00"))
     if published <= frame_sealed:
         raise ValueError("randomness beacon must be published after the frame seal")
+    previous = datetime.fromisoformat(beacon["previous_round_published_at"].replace("Z", "+00:00"))
+    if previous > frame_sealed:
+        raise ValueError("selected randomness beacon is not the first verified round after frame seal")
+    if beacon["selection_rule"] != "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL":
+        raise ValueError("randomness beacon selection rule is not frozen first-post-seal")
     key = derive_sampling_key(frame_digest, beacon["randomness_hex"])
     return {
         "seal_bundle_version": "big0f-seal-bundle-v2",
