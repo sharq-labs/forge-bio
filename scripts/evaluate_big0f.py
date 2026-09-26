@@ -480,9 +480,8 @@ def _verified_context_from_files(
         raise ValueError("pilot protocol digest does not match sealed protocol")
 
     selection_provenance = load_json_strict(selection_provenance_path)
-    selection_digest = sha256_file(selection_provenance_path)
-    if selection_digest != result["selection_provenance_digest"]:
-        raise ValueError("selection provenance digest mismatch")
+    if selection_provenance.get("digest") != result["selection_provenance_digest"]:
+        raise ValueError("selection provenance canonical digest mismatch")
     if selection_provenance.get("selection_id") != result["selection_provenance_id"]:
         raise ValueError("selection provenance ID mismatch")
 
@@ -505,9 +504,6 @@ def _verified_context_from_files(
         raise ValueError("selection provenance failed deterministic verification: " + " | ".join(selection_errors))
 
     nuisance_run = load_json_strict(nuisance_run_path)
-    nuisance_run_digest = sha256_file(nuisance_run_path)
-    if nuisance_run_digest != result["nuisance_run_digest"]:
-        raise ValueError("nuisance-run file digest mismatch")
     if nuisance_run.get("run_id") != result["nuisance_run_id"]:
         raise ValueError("nuisance-run ID mismatch")
     if nuisance_run.get("digest") != result["nuisance_run_digest"]:
