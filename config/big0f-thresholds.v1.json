@@ -62,5 +62,217 @@
     }
   ],
   "max_inconclusive_evaluations": 2,
-  "frozen_at": "2026-09-26T00:00:00Z"
+  "frozen_at": "2026-09-26T00:00:00Z",
+  "threshold_metadata": {
+    "alpha": {
+      "rationale": "Pre-registered alpha boundary is frozen before pilot outcomes to constrain power decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BENCHMARK_ESTIMAND_V0.md",
+        "confirmatory-program-budget-v1"
+      ],
+      "decision_role": "POWER"
+    },
+    "min_disease_count": {
+      "rationale": "Pre-registered min_disease_count boundary is frozen before pilot outcomes to constrain design decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "DESIGN"
+    },
+    "max_disease_count": {
+      "rationale": "Pre-registered max_disease_count boundary is frozen before pilot outcomes to constrain design decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "DESIGN"
+    },
+    "min_candidate_event_count": {
+      "rationale": "Pre-registered min_candidate_event_count boundary is frozen before pilot outcomes to constrain feasibility decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "FEASIBILITY"
+    },
+    "max_candidate_event_count": {
+      "rationale": "Pre-registered max_candidate_event_count boundary is frozen before pilot outcomes to constrain feasibility decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "FEASIBILITY"
+    },
+    "max_ambiguity_go": {
+      "rationale": "Pre-registered max_ambiguity_go boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_ambiguity_redesign": {
+      "rationale": "Pre-registered max_ambiguity_redesign boundary is frozen before pilot outcomes to constrain redesign no go decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "REDESIGN_NO_GO"
+    },
+    "min_agreement_go": {
+      "rationale": "Pre-registered min_agreement_go boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "min_agreement_redesign": {
+      "rationale": "Pre-registered min_agreement_redesign boundary is frozen before pilot outcomes to constrain redesign no go decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "REDESIGN_NO_GO"
+    },
+    "min_required_field_availability_go": {
+      "rationale": "Pre-registered min_required_field_availability_go boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "min_required_field_availability_redesign": {
+      "rationale": "Pre-registered min_required_field_availability_redesign boundary is frozen before pilot outcomes to constrain redesign no go decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "REDESIGN_NO_GO"
+    },
+    "min_primary_eligible_fraction": {
+      "rationale": "Pre-registered min_primary_eligible_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_author_nearest_fraction": {
+      "rationale": "Pre-registered max_author_nearest_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_abs_attention_association": {
+      "rationale": "Pre-registered max_abs_attention_association boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "max_pre_t_cohort_reuse_fraction": {
+      "rationale": "Pre-registered max_pre_t_cohort_reuse_fraction boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "max_nuisance_median_rank_fraction": {
+      "rationale": "Pre-registered max_nuisance_median_rank_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_nuisance_top1_positive_fraction": {
+      "rationale": "Pre-registered max_nuisance_top1_positive_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "min_ancestry_metadata_coverage_fraction": {
+      "rationale": "Pre-registered min_ancestry_metadata_coverage_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_event_family_deduplication_fraction": {
+      "rationale": "Pre-registered max_event_family_deduplication_fraction boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "max_locus_to_many_gene_credit_impact_fraction": {
+      "rationale": "Pre-registered max_locus_to_many_gene_credit_impact_fraction boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "max_median_event_curation_minutes": {
+      "rationale": "Pre-registered max_median_event_curation_minutes boundary is frozen before pilot outcomes to constrain feasibility decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "FEASIBILITY"
+    },
+    "min_non_event_to_event_time_ratio": {
+      "rationale": "Pre-registered min_non_event_to_event_time_ratio boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "max_non_event_to_event_time_ratio": {
+      "rationale": "Pre-registered max_non_event_to_event_time_ratio boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "min_source_family_count": {
+      "rationale": "Pre-registered min_source_family_count boundary is frozen before pilot outcomes to constrain feasibility decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "FEASIBILITY"
+    },
+    "minimum_scientifically_meaningful_effect": {
+      "rationale": "Pre-registered minimum_scientifically_meaningful_effect boundary is frozen before pilot outcomes to constrain power decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BENCHMARK_ESTIMAND_V0.md",
+        "confirmatory-program-budget-v1"
+      ],
+      "decision_role": "POWER"
+    },
+    "min_hypothesis_free_primary_positive_fraction": {
+      "rationale": "Pre-registered min_hypothesis_free_primary_positive_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    },
+    "max_label_feature_method_coupling_fraction": {
+      "rationale": "Pre-registered max_label_feature_method_coupling_fraction boundary is frozen before pilot outcomes to constrain sensitivity decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "SENSITIVITY"
+    },
+    "min_high_specificity_positive_count": {
+      "rationale": "Pre-registered min_high_specificity_positive_count boundary is frozen before pilot outcomes to constrain power decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "POWER"
+    },
+    "min_event_bearing_disease_fraction": {
+      "rationale": "Pre-registered min_event_bearing_disease_fraction boundary is frozen before pilot outcomes to constrain go redesign decisions and prevent post-outcome threshold tuning.",
+      "provenance_refs": [
+        "BIG_0F_PROTOCOL.md"
+      ],
+      "decision_role": "GO_REDESIGN"
+    }
+  }
 }
