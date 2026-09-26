@@ -12,13 +12,13 @@ A database, graph, or dashboard is not automatically a digital twin.
 
 Forge Bio uses explicit maturity levels:
 
-| Level | Name | Minimum capability |
+| Level | Canonical enum | Minimum capability |
 |---|---|---|
-| T0 | PROFILE_ONLY | structured evidence-backed profile |
-| T1 | DYNAMIC_KNOWLEDGE_TWIN | versioned state updated from new evidence |
-| T2 | MECHANISTIC_TWIN | explicit state-transition / mechanistic model |
-| T3 | VALIDATED_PREDICTIVE_TWIN | predicts held-out/future observations with quantified uncertainty |
-| T4 | VALIDATED_INTERVENTION_SIMULATION_TWIN | validated research simulation of defined perturbations/interventions |
+| T0 | T0_PROFILE_ONLY | structured evidence-backed profile |
+| T1 | T1_DYNAMIC_KNOWLEDGE_TWIN | versioned state updated from new evidence |
+| T2 | T2_MECHANISTIC_TWIN | explicit state-transition / mechanistic model |
+| T3 | T3_VALIDATED_PREDICTIVE_TWIN | predicts held-out/future observations with quantified uncertainty |
+| T4 | T4_VALIDATED_INTERVENTION_SIMULATION_TWIN | validated research simulation of defined perturbations/interventions |
 
 No artifact may claim a maturity level it has not passed.
 
