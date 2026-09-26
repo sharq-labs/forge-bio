@@ -8,6 +8,9 @@
     "power_analysis_id",
     "schema_version",
     "method",
+    "nuisance_run_digest",
+    "nuisance_run_id",
+    "sd_derivation_method",
     "alpha",
     "target_power",
     "minimum_scientifically_meaningful_effect",
@@ -82,6 +85,17 @@
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "sd_derivation_method": {
+      "const": "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
+    },
+    "nuisance_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nuisance_run_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }

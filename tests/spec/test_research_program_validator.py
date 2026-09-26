@@ -3,7 +3,7 @@ from __future__ import annotations
 import copy
 import unittest
 
-from scripts.validate_research_program import validate_program
+from scripts.validate_research_program import canonical_digest, validate_ledger_chain, validate_program
 
 
 def budget():
@@ -55,6 +55,32 @@ def attempt(idx=1, gid="G1", alpha=0.025, attempt_id="A1"):
     }
 
 
+def ledger(sequence: int, attempts: list[dict], previous_digest=None):
+    x = {
+        "ledger_id": "RPL-FORGE-BIO-B-TGT-E1-V0",
+        "schema_version": "research-program-ledger-v1",
+        "research_program_id": "FORGE-BIO-B-TGT-E1-V0",
+        "confirmatory_program_budget_id": "CPB-FORGE-BIO-B-TGT-E1-V0",
+        "ledger_sequence": sequence,
+        "previous_ledger_digest": previous_digest,
+        "external_anchor_attestation_id": f"LEDGER-SEAL-{sequence}",
+        "attempts": attempts,
+    }
+    x["digest"] = canonical_digest(x)
+    return x
+
+
+def ledger_attempt(idx: int, result_status: str = "NULL"):
+    return {
+        "attempt_id": f"A{idx}",
+        "attempt_tier": "CONFIRMATORY",
+        "attempt_index": idx,
+        "allocation_generation_id": f"G{idx}",
+        "allocated_alpha": 0.025,
+        "result_status": result_status,
+    }
+
+
 class ResearchProgramValidatorTests(unittest.TestCase):
     def test_valid_program(self):
         self.assertEqual([], validate_program(budget(), [attempt()]))
@@ -82,6 +108,23 @@ class ResearchProgramValidatorTests(unittest.TestCase):
         b["benchmark_family"] = "B-TGT-E1-v2"
         errors = validate_program(b, [attempt()])
         self.assertTrue(errors)
+
+    def test_ledger_chain_accepts_append_only_history(self):
+        first = ledger(0, [ledger_attempt(1, "NULL")])
+        second = ledger(1, [ledger_attempt(1, "NULL"), ledger_attempt(2, "NEGATIVE")], first["digest"])
+        self.assertEqual([], validate_ledger_chain(second, first))
+
+    def test_failed_attempt_cannot_disappear_from_new_ledger(self):
+        first = ledger(0, [ledger_attempt(1, "FAILED_EXECUTION")])
+        second = ledger(1, [ledger_attempt(2, "POSITIVE")], first["digest"])
+        errors = validate_ledger_chain(second, first)
+        self.assertTrue(any("append-only" in e for e in errors))
+
+    def test_non_genesis_ledger_requires_previous_artifact(self):
+        first = ledger(0, [ledger_attempt(1, "NULL")])
+        second = ledger(1, [ledger_attempt(1, "NULL"), ledger_attempt(2, "POSITIVE")], first["digest"])
+        errors = validate_ledger_chain(second, None)
+        self.assertTrue(any("immediately previous" in e for e in errors))
 
 
 if __name__ == "__main__":

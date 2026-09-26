@@ -83,6 +83,54 @@ def deterministic_order(disease_ids: list[str], key: bytes) -> list[str]:
     )
 
 
+def deterministic_event_sample(
+    event_records: list[dict[str, str]],
+    key: bytes,
+    *,
+    cap: int = 150,
+) -> list[str]:
+    """Deterministically cap events while preserving every event-bearing disease.
+
+    The input event universe is immutable. When it exceeds the cap, one event
+    per disease is selected first using the sealed sampling key, then remaining
+    slots are filled by the same keyed hash order across all remaining events.
+    """
+    if cap < 1:
+        raise ValueError("cap must be positive")
+    seen_ids: set[str] = set()
+    by_disease: dict[str, list[str]] = {}
+    for record in event_records:
+        event_id = record.get("event_id")
+        disease_id = record.get("disease_id")
+        if not isinstance(event_id, str) or not event_id:
+            raise ValueError("event_id must be a non-empty string")
+        if not isinstance(disease_id, str) or not disease_id:
+            raise ValueError("disease_id must be a non-empty string")
+        if event_id in seen_ids:
+            raise ValueError(f"duplicate event_id: {event_id}")
+        seen_ids.add(event_id)
+        by_disease.setdefault(disease_id, []).append(event_id)
+
+    def event_key(event_id: str) -> bytes:
+        return hashlib.sha256(key + b"\\0event\\0" + event_id.encode("utf-8")).digest()
+
+    all_ids = sorted(seen_ids, key=event_key)
+    if len(all_ids) <= cap:
+        return all_ids
+    if len(by_disease) > cap:
+        raise ValueError("event cap is smaller than the number of event-bearing diseases")
+
+    selected: list[str] = []
+    selected_set: set[str] = set()
+    for disease_id in sorted(by_disease):
+        first = min(by_disease[disease_id], key=event_key)
+        selected.append(first)
+        selected_set.add(first)
+
+    remaining = [event_id for event_id in all_ids if event_id not in selected_set]
+    selected.extend(remaining[: cap - len(selected)])
+    return sorted(selected, key=event_key)
+
 def select(
     disease_ids: list[str],
     beacon: dict[str, Any],

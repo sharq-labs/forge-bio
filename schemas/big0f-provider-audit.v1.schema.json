@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-provider-audit.v1.schema.json",
+  "title": "Forge Bio BIG 0F Provider Audit v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id",
+    "schema_version",
+    "source_families",
+    "required_field_cells",
+    "provider_coupling",
+    "ancestry_population_audit",
+    "digest"
+  ],
+  "properties": {
+    "audit_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "big0f-provider-audit-v1"},
+    "source_families": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_family_id", "family_kind", "provider_id", "historical_release_id"],
+        "properties": {
+          "source_family_id": {"type": "string", "minLength": 1},
+          "family_kind": {
+            "enum": [
+              "PRIMARY_PUBLICATION_METADATA",
+              "GWAS_HISTORICAL",
+              "IDENTITY_ONTOLOGY",
+              "HISTORICAL_GENE_MODEL_ANNOTATION",
+              "OTHER"
+            ]
+          },
+          "provider_id": {"type": "string", "minLength": 1},
+          "historical_release_id": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "required_field_cells": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "disease_id",
+          "source_family_id",
+          "field_id",
+          "criticality",
+          "historical_release_obtainable",
+          "release_version_identifiable",
+          "field_existed_at_t",
+          "value_reconstructable",
+          "retrospectively_curated",
+          "mapping_needed",
+          "license_access_constraint",
+          "coverage_grade"
+        ],
+        "properties": {
+          "disease_id": {"type": "string", "minLength": 1},
+          "source_family_id": {"type": "string", "minLength": 1},
+          "field_id": {"type": "string", "minLength": 1},
+          "criticality": {"enum": ["CRITICAL", "REQUIRED", "OPTIONAL"]},
+          "historical_release_obtainable": {"type": "boolean"},
+          "release_version_identifiable": {"type": "boolean"},
+          "field_existed_at_t": {"type": "boolean"},
+          "value_reconstructable": {"type": "boolean"},
+          "retrospectively_curated": {"type": "boolean"},
+          "mapping_needed": {"type": "boolean"},
+          "license_access_constraint": {"type": "boolean"},
+          "coverage_grade": {"enum": ["HIGH", "MODERATE", "LOW", "UNKNOWN"]}
+        }
+      }
+    },
+    "provider_coupling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["risk", "shared_pipeline_fraction", "evidence_digests"],
+      "properties": {
+        "risk": {"enum": ["LOW", "MODERATE", "HIGH", "UNKNOWN"]},
+        "shared_pipeline_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_digests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+        }
+      }
+    },
+    "ancestry_population_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adequacy", "case_records", "evidence_digests"],
+      "properties": {
+        "adequacy": {"enum": ["ADEQUATE", "INADEQUATE", "UNKNOWN"]},
+        "case_records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["case_id", "metadata_available"],
+            "properties": {
+              "case_id": {"type": "string", "minLength": 1},
+              "metadata_available": {"type": "boolean"}
+            }
+          }
+        },
+        "evidence_digests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+        }
+      }
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+  }
+}

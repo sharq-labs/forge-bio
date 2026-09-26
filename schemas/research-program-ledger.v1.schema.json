@@ -10,7 +10,10 @@
     "research_program_id",
     "confirmatory_program_budget_id",
     "attempts",
-    "digest"
+    "digest",
+    "ledger_sequence",
+    "previous_ledger_digest",
+    "external_anchor_attestation_id"
   ],
   "properties": {
     "ledger_id": {
@@ -83,6 +86,54 @@
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "ledger_sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "previous_ledger_digest": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        }
+      ]
+    },
+    "external_anchor_attestation_id": {
+      "type": "string",
+      "minLength": 1
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ledger_sequence": {
+            "const": 0
+          }
+        },
+        "required": [
+          "ledger_sequence"
+        ]
+      },
+      "then": {
+        "properties": {
+          "previous_ledger_digest": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "previous_ledger_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          }
+        }
+      }
+    }
+  ]
 }

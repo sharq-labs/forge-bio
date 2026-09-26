@@ -10,9 +10,25 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.build_seal_bundle import manifest_digest, verify_manifest
+from scripts.build_seal_bundle import canonical_json_bytes, manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
+from scripts.verify_external_authorities import verify_drand_beacon, verify_external_attestation
 from scripts.simulate_big0f_power import verify_artifact as verify_power_artifact
+from scripts.verify_big0f_provenance import (
+    ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
+    CURATION_AUDIT_SCHEMA_PATH,
+    NUISANCE_RUN_SCHEMA_PATH,
+    PROVIDER_AUDIT_SCHEMA_PATH,
+    SELECTION_SCHEMA_PATH,
+    derive_curation_metrics,
+    derive_nuisance_metrics,
+    derive_provider_metrics,
+    verify_adjudicator_independence,
+    verify_curation_audit,
+    verify_nuisance_run,
+    verify_provider_audit,
+    verify_selection_provenance,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +60,11 @@ class EvaluationContext:
     decision_engine_sealed: bool
     pilot_schema_sealed: bool
     sampling_code_sealed: bool
+    selection_provenance_verified: bool
+    nuisance_run_verified: bool
+    provider_audit_verified: bool
+    adjudicator_independence_verified: bool
+    curation_audit_verified: bool
 
 
 def _reject_constant(value: str) -> None:
@@ -118,6 +139,11 @@ def _reference_context_missing(context: EvaluationContext | None) -> list[str]:
         "decision_engine_sealed",
         "pilot_schema_sealed",
         "sampling_code_sealed",
+        "selection_provenance_verified",
+        "nuisance_run_verified",
+        "provider_audit_verified",
+        "adjudicator_independence_verified",
+        "curation_audit_verified",
     ):
         if not getattr(context, field):
             missing.append(f"{field} is false")
@@ -153,6 +179,9 @@ def _evaluate_once(
 
     if metrics["event_bearing_disease_count"] > metrics["disease_count"]:
         raise ValueError("event-bearing disease count exceeds total disease count")
+    event_bearing_fraction = metrics["event_bearing_disease_count"] / metrics["disease_count"]
+    if event_bearing_fraction < thresholds["min_event_bearing_disease_fraction"]:
+        redesign.append("event-bearing disease fraction below sealed diversity minimum")
     if metrics["adjudication_metrics"]["adjudicated_event_case_count"] > metrics["candidate_event_count"]:
         raise ValueError("adjudicated event cases exceed candidate events")
     if metrics["high_specificity_positive_count"] > metrics["candidate_event_count"]:
@@ -368,12 +397,22 @@ def _verified_context_from_files(
     disease_frame_path: Path,
     randomness_beacon_path: Path,
     frame_seal_attestation_path: Path,
+    frame_seal_ots_proof_path: Path | None,
     threshold_manifest_path: Path,
     seal_bundle_manifest_path: Path,
     seal_attestation_paths: list[Path],
+    seal_bundle_ots_proof_path: Path | None,
     power_analysis_path: Path,
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
+    selection_provenance_path: Path,
+    nuisance_run_path: Path,
+    provider_audit_path: Path,
+    provider_evidence_paths: list[Path],
+    adjudicator_independence_path: Path,
+    adjudicator_role_registry_path: Path,
+    adjudicator_independence_evidence_path: Path,
+    curation_audit_path: Path,
     sampling_code_path: Path,
     power_engine_path: Path,
 ) -> EvaluationContext:
@@ -390,6 +429,24 @@ def _verified_context_from_files(
     bundle_digest = manifest_digest(seal_manifest)
     if bundle_digest != result["seal_bundle_digest"]:
         raise ValueError("pilot seal_bundle_digest does not match seal-bundle manifest")
+
+    frame_attestation = load_json_strict(frame_seal_attestation_path)
+    _validate_schema(frame_attestation, ATTESTATION_SCHEMA_PATH)
+    frame_semantic_errors = validate_external_seal(frame_attestation)
+    if frame_semantic_errors:
+        raise ValueError("frame external seal attestation invalid: " + " | ".join(frame_semantic_errors))
+    frame_external_errors = verify_external_attestation(
+        frame_attestation,
+        disease_frame_path.read_bytes(),
+        ots_proof_path=frame_seal_ots_proof_path,
+    )
+    if frame_external_errors:
+        raise ValueError("frame external authority verification failed: " + " | ".join(frame_external_errors))
+
+    beacon_for_authority_check = load_json_strict(randomness_beacon_path)
+    beacon_authority_errors = verify_drand_beacon(beacon_for_authority_check)
+    if beacon_authority_errors:
+        raise ValueError("randomness beacon external verification failed: " + " | ".join(beacon_authority_errors))
 
     if len(seal_attestation_paths) < 2:
         raise ValueError("BIG 0F requires both third-party timestamp and public-registry attestations")
@@ -409,6 +466,13 @@ def _verified_context_from_files(
         "adjudication_policy_schema": ADJUDICATION_SCHEMA_PATH,
         "nuisance_manifest_schema": NUISANCE_SCHEMA_PATH,
         "power_analysis_schema": POWER_SCHEMA_PATH,
+        "selection_provenance_schema": SELECTION_SCHEMA_PATH,
+        "nuisance_run_schema": NUISANCE_RUN_SCHEMA_PATH,
+        "provider_audit_schema": PROVIDER_AUDIT_SCHEMA_PATH,
+        "adjudicator_independence_schema": ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH,
+        "curation_audit_schema": CURATION_AUDIT_SCHEMA_PATH,
+        "provenance_verifier": ROOT / "scripts" / "verify_big0f_provenance.py",
+        "external_authority_verifier": ROOT / "scripts" / "verify_external_authorities.py",
         "power_engine": power_engine_path,
     }
 
@@ -427,6 +491,16 @@ def _verified_context_from_files(
             raise ValueError("BIG 0F seal attestation must target BIG0F_SEAL_BUNDLE")
         if attestation["artifact_digest"] != bundle_digest:
             raise ValueError("external attestation does not match sealed bundle digest")
+        external_authority_errors = verify_external_attestation(
+            attestation,
+            canonical_json_bytes(seal_manifest),
+            ots_proof_path=seal_bundle_ots_proof_path,
+        )
+        if external_authority_errors:
+            raise ValueError(
+                "bundle external authority verification failed: "
+                + " | ".join(external_authority_errors)
+            )
         sealed_at = __import__("datetime").datetime.fromisoformat(
             attestation["sealed_at"].replace("Z", "+00:00")
         )
@@ -460,6 +534,136 @@ def _verified_context_from_files(
     if seal_manifest["protocol_sha256"] != result["protocol_digest"]:
         raise ValueError("pilot protocol digest does not match sealed protocol")
 
+    selection_provenance = load_json_strict(selection_provenance_path)
+    if selection_provenance.get("digest") != result["selection_provenance_digest"]:
+        raise ValueError("selection provenance canonical digest mismatch")
+    if selection_provenance.get("selection_id") != result["selection_provenance_id"]:
+        raise ValueError("selection provenance ID mismatch")
+
+    disease_ids = json.loads(disease_frame_path.read_text(encoding="utf-8"), parse_constant=_reject_constant)
+    if not isinstance(disease_ids, list) or not all(isinstance(x, str) and x for x in disease_ids):
+        raise ValueError("disease frame must be a JSON array of non-empty string IDs")
+    beacon = load_json_strict(randomness_beacon_path)
+    frame_seal = load_json_strict(frame_seal_attestation_path)
+    selection_errors = verify_selection_provenance(
+        selection_provenance,
+        thresholds=threshold_manifest["thresholds"],
+        result=result,
+        disease_ids=disease_ids,
+        beacon=beacon,
+        frame_digest=sha256_file(disease_frame_path),
+        frame_seal_attestation=frame_seal,
+        frame_seal_attestation_digest=sha256_file(frame_seal_attestation_path),
+    )
+    if selection_errors:
+        raise ValueError("selection provenance failed deterministic verification: " + " | ".join(selection_errors))
+
+    provider_audit = load_json_strict(provider_audit_path)
+    if provider_audit.get("audit_id") != result["provider_audit_id"]:
+        raise ValueError("provider-audit ID mismatch")
+    if provider_audit.get("digest") != result["provider_audit_digest"]:
+        raise ValueError("provider-audit canonical digest mismatch")
+    provider_errors = verify_provider_audit(provider_audit)
+    if provider_errors:
+        raise ValueError("provider audit failed deterministic verification: " + " | ".join(provider_errors))
+    expected_provider_evidence = set(provider_audit["provider_coupling"]["evidence_digests"])
+    expected_provider_evidence.update(provider_audit["ancestry_population_audit"]["evidence_digests"])
+    actual_provider_evidence = {sha256_file(path) for path in provider_evidence_paths}
+    if actual_provider_evidence != expected_provider_evidence:
+        raise ValueError(
+            "provider evidence files do not exactly match the immutable evidence digests "
+            f"(missing={sorted(expected_provider_evidence - actual_provider_evidence)}, "
+            f"extra={sorted(actual_provider_evidence - expected_provider_evidence)})"
+        )
+    derived_provider = derive_provider_metrics(provider_audit)
+    if derived_provider["source_family_ids"] != result["source_family_ids"]:
+        raise ValueError("pilot source_family_ids do not match provider audit")
+    if len(derived_provider["source_family_ids"]) != result["source_family_count"]:
+        raise ValueError("pilot source_family_count does not match provider audit")
+    if abs(
+        derived_provider["required_field_availability_fraction"]
+        - result["provider_metrics"]["required_field_availability_fraction"]
+    ) > 1e-12:
+        raise ValueError("provider required-field availability does not match audit cells")
+    if derived_provider["historical_search_coverage_distribution"] != result["provider_metrics"]["historical_search_coverage_distribution"]:
+        raise ValueError("provider historical-search coverage distribution does not match audit cells")
+    if derived_provider["provider_coupling_risk"] != result["provider_metrics"]["provider_coupling_risk"]:
+        raise ValueError("provider coupling risk does not match provider audit")
+    if abs(
+        derived_provider["ancestry_metadata_coverage_fraction"]
+        - result["applicability_metrics"]["ancestry_metadata_coverage_fraction"]
+    ) > 1e-12:
+        raise ValueError("ancestry metadata coverage does not match provider audit")
+    if derived_provider["ancestry_population_metadata_adequacy"] != result["applicability_metrics"]["ancestry_population_metadata_adequacy"]:
+        raise ValueError("ancestry/population adequacy does not match provider audit")
+
+    adjudicator_independence = load_json_strict(adjudicator_independence_path)
+    if adjudicator_independence.get("attestation_id") != result["adjudication_metrics"]["second_adjudicator_independence_attestation_id"]:
+        raise ValueError("second-adjudicator independence attestation ID mismatch")
+    if adjudicator_independence.get("digest") != result["adjudicator_independence_attestation_digest"]:
+        raise ValueError("second-adjudicator independence attestation digest mismatch")
+    adjudicator_errors = verify_adjudicator_independence(adjudicator_independence)
+    if adjudicator_errors:
+        raise ValueError("second-adjudicator independence verification failed: " + " | ".join(adjudicator_errors))
+    if sha256_file(adjudicator_role_registry_path) != adjudicator_independence["role_registry_digest"]:
+        raise ValueError("adjudicator role-registry evidence digest mismatch")
+    if sha256_file(adjudicator_independence_evidence_path) != adjudicator_independence["independence_evidence_digest"]:
+        raise ValueError("adjudicator independence-evidence digest mismatch")
+    if adjudicator_independence["adjudicator_id"] != result["adjudication_metrics"]["second_adjudicator_id"]:
+        raise ValueError("second-adjudicator identity mismatch")
+    if adjudicator_independence["blinded_to_rankings"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_rankings"]:
+        raise ValueError("second-adjudicator ranking blinding mismatch")
+    if adjudicator_independence["blinded_to_first_review"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_first_review"]:
+        raise ValueError("second-adjudicator first-review blinding mismatch")
+
+    curation_audit = load_json_strict(curation_audit_path)
+    if curation_audit.get("audit_id") != result["curation_audit_id"]:
+        raise ValueError("curation-audit ID mismatch")
+    if curation_audit.get("digest") != result["curation_audit_digest"]:
+        raise ValueError("curation-audit canonical digest mismatch")
+    curation_errors = verify_curation_audit(
+        curation_audit,
+        total_event_cases=result["adjudication_metrics"]["adjudicated_event_case_count"],
+        max_median_event_curation_minutes=threshold_manifest["thresholds"]["max_median_event_curation_minutes"],
+    )
+    if curation_errors:
+        raise ValueError("curation audit failed deterministic verification: " + " | ".join(curation_errors))
+    derived_curation = derive_curation_metrics(
+        curation_audit,
+        total_event_cases=result["adjudication_metrics"]["adjudicated_event_case_count"],
+        max_median_event_curation_minutes=threshold_manifest["thresholds"]["max_median_event_curation_minutes"],
+    )
+    for key, expected in derived_curation.items():
+        actual = result["curation_metrics"][key]
+        if isinstance(expected, float):
+            if abs(float(actual) - expected) > 1e-12:
+                raise ValueError(f"curation metric mismatch for {key}")
+        elif actual != expected:
+            raise ValueError(f"curation metric mismatch for {key}")
+
+    nuisance_run = load_json_strict(nuisance_run_path)
+    if nuisance_run.get("run_id") != result["nuisance_run_id"]:
+        raise ValueError("nuisance-run ID mismatch")
+    if nuisance_run.get("digest") != result["nuisance_run_digest"]:
+        raise ValueError("pilot nuisance_run_digest must equal the nuisance-run canonical digest")
+
+    selected_event_ids = set(selection_provenance["selected_event_ids"])
+    selected_disease_ids = set(selection_provenance["selected_disease_ids"])
+    nuisance_errors = verify_nuisance_run(
+        nuisance_run,
+        nuisance_manifest=nuisance_manifest,
+        nuisance_manifest_digest=nuisance_digest,
+        selected_event_ids=selected_event_ids,
+        selected_disease_ids=selected_disease_ids,
+        expected_positive_count=result["high_specificity_positive_count"],
+    )
+    if nuisance_errors:
+        raise ValueError("nuisance run failed deterministic verification: " + " | ".join(nuisance_errors))
+    derived_nuisance = derive_nuisance_metrics(nuisance_run)
+    for key in ("median_positive_rank_fraction", "top_1pct_fraction", "top_5pct_fraction"):
+        if abs(derived_nuisance[key] - result["nuisance_headroom_metrics"][key]) > 1e-12:
+            raise ValueError(f"nuisance headroom metric mismatch for {key}")
+
     power = load_json_strict(power_analysis_path)
     _validate_schema(power, POWER_SCHEMA_PATH)
     if seal_manifest["power_engine_sha256"] != sha256_file(power_engine_path):
@@ -467,6 +671,7 @@ def _verified_context_from_files(
     power_recompute_errors = verify_power_artifact(
         power,
         engine_sha256=sha256_file(power_engine_path),
+        nuisance_run=nuisance_run,
     )
     if power_recompute_errors:
         raise ValueError("power artifact failed deterministic recomputation: " + " | ".join(power_recompute_errors))
@@ -495,6 +700,11 @@ def _verified_context_from_files(
         decision_engine_sealed=True,
         pilot_schema_sealed=True,
         sampling_code_sealed=True,
+        selection_provenance_verified=True,
+        nuisance_run_verified=True,
+        provider_audit_verified=True,
+        adjudicator_independence_verified=True,
+        curation_audit_verified=True,
     )
 
 
@@ -505,12 +715,22 @@ def main() -> int:
     ap.add_argument("--disease-frame", type=Path, required=True)
     ap.add_argument("--randomness-beacon", type=Path, required=True)
     ap.add_argument("--frame-seal-attestation", type=Path, required=True)
+    ap.add_argument("--frame-seal-ots-proof", type=Path)
     ap.add_argument("--threshold-manifest", type=Path, default=DEFAULT_THRESHOLD_PATH)
     ap.add_argument("--seal-bundle-manifest", type=Path, required=True)
     ap.add_argument("--seal-attestation", type=Path, action="append", required=True)
+    ap.add_argument("--seal-bundle-ots-proof", type=Path)
     ap.add_argument("--power-analysis", type=Path, required=True)
     ap.add_argument("--adjudication-policy", type=Path, required=True)
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
+    ap.add_argument("--selection-provenance", type=Path, required=True)
+    ap.add_argument("--nuisance-run", type=Path, required=True)
+    ap.add_argument("--provider-audit", type=Path, required=True)
+    ap.add_argument("--provider-evidence", type=Path, action="append", required=True)
+    ap.add_argument("--adjudicator-independence", type=Path, required=True)
+    ap.add_argument("--adjudicator-role-registry", type=Path, required=True)
+    ap.add_argument("--adjudicator-independence-evidence", type=Path, required=True)
+    ap.add_argument("--curation-audit", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
     ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
@@ -524,12 +744,22 @@ def main() -> int:
         disease_frame_path=args.disease_frame,
         randomness_beacon_path=args.randomness_beacon,
         frame_seal_attestation_path=args.frame_seal_attestation,
+        frame_seal_ots_proof_path=args.frame_seal_ots_proof,
         threshold_manifest_path=args.threshold_manifest,
         seal_bundle_manifest_path=args.seal_bundle_manifest,
         seal_attestation_paths=args.seal_attestation,
+        seal_bundle_ots_proof_path=args.seal_bundle_ots_proof,
         power_analysis_path=args.power_analysis,
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,
+        selection_provenance_path=args.selection_provenance,
+        nuisance_run_path=args.nuisance_run,
+        provider_audit_path=args.provider_audit,
+        provider_evidence_paths=args.provider_evidence,
+        adjudicator_independence_path=args.adjudicator_independence,
+        adjudicator_role_registry_path=args.adjudicator_role_registry,
+        adjudicator_independence_evidence_path=args.adjudicator_independence_evidence,
+        curation_audit_path=args.curation_audit,
         sampling_code_path=args.sampling_code,
         power_engine_path=args.power_engine,
     )

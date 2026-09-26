@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-nuisance-run.v1.schema.json",
+  "title": "Forge Bio BIG 0F Nuisance Run v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "schema_version",
+    "nuisance_manifest_digest",
+    "pilot_model_evaluation_mode",
+    "actual_feature_families",
+    "feature_artifact_digests",
+    "semantic_evidence_features_used",
+    "learner_family_id",
+    "preprocessing_digest",
+    "training_config_digest",
+    "model_artifact_digest",
+    "event_rank_records",
+    "digest"
+  ],
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "big0f-nuisance-run-v1"},
+    "nuisance_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "pilot_model_evaluation_mode": {"const": "NUISANCE_ONLY"},
+    "actual_feature_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "feature_artifact_digests": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-fA-F]{64}$"
+      }
+    },
+    "semantic_evidence_features_used": {"const": false},
+    "learner_family_id": {"type": "string", "minLength": 1},
+    "preprocessing_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "training_config_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "model_artifact_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "event_rank_records": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event_id", "disease_id", "rank_fraction"],
+        "properties": {
+          "event_id": {"type": "string", "minLength": 1},
+          "disease_id": {"type": "string", "minLength": 1},
+          "rank_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

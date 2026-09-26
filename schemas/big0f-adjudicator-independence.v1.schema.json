@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-adjudicator-independence.v1.schema.json",
+  "title": "Forge Bio BIG 0F Adjudicator Independence Attestation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "attestation_id",
+    "schema_version",
+    "adjudicator_id",
+    "study_team_member",
+    "ranking_team_member",
+    "first_reviewer",
+    "blinded_to_rankings",
+    "blinded_to_first_review",
+    "conflict_status",
+    "role_registry_digest",
+    "independence_evidence_digest",
+    "signed_at",
+    "signer_identity",
+    "digest"
+  ],
+  "properties": {
+    "attestation_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "big0f-adjudicator-independence-v1"},
+    "adjudicator_id": {"type": "string", "minLength": 1},
+    "study_team_member": {"const": false},
+    "ranking_team_member": {"const": false},
+    "first_reviewer": {"const": false},
+    "blinded_to_rankings": {"const": true},
+    "blinded_to_first_review": {"const": true},
+    "conflict_status": {"enum": ["NONE", "MANAGED"]},
+    "role_registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "independence_evidence_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
+    "signed_at": {"type": "string", "format": "date-time"},
+    "signer_identity": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
+  }
+}

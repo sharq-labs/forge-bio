@@ -5,6 +5,7 @@ import math
 import unittest
 
 from scripts.evaluate_endpoint_quality import evaluate_rule, validate_rule
+from scripts.validate_endpoint_quality_rule import evaluate_event, validate_rule_semantics
 
 
 def frozen_rule():
@@ -108,6 +109,12 @@ class EndpointQualityExecutorTests(unittest.TestCase):
         event["p_value"]=float("nan")
         passed,failures=evaluate_rule(frozen_rule(),event)
         self.assertFalse(passed)
+
+    def test_legacy_validator_is_exact_canonical_alias(self):
+        rule=frozen_rule()
+        event=qualifying_event()
+        self.assertEqual(validate_rule(rule), validate_rule_semantics(rule))
+        self.assertEqual(evaluate_rule(rule,event), evaluate_event(rule,event))
 
 
 if __name__=="__main__":

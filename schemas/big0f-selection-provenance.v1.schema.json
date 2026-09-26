@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-selection-provenance.v1.schema.json",
+  "title": "Forge Bio BIG 0F Selection Provenance v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "selection_id",
+    "schema_version",
+    "candidate_pairs",
+    "selected_disease_ids",
+    "selected_event_ids",
+    "digest"
+  ],
+  "properties": {
+    "selection_id": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "big0f-selection-provenance-v1"},
+    "candidate_pairs": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cutoff",
+          "horizon",
+          "provider_availability_pass",
+          "provider_availability_evidence_digest",
+          "observation_window_pass",
+          "observation_window_evidence_digest",
+          "raw_event_records"
+        ],
+        "properties": {
+          "cutoff": {
+            "enum": ["2005-12-31", "2008-12-31", "2011-12-31", "2014-12-31"]
+          },
+          "horizon": {"enum": ["3y", "5y", "7y", "10y"]},
+          "provider_availability_pass": {"type": "boolean"},
+          "provider_availability_evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "observation_window_pass": {"type": "boolean"},
+          "observation_window_evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "raw_event_records": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["event_id", "disease_id"],
+              "properties": {
+                "event_id": {"type": "string", "minLength": 1},
+                "disease_id": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        }
+      }
+    },
+    "selected_disease_ids": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 15,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "selected_event_ids": {
+      "type": "array",
+      "maxItems": 150,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

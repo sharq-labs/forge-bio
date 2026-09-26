@@ -10,8 +10,7 @@
     "status",
     "thresholds",
     "sensitivity_variants",
-    "max_inconclusive_evaluations",
-    "digest"
+    "max_inconclusive_evaluations"
   ],
   "properties": {
     "manifest_id": {
@@ -221,10 +220,6 @@
     "frozen_at": {
       "type": "string",
       "format": "date-time"
-    },
-    "digest": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }

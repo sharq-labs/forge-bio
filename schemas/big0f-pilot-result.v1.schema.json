@@ -35,7 +35,16 @@
     "first_adjudication_at",
     "source_family_count",
     "source_family_ids",
-    "prior_inconclusive_count"
+    "prior_inconclusive_count",
+    "selection_provenance_id",
+    "selection_provenance_digest",
+    "nuisance_run_id",
+    "nuisance_run_digest",
+    "provider_audit_id",
+    "provider_audit_digest",
+    "adjudicator_independence_attestation_digest",
+    "curation_audit_id",
+    "curation_audit_digest"
   ],
   "properties": {
     "pilot_id": {
@@ -544,6 +553,42 @@
     "prior_inconclusive_count": {
       "type": "integer",
       "minimum": 0
+    },
+    "selection_provenance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_provenance_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nuisance_run_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "provider_audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_audit_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudicator_independence_attestation_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "curation_audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "curation_audit_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }

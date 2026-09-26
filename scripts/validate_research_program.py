@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -10,11 +11,13 @@ from jsonschema import Draft202012Validator, FormatChecker
 from scripts.scientific_invariants import (
     validate_confirmatory_program_budget,
     validate_research_program_attempt,
+    validate_research_program_ledger,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
 BUDGET_SCHEMA = ROOT / "schemas" / "confirmatory-program-budget.v1.schema.json"
 ATTEMPT_SCHEMA = ROOT / "schemas" / "research-program-attempt.v1.schema.json"
+LEDGER_SCHEMA = ROOT / "schemas" / "research-program-ledger.v1.schema.json"
 
 
 def _reject_constant(value: str) -> None:
@@ -33,6 +36,59 @@ def _validate_schema(instance: Any, schema_path: Path) -> list[str]:
         f"{'.'.join(str(x) for x in err.absolute_path) or '<root>'}: {err.message}"
         for err in validator.iter_errors(instance)
     ]
+
+
+def canonical_digest(payload: dict[str, Any]) -> str:
+    body = dict(payload)
+    body.pop("digest", None)
+    encoded = json.dumps(body, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+def validate_ledger_chain(
+    current: dict[str, Any],
+    previous: dict[str, Any] | None,
+) -> list[str]:
+    errors: list[str] = []
+    errors.extend(f"current ledger: {e}" for e in _validate_schema(current, LEDGER_SCHEMA))
+    errors.extend(f"current ledger: {e}" for e in validate_research_program_ledger(current))
+    if errors:
+        return errors
+
+    if current.get("digest") != canonical_digest(current):
+        errors.append("current ledger canonical digest mismatch")
+
+    sequence = current["ledger_sequence"]
+    if sequence == 0:
+        if previous is not None:
+            errors.append("genesis ledger cannot declare a previous ledger")
+        return errors
+
+    if previous is None:
+        errors.append("non-genesis ledger requires the immediately previous ledger artifact")
+        return errors
+
+    errors.extend(f"previous ledger: {e}" for e in _validate_schema(previous, LEDGER_SCHEMA))
+    errors.extend(f"previous ledger: {e}" for e in validate_research_program_ledger(previous))
+    if errors:
+        return errors
+    if previous.get("digest") != canonical_digest(previous):
+        errors.append("previous ledger canonical digest mismatch")
+        return errors
+
+    if sequence != previous["ledger_sequence"] + 1:
+        errors.append("ledger_sequence must increment exactly by one")
+    if current["previous_ledger_digest"] != previous["digest"]:
+        errors.append("previous_ledger_digest does not match the supplied previous ledger")
+
+    previous_attempts = previous.get("attempts") or []
+    current_attempts = current.get("attempts") or []
+    if len(current_attempts) < len(previous_attempts):
+        errors.append("research-program ledger is not append-only: prior attempts were removed")
+    elif current_attempts[: len(previous_attempts)] != previous_attempts:
+        errors.append("research-program ledger is not append-only: prior attempts were modified or reordered")
+
+    return errors
 
 
 def validate_program(budget: dict[str, Any], attempts: list[dict[str, Any]]) -> list[str]:
@@ -84,10 +140,26 @@ def validate_program(budget: dict[str, Any], attempts: list[dict[str, Any]]) -> 
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Validate Forge Bio research-program attempts against one canonical alpha budget")
-    ap.add_argument("--budget", type=Path, required=True)
-    ap.add_argument("--attempts", type=Path, required=True, help="JSON array of ResearchProgramAttempt artifacts")
+    ap = argparse.ArgumentParser(description="Validate Forge Bio research-program multiplicity and append-only history")
+    ap.add_argument("--budget", type=Path)
+    ap.add_argument("--attempts", type=Path, help="JSON array of ResearchProgramAttempt artifacts")
+    ap.add_argument("--ledger", type=Path, help="current ResearchProgramLedger artifact")
+    ap.add_argument("--previous-ledger", type=Path, help="immediately previous ledger artifact")
     args = ap.parse_args()
+
+    if args.ledger is not None:
+        current = load_json(args.ledger)
+        previous = load_json(args.previous_ledger) if args.previous_ledger is not None else None
+        errors = validate_ledger_chain(current, previous)
+        if errors:
+            for err in errors:
+                print(err)
+            return 1
+        print("research-program append-only ledger validation passed")
+        return 0
+
+    if args.budget is None or args.attempts is None:
+        ap.error("provide --ledger [--previous-ledger] or both --budget and --attempts")
 
     budget = load_json(args.budget)
     attempts = load_json(args.attempts)

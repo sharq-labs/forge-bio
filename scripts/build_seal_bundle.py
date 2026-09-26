@@ -88,6 +88,13 @@ def build_manifest(
     power_engine_path: Path,
     created_at: str,
     created_by_role: str,
+    selection_provenance_schema_path: Path = ROOT / "schemas" / "big0f-selection-provenance.v1.schema.json",
+    nuisance_run_schema_path: Path = ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json",
+    provenance_verifier_path: Path = ROOT / "scripts" / "verify_big0f_provenance.py",
+    provider_audit_schema_path: Path = ROOT / "schemas" / "big0f-provider-audit.v1.schema.json",
+    adjudicator_independence_schema_path: Path = ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json",
+    external_authority_verifier_path: Path = ROOT / "scripts" / "verify_external_authorities.py",
+    curation_audit_schema_path: Path = ROOT / "schemas" / "big0f-curation-audit.v1.schema.json",
 ) -> dict[str, Any]:
     frame_digest = sha256_file(disease_frame_path)
     beacon = _load_json(randomness_beacon_path)
@@ -137,6 +144,13 @@ def build_manifest(
         "adjudication_policy_schema_sha256": sha256_file(adjudication_policy_schema_path),
         "nuisance_manifest_schema_sha256": sha256_file(nuisance_manifest_schema_path),
         "power_analysis_schema_sha256": sha256_file(power_analysis_schema_path),
+        "selection_provenance_schema_sha256": sha256_file(selection_provenance_schema_path),
+        "nuisance_run_schema_sha256": sha256_file(nuisance_run_schema_path),
+        "provenance_verifier_sha256": sha256_file(provenance_verifier_path),
+        "provider_audit_schema_sha256": sha256_file(provider_audit_schema_path),
+        "adjudicator_independence_schema_sha256": sha256_file(adjudicator_independence_schema_path),
+        "external_authority_verifier_sha256": sha256_file(external_authority_verifier_path),
+        "curation_audit_schema_sha256": sha256_file(curation_audit_schema_path),
         "power_engine_sha256": sha256_file(power_engine_path),
     }
 
@@ -173,6 +187,13 @@ def verify_manifest(
         "adjudication_policy_schema_sha256": sha256_file(component_paths["adjudication_policy_schema"]),
         "nuisance_manifest_schema_sha256": sha256_file(component_paths["nuisance_manifest_schema"]),
         "power_analysis_schema_sha256": sha256_file(component_paths["power_analysis_schema"]),
+        "selection_provenance_schema_sha256": sha256_file(component_paths.get("selection_provenance_schema", ROOT / "schemas" / "big0f-selection-provenance.v1.schema.json")),
+        "nuisance_run_schema_sha256": sha256_file(component_paths.get("nuisance_run_schema", ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json")),
+        "provenance_verifier_sha256": sha256_file(component_paths.get("provenance_verifier", ROOT / "scripts" / "verify_big0f_provenance.py")),
+        "provider_audit_schema_sha256": sha256_file(component_paths.get("provider_audit_schema", ROOT / "schemas" / "big0f-provider-audit.v1.schema.json")),
+        "adjudicator_independence_schema_sha256": sha256_file(component_paths.get("adjudicator_independence_schema", ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json")),
+        "external_authority_verifier_sha256": sha256_file(component_paths.get("external_authority_verifier", ROOT / "scripts" / "verify_external_authorities.py")),
+        "curation_audit_schema_sha256": sha256_file(component_paths.get("curation_audit_schema", ROOT / "schemas" / "big0f-curation-audit.v1.schema.json")),
         "power_engine_sha256": sha256_file(component_paths["power_engine"]),
     }
     for key, actual in checks.items():

@@ -32,6 +32,8 @@ Model lift, biological-model rankings, nuisance-model lift, or ambiguity outcome
 
 If none pass, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
 
+Machine-enforcement requirement: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair, and evidence digests for provider availability and observation-window feasibility. The evaluator reconstructs the first passing pair; a later favorable pair cannot be declared manually.
+
 ## 2. Disease sampling
 
 Construct the eligible disease frame mechanically from the as-of-T vocabulary and B-TGT common-complex germline regime.
@@ -71,11 +73,15 @@ If more than 150 candidate events exist, select 150 with a sealed stratified ran
 
 No famous/manual disease additions enter the decision dataset.
 
+The evaluator reconstructs the first 15 diseases from the sealed frame + verified beacon. It then recomputes the 12→15 expansion mechanically from the raw event universe. A pilot result that stops early, expands unnecessarily, or reports a different disease order is invalid.
+
 ## 3. Pilot event sampling
 
 For each selected disease, enumerate candidate post-T genetic events in (T, T+H] using the frozen outcome-discovery procedure.
 
 All enumerated events are retained unless the 150-event cap applies.
+
+When the cap applies, `scripts/select_big0f_sample.py` performs deterministic keyed sampling over the immutable raw event universe, first preserving at least one event from every event-bearing disease and then filling remaining slots by keyed hash order. The selected event IDs are recorded in the selection-provenance artifact and are independently reconstructed by the evaluator.
 
 Events are grouped into ScientificEventFamily / GeneticDiscoveryEventFamily before adjudication.
 
@@ -172,6 +178,8 @@ criticality: CRITICAL | REQUIRED | OPTIONAL
 
 Current availability is not accepted as evidence of historical reconstructability.
 
+Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. Required-field availability, coverage distribution, source-family count/IDs, and ancestry metadata coverage are deterministically re-derived from that artifact before GO can be evaluated. Provider-coupling and ancestry adequacy assertions must carry immutable evidence digests.
+
 ### Required-field availability score
 
 The GO/REDESIGN/NO-GO "archived required-field availability" metric is computed as:
@@ -256,6 +264,8 @@ The nuisance manifest requires content-free disease-specific attention volume an
 
 This is a nuisance-saturation / feasibility analysis, not a Forge Bio performance experiment.
 
+The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact. Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The evaluator re-derives the headline nuisance metrics from the event-rank records.
+
 Report:
 - median percentile rank of positive events under nuisance only;
 - distribution by disease;
@@ -275,6 +285,8 @@ The pilot outputs:
 - observed dependence clusters.
 
 These feed a simulation-based confirmatory power analysis.
+
+V0 does **not** accept a caller-supplied disease-level standard deviation. Because BIG 0F is NUISANCE_ONLY and therefore cannot empirically observe the future paired biological-model lift, the power artifact uses a transparent planning proxy: the sample standard deviation of per-disease mean positive rank fractions from the bound nuisance-run artifact. The exact derivation method is recorded as `PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1` and is recomputed from raw rank records. This closes favorable manual-SD selection but must not be described as an empirical estimate of biological-lift variance; that model assumption remains part of confirmatory power sensitivity reporting.
 
 Planning confirmatory defaults:
 
@@ -340,6 +352,7 @@ GO requires all:
 - symmetric non-event audit completed at the frozen sample size;
 - independent duplicate-adjudication minimum coverage completed;
 - nuisance headroom not saturated under both the median-rank and sealed top-1%-positive-fraction rules;
+- event-bearing disease fraction meets the sealed diversity threshold;
 - simulation-based target power >= 0.80 at the frozen alpha/effect;
 - untouched diseases remain available for sealed confirmation.
 
@@ -401,3 +414,17 @@ decision_consequence
 The MAR must report a sensitivity table around each threshold that materially changes GO/REDESIGN/NO-GO.
 
 If the conclusion flips under a small scientifically plausible threshold change, the correct outcome is REDESIGN / INCONCLUSIVE rather than selectively choosing the favorable threshold.
+
+
+## 15. Executable evidence binding added by preflight hardening
+
+A GO-capable pilot evaluation requires all of the following machine-verifiable artifacts in addition to the scalar result:
+
+- selection provenance for the full cutoff/horizon grid, deterministic disease expansion, raw event universe, and capped event IDs;
+- the fitted nuisance-only run with exact frozen feature families and immutable feature/model/preprocessing digests;
+- a field-level provider audit artifact;
+- a second-adjudicator independence attestation bound to role-registry and independence-evidence digests;
+- a power artifact deterministically rebuilt from the bound nuisance-run ranks;
+- real external-authority verification: OpenTimestamps proof verification for timestamp-service attestations, an independently fetched OSF record containing the exact committed digest for public-registry attestations, and an independently fetched DRAND round matching the sealed randomness.
+
+A JSON field that merely says `VERIFIED` is not sufficient for BIG 0F claim-valid execution.

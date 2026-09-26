@@ -14,8 +14,7 @@
     "secondary_gene_assignment_classes",
     "primary_study_ascertainment_classes",
     "other_high_specificity_method_allowed",
-    "label_feature_method_coupling_sensitivity_required",
-    "digest"
+    "label_feature_method_coupling_sensitivity_required"
   ],
   "properties": {
     "policy_id": {
@@ -62,10 +61,6 @@
     },
     "label_feature_method_coupling_sensitivity_required": {
       "const": true
-    },
-    "digest": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }

@@ -23,6 +23,5 @@
     "BIOBANK_WIDE"
   ],
   "other_high_specificity_method_allowed": false,
-  "label_feature_method_coupling_sensitivity_required": true,
-  "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  "label_feature_method_coupling_sensitivity_required": true
 }
