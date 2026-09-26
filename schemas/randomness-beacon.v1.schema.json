@@ -16,7 +16,10 @@
     "frame_digest",
     "frame_sealed_at",
     "frame_seal_attestation_id",
-    "digest"
+    "digest",
+    "selection_rule",
+    "previous_round_id",
+    "previous_round_published_at"
   ],
   "properties": {
     "beacon_id": {
@@ -66,6 +69,17 @@
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_rule": {
+      "const": "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL"
+    },
+    "previous_round_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "previous_round_published_at": {
+      "type": "string",
+      "format": "date-time"
     }
   }
 }
