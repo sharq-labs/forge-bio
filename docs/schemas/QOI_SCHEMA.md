@@ -10,6 +10,7 @@ Every governed study must instantiate one Question of Interest (QoI).
 question_id: string
 schema_version: string
 benchmark_family: string
+benchmark_role: string
 hypothesis_type: string
 
 disease_scope:
@@ -25,6 +26,10 @@ future_endpoint:
   primary_subtype: string
   endpoint_policy_version: string
   evidence_quality_policy_version: string
+  pre_t_genetic_state_policy_version: string
+  phenotype_match_policy_version: string
+  gene_assignment_policy_version: string
+  replication_policy_version: string
 
 evaluation_horizon:
   duration: string
@@ -33,6 +38,7 @@ evaluation_horizon:
 estimand_id: string
 primary_metric_id: string
 primary_review_budget_or_k: string
+secondary_all_frame_utility_metric_id: string
 baseline_family_ids: [string]
 discoverability_control_id: string
 
@@ -57,6 +63,7 @@ claim_boundary: string
 question_id: B-TGT-E1-v0-Q1
 schema_version: qoi-v1
 benchmark_family: B-TGT
+benchmark_role: B-TGT-A1-disease-gene-association-prioritization
 hypothesis_type: TargetAssociationCandidate
 
 disease_scope:
@@ -72,6 +79,10 @@ future_endpoint:
   primary_subtype: TO_BE_FROZEN
   endpoint_policy_version: e1-v0
   evidence_quality_policy_version: TO_BE_FROZEN
+  pre_t_genetic_state_policy_version: pre-t-genetic-state-v1
+  phenotype_match_policy_version: phenotype-match-v1
+  gene_assignment_policy_version: outcome-gene-assignment-v1
+  replication_policy_version: genetic-replication-v1
 
 evaluation_horizon:
   duration: TO_BE_FROZEN
@@ -80,6 +91,7 @@ evaluation_horizon:
 estimand_id: b-tgt-e1-estimand-v0
 primary_metric_id: TO_BE_FROZEN
 primary_review_budget_or_k: TO_BE_FROZEN
+secondary_all_frame_utility_metric_id: observed-event-yield-per-total-review-budget
 baseline_family_ids:
   - random
   - historical-attention
@@ -89,5 +101,5 @@ baseline_family_ids:
 discoverability_control_id: discoverability-v0
 
 context_of_use_id: research-prioritization-v1
-claim_boundary: biological prioritization only; no intervention-direction or clinical claim
+claim_boundary: disease-gene association prioritization only; no causal-target, intervention-direction, tractability, or clinical claim
 ```
