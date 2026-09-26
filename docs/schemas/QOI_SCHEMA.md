@@ -4,7 +4,7 @@
 
 Every governed study must instantiate one Question of Interest (QoI).
 
-Executable companion: [QoI JSON Schema](../../../schemas/qoi.v1.schema.json).
+Executable companion: [QoI JSON Schema](../../schemas/qoi.v1.schema.json).
 
 ## Required schema
 
