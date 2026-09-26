@@ -1390,3 +1390,74 @@ L6 additionally requires:
 - disclosure of any prediction-to-research influence risk.
 
 Normative policy: [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md).
+
+---
+
+## 43. B-TGT-E1 critical-path contract after independent hostile review
+
+### 43.1 Biological value must be incremental over nuisance structure
+
+The primary scientific claim is not:
+
+> Forge Bio beats random / publication count.
+
+It is:
+
+> Pre-T biological evidence provides reproducible incremental ranking value beyond a preregistered Combined Nuisance Model built from as-of-T attention, discoverability, genomic architecture, cross-trait pleiotropy, historical observability, and source/measurement opportunity.
+
+The primary confirmatory comparator is therefore nuisance-only versus nuisance-plus-biological-signal under matched temporal protocol.
+
+### 43.2 Primary gene labels must resist attention circularity
+
+AUTHOR_NAMED, NEAREST_GENE, positional-only, generic database-gene, modern-L2G-only, or current-curation-only assignments cannot independently create a primary B-TGT-E1 gene positive.
+
+Primary labels require a frozen high-specificity assignment class under ADR-020.
+
+If the resulting event set is too sparse or remains attention-coupled, the benchmark REDESIGNS to a locus-level or otherwise attention-resistant endpoint.
+
+### 43.3 Confirmatory statistics must be decision-complete
+
+A confirmatory MAP freezes:
+- null/alternative;
+- test statistic;
+- direction;
+- alpha;
+- minimum scientifically meaningful effect;
+- target power;
+- power analysis;
+- numeric success rule;
+- confirmatory-generation / alpha-spending budget.
+
+A free-text success threshold is invalid.
+
+### 43.4 Pilot contamination
+
+Every case inspected in BIG 0F is DEVELOPMENT_EXPOSED and cannot enter the strongest-tier sealed generation.
+
+### 43.5 Independent adjudication / custody
+
+Strongest-tier interpretation requires operational independence, not merely named roles.
+
+At minimum:
+- ranking team;
+- outcome adjudicator;
+- lockbox custodian
+
+are separated, and BIG 0F includes independent duplicate adjudication.
+
+If independence cannot be provided, claim maturity is capped rather than silently waived.
+
+### 43.6 Machine enforcement
+
+Scientific artifact validity requires:
+1. JSON Schema structural validation;
+2. format validation;
+3. cross-field scientific semantic invariants;
+4. hostile-review regression tests.
+
+Field presence alone does not establish scientific validity.
+
+Normative decisions:
+- [ADR-020](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
+- [ADR-021](adr/ADR-021-big-0f-pilot-protocol.md)
+- [BIG_0F_PROTOCOL.md](BIG_0F_PROTOCOL.md)
