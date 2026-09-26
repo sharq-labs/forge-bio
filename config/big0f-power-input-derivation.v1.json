@@ -25,5 +25,7 @@
     "scenario_instability": "REDESIGN",
     "power_below_target_under_primary_conservative_scenario": "NO_GO"
   },
-  "frozen_at": "2026-09-26T00:00:00Z"
+  "frozen_at": "2026-09-26T00:00:00Z",
+  "variance_source_discovery_policy": "SEALED_EXHAUSTIVE_ELIGIBLE_SOURCE_REGISTRY",
+  "variance_source_registry_required": true
 }
