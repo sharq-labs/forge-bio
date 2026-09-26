@@ -24,7 +24,10 @@
     "negation_evaluation_status",
     "null_result_evaluation_status",
     "qualification_threshold_artifact_id",
-    "meets_qualification_thresholds"
+    "meets_qualification_thresholds",
+    "minimum_sample_size_required",
+    "minimum_precision_required",
+    "minimum_recall_required"
   ],
   "properties": {
     "quality_card_id": {
@@ -149,6 +152,20 @@
     },
     "meets_qualification_thresholds": {
       "type": "boolean"
+    },
+    "minimum_sample_size_required": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "minimum_precision_required": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "minimum_recall_required": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
     }
   },
   "allOf": [
