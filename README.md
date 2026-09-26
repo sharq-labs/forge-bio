@@ -145,7 +145,7 @@ Do not start production scientific code before that gate.
 - [Machine-Verifiable JSON Schemas](schemas/README.md)
 - [Repository License](LICENSE)
 - [Disease / Pathogen / Therapeutic Profile Model](docs/DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
-- [Scientific Digital Twin Architecture](docs/SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [Forge Bio Scientific Twin Architecture](docs/SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
 - [Scientific Twin JSON Schema](schemas/scientific-twin.v1.schema.json)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
@@ -178,9 +178,9 @@ Do **not** start production scientific code while any P0 blocker remains active.
 Once P0 is closed, run a final red-team review against the frozen commit. Only then declare **GO FOR CORE SCIENTIFIC CODE**.
 
 
-## Scientific digital twins
+## Forge Bio Scientific Twins
 
-Forge Bio uses a maturity hierarchy rather than treating every model as a digital twin:
+Forge Bio uses a project-defined **research Scientific Twin** maturity hierarchy rather than treating every model as a clinical/health digital twin:
 
 ```text
 T0_PROFILE_ONLY
