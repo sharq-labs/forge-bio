@@ -130,6 +130,27 @@
 - [ ] Implement and run the local canonical seal-bundle build/verify/tamper dry run before BIG 0F.
 - [ ] External OpenTimestamps/OSF seal mechanism dry-run tested end-to-end with synthetic artifacts.
 
+### Round 2 false-GO closure plan
+
+- [x] Event-bearing disease diversity is a formal GO gate with sensitivity handling.
+- [x] First-passing cutoff/horizon selection requires a reconstructable feasibility ledger.
+- [x] Disease expansion from 12 to 15 is prefix-only and event-count-triggered.
+- [x] >150-event capping requires a committed raw universe and deterministic disease-preserving sampling.
+- [x] A freely supplied disease-level SD is prohibited; power planning requires a frozen derivation/scenario contract without biological-arm leakage.
+- [x] Actual nuisance execution must bind to the complete frozen nuisance manifest and reproducible rank outputs.
+- [x] External timestamp/registry/beacon trust cannot be established by a self-declared VERIFIED field.
+- [x] Provider, applicability, curation, and adjudicator summary states must be regenerable from evidence artifacts.
+- [x] Confirmatory program history must be append-only/hash-chained and externally anchorable.
+- [x] One canonical endpoint decision semantics source is required.
+- [x] Threshold provenance/digest hygiene and locus-level robustness requirements are specified.
+- [ ] Freeze the Power Input Derivation Contract before adjudication.
+- [ ] Freeze the Nuisance Execution Artifact contract before adjudication.
+- [ ] Freeze provider/applicability/curation/adjudicator evidence-artifact schemas before adjudication.
+- [ ] Complete independent external-authority/beacon dry run before adjudication.
+- [ ] Complete one final hostile review of the frozen closure contracts.
+
+Normative detail: [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md).
+
 ### Feasibility and governance
 
 - [x] BIG 0F pilot result has a machine-readable schema.
