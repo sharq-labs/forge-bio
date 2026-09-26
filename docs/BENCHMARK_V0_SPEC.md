@@ -127,7 +127,20 @@ PreTGeneticState
     AMBIGUOUS
 ```
 
-`NO_SIGNAL_OBSERVED` means no relevant signal was found after the preregistered historical audit with adequate coverage. It is not an ontological claim that no signal existed anywhere.
+`NO_SIGNAL_OBSERVED` means no relevant signal was found after the preregistered historical audit **and** the candidate meets the MAP-frozen minimum HistoricalGeneticSearchCoverage grade. It is not an ontological claim that no signal existed anywhere.
+
+If historical search/measurement coverage is below the frozen threshold, the state is `AMBIGUOUS`, not `NO_SIGNAL_OBSERVED`.
+
+The novelty audit also distinguishes:
+
+```text
+KNOWN_TO_RANKER_AT_T
+KNOWN_PUBLICLY_AT_T
+```
+
+A pre-T result that was publicly available but absent from the ranker's historical provider snapshot is a provider/reconstruction coverage failure, not a novel future discovery.
+
+Normative policy: [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md).
 
 ### E1-NOVEL-STRICT — new human genetic support
 
@@ -188,6 +201,10 @@ A qualifying event must:
 10. satisfy GeneticReplicationPolicy when the subtype is E1-REPLICATION.
 
 The endpoint-quality payload retains, where applicable:
+- canonical variant/locus IDs;
+- genome assembly/reference sequence;
+- harmonization artifact ID;
+- LD reference-panel/method ID where a proxy relation is used;
 - sample size;
 - effect size;
 - standard error;
@@ -204,6 +221,10 @@ The endpoint-quality payload retains, where applicable:
 Genome-wide significance alone is not a complete endpoint-quality rule.
 
 The precise quality threshold is frozen before sealed evaluation.
+
+Genomic harmonization is part of scientific provenance, not a hidden preprocessing utility. Ambiguous strand/orientation, unresolved liftover, or unresolved variant normalization fails closed for strict replication matching.
+
+Normative genomic policy: [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md).
 
 ## 9. Locus/variant to gene assignment
 
@@ -353,10 +374,23 @@ Where practical, sealed disease identities remain hidden from the ranking method
 
 Distinct database rows, publications, or PMIDs do not guarantee independent evidence.
 
+Every OutcomeEvent belongs to a canonical `ScientificEventFamily` when multiple records/publications/databases are manifestations of the same underlying discovery.
+
+For genetic outcomes, use `GeneticDiscoveryEventFamily` to group locus-level discovery and its gene assignments.
+
+Default V0 primary-credit rule:
+
+```text
+one scientific event family receives at most one primary event credit
+```
+
+Multiple gene assignments from one locus do not automatically create multiple independent future discoveries.
+
 Every OutcomeEvent carries, where applicable:
 
 ```text
 outcome_event_id
+event_family_id
 endpoint_type
 event_time
 first_publicly_available_interval
@@ -376,9 +410,13 @@ derivation_type
 evaluation_identity_bridge_version
 ```
 
+Cohort, Dataset, Biobank, Consortium, and SampleSet references must resolve through the identity layer rather than free-text aliases.
+
 UNKNOWN cohort/sample overlap is not interpreted as independent replication.
 
 A post-T annotation that only re-curates pre-T evidence does not qualify as new independent support.
+
+Normative event/source policy: [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md).
 
 ## 17. Discoverability / observation-propensity control
 
@@ -408,6 +446,10 @@ Candidate variables may include, where available and scientifically justified:
 These controls are benchmark comparators; they are not automatically allowed as ranker features.
 
 A claimed biological-discovery signal must be distinguishable from discoverability/measurement opportunity.
+
+The benchmark also records `GeneticObservabilityAtT` and reports a preregistered historically-observable sensitivity universe. Historical identity eligibility is not assumed to imply equal genetic measurability across eras/technologies.
+
+This observability sensitivity is constructed from as-of-T technology/source criteria only and may not use future outcomes.
 
 ## 18. Baselines
 
@@ -557,11 +599,25 @@ Each validation case/outcome set belongs to a versioned generation with:
 - case-set digest;
 - outcome-snapshot digest;
 - access count;
+- maximum disclosure level observed;
 - ACTIVE / SPENT_FOR_MODEL_SELECTION / RETIRED status.
+
+Disclosure levels are:
+
+```text
+AGGREGATE_ONLY
+SUBGROUP
+PER_CASE
+FULL_LABEL
+```
+
+Adaptive risk is evaluated from both access count and feedback granularity.
 
 A generation that materially influences model/feature/endpoint selection is marked spent and is not described as untouched evidence.
 
-## 27. Future outcome snapshot commitment
+## 27. Future outcome discovery and snapshot commitment
+
+For strongest L3 evaluation, sealed future-event discovery/adjudication is completed and committed **before model rank/order is revealed**. Searching for additional outcome events after seeing ranks automatically downgrades the strongest confirmatory tier.
 
 Before sealed evaluation, freeze/commit:
 - future outcome source release IDs;
@@ -571,9 +627,15 @@ Before sealed evaluation, freeze/commit:
 - evaluation identity-bridge digest;
 - phenotype-match policy version;
 - gene-assignment policy version;
-- replication policy version.
+- replication policy version;
+- scientific-event-family ledger digest;
+- provider-lineage / input-outcome coupling assessment digest.
 
-Changing a provider release, adjudication batch, mapping bridge, or outcome policy creates a new evaluation artifact/generation.
+Changing a provider release, adjudication batch, event-family ledger, mapping bridge, or outcome policy creates a new evaluation artifact/generation.
+
+Past input providers and Future outcome providers are assessed for shared upstream sources, curation pipelines, ontologies, and identity-mapping families. Where coupling is material, the MAR includes same-pipeline exclusion or external-source sensitivity.
+
+Normative governance: [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md).
 
 Normative governance: [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md).
 
@@ -587,12 +649,15 @@ A sealed confirmatory claim requires all of:
 5. OutcomeGeneAssignmentPolicy passed;
 6. OutcomePhenotypeMatchPolicy passed;
 7. GeneticReplicationPolicy passed when applicable;
-8. exact Future Outcome snapshot/ledger commitment matches the frozen MAP;
-9. primary delta exceeds the preregistered threshold against the strongest required attention/discoverability control;
-10. confidence interval satisfies the preregistered rule and dependence sensitivity is reported;
-11. signal is not driven by one disease/family/research-intensity stratum;
-12. null/placebo controls do not reproduce the result;
-13. sensitivity analyses show no material identity, reconstruction, phenotype-match, gene-assignment, replication, or outcome-source artifact.
+8. exact Future Outcome snapshot/ledger/event-family commitment matches the frozen MAP;
+9. strict novelty meets the frozen HistoricalGeneticSearchCoverage threshold;
+10. genomic variant/locus harmonization and LD provenance pass;
+11. input/outcome provider coupling is measured and required sensitivities pass;
+12. primary delta exceeds the preregistered threshold against the strongest required attention/discoverability control;
+13. confidence interval satisfies the preregistered rule and dependence sensitivity is reported;
+14. signal is not driven by one disease/family/research-intensity stratum;
+15. null/placebo controls do not reproduce the result;
+16. sensitivity analyses show no material identity, reconstruction, phenotype-match, gene-assignment, replication, observability, event-family, provider-coupling, or outcome-source artifact.
 
 Results are reported even when negative.
 
