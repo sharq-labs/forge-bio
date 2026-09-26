@@ -13,7 +13,10 @@
     "digest",
     "non_event_duplicate_review_min_fraction",
     "non_event_duplicate_review_min_count_floor",
-    "non_event_review_summary"
+    "non_event_review_summary",
+    "event_case_set_digest",
+    "non_event_case_set_digest",
+    "duplicate_review_selection_digest"
   ],
   "properties": {
     "audit_id": {
@@ -289,6 +292,18 @@
           "maximum": 1
         }
       }
+    },
+    "event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "non_event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "duplicate_review_selection_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }
