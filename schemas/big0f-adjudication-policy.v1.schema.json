@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-adjudication-policy.v1.schema.json",
+  "title": "Forge Bio BIG 0F Adjudication Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "policy_id",
+    "schema_version",
+    "status",
+    "primary_endpoint_subtype",
+    "primary_metric_id",
+    "primary_gene_assignment_classes",
+    "secondary_gene_assignment_classes",
+    "primary_study_ascertainment_classes",
+    "other_high_specificity_method_allowed",
+    "label_feature_method_coupling_sensitivity_required",
+    "digest"
+  ],
+  "properties": {
+    "policy_id": {
+      "const": "BIG0F-ADJUDICATION-V1"
+    },
+    "schema_version": {
+      "const": "big0f-adjudication-policy-v1"
+    },
+    "status": {
+      "const": "FROZEN"
+    },
+    "primary_endpoint_subtype": {
+      "const": "E1-NOVEL-STRICT"
+    },
+    "primary_metric_id": {
+      "const": "EVENT_RANK_PERCENTILE_V1"
+    },
+    "primary_gene_assignment_classes": {
+      "const": [
+        "HYPOTHESIS_FREE_CODING_OR_LOF",
+        "HIGH_CONFIDENCE_FINE_MAPPING",
+        "PREREGISTERED_COLOCALIZATION"
+      ]
+    },
+    "secondary_gene_assignment_classes": {
+      "const": [
+        "AUTHOR_NAMED",
+        "NEAREST_GENE",
+        "POSITIONAL_PROXIMITY_ONLY",
+        "GENERIC_DATABASE_GENE_FIELD",
+        "MODERN_L2G_ONLY",
+        "TARGETED_CANDIDATE_GENE_CODING"
+      ]
+    },
+    "primary_study_ascertainment_classes": {
+      "const": [
+        "GENOME_WIDE",
+        "EXOME_WIDE",
+        "BIOBANK_WIDE"
+      ]
+    },
+    "other_high_specificity_method_allowed": {
+      "const": false
+    },
+    "label_feature_method_coupling_sensitivity_required": {
+      "const": true
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}
