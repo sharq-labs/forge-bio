@@ -1,6 +1,8 @@
-# Scientific Digital Twin Architecture
+# Forge Bio Scientific Twin Architecture
 
 **Status:** NORMATIVE PRE-CODE CANDIDATE — BIG 0R4
+
+**Terminology scope:** "Forge Bio Scientific Twin" is a project-defined research construct. It is not presented as a patient/clinical health digital twin merely by using the word twin.
 
 ## 1. Goal
 
@@ -38,11 +40,25 @@ ScientificDigitalTwin
     profile_snapshot_ids
     evidence_snapshot_ids
 
+    cutoff?
+
     state_definition_id
-    state_model_id?
+    state_model_artifact_id?
     parameter_artifact_ids
 
-    update_policy_id
+    update_policy_artifact_id
+
+    prediction_spec_id?
+    map_id?
+    mar_ids
+    validation_generation_id?
+    benchmark_design_provenance_id?
+
+    perturbation_artifact_ids
+    sensitivity_artifact_ids
+    causal_assumption_set_id?
+    intervention_semantics_id?
+    identifiability_status
 
     verification_artifact_ids
     validation_artifact_ids
@@ -77,6 +93,8 @@ Patient-specific twins are excluded from V1.
 
 T1+ twins expose versioned state.
 
+For STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR, the twin object itself carries an explicit `cutoff`. `valid_at` is not a substitute for the historical admission boundary.
+
 ```text
 TwinState
     state_id
@@ -104,6 +122,35 @@ Both remain addressable.
 ## 6. Mechanistic state models
 
 T2+ requires an explicit state model.
+
+The **state-model structure itself is knowledge-bearing unless proven otherwise**. A model topology, manually chosen mechanism, causal edge set, state variable set, or transition rule may encode later biomedical knowledge even when its numeric parameters were fitted only on historical data.
+
+Therefore use:
+
+```text
+TwinStateModelArtifact
+    state_model_artifact_id
+    structure_definition
+    model_family
+    structural_assumption_ids
+    source_evidence_ids
+    created_from_snapshot_ids
+    knowledge_bearingness
+    knowledge_watermark
+    provenance
+    digest
+
+TwinUpdatePolicyArtifact
+    update_policy_artifact_id
+    update_rule
+    source_dependencies
+    knowledge_bearingness
+    knowledge_watermark
+    provenance
+    digest
+```
+
+The twin watermark joins profile/evidence, state-model structure, update policy, parameters, mappings, representations, and any other knowledge-bearing dependency.
 
 Examples of allowed model families include:
 - causal/state-transition graphs;
@@ -135,6 +182,10 @@ TwinValidationArtifact
     validation_id
     twin_id
     model_version
+    map_id
+    mar_id
+    validation_generation_id
+    benchmark_design_provenance_id
     prediction_target
     prediction_horizon
     dataset_snapshot_ids
@@ -147,9 +198,29 @@ TwinValidationArtifact
     digest
 ```
 
-## 8. Intervention simulation
+## 8. Intervention simulation and causal claim boundary
 
 T4 is research simulation only.
+
+A perturbation operator is not automatically a causal intervention. T4 therefore requires an explicit:
+
+```text
+CausalAssumptionSet
+InterventionSemantics
+IdentifiabilityStatus
+```
+
+Allowed maturity-supporting identifiability states are:
+
+```text
+IDENTIFIED
+PARTIALLY_IDENTIFIED
+ASSUMPTION_DEPENDENT
+```
+
+`NOT_IDENTIFIED` or `UNKNOWN` cannot support T4 maturity.
+
+A favorable associational simulation cannot be relabelled as an intervention effect.
 
 A perturbation is a formal computational experiment:
 
@@ -186,8 +257,11 @@ A core Forge Bio capability is time-indexed twin reconstruction:
 Twin(subject, T)
 ```
 
-A T3/T4 historical twin is valid only if:
+A T2/T3/T4 historical twin is valid only if:
+- the twin has an explicit cutoff T;
 - model-visible evidence is admissible at T;
+- state-model structure/transition rules are admissible at T;
+- update-policy knowledge is admissible at T;
 - parameters are fit only from data allowed by T;
 - feature/preprocessing artifacts obey T;
 - future outcomes are excluded from fitting and model choice;
@@ -258,6 +332,13 @@ Checks:
 - state-transition integrity.
 
 ### Validation
+
+T3/T4 validation reuses the platform's existing governance rather than creating a parallel regime:
+- frozen MAP;
+- MAR;
+- ValidationGeneration;
+- BenchmarkDesignProvenance;
+- lockbox/outcome commitments where the validation target uses sealed future outcomes.
 
 Checks:
 - held-out/future predictive performance;
