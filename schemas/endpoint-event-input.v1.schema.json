@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/endpoint-event-input.v1.schema.json",
+  "title": "Forge Bio Endpoint Event Input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "schema_version",
+    "fields",
+    "digest"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "endpoint-event-input-v1"
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "study_design_class": {
+          "enum": [
+            "GENOME_WIDE",
+            "EXOME_WIDE",
+            "BIOBANK_WIDE",
+            "TARGETED_CANDIDATE_GENE",
+            "OTHER",
+            "UNKNOWN"
+          ]
+        },
+        "p_value": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "sample_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "independence_status": {
+          "enum": [
+            "INDEPENDENT",
+            "NON_INDEPENDENT",
+            "UNKNOWN"
+          ]
+        },
+        "phenotype_relation": {
+          "enum": [
+            "EXACT",
+            "SAME_CONCEPT_DIFFERENT_DEFINITION",
+            "NARROWER",
+            "BROADER",
+            "SURROGATE",
+            "RISK_FACTOR",
+            "INTERMEDIATE_PHENOTYPE",
+            "RELATED",
+            "UNRESOLVED"
+          ]
+        },
+        "genomic_harmonization_status": {
+          "enum": [
+            "RESOLVED",
+            "AMBIGUOUS",
+            "UNKNOWN"
+          ]
+        },
+        "allele_direction_status": {
+          "enum": [
+            "CONSISTENT",
+            "CONFLICT",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "population_ancestry_status": {
+          "enum": [
+            "ADEQUATE",
+            "INADEQUATE",
+            "UNKNOWN"
+          ]
+        },
+        "replication_status": {
+          "enum": [
+            "REPLICATED",
+            "PARTIAL_REPLICATION",
+            "DIRECTION_CONFLICT",
+            "PHENOTYPE_MISMATCH",
+            "NON_INDEPENDENT",
+            "INCONCLUSIVE",
+            "UNRESOLVED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "heterogeneity_status": {
+          "enum": [
+            "ACCEPTABLE",
+            "CONCERN",
+            "UNKNOWN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "gene_assignment_class": {
+          "enum": [
+            "HYPOTHESIS_FREE_CODING_OR_LOF",
+            "HIGH_CONFIDENCE_FINE_MAPPING",
+            "PREREGISTERED_COLOCALIZATION",
+            "AUTHOR_NAMED",
+            "NEAREST_GENE",
+            "POSITIONAL_PROXIMITY_ONLY",
+            "GENERIC_DATABASE_GENE_FIELD",
+            "MODERN_L2G_ONLY",
+            "TARGETED_CANDIDATE_GENE_CODING"
+          ]
+        },
+        "historical_novelty_status": {
+          "enum": [
+            "NOVEL_CONFIRMED",
+            "KNOWN_AT_T",
+            "NOVELTY_AMBIGUOUS"
+          ]
+        },
+        "source_quality_status": {
+          "enum": [
+            "PRIMARY_SOURCE_VERIFIED",
+            "INDEPENDENT_REEXTRACTION",
+            "CURATED_ONLY",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}
