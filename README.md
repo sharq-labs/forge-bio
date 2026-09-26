@@ -110,7 +110,7 @@ Primary gene-level positives use high-specificity outcome-assignment classes. AU
 
 ## Pre-code status
 
-Current phase: **BIG 0F-0 Critical-Path Hardening → BIG 0F**
+Current phase: **BIG 0F Operational Preparation → BIG 0F**
 
 BIG 0R4/BIG 0R5 platform-extension work is frozen/deferred while BIG 0F-0 repairs the B-TGT-E1 critical path identified by independent hostile review.
 
@@ -133,6 +133,7 @@ Do not start production scientific code before that gate.
 - [Scientific Red-Team Gap Register](docs/SCIENTIFIC_RED_TEAM_GAPS.md)
 - [Plan Strength Audit](docs/PLAN_STRENGTH_AUDIT.md)
 - [BIG 0F V0 Pilot Protocol](docs/BIG_0F_PROTOCOL.md)
+- [Endpoint Evidence-Quality Rule Template](docs/ENDPOINT_QUALITY_RULE.md)
 - [Scientific Glossary](docs/GLOSSARY.md)
 - [Core Scientific Types](docs/CORE_TYPES.md)
 - [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
@@ -181,7 +182,14 @@ The readiness checklist and red-team gap register are authoritative.
 Current P0 work is **not** limited to empirical feasibility. BIG 0F-0 also contains critical protocol/operational gates identified by independent hostile review.
 
 Important remaining P0 work includes:
-- final frozen B-TGT-E1 estimand after feasibility evidence;
+
+Already machine-enforced in the operational-prep layer:
+- B-TGT-E1 estimand structure / zero-event / weighting contract;
+- endpoint-quality decision structure;
+- canonical seal-bundle builder and tamper detection;
+- BIG 0F result schema;
+- deterministic GO / REDESIGN / NO_GO evaluator.
+- exact confirmatory estimand instance (H, subtype, metric) after feasibility evidence;
 - final primary E1 subtype and endpoint evidence-quality threshold;
 - manual outcome-feasibility pilot and its ambiguity/coverage/curation/lineage measurements;
 - pilot GO / REDESIGN / NO-GO verdict;
