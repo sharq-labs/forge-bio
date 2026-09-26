@@ -36,6 +36,16 @@ required = [
     ROOT / "schemas" / "research-program-attempt.v1.schema.json",
     ROOT / "schemas" / "gene-model-release.v1.schema.json",
     ROOT / "schemas" / "confirmatory-program-budget.v1.schema.json",
+    ROOT / "schemas" / "estimand.v1.schema.json",
+    ROOT / "schemas" / "endpoint-quality-rule.v1.schema.json",
+    ROOT / "schemas" / "seal-bundle-manifest.v1.schema.json",
+    ROOT / "schemas" / "big0f-pilot-result.v1.schema.json",
+    ROOT / "scripts" / "build_seal_bundle.py",
+    ROOT / "scripts" / "evaluate_big0f.py",
+    ROOT / "tests" / "spec" / "test_seal_bundle.py",
+    ROOT / "tests" / "spec" / "test_big0f_decision.py",
+    ROOT / "tests" / "spec" / "test_big0f_operational_contracts.py",
+    ROOT / "docs" / "ENDPOINT_QUALITY_RULE.md",
     ROOT / "scripts" / "scientific_invariants.py",
     ROOT / "tests" / "spec" / "test_hostile_review_regressions.py",
     ROOT / "docs" / "BIG_0F_PROTOCOL.md",
@@ -152,6 +162,24 @@ for phrase in [
 audit = (ROOT / "docs" / "PLAN_STRENGTH_AUDIT.md").read_text(encoding="utf-8")
 if "No currently known major architecture/specification gap remains" in audit:
     errors.append("PLAN_STRENGTH_AUDIT still contains superseded no-known-gap conclusion")
+
+
+
+# BIG 0F operational-prep contract checks
+estimand_doc = (ROOT / "docs" / "BENCHMARK_ESTIMAND_V0.md").read_text(encoding="utf-8")
+if "STRUCTURE FROZEN" not in estimand_doc:
+    errors.append("B-TGT-E1 estimand structure must remain explicitly frozen")
+
+endpoint_doc = (ROOT / "docs" / "ENDPOINT_QUALITY_RULE.md").read_text(encoding="utf-8")
+if "STRUCTURE FROZEN / VALUES EMPIRICAL-OPEN" not in endpoint_doc:
+    errors.append("endpoint-quality rule must separate frozen structure from empirical threshold values")
+
+for phrase in [
+    "Local canonical seal-bundle build/verify/tamper dry run is executable and tested.",
+    "BIG 0F GO/REDESIGN/NO_GO decision rules are executable and deterministic.",
+]:
+    if phrase not in checklist:
+        errors.append(f"readiness checklist missing operational-prep closure: {phrase}")
 
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")

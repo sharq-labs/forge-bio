@@ -34,6 +34,8 @@ created_by_role
 
 Do not rely on filenames alone.
 
+The externally attested manifest digest is the root commitment. Verification must compare against that independently stored/registered digest; recomputing a fresh digest from the manifest under test is not sufficient.
+
 The plaintext random seed may be held by the independent custodian. The public/time-stamped bundle may contain only its cryptographic commitment if revealing the seed would compromise blinding.
 
 ## 3. Canonicalization
@@ -112,9 +114,12 @@ Perform a dry run with synthetic/non-study content:
 7. verify timestamp proof independently;
 8. create a test registration or documented registry dry run as allowed by the service;
 9. reconstruct the bundle from stored artifacts;
-10. verify all hashes;
-11. verify that a one-byte modification fails;
-12. record an ExternalSealAttestation fixture.
+10. validate the complete manifest against `schemas/seal-bundle-manifest.v1.schema.json`;
+11. compare the canonical manifest SHA-256 against the **externally attested digest** (not a digest recomputed from a potentially modified manifest);
+12. verify all component hashes;
+13. verify that a one-byte component modification fails;
+14. verify that any manifest-field mutation (protocol version, sampling algorithm, extra field, etc.) fails schema and/or attested-digest verification;
+15. record an ExternalSealAttestation fixture.
 
 Only after this dry run succeeds may the checklist item "seal mechanism identified and tested" be closed.
 

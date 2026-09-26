@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-pilot-result.v1.schema.json",
+  "title": "Forge Bio BIG 0F Pilot Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pilot_id",
+    "schema_version",
+    "protocol_digest",
+    "seal_attestation_ids",
+    "cutoff",
+    "horizon",
+    "disease_count",
+    "candidate_event_count",
+    "event_bearing_disease_count",
+    "assignment_metrics",
+    "ambiguity_metrics",
+    "provider_metrics",
+    "independence_metrics",
+    "adjudication_metrics",
+    "power_metrics",
+    "nuisance_headroom_metrics",
+    "decision",
+    "decision_reasons",
+    "digest",
+    "untouched_confirmatory_disease_count",
+    "high_specificity_positive_count",
+    "applicability_metrics",
+    "curation_metrics",
+    "threshold_sensitivity_stable"
+  ],
+  "properties": {
+    "pilot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-pilot-result-v1"
+    },
+    "protocol_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "seal_attestation_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "horizon": {
+      "enum": [
+        "3y",
+        "5y",
+        "7y",
+        "10y"
+      ]
+    },
+    "disease_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "candidate_event_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "event_bearing_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "assignment_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_eligible_fraction",
+        "author_named_fraction",
+        "nearest_gene_fraction",
+        "attention_assignment_association"
+      ],
+      "properties": {
+        "primary_eligible_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "author_named_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "nearest_gene_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "attention_assignment_association": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        }
+      }
+    },
+    "ambiguity_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "novelty_ambiguity_fraction",
+        "variant_harmonization_ambiguity_fraction",
+        "phenotype_ambiguity_fraction",
+        "sample_overlap_ambiguity_fraction",
+        "any_primary_endpoint_ambiguity_fraction"
+      ],
+      "properties": {
+        "novelty_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "variant_harmonization_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "phenotype_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sample_overlap_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "any_primary_endpoint_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "provider_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_field_availability_fraction",
+        "historical_search_coverage_distribution",
+        "provider_coupling_risk"
+      ],
+      "properties": {
+        "required_field_availability_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "historical_search_coverage_distribution": {
+          "type": "object",
+          "minProperties": 1
+        },
+        "provider_coupling_risk": {
+          "enum": [
+            "LOW",
+            "MODERATE",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "independence_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_family_deduplication_fraction",
+        "locus_to_many_gene_credit_impact",
+        "pre_t_cohort_reuse_fraction"
+      ],
+      "properties": {
+        "event_family_deduplication_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "locus_to_many_gene_credit_impact": {
+          "type": "number",
+          "minimum": 0
+        },
+        "pre_t_cohort_reuse_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "adjudication_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_review_fraction",
+        "primary_assignment_agreement",
+        "phenotype_agreement",
+        "duplicate_review_count",
+        "adjudicated_event_case_count"
+      ],
+      "properties": {
+        "duplicate_review_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "primary_assignment_agreement": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "phenotype_agreement": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "duplicate_review_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "adjudicated_event_case_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "power_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alpha",
+        "target_power",
+        "estimated_power",
+        "minimum_scientifically_meaningful_effect"
+      ],
+      "properties": {
+        "alpha": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.1
+        },
+        "target_power": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 0.99
+        },
+        "estimated_power": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "minimum_scientifically_meaningful_effect": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "nuisance_headroom_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "median_positive_rank_fraction",
+        "top_1pct_fraction",
+        "top_5pct_fraction"
+      ],
+      "properties": {
+        "top_1pct_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "top_5pct_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "median_positive_rank_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "GO",
+        "REDESIGN",
+        "NO_GO",
+        "INCONCLUSIVE"
+      ]
+    },
+    "decision_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "untouched_confirmatory_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "high_specificity_positive_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "applicability_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ancestry_metadata_coverage_fraction",
+        "ancestry_population_metadata_adequacy"
+      ],
+      "properties": {
+        "ancestry_metadata_coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ancestry_population_metadata_adequacy": {
+          "enum": [
+            "ADEQUATE",
+            "INADEQUATE",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "curation_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retrospective_curation_burden_assessment",
+        "median_minutes_per_event_case",
+        "symmetric_non_event_audit_complete",
+        "non_event_case_count",
+        "median_minutes_per_non_event_case"
+      ],
+      "properties": {
+        "retrospective_curation_burden_assessment": {
+          "enum": [
+            "ACCEPTABLE",
+            "EXCESSIVE",
+            "UNKNOWN"
+          ]
+        },
+        "median_minutes_per_event_case": {
+          "type": "number",
+          "minimum": 0
+        },
+        "symmetric_non_event_audit_complete": {
+          "type": "boolean"
+        },
+        "non_event_case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "median_minutes_per_non_event_case": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "threshold_sensitivity_stable": {
+      "type": "boolean"
+    }
+  }
+}

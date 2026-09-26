@@ -27,6 +27,10 @@ Files:
 - `research-program-attempt.v1.schema.json`
 - `gene-model-release.v1.schema.json`
 - `confirmatory-program-budget.v1.schema.json`
+- `estimand.v1.schema.json`
+- `endpoint-quality-rule.v1.schema.json`
+- `seal-bundle-manifest.v1.schema.json`
+- `big0f-pilot-result.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
@@ -45,3 +49,10 @@ BIG 0F-0 adds a second enforcement layer:
 - `tests/spec/test_hostile_review_regressions.py` for permanent adversarial regression tests.
 
 A frozen artifact is not considered valid merely because it passes JSON Schema.
+
+BIG 0F operational-prep contracts additionally provide:
+- deterministic seal-bundle construction + tamper detection;
+- structure-frozen vs confirmatory-instance estimand distinction;
+- endpoint-quality decision structure;
+- machine-readable pilot result;
+- deterministic GO / REDESIGN / NO_GO evaluation.

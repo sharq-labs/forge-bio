@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/estimand.v1.schema.json",
+  "title": "Forge Bio B-TGT-E1 Estimand v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "estimand_id",
+    "schema_version",
+    "status",
+    "benchmark_id",
+    "primary_population",
+    "conditioning_rule",
+    "disease_weighting",
+    "zero_event_policy",
+    "primary_contrast",
+    "horizon_selection_policy_ref",
+    "subtype_selection_policy_ref",
+    "primary_metric_selection_policy_ref",
+    "all_frame_utility_metric_id",
+    "frozen_at",
+    "digest"
+  ],
+  "properties": {
+    "estimand_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "b-tgt-e1-estimand-v1"
+    },
+    "status": {
+      "enum": [
+        "STRUCTURE_FROZEN",
+        "CONFIRMATORY_INSTANCE_FROZEN"
+      ]
+    },
+    "benchmark_id": {
+      "const": "B-TGT-E1-v0"
+    },
+    "primary_population": {
+      "const": "COMMON_COMPLEX_GERMLINE_DISEASE_TRAIT_GENETICS"
+    },
+    "conditioning_rule": {
+      "const": "QUALIFYING_FUTURE_EVENT_OBSERVED_WITHIN_H"
+    },
+    "disease_weighting": {
+      "const": "EQUAL_WEIGHT_ACROSS_EVENT_BEARING_DISEASES"
+    },
+    "zero_event_policy": {
+      "const": "RETAIN_IN_FRAME_NO_FABRICATED_RANK_SCORE_REPORT_ALL_FRAME_UTILITY"
+    },
+    "primary_contrast": {
+      "const": "ASCERTAINMENT_OPPORTUNITY_PLUS_DISEASE_EVIDENCE_MINUS_ASCERTAINMENT_OPPORTUNITY_ONLY"
+    },
+    "horizon_selection_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subtype_selection_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primary_metric_selection_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "all_frame_utility_metric_id": {
+      "const": "OBSERVED_EVENT_YIELD_AT_TOTAL_REVIEW_BUDGET"
+    },
+    "exact_horizon": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "3y",
+        "5y",
+        "7y",
+        "10y",
+        null
+      ]
+    },
+    "primary_endpoint_subtype": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "E1-NOVEL-STRICT",
+        "E1-MATURATION",
+        "E1-REPLICATION",
+        "E1-CROSSMODAL",
+        null
+      ]
+    },
+    "primary_metric_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "CONFIRMATORY_INSTANCE_FROZEN"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "exact_horizon",
+          "primary_endpoint_subtype",
+          "primary_metric_id"
+        ],
+        "properties": {
+          "exact_horizon": {
+            "type": "string",
+            "enum": [
+              "3y",
+              "5y",
+              "7y",
+              "10y"
+            ]
+          },
+          "primary_endpoint_subtype": {
+            "type": "string",
+            "enum": [
+              "E1-NOVEL-STRICT",
+              "E1-MATURATION",
+              "E1-REPLICATION",
+              "E1-CROSSMODAL"
+            ]
+          },
+          "primary_metric_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "STRUCTURE_FROZEN"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "exact_horizon": {
+            "type": "null"
+          },
+          "primary_endpoint_subtype": {
+            "type": "null"
+          },
+          "primary_metric_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}
