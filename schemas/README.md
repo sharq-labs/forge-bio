@@ -12,6 +12,12 @@ Files:
 - `virus-profile-extension.v1.schema.json`
 - `pathogen-host-profile.v1.schema.json`
 - `therapeutic-profile.v1.schema.json`
+- `quantity-definition.v1.schema.json`
+- `quantitative-observation.v1.schema.json`
+- `effect-estimate.v1.schema.json`
+- `measurement-process.v1.schema.json`
+- `numerical-verification.v1.schema.json`
+- `model-credibility.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
@@ -21,3 +27,6 @@ Rules:
 
 
 Scientific-twin/profile schemas are exercised by executable positive/negative contract tests under `tests/spec/`. A schema file merely parsing as JSON is not sufficient for readiness.
+
+
+BIG 0R5 schemas enforce quantitative/credibility semantics, including unit-required observations, missing/censoring state, custom-transform provenance, numerical-verification adequacy, and Context-of-Use-specific credibility conclusions.
