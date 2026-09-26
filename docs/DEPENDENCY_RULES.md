@@ -25,6 +25,10 @@ evidence --------+
   ↑
 knowledge
   ↑
+profiles
+  ↑
+twins
+  ↑
 hypotheses
   ↑
 ranking
@@ -73,6 +77,35 @@ Builds cutoff-specific projections from admitted evidence.
 
 Must not access unrestricted provider APIs or future storage at runtime.
 
+### profiles
+
+Build evidence-backed Disease/Pathogen/PathogenHost/Therapeutic profile snapshots from admitted identity/evidence/knowledge capabilities.
+
+Historical profile construction must not import:
+- FutureEvent/outcome repositories;
+- evaluation-only identity bridges;
+- unrestricted current/latest providers;
+- ranking results as biological evidence.
+
+### twins
+
+Twin construction receives only:
+- frozen profile snapshots;
+- admitted evidence snapshots;
+- HistoricalKnowledgeView or current-discovery equivalent;
+- versioned state-model/update-policy/parameter artifacts allowed by the run mode.
+
+STRICT_HISTORICAL / HISTORICAL_INPUT_MODERN_PRIOR twin construction must not import:
+- FutureEvent/outcome repositories;
+- lockbox readers;
+- evaluation-only identity bridges;
+- unrestricted current/latest provider clients;
+- future validation labels/results.
+
+Twin prediction/simulation output is not written back as EvidenceRecord.
+
+State-model structure, update policies, parameter artifacts, manually selected mechanism graphs, and pretrained representations are scientific dependencies and obey provenance/KnowledgeWatermark rules.
+
 ### hypotheses/ranking
 Receive HistoricalKnowledgeView + CandidateUniverse only.
 
@@ -91,9 +124,12 @@ Must not mutate historical evidence or candidate universes.
 ### validation/evaluation
 May read:
 - sealed ranking artifact;
+- frozen twin prediction/simulation artifact;
 - frozen MAP;
 - Future Outcome plane;
 - evaluation-only identity bridge.
+
+Twin validation is performed here rather than inside twin-construction modules when future/sealed outcomes are required.
 
 Must not retroactively modify ranking/config/features.
 
@@ -103,6 +139,9 @@ Required techniques:
 - package/import contract tests;
 - dependency graph test;
 - forbidden symbol/module fixtures;
+- profile/twin import-wall tests;
+- future-sentinel tests against historical twin construction;
+- model-structure/update-policy watermark tests;
 - separate credentials/configuration for future storage;
 - network-disabled confirmatory ranking runtime where feasible;
 - capability interfaces instead of raw database handles.
