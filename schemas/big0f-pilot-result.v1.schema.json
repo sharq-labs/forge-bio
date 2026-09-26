@@ -39,7 +39,10 @@
     "selection_provenance_id",
     "selection_provenance_digest",
     "nuisance_run_id",
-    "nuisance_run_digest"
+    "nuisance_run_digest",
+    "provider_audit_id",
+    "provider_audit_digest",
+    "adjudicator_independence_attestation_digest"
   ],
   "properties": {
     "pilot_id": {
@@ -562,6 +565,18 @@
       "minLength": 1
     },
     "nuisance_run_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "provider_audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_audit_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudicator_independence_attestation_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
