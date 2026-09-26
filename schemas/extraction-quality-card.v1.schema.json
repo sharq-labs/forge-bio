@@ -18,7 +18,13 @@
     "abstention_rate",
     "known_failure_modes",
     "qualification_status",
-    "digest"
+    "digest",
+    "precision_ci_low",
+    "recall_ci_low",
+    "negation_evaluation_status",
+    "null_result_evaluation_status",
+    "qualification_threshold_artifact_id",
+    "meets_qualification_thresholds"
   ],
   "properties": {
     "quality_card_id": {
@@ -98,6 +104,51 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "precision_ci_low": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "recall_ci_low": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "negation_evaluation_status": {
+      "enum": [
+        "EVALUATED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "negation_accuracy": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "null_result_evaluation_status": {
+      "enum": [
+        "EVALUATED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "null_result_accuracy": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "qualification_threshold_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "meets_qualification_thresholds": {
+      "type": "boolean"
     }
   },
   "allOf": [
@@ -120,6 +171,73 @@
           "qualification_condition": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "qualification_status": {
+            "const": "QUALIFIED"
+          }
+        },
+        "required": [
+          "qualification_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "meets_qualification_thresholds": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "negation_evaluation_status": {
+            "const": "EVALUATED"
+          }
+        },
+        "required": [
+          "negation_evaluation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "negation_accuracy"
+        ],
+        "properties": {
+          "negation_accuracy": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "null_result_evaluation_status": {
+            "const": "EVALUATED"
+          }
+        },
+        "required": [
+          "null_result_evaluation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "null_result_accuracy"
+        ],
+        "properties": {
+          "null_result_accuracy": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
           }
         }
       }
