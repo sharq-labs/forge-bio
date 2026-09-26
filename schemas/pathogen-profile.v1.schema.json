@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/pathogen-profile.v1.schema.json",
+  "title": "Forge Bio Pathogen Scientific Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "schema_version",
+    "subject_entity_id",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "uncertainty_bundle_ref",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest",
+    "pathogen_id",
+    "pathogen_type",
+    "taxonomy_ref"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "pathogen-profile-v1"
+    },
+    "subject_entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contradiction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_gap_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncertainty_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pathogen_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pathogen_type": {
+      "enum": [
+        "VIRUS",
+        "BACTERIUM",
+        "FUNGUS",
+        "PARASITE",
+        "OTHER_PATHOGEN"
+      ]
+    },
+    "taxonomy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "genome_representation_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "gene_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "protein_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "strain_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathogen_variant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_species_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "tissue_tropism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "cell_tropism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_receptor_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_interaction_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "lifecycle_stage_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "replication_process_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "immune_interaction_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "immune_evasion_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "associated_disease_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "virulence_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "resistance_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathogen_target_hypothesis_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_target_hypothesis_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "therapeutic_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "virus_extension_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
