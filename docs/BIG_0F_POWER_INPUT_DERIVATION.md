@@ -9,7 +9,7 @@ BIG 0F cannot observe the future paired biological-model lift because the pilot 
 
 ## Primary rule
 
-A GO-capable power conclusion requires variance evidence from at least one **independent DEVELOPMENT dataset or prior development benchmark that measures the same estimand and the same primary metric**.
+A GO-capable power conclusion requires variance evidence from an **exhaustive frozen registry of eligible independent DEVELOPMENT datasets or prior development benchmarks that measure the same estimand and the same primary metric**. The registry/search rule is sealed before adjudication, so favorable sources cannot be cherry-picked later.
 
 The variance source must:
 - be identified and content-addressed;
@@ -25,7 +25,7 @@ For each eligible independent source:
 2. compute the preregistered bootstrap 95% upper confidence bound for that SD;
 3. apply the frozen dependence/cluster adjustment when the source contains materially dependent disease/event groups.
 
-The primary planning SD is the most conservative eligible adjusted upper-bound SD across the frozen eligible sources.
+The primary planning SD is the most conservative eligible adjusted upper-bound SD across **all sources in the frozen eligible-source registry**. The power artifact binds the registry digest.
 
 ## Pilot nuisance proxy
 
