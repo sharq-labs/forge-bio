@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-power-analysis.v1.schema.json",
+  "title": "Forge Bio BIG 0F Power Analysis v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "power_analysis_id",
+    "schema_version",
+    "method",
+    "alpha",
+    "target_power",
+    "minimum_scientifically_meaningful_effect",
+    "disease_level_sd",
+    "simulation_replicates",
+    "simulation_seed",
+    "estimated_power",
+    "required_confirmatory_disease_count",
+    "required_high_specificity_positive_count",
+    "input_provenance_ids",
+    "engine_sha256",
+    "digest"
+  ],
+  "properties": {
+    "power_analysis_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-power-analysis-v1"
+    },
+    "method": {
+      "const": "PAIRED_DISEASE_MONTE_CARLO_NORMAL_APPROX"
+    },
+    "alpha": {
+      "const": 0.05
+    },
+    "target_power": {
+      "type": "number",
+      "minimum": 0.8,
+      "maximum": 0.99
+    },
+    "minimum_scientifically_meaningful_effect": {
+      "const": 0.05
+    },
+    "disease_level_sd": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "simulation_replicates": {
+      "type": "integer",
+      "minimum": 10000
+    },
+    "simulation_seed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "estimated_power": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "required_confirmatory_disease_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "required_high_specificity_positive_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "input_provenance_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "engine_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}
