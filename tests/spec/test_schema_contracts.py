@@ -51,6 +51,7 @@ class ScientificTwinSchemaTests(unittest.TestCase):
         x = self.base()
         x.update({
             "maturity_level": "T3_VALIDATED_PREDICTIVE_TWIN",
+            "evidence_snapshot_ids": ["evidence-1"],
             "state_definition_id": "state-def-1",
             "state_model_artifact_id": "state-model-1",
             "parameter_artifact_ids": ["param-1"],
