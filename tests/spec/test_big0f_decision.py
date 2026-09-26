@@ -20,6 +20,7 @@ CTX = EvaluationContext(
     nuisance_run_verified=True,
     provider_audit_verified=True,
     adjudicator_independence_verified=True,
+    curation_audit_verified=True,
 )
 
 
