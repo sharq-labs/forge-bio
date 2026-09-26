@@ -15,7 +15,8 @@
     "reference_group_ref",
     "comparison_group_ref",
     "provenance_ref",
-    "digest"
+    "digest",
+    "effect_context"
   ],
   "properties": {
     "effect_id": {
@@ -133,6 +134,56 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "effect_context": {
+      "enum": [
+        "GENERAL",
+        "GENETIC_ASSOCIATION"
+      ]
+    },
+    "variant_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "effect_allele": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "other_allele": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "effect_allele_frequency": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "time_scale_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "censoring_policy_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "adjustment_set_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "allOf": [
@@ -155,6 +206,135 @@
           "transform_artifact_id": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "effect_measure_kind": {
+            "enum": [
+              "ODDS_RATIO",
+              "RISK_RATIO",
+              "HAZARD_RATIO"
+            ]
+          },
+          "scale": {
+            "const": "NATURAL"
+          }
+        },
+        "required": [
+          "effect_measure_kind",
+          "scale"
+        ]
+      },
+      "then": {
+        "properties": {
+          "estimate": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "confidence_interval_low": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "exclusiveMinimum": 0
+          },
+          "confidence_interval_high": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "exclusiveMinimum": 0
+          },
+          "transform": {
+            "const": "NONE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "effect_context": {
+            "const": "GENETIC_ASSOCIATION"
+          }
+        },
+        "required": [
+          "effect_context"
+        ]
+      },
+      "then": {
+        "required": [
+          "variant_id",
+          "effect_allele",
+          "other_allele"
+        ],
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect_allele": {
+            "type": "string",
+            "minLength": 1
+          },
+          "other_allele": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "effect_measure_kind": {
+            "const": "HAZARD_RATIO"
+          }
+        },
+        "required": [
+          "effect_measure_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "time_scale_ref",
+          "censoring_policy_ref"
+        ],
+        "properties": {
+          "time_scale_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "censoring_policy_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scale": {
+            "const": "LOG"
+          }
+        },
+        "required": [
+          "scale"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transform": {
+            "enum": [
+              "LN",
+              "LOG2",
+              "LOG10"
+            ]
           }
         }
       }
