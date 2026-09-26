@@ -143,9 +143,9 @@
 - [x] Confirmatory program history must be append-only/hash-chained and externally anchorable.
 - [x] One canonical endpoint decision semantics source is required.
 - [x] Threshold provenance/digest hygiene and locus-level robustness requirements are specified.
-- [ ] Freeze the Power Input Derivation Contract before adjudication.
-- [ ] Freeze the Nuisance Execution Artifact contract before adjudication.
-- [ ] Freeze provider/applicability/curation/adjudicator evidence-artifact schemas before adjudication.
+- [x] Power Input Derivation Contract frozen; proxy-only variance cannot support GO.
+- [x] Nuisance Execution Artifact contract frozen with candidate-universe/full-rank/training identity binding.
+- [x] Provider/applicability/curation/adjudicator evidence-artifact schemas frozen and evidence-bound.
 - [ ] Complete independent external-authority/beacon dry run before adjudication.
 - [ ] Complete one final hostile review of the frozen closure contracts.
 
