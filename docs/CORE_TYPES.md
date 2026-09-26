@@ -125,10 +125,42 @@ LabelState
     AMBIGUOUS
     KNOWN_AT_T
 
+PreTGeneticState
+    NO_SIGNAL_OBSERVED
+    SUGGESTIVE
+    QUALIFYING
+    AMBIGUOUS
+
 E1Subtype
-    E1_NOVEL
+    E1_NOVEL_STRICT
+    E1_MATURATION
     E1_REPLICATION
     E1_CROSSMODAL
+
+OutcomePhenotypeRelation
+    EXACT
+    SAME_CONCEPT_DIFFERENT_DEFINITION
+    NARROWER
+    BROADER
+    SURROGATE
+    RISK_FACTOR
+    INTERMEDIATE_PHENOTYPE
+    RELATED
+    UNRESOLVED
+
+GeneticReplicationVerdict
+    REPLICATED
+    PARTIAL_REPLICATION
+    DIRECTION_CONFLICT
+    PHENOTYPE_MISMATCH
+    NON_INDEPENDENT
+    INCONCLUSIVE
+    UNRESOLVED
+
+ValidationGenerationStatus
+    ACTIVE
+    SPENT_FOR_MODEL_SELECTION
+    RETIRED
 
 NoveltyAuditState
     NOVEL_CONFIRMED
@@ -179,7 +211,12 @@ TargetAssociationCandidate
 TargetHypothesis
 FutureEvent
 OutcomeGeneAssignment
+OutcomePhenotypeMatchAssessment
+PreTGeneticStateAssessment
+GeneticReplicationAssessment
 HistoricalNoveltyAudit
+ValidationGeneration
+OutcomeSnapshotCommitment
 BenchmarkDesignProvenance
 BenchmarkSpec
 MAP
@@ -193,6 +230,9 @@ UncertaintyBundle
 - LabelState is endpoint-specific.
 - gene != protein != target.
 - locus/variant event != gene assignment.
+- phenotype/trait relation != disease identity.
+- suggestive pre-T genetics != novel discovery.
+- replication != repeated database annotation.
 - identity reconciliation != causal assignment.
 - EvidenceRecord != model prediction.
 - distinct database rows != independent evidence.
