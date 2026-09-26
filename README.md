@@ -129,6 +129,7 @@ Do not start production scientific code before that gate.
 - [Model Training Policy](docs/MODEL_TRAINING_POLICY.md)
 - [Pre-Code Readiness Checklist](docs/PRE_CODE_CHECKLIST.md)
 - [Scientific Red-Team Gap Register](docs/SCIENTIFIC_RED_TEAM_GAPS.md)
+- [Plan Strength Audit](docs/PLAN_STRENGTH_AUDIT.md)
 - [Scientific Glossary](docs/GLOSSARY.md)
 - [Core Scientific Types](docs/CORE_TYPES.md)
 - [Golden Synthetic Biomedical World](docs/GOLDEN_SYNTHETIC_WORLD.md)
@@ -148,6 +149,7 @@ Do not start production scientific code before that gate.
 - [Forge Bio Scientific Twin Architecture](docs/SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
 - [Model Credibility Policy](docs/MODEL_CREDIBILITY_POLICY.md)
 - [Quantitative Semantics](docs/QUANTITATIVE_SEMANTICS.md)
+- [Evidence Extraction Quality Policy](docs/EVIDENCE_EXTRACTION_POLICY.md)
 - [Scientific Twin JSON Schema](schemas/scientific-twin.v1.schema.json)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
@@ -161,6 +163,7 @@ Do not start production scientific code before that gate.
 - [ADR-015 — Scientific Digital Twin Semantics](docs/adr/ADR-015-scientific-digital-twin-semantics.md)
 - [ADR-016 — Model Credibility & Numerical Verification](docs/adr/ADR-016-model-credibility-numerical-verification.md)
 - [ADR-017 — Quantitative Semantics](docs/adr/ADR-017-quantitative-semantics.md)
+- [ADR-018 — Evidence Extraction Quality](docs/adr/ADR-018-evidence-extraction-quality.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
