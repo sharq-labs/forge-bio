@@ -1,0 +1,14 @@
+# Machine-Verifiable Scientific Schemas
+
+These JSON Schemas are executable companions to the normative Markdown contracts.
+
+Files:
+- `qoi.v1.schema.json`
+- `map.v1.schema.json`
+- `mar.v1.schema.json`
+
+Rules:
+- JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
+- Markdown contracts remain authoritative for scientific semantics.
+- A runtime freeze validator must additionally reject unresolved placeholders such as `TO_BE_FROZEN` when an artifact status is FROZEN.
+- Schema version and content digest are included in frozen artifacts.
