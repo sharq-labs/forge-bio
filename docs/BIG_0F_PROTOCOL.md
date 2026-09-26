@@ -110,6 +110,13 @@ Agreement is reported for:
 - event-family identity;
 - sample-overlap verdict.
 
+Record both:
+- adjudicated_event_case_count;
+- duplicate_review_count;
+- duplicate_review_fraction = duplicate_review_count / adjudicated_event_case_count.
+
+A GO decision is invalid unless duplicate_review_count reaches `min(N_event_cases, max(30, ceil(0.30 * N_event_cases)))`.
+
 Report percent agreement plus a chance-corrected agreement statistic.
 
 Cohen's kappa is used only when category prevalence/balance makes it interpretable. For strongly imbalanced categorical decisions, also report a prevalence-robust agreement statistic (for example Gwet's AC1/AC2 or a preregistered equivalent) and the full confusion matrix.
@@ -278,7 +285,7 @@ These thresholds are frozen before adjudication.
 NO-GO if any remains true after one allowed rule clarification/revision:
 
 - archived/as-of-T required-field availability < 70%;
-- unresolved/AMBIGUOUS fraction across primary endpoint adjudication > 40%;
+- fraction of unique cases AMBIGUOUS on **any** primary-endpoint dimension > 40%;
 - preregistered primary agreement statistic < 0.60 on either primary gene-assignment class or phenotype match;
 - simulation-based confirmatory power < 0.80 at alpha 0.05 for the frozen scientifically meaningful effect even after using all feasible untouched confirmatory diseases/cutoff resources;
 - no plausible untouched disease pool remains after excluding pilot contamination;
@@ -293,7 +300,7 @@ REDESIGN if any occurs:
 - primary-eligible high-specificity assignments < 50% of gene-level positives;
 - strict novelty is dominated by pre-T cohort reuse / power maturation;
 - same curation pipeline materially dominates both inputs and outcomes;
-- unresolved ambiguity is >20% and <=40%;
+- fraction of unique cases AMBIGUOUS on any primary-endpoint dimension is >20% and <=40%;
 - preregistered primary agreement statistic is >=0.60 and <0.70;
 - archived required-field availability is >=70% and <90%;
 - Combined Nuisance already ranks the median positive in the top 1% of its disease candidate universe, leaving little plausible headroom.
@@ -310,15 +317,29 @@ Default redesign options:
 GO requires all:
 
 - archived required-field availability >= 90%;
-- unresolved/AMBIGUOUS fraction <= 20%;
+- fraction of unique cases AMBIGUOUS on any primary-endpoint dimension <= 20%;
 - preregistered primary agreement statistic >= 0.70 for primary assignment and phenotype match;
 - high-specificity primary-eligible assignment fraction >= 50%;
 - no material unmitigated Past/Future curation coupling;
 - sample-overlap / lineage ambiguity within the frozen acceptable policy;
 - ancestry/population metadata adequate for the intended primary interpretation;
+- retrospective curation burden assessed ACCEPTABLE under the sealed operational-capacity rule;
+- symmetric non-event audit completed at the frozen sample size;
+- independent duplicate-adjudication minimum coverage completed;
 - nuisance headroom not saturated under the top-1% rule above;
 - simulation-based target power >= 0.80 at the frozen alpha/effect;
 - untouched diseases remain available for sealed confirmation.
+
+### Incomplete prerequisite rule
+
+The deterministic evaluator returns `INCONCLUSIVE` rather than GO when a mandatory decision prerequisite is unresolved, including:
+- union ambiguity is internally inconsistent with component ambiguity;
+- independent duplicate-review coverage is below the frozen minimum;
+- ancestry/population adequacy is UNKNOWN;
+- provider-coupling risk is UNKNOWN;
+- retrospective-curation burden is UNKNOWN;
+- symmetric non-event audit is incomplete/undersized;
+- threshold-sensitivity conclusion is unstable.
 
 Passing GO means only:
 
