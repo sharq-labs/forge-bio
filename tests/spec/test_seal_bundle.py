@@ -198,7 +198,15 @@ class SealBundleV2Tests(unittest.TestCase):
             self.attestation(m, "PUBLIC_REGISTRY"),
         ], component_paths=self.components())
         self.assertTrue(errors)
-        self.assertTrue(any("externally attested digest" in e or "schema violation" in e for e in errors))
+        self.assertTrue(
+            any(
+                "digest mismatch" in e
+                or "protocol_version" in e
+                or "BIG-0F-v0" in e
+                for e in errors
+            ),
+            msg=str(errors),
+        )
 
     def test_beacon_must_be_first_round_after_frame_seal(self):
         b = json.loads(self.beacon.read_text(encoding="utf-8"))
