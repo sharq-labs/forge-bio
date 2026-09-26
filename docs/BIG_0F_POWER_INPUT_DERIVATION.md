@@ -9,7 +9,7 @@ BIG 0F cannot observe the future paired biological-model lift because the pilot 
 
 ## Primary rule
 
-A GO-capable power conclusion requires variance evidence from an **exhaustive frozen registry of eligible independent DEVELOPMENT datasets or prior development benchmarks that measure the same estimand and the same primary metric**. The registry/search rule is sealed before adjudication, so favorable sources cannot be cherry-picked later.
+A GO-capable power conclusion requires variance evidence from an **exhaustive frozen registry of eligible independent DEVELOPMENT datasets or prior development benchmarks that measure the same estimand and the same primary metric**. The registry/search rule is sealed before adjudication, so favorable sources cannot be cherry-picked later. The registry uses `schemas/big0f-variance-source-registry.v1.schema.json` and is committed by digest in the BIG 0F root seal.
 
 The variance source must:
 - be identified and content-addressed;
