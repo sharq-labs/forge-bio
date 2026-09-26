@@ -70,3 +70,30 @@ Comparison operators are executable, not descriptive placeholders:
 - `REQUIRE` asserts presence/availability and does not require a comparison operand.
 
 A FROZEN rule with a missing or unusable comparison operand is schema-invalid.
+
+
+## Executable evaluator
+
+Frozen endpoint rules are executed by:
+
+`scripts/evaluate_endpoint_quality.py`
+
+against:
+
+`schemas/endpoint-event-input.v1.schema.json`.
+
+For V0 the executor additionally enforces:
+- one criterion per scientific dimension / executable field;
+- scientific-dimension ↔ field consistency;
+- finite numeric thresholds;
+- p-value thresholds use LT/LE and are dimensionless;
+- sample-size thresholds use GT/GE with participants/samples units;
+- hypothesis-free primary study designs only;
+- primary gene-assignment classes only;
+- independence must resolve to INDEPENDENT;
+- historical novelty must resolve to NOVEL_CONFIRMED;
+- UNKNOWN/AMBIGUOUS required scientific states fail closed;
+- missing required fields fail closed;
+- duplicate/conflicting executable fields invalidate the frozen rule.
+
+Passing JSON Schema alone is therefore not sufficient to qualify an event.
