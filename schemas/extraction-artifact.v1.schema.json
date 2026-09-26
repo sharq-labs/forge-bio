@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/extraction-artifact.v1.schema.json",
+  "title": "Forge Bio Extraction Artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "extraction_id",
+    "schema_version",
+    "source_artifact_id",
+    "source_record_id",
+    "source_locator_or_span",
+    "extraction_method",
+    "extractor_id",
+    "extractor_version",
+    "knowledge_watermark",
+    "output_schema_version",
+    "extracted_claim_ids",
+    "abstention_state",
+    "reviewer_state",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "extraction_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "extraction-artifact-v1"
+    },
+    "source_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_locator_or_span": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extraction_method": {
+      "enum": [
+        "HUMAN_CURATED",
+        "RULE_BASED",
+        "ML_EXTRACTED",
+        "LLM_EXTRACTED"
+      ]
+    },
+    "extractor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extractor_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_or_rule_config_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_training_horizon": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extracted_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "abstention_state": {
+      "enum": [
+        "NOT_ABSTAINED",
+        "ABSTAINED",
+        "PARTIAL"
+      ]
+    },
+    "reviewer_state": {
+      "enum": [
+        "NOT_REQUIRED",
+        "PENDING",
+        "REVIEWED",
+        "DISAGREEMENT",
+        "ADJUDICATED"
+      ]
+    },
+    "quality_card_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "extraction_method": {
+            "enum": [
+              "ML_EXTRACTED",
+              "LLM_EXTRACTED",
+              "RULE_BASED"
+            ]
+          }
+        },
+        "required": [
+          "extraction_method"
+        ]
+      },
+      "then": {
+        "required": [
+          "quality_card_id"
+        ],
+        "properties": {
+          "quality_card_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
