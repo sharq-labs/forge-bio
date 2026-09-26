@@ -13,24 +13,22 @@
     "max_confirmatory_generations",
     "generation_allocations",
     "development_results_can_support_confirmatory_claim",
-    "digest"
+    "digest",
+    "research_program_id",
+    "program_scope_lock"
   ],
   "properties": {
     "budget_id": {
-      "type": "string",
-      "minLength": 1
+      "const": "CPB-FORGE-BIO-B-TGT-E1-V0"
     },
     "schema_version": {
       "const": "confirmatory-program-budget-v1"
     },
     "benchmark_family": {
-      "type": "string",
-      "minLength": 1
+      "const": "B-TGT-E1"
     },
     "familywise_alpha": {
-      "type": "number",
-      "exclusiveMinimum": 0,
-      "maximum": 0.1
+      "const": 0.05
     },
     "allocation_method": {
       "enum": [
@@ -41,9 +39,7 @@
       ]
     },
     "max_confirmatory_generations": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 10
+      "const": 2
     },
     "generation_allocations": {
       "type": "array",
@@ -65,7 +61,7 @@
           "allocated_alpha": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "maximum": 0.1
+            "maximum": 0.05
           },
           "status": {
             "enum": [
@@ -76,7 +72,8 @@
             ]
           }
         }
-      }
+      },
+      "maxItems": 2
     },
     "development_results_can_support_confirmatory_claim": {
       "const": false
@@ -87,7 +84,13 @@
     },
     "digest": {
       "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "research_program_id": {
+      "const": "FORGE-BIO-B-TGT-E1-V0"
+    },
+    "program_scope_lock": {
+      "const": "RENAMING_BENCHMARK_ENDPOINT_FRAME_OR_MODEL_DOES_NOT_RESET_BUDGET"
     }
   }
 }
