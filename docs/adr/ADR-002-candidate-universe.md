@@ -1,6 +1,6 @@
 # ADR-002 — Historical Candidate Universe
 
-**Status:** Proposed for freeze before coding
+**Status:** Accepted — amended by ADR-011 and ADR-012
 
 ## Decision
 
@@ -18,3 +18,13 @@ Candidate-universe leakage can reveal future entities even when every feature re
 - membership carries provenance;
 - the same HistoricalKnowledgeView may support multiple benchmark universes;
 - evaluation reports candidate-universe coverage and sensitivity.
+
+
+## Amendments
+
+Historical identity eligibility does not imply equal genetic observability.
+
+- ADR-011 defines canonical genomic identity required by genetic evidence/outcome matching.
+- ADR-012 requires a separate GeneticObservabilityAtT sensitivity universe built only from as-of-T technology/source criteria.
+
+The primary CandidateUniverse remains broad and identity-valid; observability is a preregistered sensitivity, not a future-outcome-driven exclusion.
