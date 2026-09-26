@@ -84,6 +84,7 @@ def build_manifest(
     adjudication_policy_schema_path: Path,
     nuisance_manifest_schema_path: Path,
     power_analysis_schema_path: Path,
+    power_engine_path: Path,
     created_at: str,
     created_by_role: str,
 ) -> dict[str, Any]:
@@ -122,6 +123,7 @@ def build_manifest(
         "adjudication_policy_schema_sha256": sha256_file(adjudication_policy_schema_path),
         "nuisance_manifest_schema_sha256": sha256_file(nuisance_manifest_schema_path),
         "power_analysis_schema_sha256": sha256_file(power_analysis_schema_path),
+        "power_engine_sha256": sha256_file(power_engine_path),
     }
 
 
@@ -156,6 +158,7 @@ def verify_manifest(
         "adjudication_policy_schema_sha256": sha256_file(component_paths["adjudication_policy_schema"]),
         "nuisance_manifest_schema_sha256": sha256_file(component_paths["nuisance_manifest_schema"]),
         "power_analysis_schema_sha256": sha256_file(component_paths["power_analysis_schema"]),
+        "power_engine_sha256": sha256_file(component_paths["power_engine"]),
     }
     for key, actual in checks.items():
         if manifest.get(key) != actual:
@@ -197,6 +200,7 @@ def main() -> int:
     ap.add_argument("--adjudication-policy-schema", type=_path, default=ROOT / "schemas" / "big0f-adjudication-policy.v1.schema.json")
     ap.add_argument("--nuisance-manifest-schema", type=_path, default=ROOT / "schemas" / "big0f-nuisance-manifest.v1.schema.json")
     ap.add_argument("--power-analysis-schema", type=_path, default=ROOT / "schemas" / "big0f-power-analysis.v1.schema.json")
+    ap.add_argument("--power-engine", type=_path, default=ROOT / "scripts" / "simulate_big0f_power.py")
     ap.add_argument("--created-at", required=True)
     ap.add_argument("--created-by-role", choices=["INDEPENDENT_CUSTODIAN", "PREREGISTRATION_OPERATOR"], required=True)
     ap.add_argument("--output", type=Path, required=True)
@@ -218,6 +222,7 @@ def main() -> int:
         "adjudication_policy_schema": args.adjudication_policy_schema,
         "nuisance_manifest_schema": args.nuisance_manifest_schema,
         "power_analysis_schema": args.power_analysis_schema,
+        "power_engine": args.power_engine,
     }
 
     if args.verify:
@@ -247,6 +252,7 @@ def main() -> int:
         adjudication_policy_schema_path=args.adjudication_policy_schema,
         nuisance_manifest_schema_path=args.nuisance_manifest_schema,
         power_analysis_schema_path=args.power_analysis_schema,
+        power_engine_path=args.power_engine,
         created_at=args.created_at,
         created_by_role=args.created_by_role,
     )
