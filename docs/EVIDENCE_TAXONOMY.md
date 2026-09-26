@@ -130,6 +130,17 @@ NULL_RESULT is not automatically REFUTES.
 
 ML/LLM extraction carries extractor/model identity and horizon.
 
+Non-native extraction is governed by [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md).
+
+Confirmatory evidence generation requires:
+- recoverable source grounding/span;
+- extractor ID/version/config;
+- task/domain-specific ExtractionQualityCard;
+- explicit abstention/review state;
+- preservation of source/IndependenceFamily lineage.
+
+Extractor confidence is not evidence strength.
+
 ## 9. BiologicalContext
 
 Support explicit fields for:
@@ -152,21 +163,32 @@ Unknown remains UNKNOWN.
 
 Do not force all evidence into one scalar.
 
-Possible fields:
-- estimate
-- effect_direction
-- effect_size
-- effect_unit
-- standard_error
-- confidence_interval
-- p_value
-- sample_size
-- assay_value
-- assay_unit
-- quality_grade
-- raw_payload_ref
+Quantitative evidence references typed artifacts:
 
-Method-specific payloads are schema-versioned.
+```text
+EvidenceRecord
+    observation_id? -> QuantitativeObservation
+    effect_id?      -> EffectEstimate
+    raw_payload_ref?
+```
+
+Normative quantitative semantics are defined in [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md).
+
+Executable schemas include:
+- QuantityDefinition;
+- QuantitativeObservation;
+- EffectEstimate;
+- MeasurementProcessArtifact.
+
+Rules:
+- a number without quantity/scale/transform/context semantics is not a scientific measurement;
+- a p-value alone is not an effect estimate;
+- ratio, log-ratio, odds ratio, risk ratio, hazard ratio, and regression coefficients are not interchangeable;
+- unit-bearing values require dimensional compatibility before arithmetic/aggregation;
+- missing/censored measurements are not coerced to numeric zero;
+- normalization/imputation/batch correction are provenance-bearing transforms.
+
+Method-specific payloads remain schema-versioned.
 
 Human-genetic payloads may additionally include:
 - canonical variant/locus IDs;
@@ -312,3 +334,56 @@ ScientificEventFamily
 For genetic outcomes, GeneticDiscoveryEventFamily additionally preserves locus IDs and gene assignments.
 
 Event-family identity is used for outcome counting and cross-anchor reuse; IndependenceFamily is used for evidentiary dependence. They are related but not interchangeable.
+
+
+## 20. Measurement and batch provenance
+
+Quantitative observations preserve the process that produced them.
+
+```text
+MeasurementProcessArtifact
+    assay_or_measurement_type
+    platform
+    protocol/provider
+    calibration
+    normalization
+    batch context
+    detection limits
+    measurement-error model
+    provenance
+    knowledge watermark
+```
+
+Platform/batch/normalization effects are retained where they may alter comparability.
+
+A normalization fitted using post-cutoff data is temporal leakage.
+
+## 21. Quantitative uncertainty decomposition
+
+Where relevant, distinguish:
+- measurement uncertainty;
+- sampling uncertainty;
+- parameter uncertainty;
+- numerical uncertainty;
+- model-form uncertainty.
+
+These are not collapsed into one generic confidence scalar.
+
+
+## 22. Extraction quality
+
+```text
+SourceArtifact
+→ SourceRecord
+→ ExtractionArtifact
+→ ScientificClaim
+→ EvidenceRecord
+```
+
+A structured extraction layer can introduce error even when the source is correct.
+
+Automated extraction qualification is task/domain specific and reports at least precision, recall, abstention, and known failure modes.
+
+Material model/prompt/rule/ontology/output-schema changes create a new extractor version and trigger requalification.
+
+Multiple extracted claims from one originating observation retain shared source lineage and do not become independent evidence.

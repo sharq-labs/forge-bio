@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/measurement-process.v1.schema.json",
+  "title": "Forge Bio Measurement Process Artifact v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "process_id",
+    "schema_version",
+    "assay_or_measurement_type",
+    "platform_ref",
+    "protocol_or_provider_ref",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest"
+  ],
+  "properties": {
+    "process_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "measurement-process-v1"
+    },
+    "assay_or_measurement_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platform_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protocol_or_provider_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "calibration_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "normalization_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "batch_context_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "limit_of_detection": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "limit_unit_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "measurement_error_model_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

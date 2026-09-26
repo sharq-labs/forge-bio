@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/gene-model-release.v1.schema.json",
+  "title": "Forge Bio Gene Model Release v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gene_model_release_id",
+    "schema_version",
+    "provider",
+    "release_id",
+    "genome_assembly_id",
+    "release_time",
+    "availability_attestation_ref",
+    "knowledge_watermark",
+    "digest"
+  ],
+  "properties": {
+    "gene_model_release_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "gene-model-release-v1"
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "genome_assembly_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_time": {
+      "type": "string",
+      "format": "date"
+    },
+    "availability_attestation_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "DATED",
+            "UNKNOWN"
+          ]
+        },
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "DATED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "date"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+    }
+  }
+}

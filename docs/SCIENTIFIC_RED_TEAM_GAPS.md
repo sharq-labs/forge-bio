@@ -569,3 +569,176 @@ Spec Integrity now executes JSON Schema positive/negative tests, including inval
 **Status:** OPEN-OPERATIONAL
 
 Branch protection / required independent review remains unresolved under GitHub Issue #2 and blocks FROZEN V1, though it does not block BIG 0F exploratory feasibility work.
+
+
+## BIG 0R5 model-credibility / quantitative-integrity closure ledger
+
+### R5-01 — VVUQ not tied tightly enough to Context of Use
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+CredibilityAssessmentArtifact now ties model credibility to the exact research decision, model influence, consequence-if-wrong, and CoU.
+
+### R5-02 — Quantitative values could carry ambiguous unit/scale/transform semantics
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+QuantityDefinition, QuantitativeObservation, EffectEstimate, and MeasurementProcessArtifact are first-class. Unit/dimension/scale/transform/missingness/censoring rules fail closed where comparability is required.
+
+### R5-03 — Numerical solver error could masquerade as biological/model certainty
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+NumericalVerificationArtifact separates solver/discretization/stochastic numerical error from measurement, parameter, sampling, and model-form uncertainty.
+
+### R5-04 — Parameter identifiability / model discrepancy under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T2+ credibility now requires parameter adequacy/identifiability where applicable and a ModelDiscrepancyAssessment. Calibration cannot silently compensate for structural error.
+
+### R5-05 — Predictive applicability / distribution shift under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+T3+ requires applicability/shift analysis across relevant temporal, source, population, disease/target family, phenotype/measurement, platform, and base-rate axes.
+
+### R5-06 — Probability claims could rely on discrimination alone
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Probability claims require held-out calibration plus at least one proper scoring rule and an explicit endpoint/horizon.
+
+### R5-07 — Material model changes could inherit stale validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Validation attaches to an exact dependency digest. Material changes to model structure, features/preprocessing, parameters, measurement model, numerical configuration, endpoint, update policy, or applicability create a new validation target.
+
+### R5-08 — Development quality and evaluation risk of bias were not explicitly separated
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Predictive evaluation now audits data/source, predictors/features, outcome/label, and analysis/evaluation separately.
+
+### R5-09 — Measurement/batch process could be hidden behind one numeric field
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+MeasurementProcessArtifact and normalization/batch provenance are explicit; future-fitted normalization remains temporal leakage.
+
+### R5-10 — Scientific credibility could be treated as a universal model property
+
+**Status:** CLOSED-POLICY
+
+Credibility is explicitly CoU-specific. "Validated model" without the validated target/domain/use is prohibited language.
+
+
+## Final evidence-extraction closure ledger
+
+### RX-01 — Source quality could be undermined by extraction error
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+ExtractionArtifact now preserves source grounding, extractor/version/config, horizon/watermark, output schema, abstention, review state, and provenance.
+
+### RX-02 — Automated extractor confidence could masquerade as evidence strength
+
+**Status:** CLOSED-POLICY
+
+Extractor confidence is a pipeline-quality signal only. Scientific evidence strength remains method/source/context based.
+
+### RX-03 — LLM/ML/rule extractor changes could inherit old validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Material model/training-data/prompt/rule/ontology/output-schema changes create a new extractor version and trigger task-specific requalification.
+
+### RX-04 — Human curation quality under-specified
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Human workflows retain reviewer identity, disagreement, adjudication, and changes from machine output. Independent-review requirements can be frozen per task.
+
+### RX-05 — Extracted statements could inflate independence
+
+**Status:** CLOSED-POLICY
+
+Extraction never creates a new biological observation. Multiple claims from one originating observation retain shared source/IndependenceFamily lineage.
+
+
+## Final research-program integrity closure ledger
+
+### RP-01 — Retractions/corrections could rewrite history
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+SourceLifecycleEvent preserves correction/retraction/withdrawal/supersession/restoration events with public timing. Historical reconstruction resolves status as-of-T; later lifecycle events trigger current fragility analysis instead of rewriting history.
+
+### RP-02 — Repeated benchmark reuse could overfit the benchmark
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+BenchmarkExposureLedger tracks disclosure and downstream adaptation. Generations transition through ACTIVE_CONFIRMATORY, DEVELOPMENT_EXPOSED, EXHAUSTED, and RETIRED states. EXHAUSTED generations cannot support new strongest-tier confirmation.
+
+### RP-03 — Internal Git history alone could be overinterpreted as preregistration
+
+**Status:** CLOSED-POLICY / P1-OPERATIONAL
+
+ExternalSealAttestation is required for strongest confirmatory/prospective artifacts. It proves sequencing/existence at study time but does not erase researcher-hindsight risk.
+
+### RP-04 — Prospective predictions could influence their own future validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+PredictionExposureEvent records private/public exposure and contamination risk. Prospective evidence is stratified by exposure; exposed outcomes are not automatically counted as clean independent confirmation.
+
+### RP-05 — Selective reporting across many benchmark attempts
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+ResearchProgramAttempt ledger records positive, null, negative, inconclusive, and failed attempts across generations/endpoints/horizons/model families.
+
+### RP-06 — Provider/schema/ontology drift could silently mutate frozen artifacts
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Material migrations are new immutable derivation artifacts with source/target versions, migration rule, affected semantics, provenance, and digest.
+
+
+## Independent hostile review — BIG 0F-0 action ledger
+
+An independent adversarial review materially downgraded the prior self-assessment and reopened the B-TGT-E1 critical path.
+
+The previous statement that no major design gap remained is not used after this review.
+
+| ID | Finding | Status after BIG 0F-0 hardening |
+|---|---|---|
+| HR-01 | Gene assignment can re-import research attention | CLOSED-POLICY / EMPIRICAL-OPEN — high-specificity primary classes; attention audit required |
+| HR-02 | Genomic-architecture / pleiotropy baselines missing | CLOSED-POLICY / DATA-OPEN — mandatory nuisance families added |
+| HR-03 | Strongest-single comparator is inadequate | CLOSED-POLICY — Combined Nuisance Model is primary comparator |
+| HR-04 | No confirmatory alpha / power / MDE / numeric success rule | CLOSED-SCHEMA / EMPIRICAL-OPEN — MAP fields required; pilot supplies power inputs |
+| HR-05 | Repeated confirmatory generations mine one finite history | CLOSED-POLICY / SCHEMA — ConfirmatoryProgramBudget + attempt ledger |
+| HR-06 | Solo designer/adjudicator/custodian cannot support strongest tier | OPERATIONAL-OPEN — independent adjudicator/custodian required |
+| HR-07 | Strict novelty may be power maturation | EMPIRICAL-OPEN — pre-T cohort reuse + power-maturation audit in BIG 0F |
+| HR-08 | Positive-only historical audit can be asymmetric | CLOSED-POLICY / EMPIRICAL-OPEN — seeded non-event audit required |
+| HR-09 | Disease frame can be chosen with hindsight | CLOSED-POLICY / OPERATIONAL-OPEN — mechanical frame + sealed seed |
+| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-IN-PROGRESS — semantic validator + hostile regression suite; CI must pass |
+| HR-11 | Knowledge-bearingness was too self-declared | CLOSED-POLICY — biomedical-domain dependencies default UNKNOWN/knowledge-bearing |
+| HR-12 | Same curation pipeline can feed Past and Future | CLOSED-POLICY / EMPIRICAL-OPEN — primary-source/independent outcome path required |
+| HR-13 | External seals / null reporting were self-attestable | CLOSED-SCHEMA / OPERATIONAL-OPEN — approved external authority types + disclosure schedule |
+| HR-14 | Recall@K is discrete under sparse events | CLOSED-POLICY / EMPIRICAL-OPEN — event-rank percentile preferred for pilot |
+| HR-15 | Cross-disease shared controls create dependence | CLOSED-POLICY / IMPLEMENTATION-OPEN — shared-control/study-family blocks required |
+| HR-16 | Gene annotation release was not first-class | CLOSED-POLICY / SCHEMA — GeneModelRelease added |
+| HR-17 | EffectEstimate could not safely represent GWAS effects | CLOSED-SCHEMA — allele/variant/context + ratio/HR constraints added |
+| HR-18 | Scientific Twin / VVUQ gates were too weak and off critical path | DEFERRED — advanced Twin work frozen until core B-TGT evidence exists |
+| HR-19 | Extraction qualification could be vacuous | CLOSED-SCHEMA / EMPIRICAL-OPEN — task thresholds and negation/null metrics required |
+| HR-20 | Prospective validation starts too late | CLOSED-ROADMAP — private externally timestamped ledger starts with stable BIG 7 ranker |
+
+### Critical interpretation
+
+BIG 0F-0 is complete only when HR-10 regression tests pass and HR-06/HR-09 operational prerequisites required for pilot start are satisfied.
+
+BIG 0F then determines whether HR-01, HR-04, HR-07, HR-08, HR-12, HR-14, HR-19 and related feasibility risks are scientifically tolerable.
+
+No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.

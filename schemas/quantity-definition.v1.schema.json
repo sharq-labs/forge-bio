@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/quantity-definition.v1.schema.json",
+  "title": "Forge Bio Quantity Definition v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "quantity_id",
+    "schema_version",
+    "semantic_kind",
+    "measurement_endpoint_ref",
+    "canonical_dimension_id",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "quantity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "quantity-definition-v1"
+    },
+    "semantic_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "biological_subject_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "measurement_endpoint_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonical_dimension_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "preferred_unit_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid_range_low": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "valid_range_high": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

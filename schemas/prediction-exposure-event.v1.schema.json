@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/prediction-exposure-event.v1.schema.json",
+  "title": "Forge Bio Prediction Exposure Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "schema_version",
+    "prediction_artifact_id",
+    "exposure_time",
+    "exposure_scope",
+    "audience",
+    "target_visibility",
+    "contamination_risk",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "prediction-exposure-event-v1"
+    },
+    "prediction_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exposure_time": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exposure_scope": {
+      "enum": [
+        "PRIVATE_CUSTODY",
+        "LIMITED_RESEARCH_TEAM",
+        "COLLABORATOR_SHARED",
+        "PUBLIC_RELEASE"
+      ]
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_visibility": {
+      "enum": [
+        "HIDDEN",
+        "PARTIAL",
+        "FULL"
+      ]
+    },
+    "publication_or_release_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contamination_risk": {
+      "enum": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "UNKNOWN"
+      ]
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

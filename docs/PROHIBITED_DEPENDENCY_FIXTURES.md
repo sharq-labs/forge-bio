@@ -307,3 +307,120 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** a STRICT_HISTORICAL disease/pathogen/therapeutic profile omits cutoff T.
 
 **Expected:** profile JSON Schema rejects the artifact.
+
+
+## F-51 — Unitless value used where physical unit is required
+
+**Setup:** a concentration-like observation is marked OBSERVED with unit_required=true but no unit/dimension.
+
+**Expected:** quantitative schema rejects the artifact.
+
+## F-52 — Missing observation coerced to zero
+
+**Setup:** value_state=MISSING while value=0 is supplied as an observed measurement.
+
+**Expected:** quantitative schema rejects the artifact / implementation fails closed.
+
+## F-53 — Custom transform without transform provenance
+
+**Setup:** transform=CUSTOM with no TransformArtifact reference.
+
+**Expected:** quantitative schema rejects the artifact.
+
+## F-54 — Numerically unverified mechanistic simulation declared adequate
+
+**Setup:** NumericalVerificationArtifact has convergence_study=FAIL/UNKNOWN while verdict=ADEQUATE.
+
+**Expected:** schema rejects ADEQUATE verdict.
+
+## F-55 — Universal credibility claim
+
+**Setup:** model is described as "validated" without ContextOfUse or research decision/influence/consequence semantics.
+
+**Expected:** CredibilityAssessment schema/policy rejects the claim.
+
+## F-56 — High-risk predictive evaluation labelled adequate despite high risk of bias
+
+**Setup:** credibility conclusion=ADEQUATE_FOR_COU while prediction_risk_of_bias=HIGH.
+
+**Expected:** schema rejects the conclusion.
+
+## F-57 — Recalibrated/changed model inherits old validation
+
+**Setup:** preprocessing, parameters, state-model structure, measurement model, or output-changing solver configuration changes while old validation digest is reused.
+
+**Expected:** validation scope/digest check fails; new validation generation required.
+
+## F-58 — Out-of-domain prediction reported as validated
+
+**Setup:** a T3 model validated on one population/source/measurement regime is applied outside the frozen applicability domain and reported as validated.
+
+**Expected:** applicability audit marks extrapolation; validated-prediction claim fails.
+
+
+## F-59 — Ungrounded LLM extraction admitted as evidence
+
+**Setup:** LLM_EXTRACTED claim has no recoverable source locator/span.
+
+**Expected:** confirmatory EvidenceRecord admission fails.
+
+## F-60 — Automated extraction without quality qualification
+
+**Setup:** ML/LLM/RULE extraction has no ExtractionQualityCard.
+
+**Expected:** extraction schema rejects the artifact.
+
+## F-61 — Extractor confidence becomes evidence strength
+
+**Setup:** pipeline confidence is copied into biological evidence-strength ranking.
+
+**Expected:** scientific-contract/feature review rejects the field.
+
+## F-62 — Extractor update inherits old qualification
+
+**Setup:** prompt/model/rules/ontology/output schema materially change but prior quality card is reused.
+
+**Expected:** extractor-version/qualification check fails.
+
+## F-63 — Multiple extracted claims create fake independent evidence
+
+**Setup:** several statements extracted from one paper are assigned different IndependenceFamilies.
+
+**Expected:** source-lineage verification collapses them to the originating observation lineage.
+
+
+## F-64 — Post-T retraction rewrites historical ranking
+
+**Setup:** a source available at T is retracted at T+5 and the historical snapshot/rank is recomputed as though the source never existed.
+
+**Expected:** temporal/lifecycle verification fails; original historical state is preserved and a separate current fragility analysis is produced.
+
+## F-65 — Exhausted benchmark reused as fresh confirmation
+
+**Setup:** individual outcomes were inspected and methodology changed, but the same generation is labelled ACTIVE_CONFIRMATORY.
+
+**Expected:** BenchmarkExposure lifecycle rejects the strongest confirmatory claim.
+
+## F-66 — Strongest confirmatory artifact has no external seal
+
+**Setup:** only an internal Git hash is available for a strongest-tier ranking/prediction commitment.
+
+**Expected:** strongest-tier gate fails until required ExternalSealAttestation exists.
+
+## F-67 — Public prospective prediction drives later research
+
+**Setup:** targets are publicly released, collaborators/labs investigate them, and later support is counted as unexposed independent prospective validation.
+
+**Expected:** PredictionExposure classification marks exposure risk; clean independent L6 claim fails or is sensitivity-qualified.
+
+## F-68 — Null attempts omitted from research-program history
+
+**Setup:** only favorable endpoint/horizon/model-family attempts are reported.
+
+**Expected:** ResearchProgramAttempt ledger audit identifies selective reporting and downgrades confirmatory interpretation.
+
+## F-69 — Frozen ontology/provider representation overwritten in place
+
+**Setup:** a newer ontology/provider schema silently replaces an older frozen representation.
+
+**Expected:** snapshot/digest/migration verification fails; a new derivation artifact is required.

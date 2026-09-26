@@ -247,7 +247,11 @@ Patient-specific digital twins are outside V1 Context of Use.
 Normative documents:
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
+- [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+- [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
+- [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 
 ### 4.3 Target is a role
 
@@ -327,6 +331,10 @@ Evidence semantics are orthogonal rather than one flat enum. An EvidenceRecord s
 - observation/effect payload
 
 The normative taxonomy is defined in [EVIDENCE_TAXONOMY.md](EVIDENCE_TAXONOMY.md).
+
+Quantitative observations/effects use typed quantity/unit/scale/transform/measurement-process semantics from [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md).
+
+Non-native human/ML/LLM/rule extraction is governed by [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md); source grounding and task/domain-specific extraction qualification are required for confirmatory evidence generation.
 
 "Literature" is a source channel, not a scientific evidence-strength class.
 
@@ -1078,6 +1086,11 @@ The following are frozen unless superseded by ADR:
 35. Cross-anchor event reuse is explicitly bounded.
 36. ScientificOperatingMode and HistoricalDataPolicy are orthogonal.
 37. Scientific profiles/twins are time-indexed and obey HistoricalKnowledgeView/watermark semantics.
+38. Quantitative values require explicit quantity/unit/scale/transform/measurement-process semantics.
+39. Numerical verification is distinct from scientific validation.
+40. Model credibility is Context-of-Use specific and includes applicability/risk-of-bias/model-discrepancy assessment.
+41. Material model/dependency changes invalidate inherited validation until reassessed.
+42. Extraction confidence is not evidence strength; non-native extraction requires source grounding and quality qualification.
 
 
 ---
@@ -1104,6 +1117,12 @@ The following documents are normative for implementation detail and close gaps i
 - [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md) — event-family identity, provider coupling, cross-anchor reuse, and validation disclosure.
 - [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md) — operating mode vs historical data policy.
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md) — scientific profile/twin maturity and claim boundaries.
+- [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md) — CoU-specific credibility and numerical verification.
+- [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md) — measurement/effect/unit/transform semantics.
+- [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md) — extraction/curation quality and source grounding.
+- [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md) — fit-for-purpose credibility.
+- [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md) — typed quantitative science.
+- [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md) — extraction assurance.
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md) — disease/pathogen/therapeutic profile contracts.
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md) — dynamic/mechanistic/predictive twin architecture.
 - [../schemas/README.md](../schemas/README.md) — executable QoI/MAP/MAR/twin schemas.

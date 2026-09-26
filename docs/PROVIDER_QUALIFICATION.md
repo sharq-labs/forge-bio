@@ -44,6 +44,9 @@ identity_mapping_risk
 outcome_ascertainment_risk
 locus_to_gene_dependency
 population_ancestry_coverage
+measurement_platform_semantics
+unit_scale_transform_semantics
+batch_normalization_semantics
 representation_derivation_time_semantics
 ontology_dependency
 derived_model_dependency
@@ -196,6 +199,8 @@ No cutoff becomes authoritative until the provider audit documents:
 - representation-derivation timing;
 - locus-to-gene assignment dependencies where applicable;
 - population/ancestry coverage where relevant;
+- measurement/platform/unit/scale/transform semantics where quantitative fields are used;
+- batch/normalization provenance where relevant;
 - reconstruction dependencies.
 
 "2010" remains a working hypothesis until this gate is passed.

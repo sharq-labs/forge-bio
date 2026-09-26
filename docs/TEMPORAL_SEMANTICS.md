@@ -83,16 +83,29 @@ else:
 
 Missing/undefended availability may force UNKNOWN even when a nominal provider date exists.
 
-## 6. Retractions and corrections
+## 6. Retractions, corrections, and source lifecycle
 
 An as-of-T view preserves what was publicly knowable at T.
 
-If a record was available at T and retracted later:
-- the historical view retains the then-available record;
-- the later retraction is represented as a later event/state;
-- current corrected content must not silently replace historical content.
+Lifecycle changes are represented through immutable `SourceLifecycleEvent` artifacts such as:
+- CORRECTED;
+- RETRACTED;
+- EXPRESSION_OF_CONCERN;
+- WITHDRAWN;
+- SUPERSEDED;
+- RESTORED.
+
+If a record was available at T and retracted/corrected later:
+- the historical view retains the then-public state;
+- the later lifecycle event remains invisible to STRICT_HISTORICAL ranking at T;
+- current/evaluation metadata records the later lifecycle event;
+- current fragility sensitivity is required when the historical result materially depended on the affected source.
 
 If correction/retraction occurred before T, the as-of-T state reflects that status.
+
+Frozen historical snapshots are never silently rewritten to newer corrected content.
+
+Normative policy: [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md).
 
 ## 7. Knowledge-bearingness
 
@@ -124,6 +137,21 @@ KNOWLEDGE_BEARING examples:
 - feature choices informed by future biomedical outcomes
 
 UNKNOWN is refused in STRICT_HISTORICAL mode.
+
+### Default rule
+
+Any dependency containing biomedical-domain content defaults to **UNKNOWN / knowledge-bearing** until it is explicitly qualified.
+
+Only a narrow allowlist of demonstrably domain-agnostic operations may be certified NON_KNOWLEDGE_BEARING, for example:
+- cryptographic hashing;
+- canonical serialization;
+- generic arithmetic;
+- generic sorting;
+- generic numerical algorithms whose configuration does not encode biomedical priors.
+
+Gene synonym tables, ontology releases, MEDLINE/MeSH indexing, gene models, curated mappings, domain vocabularies, manually chosen biomedical feature rules, and pretrained biomedical representations are never NON_KNOWLEDGE_BEARING by default.
+
+STRICT_HISTORICAL therefore fails closed when bearingness is undeclared or cannot be defended.
 
 ## 8. KnowledgeWatermark
 
@@ -252,4 +280,7 @@ Required:
 9. change only generic compute infrastructure -> biomedical knowledge watermark remains unchanged;
 10. change genome-build/liftover/reference-panel dependency -> affected harmonization/LD artifacts receive the changed dependency provenance/watermark;
 11. replace a historical LD/reference resource with a modern evaluation-only panel -> historical rank/features unchanged;
-12. inject a current rsID mapping into historical variant identity -> strict historical resolution rejects or taints the artifact.
+12. inject a current rsID mapping into historical variant identity -> strict historical resolution rejects or taints the artifact;
+12a. inject a post-T gene synonym / ontology term / indexing term into a historical representation -> strict output must remain unchanged or fail closed;
+13. apply a post-T retraction/correction to the model-visible historical source state -> strict historical snapshot/ranking remains unchanged;
+14. overwrite a frozen source with a newer ontology/schema/provider representation -> snapshot verification fails.

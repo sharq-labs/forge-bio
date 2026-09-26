@@ -4,7 +4,7 @@
 
 ## 1. Target question
 
-For diseases selected from an as-of-T sampling frame in the primary genetic regime, when qualifying future E1 events occur within horizon H, does Forge Bio rank the event-associated genes higher than preregistered historical attention/discoverability controls?
+For diseases selected from an as-of-T sampling frame in the primary genetic regime, when qualifying future E1 events occur within horizon H, does adding pre-T biological evidence improve future-event gene ranking beyond a preregistered Combined Nuisance Model of attention, discoverability, genomic architecture, pleiotropy, and historical observability?
 
 This is a **conditional ranking estimand**, not a claim that every disease will produce a future qualifying event.
 
@@ -78,23 +78,39 @@ Event-weighted results may be secondary.
 
 ## 7. Proposed comparator
 
+The primary comparator is the preregistered **Combined Nuisance Model**, not the strongest single control.
+
 Primary delta:
 
 ```text
-metric(Forge Bio)
+metric(nuisance + biological signal)
 -
-metric(strongest preregistered attention/discoverability control)
+metric(nuisance only)
 ```
 
-The comparator identity is frozen in MAP.
+The nuisance model combines historically reconstructable non-biological / detectability predictors, including attention, genomic architecture, cross-trait pleiotropy, observability, and provider/source coverage.
 
-## 8. Candidate-universe normalization
+The comparator identity, feature families, capacity constraints, temporal training protocol, and source releases are frozen in MAP.
 
-Fixed K must be paired with at least one normalized metric:
-- Recall at x% of candidate universe; or
-- event rank percentile.
+Single baselines remain diagnostic controls, not the headline comparator.
 
-The final primary pair is selected on development data and frozen before sealed evaluation.
+## 8. Primary metric and candidate-universe normalization
+
+BIG 0F evaluates **event rank percentile** as the preferred primary statistic because sparse events make Recall@K discrete and K-sensitive.
+
+Candidate primary form:
+
+```text
+MacroDiseaseMean(
+    mean percentile rank of qualifying future event genes
+)
+```
+
+The primary confirmatory contrast is the paired difference between nuisance+biology and nuisance-only.
+
+Recall@K and Recall@x% remain mandatory secondary metrics unless BIG 0F provides a documented reason to freeze one as primary.
+
+Any final primary metric is selected using DEVELOPMENT-only information and frozen before sealed evaluation.
 
 ## 9. Horizon feasibility policy
 
@@ -127,15 +143,38 @@ LD/reference-panel sensitivity is required when proxy-variant matching materiall
 The pilot/provider audit must determine:
 - exact primary E1 subtype, including strict novelty vs maturation;
 - final H;
-- primary K/review budget;
-- normalized companion metric;
+- whether high-specificity gene-level assignment yields enough events or locus-level redesign is required;
+- exact eligible gene-assignment classes;
+- primary metric and any K/review-budget secondary metric;
+- Combined Nuisance feature set and matched-capacity protocol;
 - minimum number of event-bearing diseases;
 - acceptable zero-event fraction;
 - CI-width requirement;
+- simulation-based power target inputs;
+- minimum scientifically meaningful effect;
+- confirmatory alpha / test direction / test statistic;
+- confirmatory-generation multiplicity budget;
 - minimum HistoricalGeneticSearchCoverage grade for E1-NOVEL-STRICT;
 - acceptable variant/harmonization ambiguity;
 - ScientificEventFamily credit policy thresholds if the default one-credit rule needs refinement;
 - acceptable Past/Future provider-coupling level;
-- observability sensitivity policy details.
+- observability sensitivity policy details;
+- pilot sampling rule, N, second-adjudication fraction, and contamination rule.
 
 Until these are frozen, this document remains PRE-CODE CANDIDATE.
+
+
+## 12. Assignment-attention robustness
+
+The primary gene-level estimand excludes author-named, nearest-gene, positional-only, generic database-gene, and modern-L2G-only assignments unless they also independently satisfy a preregistered high-specificity assignment class.
+
+BIG 0F reports:
+- assignment-class distribution;
+- primary-eligible event yield;
+- author-named / nearest-gene fractions;
+- pre-T attention-rank correlation by assignment class;
+- locus-level one-credit sensitivity.
+
+If the primary gene label remains materially attention-coupled or too sparse after restriction, the benchmark REDESIGNS to a locus-level or otherwise attention-resistant primary endpoint.
+
+Normative decision: [adr/ADR-020-e1-primary-comparator-confirmatory-rule.md](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md).

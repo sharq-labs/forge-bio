@@ -70,23 +70,42 @@ model:
   feature_set_id: string
   config_hash: string
   random_seeds: [integer]
-  knowledge_watermark: string
+  knowledge_watermark:
+    kind: NON_KNOWLEDGE_BEARING | DATED | UNKNOWN
+    date: date?
   preprocessing_artifact_ids: [string]
   feature_selection_artifact_id: string?
 
 baselines:
   primary_comparator_id: string
+  combined_nuisance_model_id: string
   baseline_ids: [string]
   discoverability_control_id: string
+  nuisance_feature_family_ids:
+    [ATTENTION, ATTENTION_MOMENTUM, GLOBAL_GENE_POPULARITY,
+     ANNOTATION_DENSITY, GENE_LENGTH, VARIANT_OPPORTUNITY,
+     REGIONAL_GENE_DENSITY, LD_ARCHITECTURE, CROSS_TRAIT_PLEIOTROPY,
+     GENETIC_OBSERVABILITY, DISEASE_SAMPLE_SIZE_TRAJECTORY, PROVIDER_COVERAGE]
 
 statistics:
-  primary_metric_id: string
+  primary_metric_id: typed identifier
+  primary_metric_kind: EVENT_RANK_PERCENTILE | RECALL_AT_K | RECALL_AT_PERCENT | NDCG | MRR | OTHER_PREREGISTERED
   primary_k_or_budget: string
+  primary_review_budget: integer?
   normalized_companion_metric_id: string
   ci_method: string
   resampling_unit: string
   multiplicity_policy: string
-  success_threshold: string
+  null_hypothesis: string
+  alternative_hypothesis: string
+  test_statistic_id: string
+  test_direction: ONE_SIDED_GREATER | ONE_SIDED_LESS | TWO_SIDED
+  alpha: number
+  minimum_scientifically_meaningful_effect: number
+  power_target: number
+  power_analysis_artifact_id: string
+  success_threshold_numeric: number
+  confirmatory_generation_budget_id: string
   all_frame_utility_metric_id: string
   dependence_sensitivity_method: string
 
@@ -119,9 +138,12 @@ planned_analyses:
 
 governance:
   benchmark_design_provenance_id: string
+  study_tier: DEVELOPMENT | CONFIRMATORY | PROSPECTIVE
   ranking_team: [string]
   outcome_adjudication_role: string
   lockbox_custodian_role: string
+  independent_adjudicator_ids: [string]
+  external_seal_attestation_id: string?
   permitted_lockbox_accesses: integer
   sealed_disease_blinding_policy: string
   sealed_outcome_adjudicator_blinding_required: boolean
@@ -156,6 +178,23 @@ A FROZEN MAP must not contain unresolved placeholders for:
 - exact future-outcome snapshot/event-family/provider-coupling commitment;
 - all-frame utility metric;
 - dependence-sensitivity method;
-- success rule.
+- numeric success rule / alpha / power / minimum effect;
+- Combined Nuisance primary comparator;
+- confirmatory-generation budget;
+- governance role separation / external sealing for confirmatory tiers.
 
 Any post-freeze change creates a new MAP generation or a documented deviation. It never silently mutates the original plan.
+
+## Cross-field semantic invariants
+
+JSON Schema is not the only validator.
+
+`scripts/scientific_invariants.py` additionally enforces scientific invariants including:
+- STRICT_HISTORICAL watermark is not UNKNOWN and does not exceed cutoff;
+- primary comparator equals Combined Nuisance Model;
+- confirmatory ranking/adjudication/custodian roles are separated;
+- confirmatory disclosure/lockbox rules remain sealed;
+- confirmatory coverage gates are non-vacuous;
+- alpha/power/success thresholds are numeric.
+
+A FROZEN artifact is valid only when both JSON Schema and semantic invariants pass.

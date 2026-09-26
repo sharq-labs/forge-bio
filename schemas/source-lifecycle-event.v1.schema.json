@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/source-lifecycle-event.v1.schema.json",
+  "title": "Forge Bio Source Lifecycle Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "schema_version",
+    "source_artifact_id",
+    "event_type",
+    "event_public_time",
+    "reason",
+    "provenance_ref",
+    "digest"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "source-lifecycle-event-v1"
+    },
+    "source_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_type": {
+      "enum": [
+        "CORRECTED",
+        "RETRACTED",
+        "EXPRESSION_OF_CONCERN",
+        "WITHDRAWN",
+        "SUPERSEDED",
+        "RESTORED"
+      ]
+    },
+    "event_public_time": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effective_time": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "replacement_or_correction_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

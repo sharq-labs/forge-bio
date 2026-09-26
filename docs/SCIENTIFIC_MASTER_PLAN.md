@@ -265,7 +265,153 @@ T4_VALIDATED_INTERVENTION_SIMULATION_TWIN
 
 Architecture/schema completion is sufficient for BIG 0R4.
 
-Actual T2–T4 twin implementation is deferred until the relevant identity, evidence, provider, mechanism, therapeutic, and validation layers exist.
+Actual T2–T4 twin implementation is **frozen/deferred until after the core B-TGT program has passed BIG 0F and produced at least one credible historical benchmark result**. No additional Twin complexity is on the E1 critical path.
+
+---
+
+# BIG 0R5 — Model Credibility & Quantitative Integrity
+
+## Goal
+
+Close fit-for-purpose model-credibility, quantitative-semantics, numerical-verification, and applicability gaps before advanced mechanistic/predictive models are allowed to influence scientific claims.
+
+BIG 0R5 is a platform-hardening layer. It does not delay the manual BIG 0F endpoint-feasibility pilot, but its contracts are mandatory before T2+ Scientific Twin claims or endpoint-calibrated probability claims.
+
+## Outputs
+
+- ADR-016 computational model credibility / numerical verification
+- ADR-017 quantitative measurement/effect semantics
+- MODEL_CREDIBILITY_POLICY.md
+- QUANTITATIVE_SEMANTICS.md
+- QuantityDefinition
+- QuantitativeObservation
+- EffectEstimate
+- MeasurementProcessArtifact
+- NumericalVerificationArtifact
+- CredibilityAssessmentArtifact
+- ModelDiscrepancyAssessment
+- ApplicabilityDomain / prediction risk-of-bias audit
+- executable schemas for quantitative/model-credibility artifacts
+- executable positive/negative contract tests
+- source lifecycle events for corrections/retractions/withdrawals
+- BenchmarkExposureLedger / benchmark exhaustion states
+- ResearchProgramAttempt ledger
+- ExternalSealAttestation
+- prospective PredictionExposureEvent / self-fulfilling-attention guard
+
+## Acceptance
+
+- a numeric value without quantity/unit/scale/transform/context semantics cannot act as a scientific measurement;
+- incompatible dimensions/scales/transforms cannot be silently combined;
+- p-value alone cannot act as an effect estimate;
+- missing/censored observations cannot become numeric zero;
+- measurement/normalization/batch transforms carry provenance and cutoff;
+- numerical error is separated from measurement/parameter/model-form uncertainty;
+- T2+ numerical simulation records solver/method/tolerance/convergence evidence where applicable;
+- model credibility is explicitly Context-of-Use specific;
+- T3+ evaluation audits development/evaluation separation, applicability, and distribution shift;
+- probabilistic claims require held-out calibration plus a proper scoring rule;
+- material model/dependency change invalidates prior validation until re-assessed;
+- later source correction/retraction does not silently rewrite historical state;
+- benchmark reuse/adaptive exposure is tracked and can exhaust a generation;
+- strongest confirmatory/prospective artifacts are externally sealed;
+- prospective prediction exposure is tracked so self-fulfilling research activity is not mislabelled independent validation.
+
+## Gate
+
+R5 policy/schema completion is sufficient for pre-code hardening.
+
+Empirical adequacy is demonstrated later by the actual model/twin validation artifacts; the policy itself is not evidence that a future model is credible.
+
+---
+
+# BIG 0F-0 — Critical-Path Protocol Hardening
+
+## Goal
+
+Close the hostile-review blockers that determine whether a positive B-TGT-E1 result would mean biological predictive value rather than attention, genomic architecture, repeated benchmark mining, or label construction bias.
+
+This milestone is intentionally narrow. It precedes BIG 0F and blocks it.
+
+## Required outputs
+
+- ADR-020 primary gene-assignment eligibility / Combined Nuisance comparator / confirmatory decision rule
+- ADR-021 BIG 0F sampling / second-adjudication / contamination protocol
+- high-specificity primary gene-assignment classes
+- author-named / nearest-gene assignments demoted to secondary sensitivity
+- Combined Nuisance Model specification
+- mandatory genomic-architecture and cross-trait pleiotropy baselines
+- historical GeneModelRelease identity
+- typed/cross-field scientific artifact invariants
+- confirmatory alpha / MDE / power workflow
+- ConfirmatoryProgramBudget
+- research-program multiplicity / attempt accounting
+- BIG 0F sampling frame + random seed commitment procedure
+- second-adjudicator protocol
+- pilot DEVELOPMENT_EXPOSED exclusion rule
+- symmetric non-event historical-audit sample
+- mini historical-provider availability audit
+- development-only nuisance-headroom study
+
+## Combined Nuisance Model
+
+Required families, where historically reconstructable:
+
+```text
+attention
+attention momentum
+global popularity
+annotation density
+gene length / historical gene geometry
+variant opportunity
+regional gene density
+LD architecture
+cross-trait pleiotropy
+historical genetic observability
+disease sample-size trajectory
+provider/source coverage
+```
+
+The headline contrast becomes:
+
+```text
+Nuisance + Biological Signal
+vs
+Nuisance Only
+```
+
+## Primary label rule
+
+The primary gene-level endpoint accepts only frozen high-specificity assignment classes.
+
+AUTHOR_NAMED, NEAREST_GENE, positional-only, generic database-gene, and modern-L2G-only mappings cannot independently create a primary positive.
+
+If this leaves inadequate event yield or remains attention-coupled, REDESIGN to a locus-level primary endpoint.
+
+## Statistical gate
+
+Before a confirmatory generation exists, freeze:
+
+- test statistic;
+- direction;
+- alpha;
+- minimum scientifically meaningful effect;
+- target power;
+- simulation-based power artifact;
+- numeric success rule;
+- confirmatory-generation budget / alpha-spending rule.
+
+A free-text success threshold is prohibited.
+
+## BIG 0F entry gate
+
+BIG 0F cannot start until:
+- pilot sampling rule is frozen;
+- target pilot N is frozen from source availability without outcome adjudication;
+- numeric GO / REDESIGN / NO-GO threshold categories are defined;
+- second-adjudication plan is assigned or the reduced claim ceiling is accepted;
+- pilot contamination rule is frozen;
+- schemas + semantic invariants reject the hostile-review probes.
 
 ---
 
@@ -275,7 +421,9 @@ Actual T2–T4 twin implementation is deferred until the relevant identity, evid
 
 Test whether B-TGT-E1 ground truth can be constructed credibly before provider-scale implementation.
 
-This is a scientific feasibility exercise, not a model-performance experiment.
+This is a scientific feasibility exercise, not a confirmatory model-performance experiment.
+
+A small **DEVELOPMENT-only Combined Nuisance headroom analysis** is allowed because its purpose is to test whether a plausible biological signal has room to improve beyond nuisance structure; all pilot cases remain permanently excluded from sealed confirmation.
 
 ## Manual pilot
 
@@ -296,7 +444,14 @@ Adjudicate a small heterogeneous set of future genetic events and measure:
 - retrospective curation burden;
 - ancestry/population metadata availability;
 - adjudicator disagreement;
-- fraction of unresolved AMBIGUOUS events.
+- fraction of unresolved AMBIGUOUS events;
+- assignment-class distribution and author-named / nearest-gene fraction;
+- correlation between pre-T attention rank and assignment class;
+- share of post-T events using pre-T cohorts;
+- symmetric non-event audit cost;
+- archived field-level source availability;
+- Combined Nuisance headroom;
+- event-count / rank-variance inputs for simulation-based power.
 
 ## Outputs
 
@@ -306,11 +461,17 @@ Adjudicate a small heterogeneous set of future genetic events and measure:
 - lineage/overlap examples;
 - ambiguity statistics;
 - workload estimate;
+- externally sealed BIG 0F protocol;
+- second-adjudicator agreement report;
+- development-only Combined Nuisance headroom report;
+- simulation-based power inputs/report;
 - GO / REDESIGN / NO-GO recommendation for B-TGT-E1-v0.
 
 ## Gate
 
-Do not build provider-scale benchmark machinery if the endpoint cannot be adjudicated with acceptable ambiguity and reconstruction burden.
+Do not build provider-scale benchmark machinery if the endpoint cannot be adjudicated with acceptable ambiguity, assignment independence, power/headroom, source availability, and reconstruction burden.
+
+All BIG 0F diseases/events are permanently DEVELOPMENT_EXPOSED and cannot enter a strongest-tier sealed generation.
 
 ---
 
@@ -421,6 +582,8 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - SourceRecord
 - ScientificClaim
 - EvidenceRecord
+- ExtractionArtifact / ExtractionQualityCard
+- evidence extraction quality policy + source grounding
 - evidence method classes
 - source channels
 - evidence-family / independence semantics
@@ -434,6 +597,10 @@ Create a replayable scientific ledger from raw provider bytes to admitted eviden
 - unchanged inputs reproduce identical manifest/content identities
 - every evidence item traces to raw source bytes
 - every transformation records code/config identity
+- non-native extraction retains source span/locator and extractor/version/config
+- automated extraction has task/domain-specific quality qualification
+- human curation disagreement/adjudication remains auditable
+- extractor confidence is not scientific evidence strength
 - literature is represented as a source channel, not a strength class
 - duplicate database propagation does not create false independent evidence
 - contradiction/comparability primitive exists before BIG 7; BIG 10 expands it rather than introducing it from scratch
@@ -618,6 +785,11 @@ No LLM, PLM, GNN, current graph, or future-trained representation.
 - exact Future Outcome snapshot commitment matches the frozen MAP
 - strongest L3 outcome adjudication is rank-blinded
 - results reported even if negative
+
+
+## Early prospective shadow ledger
+
+As soon as a stable baseline/ranker exists in BIG 7, begin a **private externally timestamped prospective prediction ledger**. Predictions remain under custody to limit self-fulfilling research-attention effects. This starts the prospective clock early; it does not upgrade claims until independent future outcomes mature.
 
 ---
 
@@ -1119,7 +1291,7 @@ This is the ultimate long-term evidence.
 # 7. Current execution state
 
 ```text
-Current milestone: BIG 0R3 + BIG 0R4 (parallel platform hardening) → BIG 0F
+Current milestone: BIG 0F-0 critical-path hardening → BIG 0F
 Implementation status: not started
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
@@ -1170,7 +1342,15 @@ Implementation order is governed by:
 - [../schemas/README.md](../schemas/README.md)
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
+- [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
+- [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md)
+- [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+- [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
+- [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
+- [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
+- [adr/ADR-019-source-benchmark-lifecycle.md](adr/ADR-019-source-benchmark-lifecycle.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.

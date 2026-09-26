@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/confirmatory-program-budget.v1.schema.json",
+  "title": "Forge Bio Confirmatory Program Budget v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "budget_id",
+    "schema_version",
+    "benchmark_family",
+    "familywise_alpha",
+    "allocation_method",
+    "max_confirmatory_generations",
+    "generation_allocations",
+    "development_results_can_support_confirmatory_claim",
+    "digest"
+  ],
+  "properties": {
+    "budget_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "confirmatory-program-budget-v1"
+    },
+    "benchmark_family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "familywise_alpha": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 0.1
+    },
+    "allocation_method": {
+      "enum": [
+        "FIXED_SPLIT",
+        "ALPHA_SPENDING",
+        "SEQUENTIAL_BOUNDARY",
+        "OTHER_PREREGISTERED"
+      ]
+    },
+    "max_confirmatory_generations": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "generation_allocations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "generation_id",
+          "allocated_alpha",
+          "status"
+        ],
+        "properties": {
+          "generation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "allocated_alpha": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 0.1
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "ACTIVE",
+              "SPENT",
+              "RETIRED"
+            ]
+          }
+        }
+      }
+    },
+    "development_results_can_support_confirmatory_claim": {
+      "const": false
+    },
+    "post_failure_policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+    }
+  }
+}

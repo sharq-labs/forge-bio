@@ -41,19 +41,21 @@
     },
     "created_at": {
       "type": "string",
-      "minLength": 1
+      "format": "date-time"
     },
     "frozen_at": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "format": "date-time"
     },
     "digest": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
     },
     "qoi_ref": {
       "type": "string",
@@ -90,10 +92,12 @@
           "type": "string"
         },
         "cutoff": {
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "horizon": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[0-9]+(y| years?)$"
         },
         "disease_sampling_frame_id": {
           "type": "string"
@@ -316,7 +320,74 @@
           }
         },
         "knowledge_watermark": {
-          "type": "string"
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "NON_KNOWLEDGE_BEARING",
+                "DATED",
+                "UNKNOWN"
+              ]
+            },
+            "date": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "const": "DATED"
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              },
+              "then": {
+                "required": [
+                  "date"
+                ],
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "NON_KNOWLEDGE_BEARING",
+                      "UNKNOWN"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "date": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          ]
         },
         "preprocessing_artifact_ids": {
           "type": "array",
@@ -338,11 +409,14 @@
       "required": [
         "primary_comparator_id",
         "baseline_ids",
-        "discoverability_control_id"
+        "discoverability_control_id",
+        "combined_nuisance_model_id",
+        "nuisance_feature_family_ids"
       ],
       "properties": {
         "primary_comparator_id": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "baseline_ids": {
           "type": "array",
@@ -352,6 +426,31 @@
         },
         "discoverability_control_id": {
           "type": "string"
+        },
+        "combined_nuisance_model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nuisance_feature_family_ids": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ATTENTION",
+              "ATTENTION_MOMENTUM",
+              "GLOBAL_GENE_POPULARITY",
+              "ANNOTATION_DENSITY",
+              "GENE_LENGTH",
+              "VARIANT_OPPORTUNITY",
+              "REGIONAL_GENE_DENSITY",
+              "LD_ARCHITECTURE",
+              "CROSS_TRAIT_PLEIOTROPY",
+              "GENETIC_OBSERVABILITY",
+              "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+              "PROVIDER_COVERAGE"
+            ]
+          }
         }
       }
     },
@@ -365,13 +464,25 @@
         "ci_method",
         "resampling_unit",
         "multiplicity_policy",
-        "success_threshold",
         "all_frame_utility_metric_id",
-        "dependence_sensitivity_method"
+        "dependence_sensitivity_method",
+        "null_hypothesis",
+        "alternative_hypothesis",
+        "test_statistic_id",
+        "test_direction",
+        "alpha",
+        "minimum_scientifically_meaningful_effect",
+        "power_target",
+        "power_analysis_artifact_id",
+        "success_threshold_numeric",
+        "confirmatory_generation_budget_id",
+        "primary_metric_kind",
+        "primary_review_budget"
       ],
       "properties": {
         "primary_metric_id": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
         },
         "primary_k_or_budget": {
           "type": "string"
@@ -388,14 +499,72 @@
         "multiplicity_policy": {
           "type": "string"
         },
-        "success_threshold": {
-          "type": "string"
-        },
         "all_frame_utility_metric_id": {
           "type": "string"
         },
         "dependence_sensitivity_method": {
           "type": "string"
+        },
+        "null_hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternative_hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "test_statistic_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "test_direction": {
+          "enum": [
+            "ONE_SIDED_GREATER",
+            "ONE_SIDED_LESS",
+            "TWO_SIDED"
+          ]
+        },
+        "alpha": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 0.1
+        },
+        "minimum_scientifically_meaningful_effect": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "power_target": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 0.99
+        },
+        "power_analysis_artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "success_threshold_numeric": {
+          "type": "number"
+        },
+        "confirmatory_generation_budget_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_metric_kind": {
+          "enum": [
+            "EVENT_RANK_PERCENTILE",
+            "RECALL_AT_K",
+            "RECALL_AT_PERCENT",
+            "NDCG",
+            "MRR",
+            "OTHER_PREREGISTERED"
+          ]
+        },
+        "primary_review_budget": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
         }
       }
     },
@@ -548,16 +717,19 @@
       "additionalProperties": false,
       "required": [
         "benchmark_design_provenance_id",
+        "study_tier",
         "ranking_team",
         "outcome_adjudication_role",
         "lockbox_custodian_role",
+        "independent_adjudicator_ids",
         "permitted_lockbox_accesses",
         "sealed_disease_blinding_policy",
         "sealed_outcome_adjudicator_blinding_required",
         "validation_generation_status",
         "validation_access_count",
         "validation_max_disclosure_level",
-        "deviation_policy"
+        "deviation_policy",
+        "external_seal_attestation_id"
       ],
       "properties": {
         "benchmark_design_provenance_id": {
@@ -565,19 +737,25 @@
         },
         "ranking_team": {
           "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
           "items": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         },
         "outcome_adjudication_role": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "lockbox_custodian_role": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "permitted_lockbox_accesses": {
           "type": "integer",
-          "minimum": 0
+          "minimum": 0,
+          "maximum": 1
         },
         "sealed_disease_blinding_policy": {
           "type": "string"
@@ -606,6 +784,27 @@
         },
         "deviation_policy": {
           "type": "string"
+        },
+        "study_tier": {
+          "enum": [
+            "DEVELOPMENT",
+            "CONFIRMATORY",
+            "PROSPECTIVE"
+          ]
+        },
+        "independent_adjudicator_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "external_seal_attestation_id": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -615,5 +814,100 @@
         "type": "string"
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FROZEN"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "frozen_at",
+          "digest"
+        ],
+        "properties": {
+          "frozen_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "governance": {
+            "properties": {
+              "study_tier": {
+                "enum": [
+                  "CONFIRMATORY",
+                  "PROSPECTIVE"
+                ]
+              }
+            },
+            "required": [
+              "study_tier"
+            ]
+          }
+        },
+        "required": [
+          "governance"
+        ]
+      },
+      "then": {
+        "properties": {
+          "governance": {
+            "properties": {
+              "independent_adjudicator_ids": {
+                "minItems": 1
+              },
+              "external_seal_attestation_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sealed_outcome_adjudicator_blinding_required": {
+                "const": true
+              },
+              "validation_generation_status": {
+                "const": "ACTIVE"
+              },
+              "validation_max_disclosure_level": {
+                "const": "AGGREGATE_ONLY"
+              }
+            }
+          },
+          "coverage_gates": {
+            "properties": {
+              "max_temporal_unknown_fraction": {
+                "exclusiveMaximum": 1
+              },
+              "min_outcome_coverage_fraction": {
+                "exclusiveMinimum": 0
+              },
+              "max_novelty_ambiguity_fraction": {
+                "exclusiveMaximum": 1
+              },
+              "max_assignment_ambiguity_fraction": {
+                "exclusiveMaximum": 1
+              },
+              "min_lineage_completeness_fraction": {
+                "exclusiveMinimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

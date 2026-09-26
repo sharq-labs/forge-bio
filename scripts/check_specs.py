@@ -21,6 +21,26 @@ required = [
     ROOT / "schemas" / "virus-profile-extension.v1.schema.json",
     ROOT / "schemas" / "pathogen-host-profile.v1.schema.json",
     ROOT / "schemas" / "therapeutic-profile.v1.schema.json",
+    ROOT / "schemas" / "quantity-definition.v1.schema.json",
+    ROOT / "schemas" / "quantitative-observation.v1.schema.json",
+    ROOT / "schemas" / "effect-estimate.v1.schema.json",
+    ROOT / "schemas" / "measurement-process.v1.schema.json",
+    ROOT / "schemas" / "numerical-verification.v1.schema.json",
+    ROOT / "schemas" / "model-credibility.v1.schema.json",
+    ROOT / "schemas" / "extraction-artifact.v1.schema.json",
+    ROOT / "schemas" / "extraction-quality-card.v1.schema.json",
+    ROOT / "schemas" / "source-lifecycle-event.v1.schema.json",
+    ROOT / "schemas" / "benchmark-exposure-ledger.v1.schema.json",
+    ROOT / "schemas" / "external-seal-attestation.v1.schema.json",
+    ROOT / "schemas" / "prediction-exposure-event.v1.schema.json",
+    ROOT / "schemas" / "research-program-attempt.v1.schema.json",
+    ROOT / "schemas" / "gene-model-release.v1.schema.json",
+    ROOT / "schemas" / "confirmatory-program-budget.v1.schema.json",
+    ROOT / "scripts" / "scientific_invariants.py",
+    ROOT / "tests" / "spec" / "test_hostile_review_regressions.py",
+    ROOT / "docs" / "BIG_0F_PROTOCOL.md",
+    ROOT / "docs" / "adr" / "ADR-020-e1-primary-comparator-confirmatory-rule.md",
+    ROOT / "docs" / "adr" / "ADR-021-big-0f-pilot-protocol.md",
     ROOT / "tests" / "spec" / "test_schema_contracts.py",
 ]
 for path in required:
@@ -89,6 +109,50 @@ for required_phrase in [
     if required_phrase not in twin_arch:
         errors.append(f"scientific twin architecture missing required claim boundary: {required_phrase}")
 
+# BIG 0R5 credibility/quantitative contract checks
+for required_doc in [
+    ROOT / "docs" / "MODEL_CREDIBILITY_POLICY.md",
+    ROOT / "docs" / "QUANTITATIVE_SEMANTICS.md",
+    ROOT / "docs" / "adr" / "ADR-016-model-credibility-numerical-verification.md",
+    ROOT / "docs" / "adr" / "ADR-017-quantitative-semantics.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing R5 scientific contract: {required_doc.relative_to(ROOT)}")
+
+
+# Evidence extraction assurance checks
+for required_doc in [
+    ROOT / "docs" / "EVIDENCE_EXTRACTION_POLICY.md",
+    ROOT / "docs" / "adr" / "ADR-018-evidence-extraction-quality.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing extraction assurance contract: {required_doc.relative_to(ROOT)}")
+
+
+
+# Research-program lifecycle integrity checks
+for required_doc in [
+    ROOT / "docs" / "BENCHMARK_LIFECYCLE_POLICY.md",
+    ROOT / "docs" / "adr" / "ADR-019-source-benchmark-lifecycle.md",
+]:
+    if not required_doc.exists():
+        errors.append(f"missing lifecycle integrity contract: {required_doc.relative_to(ROOT)}")
+
+
+# BIG 0F-0 critical-path checks
+benchmark_spec = (ROOT / "docs" / "BENCHMARK_V0_SPEC.md").read_text(encoding="utf-8")
+for phrase in [
+    "Combined Nuisance Model",
+    "AUTHOR_NAMED",
+    "DEVELOPMENT_EXPOSED",
+]:
+    if phrase not in benchmark_spec:
+        errors.append(f"benchmark spec missing BIG 0F-0 contract: {phrase}")
+
+audit = (ROOT / "docs" / "PLAN_STRENGTH_AUDIT.md").read_text(encoding="utf-8")
+if "No currently known major architecture/specification gap remains" in audit:
+    errors.append("PLAN_STRENGTH_AUDIT still contains superseded no-known-gap conclusion")
+
 if errors:
     print("SPEC INTEGRITY CHECK FAILED")
     for err in errors:
@@ -96,3 +160,5 @@ if errors:
     sys.exit(1)
 
 print("SPEC INTEGRITY CHECK PASSED")
+
+

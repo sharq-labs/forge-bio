@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/extraction-quality-card.v1.schema.json",
+  "title": "Forge Bio Extraction Quality Card v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "quality_card_id",
+    "schema_version",
+    "extractor_id",
+    "extractor_version",
+    "task_definition",
+    "domain_scope",
+    "gold_set_id",
+    "sample_size",
+    "precision",
+    "recall",
+    "abstention_rate",
+    "known_failure_modes",
+    "qualification_status",
+    "digest",
+    "precision_ci_low",
+    "recall_ci_low",
+    "negation_evaluation_status",
+    "null_result_evaluation_status",
+    "qualification_threshold_artifact_id",
+    "meets_qualification_thresholds",
+    "minimum_sample_size_required",
+    "minimum_precision_required",
+    "minimum_recall_required"
+  ],
+  "properties": {
+    "quality_card_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "extraction-quality-card-v1"
+    },
+    "extractor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "extractor_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_definition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain_scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gold_set_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sample_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "precision": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "recall": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "abstention_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "inter_reviewer_agreement": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "known_failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "qualification_status": {
+      "enum": [
+        "QUALIFIED",
+        "CONDITIONAL",
+        "UNQUALIFIED",
+        "UNKNOWN"
+      ]
+    },
+    "qualification_condition": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "precision_ci_low": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "recall_ci_low": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "negation_evaluation_status": {
+      "enum": [
+        "EVALUATED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "negation_accuracy": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "null_result_evaluation_status": {
+      "enum": [
+        "EVALUATED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "null_result_accuracy": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "qualification_threshold_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "meets_qualification_thresholds": {
+      "type": "boolean"
+    },
+    "minimum_sample_size_required": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "minimum_precision_required": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "minimum_recall_required": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "qualification_status": {
+            "const": "CONDITIONAL"
+          }
+        },
+        "required": [
+          "qualification_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "qualification_condition"
+        ],
+        "properties": {
+          "qualification_condition": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "qualification_status": {
+            "const": "QUALIFIED"
+          }
+        },
+        "required": [
+          "qualification_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "meets_qualification_thresholds": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "negation_evaluation_status": {
+            "const": "EVALUATED"
+          }
+        },
+        "required": [
+          "negation_evaluation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "negation_accuracy"
+        ],
+        "properties": {
+          "negation_accuracy": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "null_result_evaluation_status": {
+            "const": "EVALUATED"
+          }
+        },
+        "required": [
+          "null_result_evaluation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "null_result_accuracy"
+        ],
+        "properties": {
+          "null_result_accuracy": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  ]
+}

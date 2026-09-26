@@ -52,6 +52,7 @@ EntityKind
     BIOLOGICAL_PROCESS
     BIOMARKER
     GENE
+    GENE_MODEL_RELEASE
     GENOME_ASSEMBLY
     REFERENCE_SEQUENCE
     GENOMIC_VARIANT
@@ -214,6 +215,37 @@ ScientificTwinFamily
     PATHOGEN_HOST_TWIN
     THERAPEUTIC_TWIN
 
+ModelInfluence
+    ADVISORY
+    MATERIAL
+    DOMINANT
+
+CredibilityConclusion
+    ADEQUATE_FOR_COU
+    CONDITIONALLY_ADEQUATE
+    INADEQUATE
+    UNKNOWN
+
+PredictionRiskOfBias
+    LOW
+    SOME_CONCERNS
+    HIGH
+    UNKNOWN
+    NOT_APPLICABLE
+
+MissingnessState
+    OBSERVED
+    MISSING
+    NOT_APPLICABLE
+
+CensoringState
+    NONE
+    BELOW_DETECTION
+    ABOVE_DETECTION
+    RIGHT_CENSORED
+    LEFT_CENSORED
+    INTERVAL_CENSORED
+
 TherapeuticModality
     SMALL_MOLECULE
     ANTIBODY
@@ -264,6 +296,7 @@ KnowledgeWatermark
 EntityId
 EntityRevision
 ExternalIdentifierAssignment
+GeneModelRelease
 GenomeAssembly
 ReferenceSequence
 GenomicVariant
@@ -301,6 +334,19 @@ InterventionSemantics
 IdentifiabilityStatus
 TwinPerturbation
 TwinSimulationResult
+QuantityDefinition
+UnitDefinition
+TransformDefinition
+QuantitativeObservation
+EffectEstimate
+MeasurementProcessArtifact
+ExtractionArtifact
+ExtractionQualityCard
+NumericalVerificationArtifact
+ModelDiscrepancyAssessment
+ApplicabilityDomain
+CredibilityAssessmentArtifact
+PredictionRiskAssessment
 Cohort
 Dataset
 Biobank
@@ -342,6 +388,7 @@ UncertaintyBundle
 - LabelState is endpoint-specific.
 - gene != protein != target.
 - locus/variant event != gene assignment.
+- gene geometry/length/window != timeless gene identity; it depends on GeneModelRelease.
 - rsID/coordinate string != canonical variant identity.
 - LD relation is population/reference-panel/version dependent.
 - harmonization/liftover is a provenance-bearing derivation.
@@ -363,6 +410,17 @@ UncertaintyBundle
 - historical twin cutoff != valid_at timestamp.
 - state-model structure/update policy may be knowledge-bearing and must carry provenance/watermark.
 - T4 perturbation != causal intervention unless causal assumptions/intervention semantics/identifiability requirements pass.
+- numeric value != scientific measurement without quantity/unit/scale/transform/context semantics.
+- p-value != effect estimate.
+- extractor confidence != scientific evidence strength.
+- extracted claim != independent observation.
+- extraction representation change != new IndependenceFamily.
+- numerical solver agreement != biological validation.
+- numerical error != parameter uncertainty != model-form uncertainty != measurement uncertainty.
+- calibration != model correctness.
+- model credibility is Context-of-Use specific.
+- model validation does not survive a material dependency change without re-assessment.
+- out-of-domain prediction != validated prediction.
 - simulation result != clinical evidence.
 - therapeutic profile != patient-specific treatment recommendation.
 - candidate-universe membership requires provenance.

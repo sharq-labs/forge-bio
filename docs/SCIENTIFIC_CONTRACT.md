@@ -1175,3 +1175,289 @@ Normative documents:
 - [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
+
+
+---
+
+## 39. Quantitative scientific semantics contract
+
+A numeric value is not scientifically interpretable without explicit semantic metadata.
+
+Quantitative evidence/features/twin variables use:
+- QuantityDefinition;
+- unit/dimension;
+- measurement scale;
+- transform;
+- measurement process;
+- context;
+- uncertainty;
+- provenance.
+
+Rules:
+- p-value != effect estimate;
+- odds ratio != risk ratio != hazard ratio;
+- ratio != log-ratio;
+- normalized assay intensity != physical concentration;
+- missing/censored != zero;
+- incompatible dimensions cannot be aggregated;
+- normalization/imputation/batch correction are provenance-bearing transformations;
+- a transformation fitted on post-cutoff data is temporal leakage.
+
+Normative policy: [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md).
+
+---
+
+## 40. Model credibility contract
+
+A model is credible only relative to a defined Context of Use.
+
+```text
+validated for CoU A
+!=
+validated for CoU B
+```
+
+T2+ credibility considers:
+- research decision;
+- model influence;
+- consequence if wrong;
+- software/model verification;
+- numerical verification when applicable;
+- parameter adequacy/identifiability;
+- model discrepancy;
+- validation adequacy;
+- uncertainty adequacy;
+- applicability/domain shift;
+- prediction risk of bias.
+
+### 40.1 Numerical verification
+
+For numerical simulation, verification considers:
+- solver/engine/version;
+- numerical method/order where applicable;
+- tolerances;
+- discretization/timestep/resolution;
+- convergence/refinement;
+- stochastic replicate/Monte Carlo error;
+- invariant/residual checks;
+- reference/synthetic solution checks where possible;
+- numerical error;
+- reproducibility tolerance.
+
+Numerical agreement is not biological validation.
+
+### 40.2 Predictive risk/applicability
+
+T3+ separates model development from model evaluation and audits:
+- data/source selection;
+- predictors/features;
+- outcome/label construction;
+- analysis/evaluation.
+
+Applicability evaluates relevant shift across:
+- time;
+- provider/source;
+- population/ancestry;
+- disease/target family;
+- phenotype/measurement definition;
+- assay/platform;
+- base rate/prevalence where relevant.
+
+Outside-domain prediction is extrapolation, not validated prediction.
+
+### 40.3 Probability claims
+
+Probability outputs require:
+- explicit endpoint/horizon;
+- held-out calibration;
+- calibration assessment;
+- at least one proper scoring rule;
+- applicability boundary.
+
+Discrimination alone is insufficient.
+
+### 40.4 Validation invalidation
+
+Validation attaches to an exact dependency digest.
+
+Material change to model structure, preprocessing/features, parameters, measurement model, update policy, endpoint, applicability domain, or output-changing numerical configuration creates a new validation target.
+
+Normative policy: [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md).
+
+
+---
+
+## 41. Evidence extraction and curation contract
+
+Source quality and extraction quality are separate.
+
+Non-native structured extraction requires an ExtractionArtifact with:
+- source artifact/record;
+- recoverable source locator/span;
+- extraction method;
+- extractor/version/config;
+- knowledge horizon/watermark;
+- output schema version;
+- extracted claim IDs;
+- abstention state;
+- review/adjudication state;
+- provenance/digest.
+
+Automated/rule-based extractors require a task/domain-specific ExtractionQualityCard.
+
+Rules:
+- extractor confidence != scientific evidence strength;
+- an extracted claim without reviewable source grounding cannot become confirmatory EvidenceRecord;
+- human review does not erase machine-extraction provenance;
+- multiple extracted statements from one source do not create independent biological evidence;
+- material extractor/model/prompt/rule/ontology/schema changes trigger requalification;
+- UNKNOWN/UNQUALIFIED extraction quality is refused for confirmatory evidence generation.
+
+Normative policy: [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md).
+
+
+---
+
+## 42. Source lifecycle, benchmark exhaustion, and prospective independence contract
+
+### 42.1 Source lifecycle
+
+Historical reconstruction resolves source lifecycle state as-of-T.
+
+Later correction/retraction/withdrawal events:
+- do not retroactively rewrite the historical view;
+- are recorded in current/evaluation metadata;
+- trigger fragility sensitivity when the historical result materially depended on affected evidence.
+
+Frozen snapshots are immutable; newer provider/ontology/schema representations create new derivation artifacts.
+
+### 42.2 Benchmark exposure lifecycle
+
+Every confirmatory benchmark generation has a BenchmarkExposureLedger.
+
+Generation states:
+
+```text
+ACTIVE_CONFIRMATORY
+DEVELOPMENT_EXPOSED
+EXHAUSTED
+RETIRED
+```
+
+A generation cannot remain ACTIVE_CONFIRMATORY after evaluation feedback materially changes endpoint, features, model, thresholds, disease/candidate selection, adjudication, or provider/source selection.
+
+EXHAUSTED generations cannot support a new strongest-tier confirmatory claim.
+
+### 42.3 Research-program attempt ledger
+
+Repeated benchmark generations, endpoints, horizons, disease subsets, and model families are logged.
+
+Selective reporting of only favorable attempts is prohibited.
+
+### 42.4 External seal
+
+For strongest confirmatory/prospective claims, required frozen artifact digests receive an ExternalSealAttestation through an independent custodian or third-party timestamp/registration mechanism.
+
+Internal Git history is necessary provenance but is not treated as sufficient external evidence of sequencing on its own.
+
+### 42.5 Prospective prediction exposure
+
+Prospective predictions record whether they were private, limited, collaborator-shared, or public.
+
+Later evidence is classified:
+
+```text
+UNEXPOSED_PROSPECTIVE
+EXPOSURE_POSSIBLE
+EXPOSURE_CONFIRMED
+UNKNOWN_EXPOSURE
+```
+
+Evidence that may have been induced by public Forge Bio predictions is not automatically counted as clean independent prospective confirmation.
+
+### 42.6 L3 / L6 claim gates
+
+Strongest L3 requires:
+- ACTIVE_CONFIRMATORY benchmark generation;
+- exposure ledger;
+- required external seals;
+- no adaptive feedback into the frozen method.
+
+L6 additionally requires:
+- prospectively registered prediction artifact;
+- exposure classification;
+- independent outcome collection/assessment;
+- disclosure of any prediction-to-research influence risk.
+
+Normative policy: [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md).
+
+---
+
+## 43. B-TGT-E1 critical-path contract after independent hostile review
+
+### 43.1 Biological value must be incremental over nuisance structure
+
+The primary scientific claim is not:
+
+> Forge Bio beats random / publication count.
+
+It is:
+
+> Pre-T biological evidence provides reproducible incremental ranking value beyond a preregistered Combined Nuisance Model built from as-of-T attention, discoverability, genomic architecture, cross-trait pleiotropy, historical observability, and source/measurement opportunity.
+
+The primary confirmatory comparator is therefore nuisance-only versus nuisance-plus-biological-signal under matched temporal protocol.
+
+### 43.2 Primary gene labels must resist attention circularity
+
+AUTHOR_NAMED, NEAREST_GENE, positional-only, generic database-gene, modern-L2G-only, or current-curation-only assignments cannot independently create a primary B-TGT-E1 gene positive.
+
+Primary labels require a frozen high-specificity assignment class under ADR-020.
+
+If the resulting event set is too sparse or remains attention-coupled, the benchmark REDESIGNS to a locus-level or otherwise attention-resistant endpoint.
+
+### 43.3 Confirmatory statistics must be decision-complete
+
+A confirmatory MAP freezes:
+- null/alternative;
+- test statistic;
+- direction;
+- alpha;
+- minimum scientifically meaningful effect;
+- target power;
+- power analysis;
+- numeric success rule;
+- confirmatory-generation / alpha-spending budget.
+
+A free-text success threshold is invalid.
+
+### 43.4 Pilot contamination
+
+Every case inspected in BIG 0F is DEVELOPMENT_EXPOSED and cannot enter the strongest-tier sealed generation.
+
+### 43.5 Independent adjudication / custody
+
+Strongest-tier interpretation requires operational independence, not merely named roles.
+
+At minimum:
+- ranking team;
+- outcome adjudicator;
+- lockbox custodian
+
+are separated, and BIG 0F includes independent duplicate adjudication.
+
+If independence cannot be provided, claim maturity is capped rather than silently waived.
+
+### 43.6 Machine enforcement
+
+Scientific artifact validity requires:
+1. JSON Schema structural validation;
+2. format validation;
+3. cross-field scientific semantic invariants;
+4. hostile-review regression tests.
+
+Field presence alone does not establish scientific validity.
+
+Normative decisions:
+- [ADR-020](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
+- [ADR-021](adr/ADR-021-big-0f-pilot-protocol.md)
+- [BIG_0F_PROTOCOL.md](BIG_0F_PROTOCOL.md)
