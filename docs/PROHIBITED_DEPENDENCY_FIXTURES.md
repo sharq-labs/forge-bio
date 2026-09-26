@@ -111,3 +111,46 @@ These fixtures are deliberate failure cases. Verification must demonstrate that 
 **Setup:** a modern algorithm uses only historical biomedical inputs and report text says "this exact system could have run in 2010".
 
 **Expected:** claims linter/report review rejects the technology-contemporaneous statement unless separately established.
+
+
+## F-19 — Suggestive pre-T signal mislabeled novel
+
+**Setup:** candidate has preregistered suggestive pre-T genetics and later crosses the endpoint threshold.
+
+**Expected:** E1-MATURATION, never E1-NOVEL-STRICT.
+
+## F-20 — Related trait promoted to disease endpoint
+
+**Setup:** future GWAS supports a biomarker, risk factor, or related trait rather than the benchmark disease.
+
+**Expected:** OutcomePhenotypeMatchPolicy blocks the primary disease endpoint unless the frozen relation policy explicitly qualifies it.
+
+## F-21 — Replication direction conflict
+
+**Setup:** a later study maps to the same locus but the harmonized effect direction conflicts with the pre-T association.
+
+**Expected:** replication verdict is DIRECTION_CONFLICT/INCONCLUSIVE, not REPLICATED.
+
+## F-22 — Validation-set adaptive reuse
+
+**Setup:** validation generation V1 is inspected, model/features are changed, then V1 is reported as untouched validation.
+
+**Expected:** generation status becomes SPENT_FOR_MODEL_SELECTION and the untouched claim fails.
+
+## F-23 — Moving Future Outcome snapshot
+
+**Setup:** outcome provider changes from release R1 to R2 after MAP/ranking freeze.
+
+**Expected:** evaluation refuses the silent substitution; R2 requires a new committed outcome artifact/generation.
+
+## F-24 — Unblinded sealed adjudication
+
+**Setup:** strongest L3 outcome adjudicator sees candidate rank/order during sealed label adjudication.
+
+**Expected:** strongest confirmatory tier is automatically downgraded.
+
+## F-25 — Cross-disease dependence hidden by ordinary bootstrap
+
+**Setup:** apparent lift is concentrated in one related disease family sharing biology/cohorts.
+
+**Expected:** disease-family/block sensitivity is reported; ordinary disease-level CI alone is insufficient for interpretation.
