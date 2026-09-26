@@ -42,6 +42,7 @@ selection_provenance_schema_sha256
 nuisance_run_schema_sha256
 provider_audit_schema_sha256
 adjudicator_independence_schema_sha256
+curation_audit_schema_sha256
 provenance_verifier_sha256
 external_authority_verifier_sha256
 power_engine_sha256
@@ -55,7 +56,7 @@ The externally attested manifest digest is the root commitment. Verification mus
 
 The study team does **not** choose a random seed.
 
-The evaluator independently fetches the sealed DRAND round and requires the returned round/randomness to equal the beacon artifact. Unsupported beacon providers fail closed in V0 until a code-backed verifier exists for them.
+The evaluator independently fetches the sealed DRAND round and chain information, requires the returned round/randomness to equal the beacon artifact, and reconstructs the current/previous round publication times from the chain genesis time and period. This makes the "first verified round after frame seal" rule externally checkable instead of trusting caller-supplied timestamps. Unsupported beacon providers fail closed in V0 until a code-backed verifier exists for them.
 
 The disease frame is externally sealed first. The exact verified frame-seal attestation artifact is hashed into the root bundle. A verified public randomness-beacon round published after that frame seal is then bound to both the frame digest and the exact frame-seal attestation digest. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
 
