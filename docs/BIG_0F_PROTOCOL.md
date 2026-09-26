@@ -32,7 +32,7 @@ Model lift, biological-model rankings, nuisance-model lift, or ambiguity outcome
 
 If none pass, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
 
-Machine-enforcement requirement: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair, and evidence digests for provider availability and observation-window feasibility. The evaluator reconstructs the first passing pair; a later favorable pair cannot be declared manually.
+Machine-enforcement requirement for the future implementation: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair, and evidence digests for provider availability and observation-window feasibility. The future evaluator must reconstruct the first passing pair; a later favorable pair cannot be declared manually.
 
 ## 2. Disease sampling
 
@@ -45,7 +45,7 @@ Before any event adjudication:
 3. after that frame seal exists, obtain a verified public randomness-beacon round;
 4. bind the beacon artifact to the already-sealed frame digest;
 5. derive the sampling key deterministically from frame digest + beacon randomness;
-6. order eligible diseases with the sealed hash-sort algorithm in `scripts/select_big0f_sample.py`.
+6. order eligible diseases with the frozen deterministic BIG 0F hash-sort sampling contract.
 
 The study team does not choose or grind candidate seeds. A beacon published before the frame seal is invalid.
 
@@ -73,7 +73,7 @@ If more than 150 candidate events exist, select 150 with a sealed stratified ran
 
 No famous/manual disease additions enter the decision dataset.
 
-The evaluator reconstructs the first 15 diseases from the sealed frame + verified beacon. It then recomputes the 12→15 expansion mechanically from the raw event universe. A pilot result that stops early, expands unnecessarily, or reports a different disease order is invalid.
+The future evaluator must reconstruct the first 15 diseases from the sealed frame + verified beacon. It must then recompute the 12→15 expansion mechanically from the raw event universe. A pilot result that stops early, expands unnecessarily, or reports a different disease order is invalid.
 
 ## 3. Pilot event sampling
 
@@ -81,7 +81,7 @@ For each selected disease, enumerate candidate post-T genetic events in (T, T+H]
 
 All enumerated events are retained unless the 150-event cap applies.
 
-When the cap applies, `scripts/select_big0f_sample.py` performs deterministic keyed sampling over the immutable raw event universe, first preserving at least one event from every event-bearing disease and then filling remaining slots by keyed hash order. The selected event IDs are recorded in the selection-provenance artifact and are independently reconstructed by the evaluator.
+When the cap applies, the frozen deterministic event-sampling contract performs keyed sampling over the immutable raw event universe, first preserving at least one event from every event-bearing disease and then filling remaining slots by keyed hash order. The selected event IDs must be recorded in the selection-provenance artifact and independently reconstructable by the future evaluator implementation.
 
 Events are grouped into ScientificEventFamily / GeneticDiscoveryEventFamily before adjudication.
 
@@ -416,9 +416,9 @@ The MAR must report a sensitivity table around each threshold that materially ch
 If the conclusion flips under a small scientifically plausible threshold change, the correct outcome is REDESIGN / INCONCLUSIVE rather than selectively choosing the favorable threshold.
 
 
-## 15. Executable evidence binding added by preflight hardening
+## 15. Evidence-binding contract added by preflight hardening
 
-A GO-capable pilot evaluation requires all of the following machine-verifiable artifacts in addition to the scalar result:
+A future GO-capable pilot implementation must require all of the following independently reconstructable artifacts in addition to the scalar result:
 
 - selection provenance for the full cutoff/horizon grid, deterministic disease expansion, raw event universe, and capped event IDs;
 - the fitted nuisance-only run with exact frozen feature families and immutable feature/model/preprocessing digests;
