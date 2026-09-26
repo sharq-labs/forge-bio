@@ -1,263 +1,367 @@
 # Scientific Red-Team Gap Register
 
-**Status:** ACTIVE — P0 blockers prevent scientific-core implementation  
+**Status:** ACTIVE — policy hardening substantially closed; feasibility/licensing blockers remain  
 **Scope:** Forge Bio pre-code benchmark, inference, governance, and outcome-label integrity  
-**Authority:** This register supplements PRE_CODE_CHECKLIST.md. A P0 item here is a hard stop unless explicitly superseded by ADR.
+**Authority:** This register supplements PRE_CODE_CHECKLIST.md.
 
-## 1. Why this exists
+A gap marked **CLOSED-POLICY** has an accepted normative design but may still require P1 implementation/verification.
 
-A benchmark can be temporally clean and still produce a misleading scientific conclusion.
+A gap marked **OPEN-P0** blocks production scientific implementation.
 
-Forge Bio therefore treats the following as distinct failure classes:
+## 1. Failure classes
 
-1. **temporal leakage** — future information enters model-visible inputs;
-2. **outcome-construction leakage** — future/modern knowledge changes what counts as a label;
-3. **ascertainment bias** — later evidence appears preferentially for candidates that are easier or more fashionable to study;
-4. **researcher hindsight** — benchmark design is influenced by knowledge of later successes even when the lockbox is technically closed;
-5. **estimand ambiguity** — metrics do not correspond to a stable scientific question;
-6. **identity/assignment contamination** — modern mapping or locus-to-gene reasoning creates a future disease-gene label that did not exist in that form;
-7. **dependency masquerading as replication** — multiple records represent the same cohort, dataset, consortium, or experiment.
+Forge Bio treats these as distinct scientific failure modes:
 
-The project does not progress because a model runs. It progresses only when the scientific interpretation is defensible.
+1. temporal leakage;
+2. outcome-construction leakage;
+3. ascertainment / discoverability bias;
+4. researcher hindsight / design-time leakage;
+5. estimand ambiguity;
+6. identity / locus-to-gene assignment contamination;
+7. phenotype/disease mismatch;
+8. false replication from incompatible or dependent evidence;
+9. validation-set adaptive reuse;
+10. moving Future Outcome ground truth;
+11. zero-event disease review-budget blind spots;
+12. cross-disease statistical dependence;
+13. claim-language inflation;
+14. licensing/data-rights mismatch.
 
-## 2. P0 blockers
+A benchmark can be technically clean and still fail scientifically.
+
+## 2. First-pass gap closure ledger
 
 ### P0-R1 — Endpoint subtype ambiguity
 
-**Risk:** "later human genetic support" can mix genuinely new discovery, replication of an existing weak signal, and evidence maturation.
+**Status:** CLOSED-POLICY
 
-**Required closure:**
-- define separate endpoint subtypes;
-- freeze which subtype is primary before sealed evaluation;
-- report subtype-specific results;
-- never merge them into one headline metric without a preregistered rationale.
+Resolved by:
+- E1-NOVEL-STRICT;
+- E1-MATURATION;
+- E1-REPLICATION;
+- E1-CROSSMODAL;
+- one primary subtype frozen per confirmatory MAP.
 
-Minimum endpoint family:
-- **E1-NOVEL:** no qualifying pre-T human genetic support, followed by qualifying post-T support;
-- **E1-REPLICATION:** pre-T suggestive/initial genetic support, followed by independent qualifying replication;
-- **E1-CROSSMODAL:** a pre-T non-genetic evidence model predicts later human genetic support; pre-T genetic evidence is excluded from or isolated in the tested arm.
+Normative source:
+- BENCHMARK_V0_SPEC.md
+- ADR-009
 
 ### P0-R2 — Locus-to-gene outcome contamination
 
-**Risk:** a post-T locus can be retrospectively assigned to a gene using modern QTL, fine-mapping, curated target knowledge, or learned L2G models. This can create an apparently historical gene-level validation that did not exist at the event date.
+**Status:** CLOSED-POLICY
 
-**Required closure:**
-- add an OutcomeGeneAssignmentPolicy;
-- preserve locus/variant-level events separately from gene-level events;
-- record assignment method, evidence, date, knowledge horizon, and confidence;
-- prohibit current learned L2G output from acting as unqualified primary ground truth;
-- require sensitivity analysis for assignment-dependent positives.
+Resolved by:
+- separate locus/variant events and gene assignment;
+- OutcomeGeneAssignmentPolicy;
+- modern learned L2G cannot act as unqualified strict gene-level truth;
+- assignment sensitivity required.
+
+Normative source:
+- ADR-006
 
 ### P0-R3 — Historical novelty false positives
 
-**Risk:** incomplete Past sources can mark a relationship "not known at T" even though a qualifying pre-T publication or dataset existed.
+**Status:** CLOSED-POLICY / OPEN-FEASIBILITY
 
-**Required closure:**
-- define an independent HistoricalNoveltyAudit;
-- use evaluation-side sources to verify absence of qualifying pre-T evidence without exposing those sources to the ranker;
-- mark unresolved cases AMBIGUOUS rather than NOVEL;
-- quantify novelty-audit failure rate.
+Policy is defined:
+- HistoricalNoveltyAudit;
+- PreTGeneticState;
+- ambiguity fails closed.
+
+Still requires pilot measurement of novelty ambiguity and historical-audit feasibility.
 
 ### P0-R4 — Discoverability / observation-propensity confounding
 
-**Risk:** the benchmark may reward genes or diseases that later receive evidence because they are easier to study, better funded, better measured, or represented in larger cohorts.
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
-**Required closure:**
-- create a historical DiscoverabilityBaseline or equivalent nuisance model;
-- include variables such as historical study count, GWAS availability, sample-size trajectory, phenotype measurability, disease prevalence where justified, gene annotation density, prior association momentum, and research-growth velocity;
-- compare model lift against this baseline;
-- report performance stratified by research intensity and evidence density.
-
-The discoverability control is a **benchmark control**, not automatically a model feature.
+Required controls now include:
+- attention momentum;
+- discoverability/observation-propensity baseline;
+- research-intensity/evidence-density stratification.
 
 ### P0-R5 — Zero-future-event disease estimand
 
-**Risk:** Recall@K is undefined for diseases with no qualifying future events. Dropping these diseases after outcome inspection creates future-conditioned selection bias.
+**Status:** CLOSED-POLICY / OPEN-P0 FINAL FREEZE
 
-**Required closure:**
-- define the target population / estimand;
-- define disease weighting;
-- define how zero-event diseases contribute to primary analysis;
-- define macro vs micro aggregation;
-- freeze the policy before sealed outcome access.
+Policy now:
+- zero-event diseases remain in benchmark accounting;
+- primary event-ranking estimand is explicitly conditional;
+- no fabricated negatives;
+- secondary all-frame observed-event review-budget utility is mandatory.
+
+Final numerical estimand choices are frozen only after feasibility.
 
 ### P0-R6 — Researcher hindsight / design-time leakage
 
-**Risk:** a team in the present may know famous later-success targets and may unintentionally encode that knowledge in disease selection, feature design, thresholds, or manual adjudication.
+**Status:** CLOSED-POLICY
 
-**Required closure:**
-- maintain BenchmarkDesignProvenance;
-- record analyst exposure to future outcomes and sealed disease identities;
-- separate ranking-team and outcome-adjudication roles where practical;
-- freeze algorithm/config before sealed outcome reveal;
-- for strongest confirmatory claims, keep sealed disease identities hidden from the ranking methodology team until the method is frozen.
+Resolved by:
+- BenchmarkDesignProvenance;
+- ranking/adjudication/custody roles;
+- sealed-disease identity governance;
+- frozen methodology before outcome reveal;
+- strongest-tier blinding requirements.
+
+Normative source:
+- ADR-007
+- LOCKBOX_POLICY.md
 
 ### P0-R7 — Disease-regime heterogeneity
 
-**Risk:** Mendelian/rare disease, common-complex disease, and somatic cancer genetics do not share one meaning of "human genetic support".
+**Status:** CLOSED-POLICY
 
-**Required closure:**
-- restrict B-TGT-E1-v0 to a clearly specified genetic/disease regime, or
-- define separate benchmark strata with separate endpoint rules;
-- prohibit pooled headline interpretation across incompatible regimes.
+Primary V0 is restricted to:
+
+```text
+common-complex germline disease/trait genetics
+```
+
+Mendelian/rare disease, somatic cancer-driver genetics, pharmacogenomics, and materially different regimes are excluded from the pooled V0 headline.
 
 ### P0-R8 — Outcome adjudication independence
 
-**Risk:** an adjudicator who knows the model ranking can unconsciously classify borderline future evidence in favor of the model.
+**Status:** CLOSED-POLICY / P1-VERIFY
 
-**Required closure:**
-- blinded outcome adjudication where feasible;
-- dual review for ambiguous/assignment-dependent positives;
-- disagreement logging;
-- versioned adjudication rubric;
-- adjudicator identity and timestamp in provenance.
+For strongest L3:
+- sealed adjudicators must be blind to rank/order;
+- violation automatically downgrades the tier;
+- ambiguous/assignment-dependent cases follow frozen dual-review rules.
 
-### P0-R9 — BIG 0 acceptance/checklist mismatch
+Normative source:
+- ADR-007
+- ADR-010
 
-**Risk:** PRE_CODE_CHECKLIST can be completed even when outputs promised by BIG 0 do not yet exist.
+### P0-R9 — BIG 0 artifact mismatch
 
-**Required closure:**
-PRE_CODE_CHECKLIST must explicitly require:
+**Status:** CLOSED
+
+Normative artifacts now exist:
 - glossary;
 - QoI schema;
 - Context-of-Use schema;
 - MAP schema;
 - MAR schema;
-- core enums/value objects;
-- minimal golden synthetic biomedical world;
-- architecture import/dependency rules;
-- prohibited-dependency fixtures/examples.
+- core scientific types;
+- golden synthetic world;
+- dependency rules;
+- prohibited-dependency fixtures;
+- estimand proposal;
+- lockbox/spec governance.
 
 ### P0-R10 — Licensing posture
 
-**Risk:** provider architecture can become dependent on data that cannot support the intended distribution/commercial posture.
+**Status:** OPEN-P0
 
-**Required closure:** ADR-005 must be decided before provider implementation.
+ADR-005 remains an explicit owner decision before provider implementation.
 
-## 3. P1 requirements before sealed confirmation
+## 3. Second-pass gap closure ledger
 
-### P1-R1 — Cohort/sample-overlap lineage
+### P0-R11 — Suggestive pre-T genetics mislabeled as novel
 
-Independence requires more than distinct publications or databases.
+**Status:** CLOSED-POLICY
 
-Outcome/evidence lineage must support, where applicable:
-- study_id;
-- cohort_id;
-- consortium_id;
-- biobank/dataset_id;
-- participant_overlap_group;
-- meta-analysis parents;
-- independence confidence;
-- lineage completeness.
+Resolved by `PreTGeneticState`.
 
-UNKNOWN overlap is not treated as independent replication.
+Only:
 
-### P1-R2 — Publication/reporting bias sensitivity
+```text
+NO_SIGNAL_OBSERVED
++
+NOVEL_CONFIRMED
+```
 
-The MAR must discuss and, where feasible, quantify bias caused by selective publication and incomplete negative-result availability.
+may support E1-NOVEL-STRICT.
 
-Preferred mitigations:
-- primary/full-summary-statistic sources where available;
-- registry or dataset-level evidence where applicable;
-- source-coverage sensitivity analyses;
-- explicit limitation when the outcome process is publication-driven.
+`SUGGESTIVE → qualifying` is E1-MATURATION.
 
-### P1-R3 — Ancestry/population applicability
+Normative source:
+- ADR-009
 
-Outcome and evidence events should retain population/ancestry metadata where scientifically relevant.
+### P0-R12 — Trait/phenotype promoted to disease outcome
 
-Confirmatory MAR must:
-- report evaluated ancestry/population distribution;
-- stratify where sample size allows;
-- avoid implying generalization beyond evaluated populations.
+**Status:** CLOSED-POLICY
 
-### P1-R4 — Stronger attention controls
+Resolved by OutcomePhenotypeMatchPolicy.
 
-Historical publication count alone is insufficient.
+Primary V0 does not silently count:
+- risk factors;
+- surrogate traits;
+- intermediate phenotypes;
+- broadly related phenotypes.
 
-At least one control should model attention momentum / discoverability trajectory, not just cumulative popularity.
+Normative source:
+- ADR-008
 
-### P1-R5 — Candidate-universe-normalized metrics
+### P0-R13 — Weak genetic replication semantics
 
-Fixed K is retained only with a companion normalized metric, e.g.:
-- Recall at x% of candidate universe;
-- rank percentile;
-- review-budget-normalized utility.
+**Status:** CLOSED-POLICY / OPEN-P0 QUALITY THRESHOLD
 
-### P1-R6 — Representation-time provenance
+Replication assessment now includes:
+- phenotype;
+- locus/variant;
+- effect allele;
+- allele harmonization;
+- effect direction;
+- LD relation;
+- population/ancestry;
+- cohort/sample independence;
+- analysis compatibility;
+- heterogeneity.
 
-For structured evidence derived long after the primary observation, preserve:
-- observation/publication time;
-- structured derivation time;
-- derivation method;
-- knowledge watermark of the derivation.
+Genome-wide significance alone is not a complete endpoint-quality rule.
 
-An old paper does not make a modern annotation historically admissible.
+The final endpoint-quality threshold remains OPEN-P0 until the feasibility/provider audit.
 
-### P1-R7 — Negative-control benchmark suite
+Normative source:
+- ADR-009
 
-Required controls should include, where meaningful:
-- shuffled outcome assignment;
-- future-sentinel invariance;
-- temporal placebo cutoffs;
-- attention/degree-preserving nulls;
-- label-source ablations.
+### P1-R11 — Validation-set adaptive reuse
 
-A benchmark that can be "passed" by a null control is invalid until explained.
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
-### P1-R8 — Multiplicity
+Validation sets are versioned generations:
 
-MAP must freeze:
-- one primary benchmark endpoint/subtype;
-- one primary metric;
-- one primary K/budget;
-- multiplicity policy for secondary endpoints/cutoffs/subgroups.
+```text
+ACTIVE
+SPENT_FOR_MODEL_SELECTION
+RETIRED
+```
 
-### P1-R9 — Knowledge-time vs technology-time claims
+A spent generation is not called untouched evidence.
 
-Forge Bio distinguishes:
+Normative source:
+- ADR-010
 
-- **knowledge-historical:** inputs encode no biomedical knowledge after T;
-- **technology-contemporaneous:** the complete implementation could realistically have been run with technology available at T.
+### P1-R12 — Moving Future Outcome snapshot
 
-STRICT_HISTORICAL supports the first claim unless a study explicitly establishes the second. Reports must not silently convert one into the other.
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
-### P1-R10 — Repository governance
+Before sealed evaluation the project commits:
+- outcome source releases;
+- snapshot IDs/digest;
+- outcome-ledger digest;
+- adjudication-batch digest;
+- evaluation identity-bridge digest;
+- outcome-policy versions.
 
-Before declaring any scientific specification frozen:
-- protect the authoritative branch or enforce equivalent review controls;
-- require reviewed PRs for scientific contract/benchmark changes;
-- version frozen specs;
-- retain immutable commit/hash references in MAP/MAR.
+A changed release creates a new evaluation generation.
 
-## 4. Manual feasibility pilot required before provider-scale implementation
+Normative source:
+- ADR-010
 
-Before building the complete outcome engine, manually adjudicate a small but heterogeneous sample of candidate future events.
+### P1-R13 — Conditional estimand hides full review burden
 
-Measure at least:
-- whether the relationship was truly unknown at T;
-- whether the event was locus-level or gene-level;
-- how gene assignment was produced;
-- whether the assignment uses post-event knowledge;
-- whether the replication is cohort-independent;
-- whether outcome ancestry/population is known;
-- whether current curation disagrees with historical interpretation;
-- fraction of events ending AMBIGUOUS;
-- retrospective-curation rate;
-- estimated label-construction workload.
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
-The pilot is a **benchmark-feasibility study**, not a performance study.
+Required secondary all-frame measures include:
+- observed qualifying event yield per total review budget;
+- event-bearing disease coverage;
+- zero-event disease review burden.
 
-If ambiguity, retrospective reconstruction, or assignment contamination exceed preregistered tolerances, redesign the endpoint before implementing large-scale ranking.
+These are observed-event utility metrics, not biological precision.
 
-## 5. Stop rule
+### P1-R14 — Cross-disease dependence
 
-No result may be described as "historical discovery signal" if a plausible alternative explanation is that the model predicts:
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Primary disease-level intervals require a preregistered disease-family/block or other cluster-aware dependence sensitivity.
+
+### P0-R15 — "Target Discovery" claim inflation
+
+**Status:** CLOSED-POLICY
+
+V0 is now described as:
+
+```text
+B-TGT-A1 / B-TGT-E1-v0
+Disease–Gene Association Prioritization
+```
+
+It does not by itself establish:
+- causal target status;
+- intervention direction;
+- tractability;
+- clinical value.
+
+The B-TGT umbrella may later contain stronger target-discovery benchmarks.
+
+## 4. Active P0 blockers after second-pass hardening
+
+Production scientific implementation remains blocked by the following evidence/owner decisions:
+
+1. **Final B-TGT-E1 estimand freeze**
+   - primary metric;
+   - K/review budget;
+   - normalized companion metric;
+   - acceptable zero-event fraction;
+   - minimum event-bearing disease count;
+   - CI-width requirement.
+
+2. **Final endpoint evidence-quality threshold**
+   - exact qualifying statistical/evidence rule;
+   - required replication quality;
+   - handling of heterogeneity;
+   - minimum lineage/phenotype/gene-assignment quality.
+
+3. **Manual outcome feasibility pilot**
+   must measure:
+   - PreTGeneticState distribution;
+   - novelty ambiguity;
+   - locus-to-gene assignment dependence;
+   - phenotype-match ambiguity;
+   - replication comparability / direction conflicts;
+   - cohort/sample-overlap ambiguity;
+   - retrospective-curation burden;
+   - ancestry/population metadata coverage;
+   - adjudicator disagreement;
+   - label-construction workload.
+
+4. **Pilot GO / REDESIGN / NO-GO verdict**
+   for B-TGT-E1-v0.
+
+5. **ADR-005 licensing posture**
+   owner decision before provider implementation.
+
+These are not documentation gaps and must not be checked off without evidence.
+
+## 5. P1 requirements before sealed confirmation
+
+At minimum:
+
+- ProviderCards complete;
+- Future Outcome providers independently qualified;
+- reconstruction fidelity measured;
+- disease frame and CandidateUniverse frozen;
+- development/validation/sealed generations frozen;
+- validation-generation access/status tracked;
+- exact Future Outcome snapshot commitment frozen;
+- OutcomeGeneAssignmentPolicy tested;
+- OutcomePhenotypeMatchPolicy tested;
+- GeneticReplicationPolicy tested;
+- HistoricalNoveltyAudit tested;
+- cohort/sample-overlap lineage coverage measured;
+- strongest L3 outcome adjudication verified rank-blind;
+- ancestry/population coverage reported;
+- publication/reporting-bias sensitivity planned;
+- all-frame utility implemented;
+- disease-family/block dependence sensitivity frozen;
+- negative/null controls frozen;
+- MAP/ranking/outcome commitments verified;
+- lockbox and branch-governance controls operationally verified.
+
+## 6. Stop rule
+
+No result may be described as historical biological discovery signal if a plausible uncontrolled explanation is that the method predicts:
+
 - research attention;
 - measurement opportunity;
 - statistical power;
+- known suggestive signals becoming mature;
+- phenotype/risk-factor proxying;
 - database curation;
-- locus-to-gene assignment artifacts;
-- or known weak signals becoming mature.
+- modern locus-to-gene assignment;
+- non-independent replication;
+- validation-set adaptation;
+- outcome-snapshot drift.
 
-Those explanations must be controlled, stratified, or explicitly retained as limitations.
+Those explanations must be controlled, stratified, falsified, or retained explicitly as limitations.
