@@ -20,6 +20,11 @@ Files:
 - `model-credibility.v1.schema.json`
 - `extraction-artifact.v1.schema.json`
 - `extraction-quality-card.v1.schema.json`
+- `source-lifecycle-event.v1.schema.json`
+- `benchmark-exposure-ledger.v1.schema.json`
+- `external-seal-attestation.v1.schema.json`
+- `prediction-exposure-event.v1.schema.json`
+- `research-program-attempt.v1.schema.json`
 
 Rules:
 - JSON Schema validates structure, types, required fields, enums, and unknown-field rejection.
