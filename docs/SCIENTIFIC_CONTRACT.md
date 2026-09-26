@@ -315,6 +315,9 @@ At minimum, the project treats the following as explicit threats:
 - retrospective curation leakage
 - ontology leakage
 - identity-mapping leakage
+- genomic-variant identity / genome-build / liftover leakage
+- allele-orientation / harmonization leakage
+- LD/reference-panel leakage
 - candidate-universe leakage
 - graph-topology leakage
 - feature-selection leakage
@@ -335,6 +338,12 @@ At minimum, the project treats the following as explicit threats:
 - ascertainment / discoverability bias
 - publication / selective-reporting bias
 - cohort/sample-overlap masquerading as replication
+- duplicated ScientificEventFamily manifestations inflating event counts
+- locus-to-many-gene assignments inflating primary credit
+- Past/Future provider or curation-pipeline coupling
+- rolling-anchor duplicate event reuse
+- preprocessing/statistic-fit leakage
+- validation-feedback granularity/adaptive reuse
 - analyst/adjudicator outcome-aware bias
 - ancestry/population applicability bias
 - future-conditioned exclusion of zero-event diseases
@@ -441,6 +450,9 @@ Identity resolution must:
 - preserve mapping provenance
 - preserve ambiguity
 - distinguish gene, protein, complex, active moiety, ingredient, product, and combination
+- treat PhenotypeConcept, GenomicVariant, GenomicLocus, GenomeAssembly, ReferenceSequence, Cohort, Dataset, Biobank, Consortium, SampleSet, and LDReferencePanel as first-class where they affect benchmark semantics
+- treat rsIDs/coordinate strings and cohort/dataset names as external representations, not canonical identity
+- preserve genome-build/normalization/liftover/allele-harmonization provenance
 - support historical model-visible mappings
 - isolate modern evaluation mappings from historical feature generation
 
@@ -450,15 +462,21 @@ A mapping with ambiguity is not silently coerced to EXACT.
 
 ## 13. Ground-truth contract
 
-Ground truth is an event ledger.
+Ground truth is an event ledger with canonical scientific-event identity.
+
+A preprint, journal article, database row, and secondary curation may be multiple manifestations of one ScientificEventFamily. Primary event credit is governed at the event-family level, not raw-row count.
 
 A future event counts as independent only when its lineage satisfies the benchmark's independence rule. A later annotation that merely re-curates pre-cutoff evidence is not automatically independent validation.
 
-Distinct publications or databases are not sufficient proof of independence. Where relevant, outcome lineage must retain cohort, consortium, dataset/biobank, meta-analysis parents, and participant-overlap state. UNKNOWN sample overlap is not interpreted as independent replication.
+Distinct publications or databases are not sufficient proof of independence or distinct scientific events. Where relevant, outcome lineage must retain cohort, consortium, dataset/biobank, meta-analysis parents, and participant-overlap state. UNKNOWN sample overlap is not interpreted as independent replication.
 
 For gene-level genetic outcomes, identity reconciliation and causal-gene assignment are separate operations. A modern identity bridge may reconcile identifiers, but it may not create a gene-level validation from a locus/variant event without passing the governed OutcomeGeneAssignmentPolicy.
 
 Disease/trait identity and phenotype applicability are also separate. A related biomarker, risk factor, intermediate phenotype, broader trait, or narrower trait is not automatically the same benchmark disease. OutcomePhenotypeMatchPolicy governs this relation.
+
+Historical novelty distinguishes KNOWN_TO_RANKER_AT_T from KNOWN_PUBLICLY_AT_T. A public pre-T result missed by the ranker's provider is a coverage failure, not future novelty.
+
+E1-NOVEL-STRICT requires the frozen minimum HistoricalGeneticSearchCoverage grade. Below-threshold coverage yields AMBIGUOUS rather than NO_SIGNAL_OBSERVED.
 
 A later genetic record is not automatically replication. E1-REPLICATION requires a GeneticReplicationAssessment covering phenotype, locus/variant, allele harmonization, effect direction, LD relation where relevant, population, cohort independence, participant overlap, analysis compatibility, and heterogeneity.
 
@@ -523,12 +541,18 @@ A confirmatory benchmark must freeze before evaluation. Disease selection and th
 
 A confirmatory benchmark must freeze:
 
+- scientific operating mode
+- historical data policy
 - cutoff
 - candidate universe
 - disease universe
 - provider releases
 - temporal policy
 - identity policy
+- genomic identity / variant-harmonization / LD policy
+- historical genetic-search coverage and observability policy
+- scientific-event-family credit policy
+- Past/Future provider-coupling policy
 - endpoint
 - horizon
 - matching policy
@@ -542,6 +566,10 @@ A confirmatory benchmark must freeze:
 - exclusions
 - ablations
 - holdout tier
+- validation disclosure policy
+- cross-anchor event reuse policy
+- outcome-event discovery freeze
+- exact Future Outcome event-family/provider-coupling commitment
 - access policy
 
 Changes after freeze are deviations and appear in the MAR.
@@ -664,8 +692,13 @@ Required categories include:
 - cryptographic manifest checks
 - metric golden tests
 - identity mapping invariants
+- genomic variant/locus normalization, liftover, allele-orientation, and LD-provenance invariants
+- phenotype/cohort/dataset/SampleSet identity invariants
 - candidate-universe determinism
-- feature lineage completeness
+- feature and preprocessing-fit lineage completeness
+- cross-anchor event-reuse invariants
+- ScientificEventFamily deduplication invariants
+- provider-lineage/input-outcome coupling audit
 - import/dependency wall tests
 - holdout access controls
 - reproducibility from manifest
@@ -918,17 +951,23 @@ Normative decisions:
 
 VALIDATION is versioned into generations.
 
+Each generation records both access count and maximum disclosure level: AGGREGATE_ONLY, SUBGROUP, PER_CASE, or FULL_LABEL.
+
 If validation results materially influence features, model class, endpoint design, hyperparameters, thresholds, disease selection, or candidate selection, that generation becomes SPENT_FOR_MODEL_SELECTION.
 
 A spent generation remains reportable but is not called untouched validation.
 
 ### 31.2 Future Outcome commitment contract
 
+For strongest L3, outcome-event discovery/adjudication is frozen before model rank/order is revealed.
+
 Before sealed evaluation, freeze/commit the exact:
 - future outcome source releases;
 - Future Outcome snapshot/digest;
 - outcome-ledger digest;
+- ScientificEventFamily ledger digest;
 - adjudication-batch digest;
+- provider-lineage/input-outcome coupling assessment digest;
 - evaluation identity-bridge digest;
 - phenotype-match, gene-assignment, and replication policy versions.
 
@@ -995,3 +1034,29 @@ Any ACTIVE P0 blocker in that register is a hard stop for production scientific 
 [PRE_CODE_CHECKLIST.md](PRE_CODE_CHECKLIST.md) is the operational go/no-go authority.
 
 This contract becomes FROZEN V1 only when all P0 items are closed or explicitly superseded by ADR.
+
+
+---
+
+## 37. BIG 0R3 genomic-integrity contract
+
+The following rules are normative before BIG 0F feasibility work:
+
+1. **Canonical genomic identity** — variants/loci use explicit reference sequence/assembly and normalized alleles. rsIDs are external identifiers, not identity.
+2. **Harmonization provenance** — liftover, strand resolution, allele normalization, and reference-panel/LD derivations are provenance-bearing artifacts with watermarks.
+3. **LD context** — LD proxy equivalence requires population/ancestry, reference panel/release, assembly, metric, threshold, and derivation method.
+4. **Coverage-gated strict novelty** — E1-NOVEL-STRICT requires a MAP-frozen minimum HistoricalGeneticSearchCoverage grade.
+5. **Historical observability sensitivity** — identity eligibility is separate from genetic measurability at T; a preregistered GeneticObservabilityAtT sensitivity is required.
+6. **Canonical cohort/sample lineage** — Cohort/Dataset/Biobank/Consortium/SampleSet identities replace free-text independence assertions.
+7. **Scientific event identity** — multiple manifestations of one discovery form one ScientificEventFamily; V0 grants at most one primary event credit per family.
+8. **Source coupling** — Past input and Future outcome providers declare shared upstream/curation lineage; material coupling requires ablation/external-source sensitivity.
+9. **Cross-anchor reuse** — one ScientificEventFamily cannot receive uncontrolled repeated training weight across overlapping historical anchors.
+10. **Mode separation** — ScientificOperatingMode and HistoricalDataPolicy are orthogonal configuration axes.
+
+Normative decisions:
+- [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
+- [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
+- [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)
+- [adr/ADR-014-operating-mode-data-policy.md](adr/ADR-014-operating-mode-data-policy.md)
+
+These policies must be represented in the QoI/MAP/MAR artifacts and their executable JSON Schemas.
