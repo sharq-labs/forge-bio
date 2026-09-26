@@ -214,6 +214,37 @@ ScientificTwinFamily
     PATHOGEN_HOST_TWIN
     THERAPEUTIC_TWIN
 
+ModelInfluence
+    ADVISORY
+    MATERIAL
+    DOMINANT
+
+CredibilityConclusion
+    ADEQUATE_FOR_COU
+    CONDITIONALLY_ADEQUATE
+    INADEQUATE
+    UNKNOWN
+
+PredictionRiskOfBias
+    LOW
+    SOME_CONCERNS
+    HIGH
+    UNKNOWN
+    NOT_APPLICABLE
+
+MissingnessState
+    OBSERVED
+    MISSING
+    NOT_APPLICABLE
+
+CensoringState
+    NONE
+    BELOW_DETECTION
+    ABOVE_DETECTION
+    RIGHT_CENSORED
+    LEFT_CENSORED
+    INTERVAL_CENSORED
+
 TherapeuticModality
     SMALL_MOLECULE
     ANTIBODY
@@ -301,6 +332,17 @@ InterventionSemantics
 IdentifiabilityStatus
 TwinPerturbation
 TwinSimulationResult
+QuantityDefinition
+UnitDefinition
+TransformDefinition
+QuantitativeObservation
+EffectEstimate
+MeasurementProcessArtifact
+NumericalVerificationArtifact
+ModelDiscrepancyAssessment
+ApplicabilityDomain
+CredibilityAssessmentArtifact
+PredictionRiskAssessment
 Cohort
 Dataset
 Biobank
@@ -363,6 +405,14 @@ UncertaintyBundle
 - historical twin cutoff != valid_at timestamp.
 - state-model structure/update policy may be knowledge-bearing and must carry provenance/watermark.
 - T4 perturbation != causal intervention unless causal assumptions/intervention semantics/identifiability requirements pass.
+- numeric value != scientific measurement without quantity/unit/scale/transform/context semantics.
+- p-value != effect estimate.
+- numerical solver agreement != biological validation.
+- numerical error != parameter uncertainty != model-form uncertainty != measurement uncertainty.
+- calibration != model correctness.
+- model credibility is Context-of-Use specific.
+- model validation does not survive a material dependency change without re-assessment.
+- out-of-domain prediction != validated prediction.
 - simulation result != clinical evidence.
 - therapeutic profile != patient-specific treatment recommendation.
 - candidate-universe membership requires provenance.
