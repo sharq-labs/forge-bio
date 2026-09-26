@@ -125,6 +125,7 @@ Repository scope during this phase is specification-only: plans, ADRs, schemas, 
 - [Architecture V1 Candidate](docs/ARCHITECTURE_V1.md)
 - [Scientific Contract V1 Candidate](docs/SCIENTIFIC_CONTRACT.md)
 - [Scientific Master Plan](docs/SCIENTIFIC_MASTER_PLAN.md)
+- [BIG 0F False-GO Closure Plan](docs/BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
 - [Benchmark V0 Specification](docs/BENCHMARK_V0_SPEC.md)
 - [Temporal Semantics](docs/TEMPORAL_SEMANTICS.md)
 - [Evidence Taxonomy](docs/EVIDENCE_TAXONOMY.md)
