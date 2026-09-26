@@ -15,7 +15,9 @@ Calling a static knowledge graph a "digital twin" would overclaim capability.
 
 ## Decision
 
-Forge Bio introduces a **Scientific Digital Twin hierarchy**.
+Forge Bio introduces a **Forge Bio Scientific Twin hierarchy**.
+
+This is a project-defined research construct. It is not claimed to be a patient/clinical health digital twin merely because it uses the term twin.
 
 A twin is not a patient-specific clinical model in V1. It is a versioned research object that represents a biological system, its evidence state, uncertainty, and—at higher maturity—validated dynamic or predictive behavior.
 
@@ -90,19 +92,35 @@ ScientificTwinSnapshot
     digest
 ```
 
-A historical twin cannot contain future evidence through parameters, mappings, pretrained representations, or state-model calibration.
+A historical twin cannot contain future evidence through parameters, mappings, pretrained representations, state-model calibration, **state-model structure/topology**, manually selected mechanisms, update policies, or other knowledge-bearing dependencies.
+
+STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR twins must record an explicit cutoff T.
 
 ## Validation rule
 
+Predictive/intervention twin levels reuse Forge Bio's existing MAP/MAR/ValidationGeneration/BenchmarkDesignProvenance governance rather than inventing a parallel validation regime.
+
 Predictive/intervention twin levels require explicit:
 
+- frozen prediction target/horizon;
+- MAP + MAR references;
+- validation-generation provenance;
 - verification tests;
 - calibration/fit provenance;
 - held-out or future validation;
 - uncertainty quantification;
 - applicability domain;
 - failure cases;
-- versioned model and parameter artifacts.
+- versioned model, state-structure, update-policy, and parameter artifacts.
+
+T4 additionally requires:
+- an explicit CausalAssumptionSet;
+- intervention semantics;
+- an identifiability status;
+- perturbation artifacts;
+- sensitivity artifacts.
+
+An associational simulation is not promoted to a causal intervention result merely because it changes a modeled state.
 
 ## Consequences
 
