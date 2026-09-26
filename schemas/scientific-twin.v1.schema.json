@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/scientific-twin.v1.schema.json",
-  "title": "Forge Bio Scientific Digital Twin v1",
+  "title": "Forge Bio Scientific Twin v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
     "historical_data_policy",
     "profile_snapshot_ids",
     "evidence_snapshot_ids",
-    "update_policy_id",
+    "update_policy_artifact_id",
     "verification_artifact_ids",
     "validation_artifact_ids",
     "uncertainty_bundle_ref",
@@ -29,6 +29,9 @@
     },
     "schema_version": {
       "const": "scientific-twin-v1"
+    },
+    "terminology_scope": {
+      "const": "FORGE_BIO_RESEARCH_SCIENTIFIC_TWIN"
     },
     "twin_family": {
       "enum": [
@@ -69,16 +72,25 @@
         "RECONSTRUCTED_ALLOWED"
       ]
     },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "profile_snapshot_ids": {
       "type": "array",
+      "minItems": 1,
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
     },
     "evidence_snapshot_ids": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
     },
     "state_definition_id": {
@@ -87,7 +99,7 @@
         "null"
       ]
     },
-    "state_model_id": {
+    "state_model_artifact_id": {
       "type": [
         "string",
         "null"
@@ -96,23 +108,93 @@
     "parameter_artifact_ids": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
     },
-    "update_policy_id": {
+    "update_policy_artifact_id": {
       "type": "string",
       "minLength": 1
+    },
+    "prediction_spec_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "map_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mar_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "validation_generation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "benchmark_design_provenance_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "perturbation_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "sensitivity_artifact_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "causal_assumption_set_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intervention_semantics_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "identifiability_status": {
+      "enum": [
+        "NOT_APPLICABLE",
+        "IDENTIFIED",
+        "PARTIALLY_IDENTIFIED",
+        "ASSUMPTION_DEPENDENT",
+        "NOT_IDENTIFIED",
+        "UNKNOWN"
+      ]
     },
     "verification_artifact_ids": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
     },
     "validation_artifact_ids": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1
       }
     },
     "uncertainty_bundle_ref": {
@@ -143,5 +225,190 @@
       "type": "string",
       "minLength": 1
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "maturity_level": {
+            "enum": [
+              "T1_DYNAMIC_KNOWLEDGE_TWIN",
+              "T2_MECHANISTIC_TWIN",
+              "T3_VALIDATED_PREDICTIVE_TWIN",
+              "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN"
+            ]
+          }
+        },
+        "required": [
+          "maturity_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "state_definition_id"
+        ],
+        "properties": {
+          "state_definition_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_snapshot_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "maturity_level": {
+            "enum": [
+              "T2_MECHANISTIC_TWIN",
+              "T3_VALIDATED_PREDICTIVE_TWIN",
+              "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN"
+            ]
+          }
+        },
+        "required": [
+          "maturity_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "state_model_artifact_id",
+          "parameter_artifact_ids"
+        ],
+        "properties": {
+          "state_model_artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parameter_artifact_ids": {
+            "minItems": 1
+          },
+          "verification_artifact_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "maturity_level": {
+            "enum": [
+              "T3_VALIDATED_PREDICTIVE_TWIN",
+              "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN"
+            ]
+          }
+        },
+        "required": [
+          "maturity_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "prediction_spec_id",
+          "map_id",
+          "mar_ids",
+          "validation_generation_id",
+          "benchmark_design_provenance_id"
+        ],
+        "properties": {
+          "prediction_spec_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "map_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mar_ids": {
+            "minItems": 1
+          },
+          "validation_generation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmark_design_provenance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "validation_artifact_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "maturity_level": {
+            "const": "T4_VALIDATED_INTERVENTION_SIMULATION_TWIN"
+          }
+        },
+        "required": [
+          "maturity_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "perturbation_artifact_ids",
+          "sensitivity_artifact_ids",
+          "causal_assumption_set_id",
+          "intervention_semantics_id",
+          "identifiability_status"
+        ],
+        "properties": {
+          "perturbation_artifact_ids": {
+            "minItems": 1
+          },
+          "sensitivity_artifact_ids": {
+            "minItems": 1
+          },
+          "causal_assumption_set_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "intervention_semantics_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identifiability_status": {
+            "enum": [
+              "IDENTIFIED",
+              "PARTIALLY_IDENTIFIED",
+              "ASSUMPTION_DEPENDENT"
+            ]
+          }
+        }
+      }
+    }
+  ]
 }
