@@ -10,7 +10,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.build_seal_bundle import canonical_json_bytes, manifest_digest
+from scripts.build_seal_bundle import manifest_digest, verify_manifest
 from scripts.scientific_invariants import validate_external_seal
 
 
@@ -20,6 +20,8 @@ THRESHOLD_SCHEMA_PATH = ROOT / "schemas" / "big0f-threshold-manifest.v1.schema.j
 SEAL_SCHEMA_PATH = ROOT / "schemas" / "seal-bundle-manifest.v1.schema.json"
 ATTESTATION_SCHEMA_PATH = ROOT / "schemas" / "external-seal-attestation.v1.schema.json"
 POWER_SCHEMA_PATH = ROOT / "schemas" / "big0f-power-analysis.v1.schema.json"
+ADJUDICATION_SCHEMA_PATH = ROOT / "schemas" / "big0f-adjudication-policy.v1.schema.json"
+NUISANCE_SCHEMA_PATH = ROOT / "schemas" / "big0f-nuisance-manifest.v1.schema.json"
 DEFAULT_THRESHOLD_PATH = ROOT / "config" / "big0f-thresholds.v1.json"
 DEFAULT_SAMPLING_CODE_PATH = ROOT / "scripts" / "select_big0f_sample.py"
 
@@ -360,9 +362,12 @@ def evaluate(
 def _verified_context_from_files(
     result: dict[str, Any],
     *,
+    protocol_path: Path,
+    disease_frame_path: Path,
+    randomness_beacon_path: Path,
     threshold_manifest_path: Path,
     seal_bundle_manifest_path: Path,
-    seal_attestation_path: Path,
+    seal_attestation_paths: list[Path],
     power_analysis_path: Path,
     adjudication_policy_path: Path,
     nuisance_manifest_path: Path,
@@ -371,59 +376,86 @@ def _verified_context_from_files(
     threshold_manifest = load_json_strict(threshold_manifest_path)
     _validate_schema(threshold_manifest, THRESHOLD_SCHEMA_PATH)
 
+    adjudication_policy = load_json_strict(adjudication_policy_path)
+    _validate_schema(adjudication_policy, ADJUDICATION_SCHEMA_PATH)
+    nuisance_manifest = load_json_strict(nuisance_manifest_path)
+    _validate_schema(nuisance_manifest, NUISANCE_SCHEMA_PATH)
+
     seal_manifest = load_json_strict(seal_bundle_manifest_path)
     _validate_schema(seal_manifest, SEAL_SCHEMA_PATH)
-
-    attestation = load_json_strict(seal_attestation_path)
-    _validate_schema(attestation, ATTESTATION_SCHEMA_PATH)
-    attestation_errors = validate_external_seal(attestation)
-    if attestation_errors:
-        raise ValueError("external seal attestation invalid: " + " | ".join(attestation_errors))
-
-    power = load_json_strict(power_analysis_path)
-    _validate_schema(power, POWER_SCHEMA_PATH)
-
     bundle_digest = manifest_digest(seal_manifest)
     if bundle_digest != result["seal_bundle_digest"]:
         raise ValueError("pilot seal_bundle_digest does not match seal-bundle manifest")
-    if attestation["artifact_digest"] != bundle_digest or attestation["verification_status"] != "VERIFIED":
-        raise ValueError("external attestation does not verify the sealed bundle digest")
 
-    sealed_at = attestation["sealed_at"]
-    if sealed_at >= result["first_adjudication_at"]:
-        raise ValueError("external seal must precede first adjudication")
+    if len(seal_attestation_paths) < 2:
+        raise ValueError("BIG 0F requires both third-party timestamp and public-registry attestations")
+
+    component_paths = {
+        "protocol": protocol_path,
+        "disease_frame": disease_frame_path,
+        "randomness_beacon": randomness_beacon_path,
+        "threshold_manifest": threshold_manifest_path,
+        "adjudication_policy": adjudication_policy_path,
+        "nuisance_manifest": nuisance_manifest_path,
+        "decision_engine": Path(__file__),
+        "pilot_result_schema": PILOT_SCHEMA_PATH,
+        "sampling_code": sampling_code_path,
+        "threshold_manifest_schema": THRESHOLD_SCHEMA_PATH,
+        "adjudication_policy_schema": ADJUDICATION_SCHEMA_PATH,
+        "nuisance_manifest_schema": NUISANCE_SCHEMA_PATH,
+        "power_analysis_schema": POWER_SCHEMA_PATH,
+    }
+
+    authorities: set[str] = set()
+    attestation_ids: set[str] = set()
+    first_adjudication = __import__("datetime").datetime.fromisoformat(
+        result["first_adjudication_at"].replace("Z", "+00:00")
+    )
+    for path in seal_attestation_paths:
+        attestation = load_json_strict(path)
+        _validate_schema(attestation, ATTESTATION_SCHEMA_PATH)
+        semantic_errors = validate_external_seal(attestation)
+        if semantic_errors:
+            raise ValueError("external seal attestation invalid: " + " | ".join(semantic_errors))
+        if attestation["artifact_type"] != "BIG0F_SEAL_BUNDLE":
+            raise ValueError("BIG 0F seal attestation must target BIG0F_SEAL_BUNDLE")
+        if attestation["artifact_digest"] != bundle_digest:
+            raise ValueError("external attestation does not match sealed bundle digest")
+        sealed_at = __import__("datetime").datetime.fromisoformat(
+            attestation["sealed_at"].replace("Z", "+00:00")
+        )
+        if sealed_at >= first_adjudication:
+            raise ValueError("every external seal must precede first adjudication")
+        verify_errors = verify_manifest(
+            seal_manifest,
+            attestation=attestation,
+            component_paths=component_paths,
+        )
+        if verify_errors:
+            raise ValueError("seal-bundle verification failed: " + " | ".join(verify_errors))
+        authorities.add(attestation["authority_type"])
+        attestation_ids.add(attestation["attestation_id"])
+
+    required_authorities = {"THIRD_PARTY_TIMESTAMP_SERVICE", "PUBLIC_REGISTRY"}
+    if not required_authorities.issubset(authorities):
+        raise ValueError("BIG 0F requires both third-party timestamp and public-registry seals")
+    if set(result["seal_attestation_ids"]) != attestation_ids:
+        raise ValueError("pilot seal_attestation_ids do not exactly match verified attestations")
 
     threshold_digest = sha256_file(threshold_manifest_path)
     if threshold_digest != result["threshold_manifest_digest"]:
         raise ValueError("threshold manifest digest mismatch")
-    if seal_manifest["threshold_manifest_sha256"] != threshold_digest:
-        raise ValueError("seal bundle does not commit the threshold manifest")
-
     adjudication_digest = sha256_file(adjudication_policy_path)
     if adjudication_digest != result["adjudication_policy_digest"]:
         raise ValueError("adjudication policy digest mismatch")
-    if seal_manifest["adjudication_policy_sha256"] != adjudication_digest:
-        raise ValueError("seal bundle does not commit the adjudication policy")
-
     nuisance_digest = sha256_file(nuisance_manifest_path)
     if nuisance_digest != result["nuisance_manifest_digest"]:
         raise ValueError("nuisance manifest digest mismatch")
-    if seal_manifest["nuisance_feature_manifest_sha256"] != nuisance_digest:
-        raise ValueError("seal bundle does not commit the nuisance manifest")
-
     if seal_manifest["protocol_sha256"] != result["protocol_digest"]:
         raise ValueError("pilot protocol digest does not match sealed protocol")
 
-    engine_digest = sha256_file(Path(__file__))
-    pilot_schema_digest = sha256_file(PILOT_SCHEMA_PATH)
-    sampling_digest = sha256_file(sampling_code_path)
-    if seal_manifest["decision_engine_sha256"] != engine_digest:
-        raise ValueError("decision engine is not the version committed by the seal")
-    if seal_manifest["pilot_result_schema_sha256"] != pilot_schema_digest:
-        raise ValueError("pilot result schema is not the version committed by the seal")
-    if seal_manifest["sampling_code_sha256"] != sampling_digest:
-        raise ValueError("sampling code is not the version committed by the seal")
-
+    power = load_json_strict(power_analysis_path)
+    _validate_schema(power, POWER_SCHEMA_PATH)
     power_digest = sha256_file(power_analysis_path)
     if power_digest != result["power_metrics"]["power_analysis_digest"]:
         raise ValueError("power analysis digest mismatch")
@@ -455,9 +487,12 @@ def _verified_context_from_files(
 def main() -> int:
     ap = argparse.ArgumentParser(description="Evaluate BIG 0F GO/REDESIGN/NO_GO rules")
     ap.add_argument("pilot_result", type=Path)
+    ap.add_argument("--protocol", type=Path, required=True)
+    ap.add_argument("--disease-frame", type=Path, required=True)
+    ap.add_argument("--randomness-beacon", type=Path, required=True)
     ap.add_argument("--threshold-manifest", type=Path, default=DEFAULT_THRESHOLD_PATH)
     ap.add_argument("--seal-bundle-manifest", type=Path, required=True)
-    ap.add_argument("--seal-attestation", type=Path, required=True)
+    ap.add_argument("--seal-attestation", type=Path, action="append", required=True)
     ap.add_argument("--power-analysis", type=Path, required=True)
     ap.add_argument("--adjudication-policy", type=Path, required=True)
     ap.add_argument("--nuisance-manifest", type=Path, required=True)
@@ -469,9 +504,12 @@ def main() -> int:
     threshold_manifest = load_threshold_manifest(args.threshold_manifest)
     context = _verified_context_from_files(
         data,
+        protocol_path=args.protocol,
+        disease_frame_path=args.disease_frame,
+        randomness_beacon_path=args.randomness_beacon,
         threshold_manifest_path=args.threshold_manifest,
         seal_bundle_manifest_path=args.seal_bundle_manifest,
-        seal_attestation_path=args.seal_attestation,
+        seal_attestation_paths=args.seal_attestation,
         power_analysis_path=args.power_analysis,
         adjudication_policy_path=args.adjudication_policy,
         nuisance_manifest_path=args.nuisance_manifest,
