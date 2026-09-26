@@ -168,6 +168,48 @@
 - [ ] Protected-authoritative-branch / reviewed-merge controls are operationally verified.
 - [ ] Lockbox storage isolation and credential separation are operationally verified.
 
+## Platform extension — Scientific Digital Twin readiness
+
+These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot explicitly uses twin outputs.
+
+### BIG 0R4 contracts
+
+- [x] DiseaseScientificProfile contract exists.
+- [x] Pathogen/Virus/PathogenHost scientific profile contracts exist.
+- [x] TherapeuticScientificProfile contract exists.
+- [x] Disease and pathogen are represented as distinct scientific identities.
+- [x] Twin maturity hierarchy T0–T4 is accepted.
+- [x] Static profile/graph is prohibited from claiming predictive twin maturity.
+- [x] Patient-specific digital twins are excluded from V1 Context of Use.
+- [x] Scientific Twin JSON Schema exists.
+
+### Before any T2 mechanistic-twin claim
+
+- [ ] State variables and transitions are explicitly defined.
+- [ ] Parameter units/meaning/provenance are complete.
+- [ ] Model assumptions and applicability domain are documented.
+- [ ] Mechanistic verification tests pass.
+- [ ] Historical twin parameters obey cutoff/watermark rules when used as-of-T.
+
+### Before any T3 predictive-twin claim
+
+- [ ] Prediction target/horizon frozen.
+- [ ] Held-out or future validation completed.
+- [ ] Predictive metrics and calibration reported where applicable.
+- [ ] Uncertainty quantification evaluated.
+- [ ] Applicability/OOD behavior evaluated.
+- [ ] Failure analysis reported.
+- [ ] No validation data entered model construction through parameters, feature selection, or tuning.
+
+### Before any T4 intervention-simulation claim
+
+- [ ] T3 predictive validity is established for the relevant state/target.
+- [ ] Perturbation semantics are explicit and versioned.
+- [ ] Sensitivity analysis completed.
+- [ ] Model-form/parameter uncertainty propagated.
+- [ ] Simulation output is labelled a research hypothesis, not clinical evidence.
+- [ ] No patient-specific treatment or dosing recommendation is produced.
+
 ## Sample-size / feasibility rule
 
 Before freezing the sealed benchmark, use only development-visible information to estimate:
@@ -246,6 +288,9 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [SCIENTIFIC_SPEC_GOVERNANCE.md](SCIENTIFIC_SPEC_GOVERNANCE.md)
 - [LOCKBOX_POLICY.md](LOCKBOX_POLICY.md)
 - [../schemas/README.md](../schemas/README.md)
+- [DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md](DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
+- [SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md](SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
 - [adr/ADR-013-event-identity-source-coupling.md](adr/ADR-013-event-identity-source-coupling.md)
