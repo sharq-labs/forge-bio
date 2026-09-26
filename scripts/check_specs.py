@@ -97,15 +97,6 @@ for required_phrase in [
     if required_phrase not in twin_arch:
         errors.append(f"scientific twin architecture missing required claim boundary: {required_phrase}")
 
-if errors:
-    print("SPEC INTEGRITY CHECK FAILED")
-    for err in errors:
-        print(f"- {err}")
-    sys.exit(1)
-
-print("SPEC INTEGRITY CHECK PASSED")
-
-
 # BIG 0R5 credibility/quantitative contract checks
 for required_doc in [
     ROOT / "docs" / "MODEL_CREDIBILITY_POLICY.md",
@@ -124,3 +115,13 @@ for required_doc in [
 ]:
     if not required_doc.exists():
         errors.append(f"missing extraction assurance contract: {required_doc.relative_to(ROOT)}")
+
+if errors:
+    print("SPEC INTEGRITY CHECK FAILED")
+    for err in errors:
+        print(f"- {err}")
+    sys.exit(1)
+
+print("SPEC INTEGRITY CHECK PASSED")
+
+
