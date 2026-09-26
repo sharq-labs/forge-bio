@@ -7,12 +7,14 @@ import subprocess
 import tempfile
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
 
 OSF_HOSTS = {"osf.io", "api.osf.io"}
 DRAND_API = "https://api.drand.sh/public/{round_id}"
+DRAND_INFO_API = "https://api.drand.sh/info"
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -143,8 +145,10 @@ def verify_drand_beacon(
     try:
         raw = _fetch_bytes(url, fetcher=fetcher)
         external = json.loads(raw.decode("utf-8"))
+        info_raw = _fetch_bytes(DRAND_INFO_API, fetcher=fetcher)
+        info = json.loads(info_raw.decode("utf-8"))
     except Exception as exc:
-        return [f"could not fetch/parse DRAND round {round_id}: {exc}"]
+        return [f"could not fetch/parse DRAND round or chain info for {round_id}: {exc}"]
 
     errors: list[str] = []
     if str(external.get("round")) != round_id:
@@ -155,4 +159,31 @@ def verify_drand_beacon(
         errors.append("DRAND API randomness does not match sealed beacon artifact")
     if len(actual_randomness) != 64:
         errors.append("DRAND API randomness is not a 32-byte hex value")
+
+    try:
+        round_number = int(round_id)
+        previous_round = int(str(beacon.get("previous_round_id", "")))
+        period = int(info["period"])
+        genesis_time = int(info["genesis_time"])
+        if round_number < 2 or period <= 0:
+            raise ValueError("invalid DRAND round/period")
+        if previous_round != round_number - 1:
+            errors.append("beacon previous_round_id is not the immediate preceding DRAND round")
+
+        expected_published = genesis_time + (round_number - 1) * period
+        expected_previous = genesis_time + (round_number - 2) * period
+
+        def epoch_seconds(value: str) -> int:
+            dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                raise ValueError("DRAND timestamps must be timezone-aware")
+            return int(dt.timestamp())
+
+        if epoch_seconds(str(beacon.get("published_at", ""))) != expected_published:
+            errors.append("beacon published_at does not match DRAND chain schedule")
+        if epoch_seconds(str(beacon.get("previous_round_published_at", ""))) != expected_previous:
+            errors.append("beacon previous_round_published_at does not match DRAND chain schedule")
+    except Exception as exc:
+        errors.append(f"cannot reconstruct DRAND round chronology from chain info: {exc}")
+
     return errors
