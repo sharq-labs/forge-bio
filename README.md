@@ -108,9 +108,9 @@ A positive V0 result is evidence about **disease–gene association prioritizati
 
 ## Pre-code status
 
-Current phase: **Pre-Code Hardening / BIG 0R3 + BIG 0R4 → BIG 0F**
+Current phase: **Pre-Code Hardening / BIG 0R3 + BIG 0R4 + BIG 0R5 → BIG 0F**
 
-BIG 0R4 is a parallel platform extension and does not block the B-TGT-E1 feasibility pilot.
+BIG 0R4 and BIG 0R5 are parallel platform-hardening extensions and do not block the B-TGT-E1 manual feasibility pilot.
 
 The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
@@ -146,6 +146,8 @@ Do not start production scientific code before that gate.
 - [Repository License](LICENSE)
 - [Disease / Pathogen / Therapeutic Profile Model](docs/DISEASE_PATHOGEN_THERAPEUTIC_PROFILE.md)
 - [Forge Bio Scientific Twin Architecture](docs/SCIENTIFIC_DIGITAL_TWIN_ARCHITECTURE.md)
+- [Model Credibility Policy](docs/MODEL_CREDIBILITY_POLICY.md)
+- [Quantitative Semantics](docs/QUANTITATIVE_SEMANTICS.md)
 - [Scientific Twin JSON Schema](schemas/scientific-twin.v1.schema.json)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
@@ -157,6 +159,8 @@ Do not start production scientific code before that gate.
 - [ADR-013 — Scientific Event Identity, Source Coupling, and Adaptive Reuse](docs/adr/ADR-013-event-identity-source-coupling.md)
 - [ADR-014 — Scientific Operating Mode vs Historical Data Policy](docs/adr/ADR-014-operating-mode-data-policy.md)
 - [ADR-015 — Scientific Digital Twin Semantics](docs/adr/ADR-015-scientific-digital-twin-semantics.md)
+- [ADR-016 — Model Credibility & Numerical Verification](docs/adr/ADR-016-model-credibility-numerical-verification.md)
+- [ADR-017 — Quantitative Semantics](docs/adr/ADR-017-quantitative-semantics.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
