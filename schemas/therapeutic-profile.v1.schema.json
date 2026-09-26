@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/therapeutic-profile.v1.schema.json",
+  "title": "Forge Bio Therapeutic Scientific Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "schema_version",
+    "subject_entity_id",
+    "scientific_operating_mode",
+    "historical_data_policy",
+    "uncertainty_bundle_ref",
+    "provenance_ref",
+    "knowledge_watermark",
+    "digest",
+    "therapeutic_entity_id",
+    "therapeutic_modality"
+  ],
+  "properties": {
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "therapeutic-profile-v1"
+    },
+    "subject_entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scientific_operating_mode": {
+      "enum": [
+        "STRICT_HISTORICAL",
+        "HISTORICAL_INPUT_MODERN_PRIOR",
+        "CURRENT_DISCOVERY"
+      ]
+    },
+    "historical_data_policy": {
+      "enum": [
+        "ARCHIVED_ONLY",
+        "RECONSTRUCTED_ALLOWED"
+      ]
+    },
+    "cutoff": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "contradiction_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_gap_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "uncertainty_bundle_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provenance_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "knowledge_watermark": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "therapeutic_entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "chemical_structure_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active_moiety_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "active_ingredient_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "medicinal_product_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "therapeutic_modality": {
+      "enum": [
+        "SMALL_MOLECULE",
+        "ANTIBODY",
+        "PROTEIN_BIOLOGIC",
+        "PEPTIDE",
+        "NUCLEIC_ACID",
+        "GENE_THERAPY",
+        "CELL_THERAPY",
+        "VACCINE",
+        "OTHER"
+      ]
+    },
+    "formulation_or_product_context": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "binding_or_engagement_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "mechanism_of_action_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "intervention_direction_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathway_effect_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "indication_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "investigation_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "approval_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "withdrawal_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "efficacy_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "safety_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "adverse_event_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pharmacokinetic_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pharmacodynamic_evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "metabolism_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "interaction_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "resistance_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "combination_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathogen_target_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "host_target_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scientific_operating_mode": {
+            "enum": [
+              "STRICT_HISTORICAL",
+              "HISTORICAL_INPUT_MODERN_PRIOR"
+            ]
+          }
+        },
+        "required": [
+          "scientific_operating_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "cutoff"
+        ],
+        "properties": {
+          "cutoff": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}
