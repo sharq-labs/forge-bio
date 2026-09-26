@@ -18,7 +18,9 @@
     "digest",
     "authority_type",
     "independence_from_study_team",
-    "verification_evidence_ref"
+    "verification_evidence_ref",
+    "verified_at",
+    "independence_evidence_ref"
   ],
   "properties": {
     "attestation_id": {
@@ -30,7 +32,7 @@
     },
     "artifact_digest": {
       "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "artifact_type": {
       "type": "string",
@@ -68,7 +70,7 @@
     },
     "digest": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "authority_type": {
       "enum": [
@@ -83,9 +85,74 @@
     "verification_evidence_ref": {
       "type": "string",
       "minLength": 1
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "independence_evidence_ref": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "authority_type": {
+            "const": "INDEPENDENT_CUSTODIAN"
+          }
+        },
+        "required": [
+          "authority_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "attestation_method": {
+            "const": "SIGNED_CUSTODIAN_ATTESTATION"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority_type": {
+            "const": "THIRD_PARTY_TIMESTAMP_SERVICE"
+          }
+        },
+        "required": [
+          "authority_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "attestation_method": {
+            "const": "THIRD_PARTY_TIMESTAMP"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority_type": {
+            "const": "PUBLIC_REGISTRY"
+          }
+        },
+        "required": [
+          "authority_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "attestation_method": {
+            "const": "PUBLIC_PREREGISTRATION"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
