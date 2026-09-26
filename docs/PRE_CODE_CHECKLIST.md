@@ -35,12 +35,13 @@
 
 ### Benchmark estimand and endpoint
 
-- [ ] B-TGT-E1 primary scientific estimand is frozen, including disease weighting and zero-future-event disease policy.
+- [x] B-TGT-E1 estimand structure is frozen, including population, equal disease weighting, zero-future-event disease policy, comparator family, and selection procedures.
 - [x] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
 - [x] E1-NOVEL-STRICT / E1-MATURATION / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
 - [x] PreTGeneticState separates no-observed-signal from suggestive/qualifying/ambiguous pre-T genetics.
 - [x] One primary E1 subtype selection procedure is accepted before sealed evaluation.
-- [ ] Endpoint evidence-quality rule is chosen after provider/outcome feasibility audit.
+- [x] Endpoint evidence-quality rule structure/dimensions are frozen in an executable schema.
+- [ ] Endpoint evidence-quality threshold values are chosen after provider/outcome feasibility audit.
 - [x] Initial H candidate set and feasibility procedure are accepted.
 - [x] Fixed-K evaluation has a candidate-universe-normalized companion metric.
 - [x] Multiplicity policy for secondary endpoints/cutoffs/subgroups is defined.
@@ -111,10 +112,13 @@
 - [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
 - [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate.
 - [ ] Independent custodian assigned.
-- [ ] External seal mechanism dry-run tested end-to-end with synthetic artifacts.
+- [x] Local canonical seal-bundle build/verify/tamper dry run is executable and tested.
+- [ ] External OpenTimestamps/OSF seal mechanism dry-run tested end-to-end with synthetic artifacts.
 
 ### Feasibility and governance
 
+- [x] BIG 0F pilot result has an executable machine schema.
+- [x] BIG 0F GO/REDESIGN/NO_GO decision rules are executable and deterministic.
 - [ ] Manual outcome feasibility pilot completed on heterogeneous events.
 - [ ] Pilot reports novelty ambiguity rate.
 - [ ] Pilot reports historical genetic-search coverage grade distribution.
@@ -153,6 +157,7 @@
 
 ### Statistics and controls
 
+- [ ] Exact confirmatory estimand instance (H, primary E1 subtype, primary metric) frozen after BIG 0F.
 - [ ] Sample-size/event-yield feasibility completed on development-visible sources.
 - [ ] Simulation-based power analysis completed.
 - [ ] Confirmatory alpha, minimum scientifically meaningful effect, and target power frozen.
