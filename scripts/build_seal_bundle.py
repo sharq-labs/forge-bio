@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import unicodedata
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from scripts.select_big0f_sample import derive_sampling_key
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schemas" / "seal-bundle-manifest.v1.schema.json"
 ATTESTATION_SCHEMA_PATH = ROOT / "schemas" / "external-seal-attestation.v1.schema.json"
+BEACON_SCHEMA_PATH = ROOT / "schemas" / "randomness-beacon.v1.schema.json"
 
 
 def canonical_json_bytes(obj: Any) -> bytes:
@@ -87,8 +89,15 @@ def build_manifest(
 ) -> dict[str, Any]:
     frame_digest = sha256_file(disease_frame_path)
     beacon = _load_json(randomness_beacon_path)
+    beacon_errors = _validate(beacon, BEACON_SCHEMA_PATH)
+    if beacon_errors:
+        raise ValueError("invalid randomness beacon artifact: " + " | ".join(beacon_errors))
     if beacon["frame_digest"] != frame_digest:
         raise ValueError("randomness beacon artifact is not bound to the sealed disease frame")
+    published = datetime.fromisoformat(beacon["published_at"].replace("Z", "+00:00"))
+    frame_sealed = datetime.fromisoformat(beacon["frame_sealed_at"].replace("Z", "+00:00"))
+    if published <= frame_sealed:
+        raise ValueError("randomness beacon must be published after the frame seal")
     key = derive_sampling_key(frame_digest, beacon["randomness_hex"])
     return {
         "seal_bundle_version": "big0f-seal-bundle-v2",
