@@ -186,7 +186,7 @@ criticality: CRITICAL | REQUIRED | OPTIONAL
 
 Current availability is not accepted as evidence of historical reconstructability.
 
-Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. The disease/source/field audit scope is frozen before availability is inspected, and every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
+Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. The disease/source/field audit scope is frozen under `big0f-provider-audit-scope-v1` before availability is inspected, and every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
 
 ### Required-field availability score
 
@@ -296,7 +296,7 @@ These feed a simulation-based confirmatory power analysis.
 
 V0 does **not** accept a caller-supplied disease-level standard deviation. Because BIG 0F is NUISANCE_ONLY, its nuisance-rank dispersion cannot be treated as an empirical estimate of future paired biological-lift variance.
 
-The frozen [Power Input Derivation Contract](BIG_0F_POWER_INPUT_DERIVATION.md) therefore requires GO-capable variance evidence from at least one independent DEVELOPMENT source measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. The primary planning SD is the conservative bootstrap upper 95% bound after the frozen dependence adjustment. The nuisance-rank SD proxy remains a sensitivity diagnostic only and is explicitly **not GO-eligible**. If no eligible independent same-estimand variance source exists, the power gate is INCONCLUSIVE.
+The frozen [Power Input Derivation Contract](BIG_0F_POWER_INPUT_DERIVATION.md) therefore requires GO-capable variance evidence from the frozen exhaustive registry of independent DEVELOPMENT sources measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. The primary planning SD is the conservative bootstrap upper 95% bound after the frozen dependence adjustment. The nuisance-rank SD proxy remains a sensitivity diagnostic only and is explicitly **not GO-eligible**. If no eligible independent same-estimand variance source exists, the power gate is INCONCLUSIVE.
 
 Planning confirmatory defaults:
 
