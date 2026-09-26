@@ -25,7 +25,10 @@
     "decision_reasons",
     "digest",
     "untouched_confirmatory_disease_count",
-    "high_specificity_positive_count"
+    "high_specificity_positive_count",
+    "applicability_metrics",
+    "curation_metrics",
+    "threshold_sensitivity_stable"
   ],
   "properties": {
     "pilot_id": {
@@ -111,7 +114,8 @@
         "novelty_ambiguity_fraction",
         "variant_harmonization_ambiguity_fraction",
         "phenotype_ambiguity_fraction",
-        "sample_overlap_ambiguity_fraction"
+        "sample_overlap_ambiguity_fraction",
+        "any_primary_endpoint_ambiguity_fraction"
       ],
       "properties": {
         "novelty_ambiguity_fraction": {
@@ -130,6 +134,11 @@
           "maximum": 1
         },
         "sample_overlap_ambiguity_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "any_primary_endpoint_ambiguity_fraction": {
           "type": "number",
           "minimum": 0,
           "maximum": 1
@@ -195,7 +204,9 @@
       "required": [
         "duplicate_review_fraction",
         "primary_assignment_agreement",
-        "phenotype_agreement"
+        "phenotype_agreement",
+        "duplicate_review_count",
+        "adjudicated_event_case_count"
       ],
       "properties": {
         "duplicate_review_fraction": {
@@ -212,6 +223,14 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1
+        },
+        "duplicate_review_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "adjudicated_event_case_count": {
+          "type": "integer",
+          "minimum": 0
         }
       }
     },
@@ -299,6 +318,66 @@
     "high_specificity_positive_count": {
       "type": "integer",
       "minimum": 0
+    },
+    "applicability_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ancestry_metadata_coverage_fraction",
+        "ancestry_population_metadata_adequacy"
+      ],
+      "properties": {
+        "ancestry_metadata_coverage_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ancestry_population_metadata_adequacy": {
+          "enum": [
+            "ADEQUATE",
+            "INADEQUATE",
+            "UNKNOWN"
+          ]
+        }
+      }
+    },
+    "curation_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retrospective_curation_burden_assessment",
+        "median_minutes_per_event_case",
+        "symmetric_non_event_audit_complete",
+        "non_event_case_count",
+        "median_minutes_per_non_event_case"
+      ],
+      "properties": {
+        "retrospective_curation_burden_assessment": {
+          "enum": [
+            "ACCEPTABLE",
+            "EXCESSIVE",
+            "UNKNOWN"
+          ]
+        },
+        "median_minutes_per_event_case": {
+          "type": "number",
+          "minimum": 0
+        },
+        "symmetric_non_event_audit_complete": {
+          "type": "boolean"
+        },
+        "non_event_case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "median_minutes_per_non_event_case": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "threshold_sensitivity_stable": {
+      "type": "boolean"
     }
   }
 }
