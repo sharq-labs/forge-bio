@@ -26,7 +26,11 @@
     "max_median_event_curation_minutes": 120,
     "min_non_event_to_event_time_ratio": 0.25,
     "max_non_event_to_event_time_ratio": 4,
-    "min_source_family_count": 4
+    "min_source_family_count": 4,
+    "minimum_scientifically_meaningful_effect": 0.05,
+    "min_hypothesis_free_primary_positive_fraction": 0.5,
+    "max_label_feature_method_coupling_fraction": 0.25,
+    "min_high_specificity_positive_count": 30
   },
   "sensitivity_variants": [
     {
@@ -36,7 +40,9 @@
         "min_agreement_go": 0.75,
         "min_required_field_availability_go": 0.95,
         "max_nuisance_top1_positive_fraction": 0.2,
-        "min_ancestry_metadata_coverage_fraction": 0.9
+        "min_ancestry_metadata_coverage_fraction": 0.9,
+        "min_hypothesis_free_primary_positive_fraction": 0.6,
+        "max_label_feature_method_coupling_fraction": 0.2
       }
     },
     {
@@ -46,7 +52,9 @@
         "min_agreement_go": 0.65,
         "min_required_field_availability_go": 0.85,
         "max_nuisance_top1_positive_fraction": 0.35,
-        "min_ancestry_metadata_coverage_fraction": 0.7
+        "min_ancestry_metadata_coverage_fraction": 0.7,
+        "min_hypothesis_free_primary_positive_fraction": 0.4,
+        "max_label_feature_method_coupling_fraction": 0.35
       }
     }
   ],
