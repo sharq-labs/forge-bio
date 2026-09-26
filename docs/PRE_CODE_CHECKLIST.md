@@ -277,6 +277,26 @@ These are non-blocking for the manual BIG 0F endpoint-feasibility pilot, but man
 - [ ] Model discrepancy/residual risk documented.
 - [ ] Credibility conclusion is CoU-specific.
 
+## Platform extension — Evidence extraction & curation assurance
+
+- [x] ExtractionArtifact contract exists.
+- [x] ExtractionQualityCard contract exists.
+- [x] Source grounding/span is required for non-native confirmatory extraction.
+- [x] Automated/rule extraction requires task/domain qualification.
+- [x] Extractor confidence is explicitly not scientific evidence strength.
+- [x] Extraction does not create a new IndependenceFamily.
+- [x] Human-review disagreement/adjudication remains explicit.
+- [x] Material extractor/model/prompt/rule/ontology/schema change triggers requalification.
+- [x] Executable extraction schemas/tests exist.
+
+Before provider-scale automated extraction:
+- [ ] Gold set frozen for each extraction task/domain.
+- [ ] Precision/recall and high-impact false-positive/false-negative rates reported.
+- [ ] Negation/null-result error measured.
+- [ ] Source-grounding error measured.
+- [ ] Manual-review burden measured.
+- [ ] QUALIFIED/CONDITIONAL verdict frozen.
+
 ## Sample-size / feasibility rule
 
 Before freezing the sealed benchmark, use only development-visible information to estimate:
@@ -362,6 +382,8 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 - [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
 - [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
 - [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
+- [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md)
+- [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-011-genomic-identity-harmonization.md](adr/ADR-011-genomic-identity-harmonization.md)
 - [adr/ADR-012-historical-genetic-observability.md](adr/ADR-012-historical-genetic-observability.md)
