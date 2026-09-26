@@ -174,6 +174,9 @@ def valid_map() -> dict:
             "sensitivity_analyses": [],
             "source_ablations": [],
             "negative_controls": ["attention-stratified permutation"],
+            "ambiguity_sensitivity_method_id": "AMBIGUOUS_EVENT_BEST_WORST_TIPPING_POINT_V1",
+            "disease_weighting_sensitivity_method_id": "HIERARCHICAL_DISEASE_SENSITIVITY_V1",
+            "label_feature_method_coupling_sensitivity_id": "METHOD_FAMILY_STRATIFIED_LABEL_FEATURE_SENSITIVITY_V1",
         },
         "governance": {
             "benchmark_design_provenance_id": "BDP1",
@@ -483,6 +486,52 @@ class HostileReviewRegressionTests(unittest.TestCase):
             "program_scope_lock": "RENAMING_BENCHMARK_ENDPOINT_FRAME_OR_MODEL_DOES_NOT_RESET_BUDGET",
             "post_failure_policy": "stop or prospectively validate",
             "digest": "sha256:" + "e" * 64,
+        }
+        validator("confirmatory-program-budget.v1.schema.json").validate(x)
+        self.assertTrue(validate_semantics("confirmatory_program_budget", x))
+
+    def test_confirmatory_map_requires_round2_robustness_sensitivities(self) -> None:
+        x = valid_map()
+        del x["planned_analyses"]["ambiguity_sensitivity_method_id"]
+        assert_schema_invalid(self, "map.v1.schema.json", x)
+
+    def test_program_budget_cannot_reset_by_renaming_family(self) -> None:
+        x = {
+            "budget_id": "CPB-FORGE-BIO-B-TGT-E1-V0",
+            "schema_version": "confirmatory-program-budget-v1",
+            "benchmark_family": "RENAMED-BENCHMARK",
+            "familywise_alpha": 0.05,
+            "allocation_method": "FIXED_SPLIT",
+            "max_confirmatory_generations": 2,
+            "generation_allocations": [
+                {"generation_id": "G1", "allocated_alpha": 0.025, "status": "PLANNED"},
+                {"generation_id": "G2", "allocated_alpha": 0.025, "status": "PLANNED"},
+            ],
+            "development_results_can_support_confirmatory_claim": False,
+            "research_program_id": "FORGE-BIO-B-TGT-E1-V0",
+            "program_scope_lock": "RENAMING_BENCHMARK_ENDPOINT_FRAME_OR_MODEL_DOES_NOT_RESET_BUDGET",
+            "post_failure_policy": "stop or prospectively validate",
+            "digest": "sha256:" + "f" * 64,
+        }
+        assert_schema_invalid(self, "confirmatory-program-budget.v1.schema.json", x)
+
+    def test_program_budget_rejects_duplicate_generation_ids_semantically(self) -> None:
+        x = {
+            "budget_id": "CPB-FORGE-BIO-B-TGT-E1-V0",
+            "schema_version": "confirmatory-program-budget-v1",
+            "benchmark_family": "B-TGT-E1",
+            "familywise_alpha": 0.05,
+            "allocation_method": "FIXED_SPLIT",
+            "max_confirmatory_generations": 2,
+            "generation_allocations": [
+                {"generation_id": "G1", "allocated_alpha": 0.025, "status": "PLANNED"},
+                {"generation_id": "G1", "allocated_alpha": 0.025, "status": "ACTIVE"},
+            ],
+            "development_results_can_support_confirmatory_claim": False,
+            "research_program_id": "FORGE-BIO-B-TGT-E1-V0",
+            "program_scope_lock": "RENAMING_BENCHMARK_ENDPOINT_FRAME_OR_MODEL_DOES_NOT_RESET_BUDGET",
+            "post_failure_policy": "stop or prospectively validate",
+            "digest": "sha256:" + "f" * 64,
         }
         validator("confirmatory-program-budget.v1.schema.json").validate(x)
         self.assertTrue(validate_semantics("confirmatory_program_budget", x))
