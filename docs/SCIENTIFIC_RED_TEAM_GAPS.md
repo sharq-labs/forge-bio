@@ -665,3 +665,42 @@ Human workflows retain reviewer identity, disagreement, adjudication, and change
 **Status:** CLOSED-POLICY
 
 Extraction never creates a new biological observation. Multiple claims from one originating observation retain shared source/IndependenceFamily lineage.
+
+
+## Final research-program integrity closure ledger
+
+### RP-01 — Retractions/corrections could rewrite history
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+SourceLifecycleEvent preserves correction/retraction/withdrawal/supersession/restoration events with public timing. Historical reconstruction resolves status as-of-T; later lifecycle events trigger current fragility analysis instead of rewriting history.
+
+### RP-02 — Repeated benchmark reuse could overfit the benchmark
+
+**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+
+BenchmarkExposureLedger tracks disclosure and downstream adaptation. Generations transition through ACTIVE_CONFIRMATORY, DEVELOPMENT_EXPOSED, EXHAUSTED, and RETIRED states. EXHAUSTED generations cannot support new strongest-tier confirmation.
+
+### RP-03 — Internal Git history alone could be overinterpreted as preregistration
+
+**Status:** CLOSED-POLICY / P1-OPERATIONAL
+
+ExternalSealAttestation is required for strongest confirmatory/prospective artifacts. It proves sequencing/existence at study time but does not erase researcher-hindsight risk.
+
+### RP-04 — Prospective predictions could influence their own future validation
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+PredictionExposureEvent records private/public exposure and contamination risk. Prospective evidence is stratified by exposure; exposed outcomes are not automatically counted as clean independent confirmation.
+
+### RP-05 — Selective reporting across many benchmark attempts
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+ResearchProgramAttempt ledger records positive, null, negative, inconclusive, and failed attempts across generations/endpoints/horizons/model families.
+
+### RP-06 — Provider/schema/ontology drift could silently mutate frozen artifacts
+
+**Status:** CLOSED-POLICY / P1-IMPLEMENTATION
+
+Material migrations are new immutable derivation artifacts with source/target versions, migration rule, affected semantics, provenance, and digest.
