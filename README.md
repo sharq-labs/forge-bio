@@ -64,19 +64,30 @@ A model that mainly predicts what researchers were about to study or what was ea
 
 ## Initial benchmark families
 
-- **B-TGT — Target Discovery:** establishes biological prioritization signal.
+- **B-TGT — Target Program:** umbrella program for biological/target prioritization. Its first benchmark is intentionally narrower than "target discovery".
 - **B-REP — Drug Repurposing:** tests whether biological signal translates into therapeutic prioritization.
 
-The first proposed benchmark is **B-TGT-E1-v0**, a narrow disease–gene target-association benchmark evaluated against later independent human genetic support.
+The first proposed benchmark is **B-TGT-A1 / B-TGT-E1-v0 — Disease–Gene Association Prioritization**, evaluated against later independent human genetic support.
 
-E1 is no longer treated as one undifferentiated endpoint. The design separates:
-- **E1-NOVEL** — genuinely new post-cutoff human genetic support;
-- **E1-REPLICATION** — later independent maturation/replication of a pre-T weak signal;
+E1 is explicitly split into:
+- **E1-NOVEL-STRICT** — no observed pre-T genetic signal after adequate audit, followed by qualifying post-T support;
+- **E1-MATURATION** — a suggestive pre-T signal later becomes qualifying;
+- **E1-REPLICATION** — genuine independent replication under allele/direction/phenotype/lineage rules;
 - **E1-CROSSMODAL** — pre-T non-genetic evidence anticipating later genetics.
 
-The benchmark also governs locus→gene assignment, historical novelty auditing, cohort/sample independence, discoverability bias, zero-event diseases, and researcher hindsight.
+The benchmark also governs:
+- locus→gene assignment;
+- disease/trait phenotype matching;
+- pre-T signal-state auditing;
+- replication comparability;
+- cohort/sample independence;
+- discoverability bias;
+- zero-event disease review burden;
+- validation-set reuse;
+- immutable Future Outcome snapshots;
+- researcher hindsight.
 
-It does not claim intervention-direction or clinical validation.
+A positive V0 result is evidence about **disease–gene association prioritization**, not therapeutic-target validation or clinical efficacy.
 
 ## Pre-code status
 
@@ -113,6 +124,9 @@ Do not start production scientific code before that gate.
 - [MAR Schema](docs/schemas/MAR_SCHEMA.md)
 - [ADR-006 — Outcome Gene Assignment and Historical Novelty](docs/adr/ADR-006-outcome-gene-assignment.md)
 - [ADR-007 — Benchmark Design Provenance and Analyst Blinding](docs/adr/ADR-007-benchmark-design-provenance.md)
+- [ADR-008 — Outcome Phenotype Matching](docs/adr/ADR-008-outcome-phenotype-matching.md)
+- [ADR-009 — Genetic Replication and Pre-T Signal State](docs/adr/ADR-009-genetic-replication-and-signal-state.md)
+- [ADR-010 — Validation Generations and Outcome Snapshot Commitment](docs/adr/ADR-010-validation-generations-and-outcome-freeze.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
