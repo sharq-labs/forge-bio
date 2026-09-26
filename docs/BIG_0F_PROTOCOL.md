@@ -39,9 +39,13 @@ Construct the eligible disease frame mechanically from the as-of-T vocabulary an
 Before any event adjudication:
 
 1. serialize and hash the disease frame;
-2. obtain an external seal for the frame digest;
-3. obtain an external seal for the random seed;
-4. order eligible diseases by seeded random permutation.
+2. externally timestamp/register the frame digest;
+3. after that frame seal exists, obtain a verified public randomness-beacon round;
+4. bind the beacon artifact to the already-sealed frame digest;
+5. derive the sampling key deterministically from frame digest + beacon randomness;
+6. order eligible diseases with the sealed hash-sort algorithm in `scripts/select_big0f_sample.py`.
+
+The study team does not choose or grind candidate seeds. A beacon published before the frame seal is invalid.
 
 Pilot selection proceeds down that immutable order.
 
@@ -189,19 +193,24 @@ Rules:
 
 ## 8. Assignment-attention audit
 
+Every gene-level outcome receives one assignment class under the externally sealed `config/big0f-adjudication-policy.v1.json`.
+
+A **primary** gene-level positive additionally requires the discovery/test ascertainment to be hypothesis-free at the relevant scale (GENOME_WIDE, EXOME_WIDE, or BIOBANK_WIDE). Targeted candidate-gene follow-up cannot independently create a primary positive.
+
+`OTHER_HIGH_SPECIFICITY_METHOD` is not an open primary category in V0. New assignment methods require a versioned REDESIGN before use.
+
 Every gene-level outcome receives one assignment class:
 
 ```text
-DIRECT_CODING_OR_LOF
+HYPOTHESIS_FREE_CODING_OR_LOF
 HIGH_CONFIDENCE_FINE_MAPPING
 PREREGISTERED_COLOCALIZATION
-OTHER_HIGH_SPECIFICITY_METHOD
 AUTHOR_NAMED
 NEAREST_GENE
 POSITIONAL_PROXIMITY_ONLY
 GENERIC_DATABASE_GENE_FIELD
 MODERN_L2G_ONLY
-OTHER
+TARGETED_CANDIDATE_GENE_CODING
 ```
 
 Report:
@@ -233,26 +242,20 @@ A development-only power-maturation baseline is constructed from historically av
 
 ## 10. Combined Nuisance headroom
 
-On pilot-only DEVELOPMENT data, build a nuisance comparator using as-of-T features from the frozen nuisance families.
+On pilot-only DEVELOPMENT data, build **only the Combined Nuisance Model** using the frozen nuisance manifest.
 
-The primary nested development comparison uses:
-- the same learner family;
-- the same nuisance feature block;
-- the same preprocessing;
-- the same tuning/search budget;
-- the same early-stopping rule;
-- the same random-seed policy.
+BIG 0F **must not run the nuisance + disease-specific biological-evidence arm** and must not inspect Forge Bio biological-model lift. This prevents the pilot from tuning subtype, nuisance definition, metric, or minimum effect toward a favorable biological result.
 
-The augmented arm differs only by adding the preregistered disease-specific hypothesis-evidence feature block.
+The nuisance manifest requires content-free disease-specific attention volume and attention momentum in addition to genomic architecture, pleiotropy, observability, sample-size trajectory, and provider coverage.
 
-This is not a performance result.
+This is a nuisance-saturation / feasibility analysis, not a Forge Bio performance experiment.
 
 Report:
 - median percentile rank of positive events under nuisance only;
 - distribution by disease;
 - fraction of events already in the top 1% and top 5%;
-- incremental room available to a biological model;
-- sensitivity to removing attention variables.
+- remaining rank-space/headroom available beyond nuisance-only prediction;
+- sensitivity to removing attention variables as a diagnostic only; the mandatory disease-specific attention volume/momentum families are not removable from the eventual headline comparator.
 
 ## 11. Power-analysis inputs
 
@@ -274,7 +277,7 @@ one-sided alpha = 0.05
 target power >= 0.80
 ```
 
-The minimum scientifically meaningful effect is frozen from the pilot's rank scale **without inspecting Forge Bio biological-model performance**.
+The minimum scientifically meaningful effect is frozen in the sealed threshold manifest at **0.05 rank-fraction units** for V0. BIG 0F may estimate variance/power inputs but may not change that effect threshold in response to Forge Bio biological-model performance.
 
 ## 12. GO / REDESIGN / NO-GO thresholds
 
@@ -296,7 +299,7 @@ NO-GO if any remains true after one allowed rule clarification/revision:
 REDESIGN if any occurs:
 
 - author-named + nearest-gene assignments > 50% of candidate gene-level positives;
-- preregistered attention/assignment association exceeds the sealed REDESIGN threshold (default absolute standardized association 0.30 until BIG 0F v1 is sealed);
+- the confidence interval for the preregistered attention/assignment association reaches or exceeds the sealed absolute boundary 0.30;
 - primary-eligible high-specificity assignments < 50% of gene-level positives;
 - strict novelty is dominated by pre-T cohort reuse / power maturation;
 - same curation pipeline materially dominates both inputs and outcomes;
@@ -307,10 +310,12 @@ REDESIGN if any occurs:
 
 Default redesign options:
 - move primary endpoint to locus level;
-- make E1-MATURATION primary with explicit power-maturation baseline;
+- create a **new versioned pilot** if a different E1 subtype is scientifically preferred;
 - replace shared curation outcomes with independently re-extracted primary-source outcomes;
 - narrow disease era/regime;
 - strengthen assignment criteria.
+
+The current V0 pilot does not switch to E1-MATURATION/E1-REPLICATION/E1-CROSSMODAL after inspecting results. V0's primary subtype is E1-NOVEL-STRICT and its primary metric is EVENT_RANK_PERCENTILE_V1.
 
 ### GO requirements
 
@@ -320,13 +325,15 @@ GO requires all:
 - fraction of unique cases AMBIGUOUS on any primary-endpoint dimension <= 20%;
 - preregistered primary agreement statistic >= 0.70 for primary assignment and phenotype match;
 - high-specificity primary-eligible assignment fraction >= 50%;
+- hypothesis-free study-design fraction among primary positives meets the sealed threshold;
+- label/feature method-family coupling remains below the sealed threshold;
 - no material unmitigated Past/Future curation coupling;
 - sample-overlap / lineage ambiguity within the frozen acceptable policy;
 - ancestry/population metadata adequate for the intended primary interpretation;
 - retrospective curation burden assessed ACCEPTABLE under the sealed operational-capacity rule;
 - symmetric non-event audit completed at the frozen sample size;
 - independent duplicate-adjudication minimum coverage completed;
-- nuisance headroom not saturated under the top-1% rule above;
+- nuisance headroom not saturated under both the median-rank and sealed top-1%-positive-fraction rules;
 - simulation-based target power >= 0.80 at the frozen alpha/effect;
 - untouched diseases remain available for sealed confirmation.
 
@@ -339,7 +346,11 @@ The deterministic evaluator returns `INCONCLUSIVE` rather than GO when a mandato
 - provider-coupling risk is UNKNOWN;
 - retrospective-curation burden is UNKNOWN;
 - symmetric non-event audit is incomplete/undersized;
-- threshold-sensitivity conclusion is unstable.
+- a mandatory prerequisite remains unresolved.
+
+Threshold sensitivity is not self-declared: the evaluator reloads the sealed threshold manifest, evaluates all sealed sensitivity variants, and returns REDESIGN if the terminal decision changes.
+
+INCONCLUSIVE may occur at most twice for V0. Reaching the frozen limit forces REDESIGN rather than indefinite re-evaluation.
 
 Passing GO means only:
 
