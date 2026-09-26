@@ -43,7 +43,7 @@ Before any event adjudication:
 3. after that frame seal exists, obtain a verified public randomness-beacon round;
 4. bind the beacon artifact to the already-sealed frame digest;
 5. derive the sampling key deterministically from frame digest + beacon randomness;
-6. order eligible diseases with the sealed hash-sort algorithm in `scripts/select_big0f_sample.py`.
+6. order eligible diseases with the frozen deterministic BIG 0F hash-sort sampling contract.
 
 The study team does not choose or grind candidate seeds. A beacon published before the frame seal is invalid.
 
