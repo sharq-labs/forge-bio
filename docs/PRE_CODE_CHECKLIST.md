@@ -36,7 +36,8 @@
 
 - [ ] B-TGT-E1 primary scientific estimand is frozen, including disease weighting and zero-future-event disease policy.
 - [x] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
-- [x] E1-NOVEL / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
+- [x] E1-NOVEL-STRICT / E1-MATURATION / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
+- [x] PreTGeneticState separates no-observed-signal from suggestive/qualifying/ambiguous pre-T genetics.
 - [x] One primary E1 subtype selection procedure is accepted before sealed evaluation.
 - [ ] Endpoint evidence-quality rule is chosen after provider/outcome feasibility audit.
 - [x] Initial H candidate set and feasibility procedure are accepted.
@@ -46,13 +47,18 @@
 ### Outcome integrity
 
 - [x] OutcomeGeneAssignmentPolicy accepted.
+- [x] OutcomePhenotypeMatchPolicy accepted.
+- [x] GeneticReplicationPolicy accepted.
 - [x] HistoricalNoveltyAudit policy accepted.
 - [x] Locus/variant-level events cannot silently become gene-level positives.
 - [x] Current/modern learned L2G output is prohibited as unqualified primary strict-historical ground truth.
 - [x] Future-event independence includes cohort/dataset/sample-overlap semantics.
 - [x] UNKNOWN sample overlap is not treated as independent replication.
 - [x] Outcome adjudication blinding/dual-review policy is accepted.
+- [x] Strongest L3 sealed adjudication requires rank/order blinding or automatic tier downgrade.
 - [x] Population/ancestry applicability fields are defined for relevant outcome classes.
+- [x] Validation-generation reuse/retirement policy is accepted.
+- [x] Exact Future Outcome snapshot/ledger commitment policy is accepted.
 
 ### Ascertainment and hindsight
 
@@ -100,10 +106,12 @@
 
 - [ ] Sample-size/event-yield feasibility completed on development-visible sources.
 - [ ] Zero-event disease handling verified in metric engine.
+- [ ] All-frame observed-event review-budget utility implemented.
 - [ ] Primary K/review budget chosen on development data only.
 - [ ] Candidate-universe-normalized primary/secondary metric implemented.
 - [ ] Strongest required attention/discoverability comparator frozen.
 - [ ] Paired disease/challenge-level CI method frozen.
+- [ ] Disease-family/block dependence sensitivity method frozen.
 - [ ] Multiplicity policy frozen.
 - [ ] Negative-control suite frozen.
 - [ ] Temporal placebo control defined where feasible.
@@ -111,16 +119,20 @@
 
 ### Outcome integrity and applicability
 
-- [ ] HistoricalNoveltyAudit process tested.
+- [ ] HistoricalNoveltyAudit + PreTGeneticState process tested.
 - [ ] Outcome gene-assignment adjudication process tested.
+- [ ] Outcome phenotype-match adjudication process tested.
+- [ ] Genetic replication assessment process tested.
 - [ ] Cohort/sample-overlap lineage coverage measured.
-- [ ] Outcome adjudicators blinded to ranking where feasible.
+- [ ] Strongest L3 sealed outcome adjudicators verified blind to ranking/order.
 - [ ] Ancestry/population coverage reported.
 - [ ] Reporting/publication-bias sensitivity plan included in MAP.
 
 ### Lockbox and reproducibility
 
 - [ ] MAP hash frozen.
+- [ ] Validation generation ID/status/access count frozen.
+- [ ] Exact Future Outcome source releases/snapshot/ledger/adjudication/identity-bridge commitment frozen.
 - [ ] Lockbox credentials unavailable to ranking runtime/team path.
 - [ ] Ranking artifact commitment mechanism tested.
 - [ ] Append-only lockbox access log tested.
@@ -151,9 +163,12 @@ If expected uncertainty is too wide, ambiguity is too high, or the endpoint is d
 ## Manual outcome feasibility pilot
 
 Before provider-scale implementation, manually adjudicate a small heterogeneous set of future events and record:
+- pre-T genetic state: no-observed-signal vs suggestive vs qualifying vs ambiguous;
 - whether evidence was truly novel at T;
 - locus-level versus gene-level status;
 - gene-assignment method and knowledge horizon;
+- benchmark-disease vs future-phenotype relation;
+- replication allele/direction/LD/population comparability where applicable;
 - cohort/sample overlap;
 - retrospective curation;
 - ancestry/population metadata;
