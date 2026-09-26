@@ -13,8 +13,9 @@ from typing import Any, Callable
 
 
 OSF_HOSTS = {"osf.io", "api.osf.io"}
-DRAND_API = "https://api.drand.sh/public/{round_id}"
-DRAND_INFO_API = "https://api.drand.sh/info"
+DRAND_CHAIN_HASH = "8990e7a9aaed2ffed73dbd7092123d6f289930540d7651336225dc172e51b2ce"
+DRAND_API = "https://api.drand.sh/{chain_hash}/public/{round_id}"
+DRAND_INFO_API = "https://api.drand.sh/{chain_hash}/info"
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -141,11 +142,13 @@ def verify_drand_beacon(
     round_id = str(beacon.get("round_id", ""))
     if not round_id.isdigit():
         return ["DRAND round_id must be an integer string"]
-    url = DRAND_API.format(round_id=round_id)
+    if beacon.get("chain_hash") != DRAND_CHAIN_HASH:
+        return ["BIG 0F DRAND chain hash does not match the frozen V0 chain"]
+    url = DRAND_API.format(chain_hash=DRAND_CHAIN_HASH, round_id=round_id)
     try:
         raw = _fetch_bytes(url, fetcher=fetcher)
         external = json.loads(raw.decode("utf-8"))
-        info_raw = _fetch_bytes(DRAND_INFO_API, fetcher=fetcher)
+        info_raw = _fetch_bytes(DRAND_INFO_API.format(chain_hash=DRAND_CHAIN_HASH), fetcher=fetcher)
         info = json.loads(info_raw.decode("utf-8"))
     except Exception as exc:
         return [f"could not fetch/parse DRAND round or chain info for {round_id}: {exc}"]
