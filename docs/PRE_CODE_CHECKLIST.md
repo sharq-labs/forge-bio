@@ -119,6 +119,14 @@
 
 - [x] BIG 0F pilot result has an executable machine schema.
 - [x] BIG 0F GO/REDESIGN/NO_GO decision rules are executable and deterministic.
+- [x] BIG 0F evaluator rejects non-finite values and incomplete/cross-field-inconsistent pilot metrics.
+- [x] BIG 0F decision engine, schemas, nuisance/adjudication manifests, sampling code, and power engine are committed by the seal bundle.
+- [x] BIG 0F sampling derives from the first verified public randomness-beacon round after disease-frame sealing.
+- [x] BIG 0F pilot is nuisance-only; biological-model lift is not inspected.
+- [x] Disease-specific content-free attention volume/momentum are mandatory nuisance families.
+- [x] Primary positive ascertainment requires frozen hypothesis-free study designs.
+- [x] Endpoint-quality rules have a fail-closed executable evaluator.
+- [x] Research-program alpha budget is program-scoped and cannot reset by benchmark/endpoint/frame/model renaming.
 - [ ] Manual outcome feasibility pilot completed on heterogeneous events.
 - [ ] Pilot reports novelty ambiguity rate.
 - [ ] Pilot reports historical genetic-search coverage grade distribution.
@@ -176,6 +184,9 @@
 - [ ] Input/outcome provider-coupling sensitivity frozen.
 - [ ] LD reference-panel / modern-evaluation-LD sensitivity frozen where applicable.
 - [ ] ScientificEventFamily credit sensitivity frozen.
+- [ ] Ambiguous-event best/worst/tipping-point sensitivity executed.
+- [ ] Hierarchical or precision-weighted disease sensitivity executed.
+- [ ] Label/feature method-family stratified sensitivity executed.
 
 ### Outcome integrity and applicability
 
