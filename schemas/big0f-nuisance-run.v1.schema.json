@@ -17,21 +17,39 @@
     "training_config_digest",
     "model_artifact_digest",
     "event_rank_records",
-    "digest"
+    "digest",
+    "candidate_universe_digest",
+    "full_rank_output_digest",
+    "source_release_ids",
+    "feature_transform_digest",
+    "hyperparameter_search_space_digest",
+    "tuning_budget_id",
+    "early_stopping_rule_id",
+    "random_seed_policy_id"
   ],
   "properties": {
-    "run_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "big0f-nuisance-run-v1"},
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-nuisance-run-v1"
+    },
     "nuisance_manifest_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "pilot_model_evaluation_mode": {"const": "NUISANCE_ONLY"},
+    "pilot_model_evaluation_mode": {
+      "const": "NUISANCE_ONLY"
+    },
     "actual_feature_families": {
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "feature_artifact_digests": {
       "type": "object",
@@ -41,8 +59,13 @@
         "pattern": "^sha256:[0-9a-fA-F]{64}$"
       }
     },
-    "semantic_evidence_features_used": {"const": false},
-    "learner_family_id": {"type": "string", "minLength": 1},
+    "semantic_evidence_features_used": {
+      "const": false
+    },
+    "learner_family_id": {
+      "type": "string",
+      "minLength": 1
+    },
     "preprocessing_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
@@ -61,17 +84,78 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["event_id", "disease_id", "rank_fraction"],
+        "required": [
+          "event_id",
+          "disease_id",
+          "rank_fraction",
+          "rank_position",
+          "candidate_universe_size"
+        ],
         "properties": {
-          "event_id": {"type": "string", "minLength": 1},
-          "disease_id": {"type": "string", "minLength": 1},
-          "rank_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disease_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rank_fraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "rank_position": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "candidate_universe_size": {
+            "type": "integer",
+            "minimum": 1
+          }
         }
       }
     },
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "candidate_universe_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "full_rank_output_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "source_release_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "feature_transform_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "hyperparameter_search_space_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "tuning_budget_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "early_stopping_rule_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "random_seed_policy_id": {
+      "type": "string",
+      "minLength": 1
     }
   }
 }
