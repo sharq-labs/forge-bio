@@ -31,7 +31,10 @@ data:
   adjudication_batch_digest: string
   evaluation_identity_bridge_digest: string
   validation_generation_id: string
+  scientific_event_family_ledger_digest: string
+  provider_coupling_assessment_digest: string
   provider_versions: [string]
+  genomic_harmonization_artifact_ids: [string]
 
 verification:
   temporal_tests: string
@@ -40,6 +43,9 @@ verification:
   identity_tests: string
   metric_golden_tests: string
   dependency_wall_tests: string
+  genomic_identity_tests: string
+  cross_anchor_event_reuse_tests: string
+  preprocessing_lineage_tests: string
   reproducibility_result: string
 
 coverage:
@@ -54,6 +60,9 @@ coverage:
   lineage_completeness_fraction: number
   outcome_coverage_fraction: number
   ancestry_population_missing_fraction: number
+  historical_genetic_coverage_grade_distribution: object
+  variant_harmonization_ambiguity_fraction: number
+  event_family_deduplication_fraction: number
 
 results:
   primary_endpoint_subtype: string
@@ -80,6 +89,10 @@ bias_and_sensitivity:
   outcome_source_ablation: object
   ancestry_population_analysis: object
   reporting_bias_analysis: object
+  historical_observability_sensitivity: object
+  ld_reference_panel_sensitivity: object
+  input_outcome_provider_coupling_sensitivity: object
+  event_family_credit_sensitivity: object
   negative_control_results: [object]
 
 governance:
@@ -87,6 +100,7 @@ governance:
   lockbox_access_log_ref: string
   validation_generation_status: string
   validation_access_count: integer
+  validation_max_disclosure_level: string
   adjudication_blinding_status: string
   adjudication_summary: string
   deviations: [object]
@@ -107,7 +121,10 @@ interpretation:
 - exact claim language is bounded by the endpoint actually evaluated;
 - zero-event disease handling matches the frozen estimand and all-frame utility is reported;
 - strongest L3 status is not claimed when sealed outcome adjudicators saw rank/order;
-- exact outcome snapshot/ledger commitments match the MAP;
+- exact outcome snapshot/ledger/event-family/provider-coupling commitments match the MAP;
+- strict novelty cases meet the frozen historical genetic-search coverage threshold;
+- genomic harmonization/LD provenance is complete for outcome-defining matches;
+- provider-coupling and historical-observability sensitivities are reported;
 - phenotype-match and replication-policy sensitivities are reported where material;
 - disease-family/block dependence sensitivity is reported;
 - population/ancestry limitations are explicit;
