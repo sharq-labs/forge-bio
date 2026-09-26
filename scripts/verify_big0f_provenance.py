@@ -21,6 +21,7 @@ SELECTION_SCHEMA_PATH = ROOT / "schemas" / "big0f-selection-provenance.v1.schema
 NUISANCE_RUN_SCHEMA_PATH = ROOT / "schemas" / "big0f-nuisance-run.v1.schema.json"
 PROVIDER_AUDIT_SCHEMA_PATH = ROOT / "schemas" / "big0f-provider-audit.v1.schema.json"
 ADJUDICATOR_INDEPENDENCE_SCHEMA_PATH = ROOT / "schemas" / "big0f-adjudicator-independence.v1.schema.json"
+CURATION_AUDIT_SCHEMA_PATH = ROOT / "schemas" / "big0f-curation-audit.v1.schema.json"
 
 CUTOFF_ORDER = ["2005-12-31", "2008-12-31", "2011-12-31", "2014-12-31"]
 HORIZON_ORDER = ["3y", "5y", "7y", "10y"]
@@ -215,6 +216,64 @@ def verify_adjudicator_independence(attestation: dict[str, Any]) -> list[str]:
         return errors
     if attestation["digest"] != canonical_digest(attestation):
         errors.append("adjudicator-independence canonical digest mismatch")
+    return errors
+
+
+def derive_curation_metrics(
+    audit: dict[str, Any],
+    *,
+    total_event_cases: int,
+    max_median_event_curation_minutes: float,
+) -> dict[str, Any]:
+    event_records = audit["event_case_records"]
+    non_event_records = audit["non_event_case_records"]
+    if len(event_records) != total_event_cases:
+        raise ValueError(
+            f"curation event-case records {len(event_records)} != adjudicated event cases {total_event_cases}"
+        )
+    event_ids = [row["case_id"] for row in event_records]
+    non_event_ids = [row["case_id"] for row in non_event_records]
+    if len(event_ids) != len(set(event_ids)):
+        raise ValueError("curation audit contains duplicate event case IDs")
+    if len(non_event_ids) != len(set(non_event_ids)):
+        raise ValueError("curation audit contains duplicate non-event case IDs")
+    if set(event_ids) & set(non_event_ids):
+        raise ValueError("curation audit event and non-event case IDs overlap")
+
+    event_median = statistics.median(float(row["minutes"]) for row in event_records)
+    non_event_median = statistics.median(float(row["minutes"]) for row in non_event_records)
+    expected_non_event = min(100, max(50, total_event_cases))
+    complete = len(non_event_records) >= expected_non_event
+    burden = "EXCESSIVE" if event_median > max_median_event_curation_minutes else "ACCEPTABLE"
+    return {
+        "retrospective_curation_burden_assessment": burden,
+        "median_minutes_per_event_case": event_median,
+        "symmetric_non_event_audit_complete": complete,
+        "non_event_case_count": len(non_event_records),
+        "median_minutes_per_non_event_case": non_event_median,
+        "operational_capacity_rule_id": audit["operational_capacity_rule_id"],
+    }
+
+
+def verify_curation_audit(
+    audit: dict[str, Any],
+    *,
+    total_event_cases: int,
+    max_median_event_curation_minutes: float,
+) -> list[str]:
+    errors = _validate_schema(audit, CURATION_AUDIT_SCHEMA_PATH)
+    if errors:
+        return errors
+    if audit["digest"] != canonical_digest(audit):
+        errors.append("curation-audit canonical digest mismatch")
+    try:
+        derive_curation_metrics(
+            audit,
+            total_event_cases=total_event_cases,
+            max_median_event_curation_minutes=max_median_event_curation_minutes,
+        )
+    except Exception as exc:
+        errors.append(f"cannot derive curation metrics: {exc}")
     return errors
 
 
