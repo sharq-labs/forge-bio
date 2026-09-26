@@ -7,6 +7,7 @@
   "required": [
     "twin_id",
     "schema_version",
+    "terminology_scope",
     "twin_family",
     "subject_entity_ids",
     "maturity_level",
@@ -14,7 +15,6 @@
     "historical_data_policy",
     "profile_snapshot_ids",
     "evidence_snapshot_ids",
-    "update_policy_artifact_id",
     "verification_artifact_ids",
     "validation_artifact_ids",
     "uncertainty_bundle_ref",
@@ -271,7 +271,8 @@
       },
       "then": {
         "required": [
-          "state_definition_id"
+          "state_definition_id",
+          "update_policy_artifact_id"
         ],
         "properties": {
           "state_definition_id": {
@@ -280,6 +281,10 @@
           },
           "evidence_snapshot_ids": {
             "minItems": 1
+          },
+          "update_policy_artifact_id": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
