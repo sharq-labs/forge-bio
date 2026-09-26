@@ -63,8 +63,17 @@ Species is represented separately in BiologicalContext.
 ## 5. Study design / method
 
 Controlled, versioned vocabulary, initially including:
-- GWAS
-- MENDELIAN_OR_RARE_VARIANT
+- GWAS_SINGLE_VARIANT
+- GWAS_META_ANALYSIS
+- FINE_MAPPING
+- COLOCALIZATION
+- EXOME_ASSOCIATION
+- WGS_ASSOCIATION
+- GENE_BURDEN
+- RARE_VARIANT_AGGREGATION
+- CNV_ASSOCIATION
+- PHEWAS
+- MENDELIAN_SEGREGATION
 - QTL
 - CRISPR_PERTURBATION
 - KNOCKOUT
@@ -159,6 +168,22 @@ Possible fields:
 
 Method-specific payloads are schema-versioned.
 
+Human-genetic payloads may additionally include:
+- canonical variant/locus IDs;
+- genome assembly/reference sequence;
+- reference/alternate/effect allele;
+- allele frequency;
+- harmonization artifact ID;
+- fine-mapping/credible-set metadata;
+- LD relation/reference-panel ID;
+- phenotype concept ID;
+- ancestry/population;
+- cohort/dataset/SampleSet IDs;
+- meta-analysis membership;
+- heterogeneity statistics.
+
+Free-text rsIDs, coordinates, cohort names, or trait labels are not substitutes for resolved identities when the field affects benchmark matching.
+
 ## 11. Independence
 
 ```text
@@ -168,7 +193,9 @@ IndependenceFamily
     originating_study_id?
     cohort_id?
     consortium_id?
-    biobank_or_dataset_id?
+    biobank_id?
+    dataset_id?
+    sample_set_ids?
     participant_overlap_group?
     lab_or_consortium?
     parent_dataset_id?
@@ -264,3 +291,24 @@ A 2008 publication converted into a gene assignment by a 2026 knowledge-bearing 
 For human evidence, population and ancestry are retained where scientifically relevant and available.
 
 Missing values remain UNKNOWN. Evidence aggregated across populations must not silently erase population-specific applicability.
+
+
+## 19. Scientific event family
+
+Evidence manifestations and scientific events are separate.
+
+A preprint, journal article, database row, and secondary curation may all describe one underlying discovery.
+
+```text
+ScientificEventFamily
+    event_family_id
+    event_domain
+    originating_study_ids
+    primary_public_manifestations
+    secondary_curated_manifestations
+    provenance
+```
+
+For genetic outcomes, GeneticDiscoveryEventFamily additionally preserves locus IDs and gene assignments.
+
+Event-family identity is used for outcome counting and cross-anchor reuse; IndependenceFamily is used for evidentiary dependence. They are related but not interchangeable.
