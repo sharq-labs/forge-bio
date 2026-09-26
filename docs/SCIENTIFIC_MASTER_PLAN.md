@@ -293,6 +293,11 @@ BIG 0R5 is a platform-hardening layer. It does not delay the manual BIG 0F endpo
 - ApplicabilityDomain / prediction risk-of-bias audit
 - executable schemas for quantitative/model-credibility artifacts
 - executable positive/negative contract tests
+- source lifecycle events for corrections/retractions/withdrawals
+- BenchmarkExposureLedger / benchmark exhaustion states
+- ResearchProgramAttempt ledger
+- ExternalSealAttestation
+- prospective PredictionExposureEvent / self-fulfilling-attention guard
 
 ## Acceptance
 
@@ -306,7 +311,11 @@ BIG 0R5 is a platform-hardening layer. It does not delay the manual BIG 0F endpo
 - model credibility is explicitly Context-of-Use specific;
 - T3+ evaluation audits development/evaluation separation, applicability, and distribution shift;
 - probabilistic claims require held-out calibration plus a proper scoring rule;
-- material model/dependency change invalidates prior validation until re-assessed.
+- material model/dependency change invalidates prior validation until re-assessed;
+- later source correction/retraction does not silently rewrite historical state;
+- benchmark reuse/adaptive exposure is tracked and can exhaust a generation;
+- strongest confirmatory/prospective artifacts are externally sealed;
+- prospective prediction exposure is tracked so self-fulfilling research activity is not mislabelled independent validation.
 
 ## Gate
 
@@ -1226,10 +1235,12 @@ Implementation order is governed by:
 - [MODEL_CREDIBILITY_POLICY.md](MODEL_CREDIBILITY_POLICY.md)
 - [QUANTITATIVE_SEMANTICS.md](QUANTITATIVE_SEMANTICS.md)
 - [EVIDENCE_EXTRACTION_POLICY.md](EVIDENCE_EXTRACTION_POLICY.md)
+- [BENCHMARK_LIFECYCLE_POLICY.md](BENCHMARK_LIFECYCLE_POLICY.md)
 - [adr/ADR-015-scientific-digital-twin-semantics.md](adr/ADR-015-scientific-digital-twin-semantics.md)
 - [adr/ADR-016-model-credibility-numerical-verification.md](adr/ADR-016-model-credibility-numerical-verification.md)
 - [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 - [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
+- [adr/ADR-019-source-benchmark-lifecycle.md](adr/ADR-019-source-benchmark-lifecycle.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
