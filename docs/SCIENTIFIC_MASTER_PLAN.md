@@ -50,17 +50,21 @@ A sophisticated demo is not a program milestone unless it improves scientific ev
 
 ## 3. Benchmark families
 
-### B-TGT — Target Discovery
+### B-TGT — Target Program
+
+B-TGT is the umbrella program for biological and eventual therapeutic-target prioritization.
+
+The first V0 benchmark is:
 
 ```text
+B-TGT-A1 / B-TGT-E1-v0
 Disease
 → historical evidence
-→ pathway / mechanism
-→ therapeutic target + intervention direction
-→ future target/mechanism events
+→ disease–gene association ranking
+→ later independent human genetic support
 ```
 
-Purpose: establish whether the platform contains biological prioritization signal.
+Purpose: establish disease–gene association prioritization signal before making stronger causal-target, intervention-direction, or tractability claims.
 
 ### B-REP — Drug Repurposing
 
@@ -97,9 +101,13 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - leakage threat model
 - scientific red-team gap register
 - benchmark scientific estimand
-- E1 endpoint subtype semantics
+- E1 endpoint subtype semantics including E1-NOVEL-STRICT vs E1-MATURATION
+- PreTGeneticState policy
 - OutcomeGeneAssignmentPolicy
+- OutcomePhenotypeMatchPolicy
+- GeneticReplicationPolicy
 - HistoricalNoveltyAudit policy
+- ValidationGeneration / OutcomeSnapshotCommitment governance
 - BenchmarkDesignProvenance / analyst-hindsight policy
 - discoverability/ascertainment control policy
 - core enums/value objects
@@ -115,7 +123,12 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - disease/genetic regime for B-TGT-E1
 - zero-future-event disease estimand
 - locus-to-gene outcome semantics
+- pre-T no-signal vs suggestive/mature genetics
+- disease/trait phenotype-match semantics
+- genetic replication semantics
 - historical novelty audit
+- validation-generation reuse/retirement
+- Future Outcome snapshot commitment
 - discoverability/observation-propensity controls
 - researcher-hindsight / analyst-blinding governance
 - benchmark holdout governance
@@ -127,9 +140,15 @@ Freeze what the system is allowed to claim and define the core scientific types 
 - architecture dependency rules documented
 - deliberate prohibited dependency examples are specified
 - golden world has known identities, dates, claims, evidence, and future events
-- endpoint family distinguishes novel discovery from replication/evidence maturation
+- endpoint family distinguishes E1-NOVEL-STRICT, E1-MATURATION, E1-REPLICATION, and E1-CROSSMODAL
+- suggestive pre-T genetics cannot be reported as strict de novo novelty
 - locus-level evidence cannot silently become gene-level validation
+- related traits/risk factors cannot silently become exact disease outcomes
+- replication requires allele/direction/phenotype/lineage comparability
 - zero-event disease policy and scientific estimand are frozen before sealed outcomes
+- all-frame review-budget utility is defined
+- validation-generation reuse is explicit
+- exact Future Outcome snapshot/ledger is committed before sealed evaluation
 - researcher hindsight is governed separately from technical lockbox access
 - discoverability/ascertainment is a required benchmark control
 
@@ -155,9 +174,12 @@ This is a scientific feasibility exercise, not a model-performance experiment.
 ## Manual pilot
 
 Adjudicate a small heterogeneous set of future genetic events and measure:
+- pre-T genetic state: no-observed-signal vs suggestive vs qualifying vs ambiguous;
 - historical novelty at T;
 - locus-level versus gene-level evidence;
 - gene-assignment method and knowledge horizon;
+- benchmark disease vs future phenotype relation;
+- replication allele/direction/LD/population comparability where applicable;
 - cohort/sample overlap;
 - retrospective curation burden;
 - ancestry/population metadata availability;
@@ -316,8 +338,11 @@ Build ground truth as endpoint-specific future events isolated from historical r
 - FutureEvent taxonomy
 - physically/logically separate outcome storage
 - endpoint definitions and E1 subtype rules
+- PreTGeneticState derivation
 - label derivation engine
 - OutcomeGeneAssignmentPolicy implementation
+- OutcomePhenotypeMatchPolicy implementation
+- GeneticReplicationAssessment implementation
 - HistoricalNoveltyAudit workflow
 - cohort/dataset/sample-overlap lineage
 - blinded outcome-adjudication workflow
@@ -332,6 +357,9 @@ Build ground truth as endpoint-specific future events isolated from historical r
 - future event source coverage is auditable
 - event-time and public-availability semantics are preserved
 - locus/variant events cannot silently become gene-level positives
+- suggestive pre-T signals cannot become E1-NOVEL-STRICT
+- related phenotype/risk-factor events cannot silently become exact disease positives
+- replication direction/allele/phenotype conflicts are explicit
 - novelty ambiguity is explicit
 - UNKNOWN cohort/sample overlap is not treated as independent replication
 - outcome adjudication provenance is complete
@@ -349,11 +377,13 @@ Make Forge Bio measurable before building a sophisticated ranker.
 - BenchmarkSpec
 - HistoricalKnowledgeView
 - historical candidate-universe builder
-- DEVELOPMENT / VALIDATION / SEALED_LOCKBOX tiers
+- DEVELOPMENT / versioned VALIDATION / SEALED_LOCKBOX tiers
+- validation-generation lifecycle and access count
 - ranking artifact sealing/hashing
+- exact Future Outcome snapshot/ledger commitment
 - lockbox access ledger
-- metric engine
-- case-level bootstrap
+- metric engine including all-frame review-budget utility
+- disease-level bootstrap + disease-family/block sensitivity
 - MAP/MAR execution lifecycle
 - reproducibility command
 
@@ -365,6 +395,8 @@ Make Forge Bio measurable before building a sophisticated ranker.
 - injected post-cutoff future sentinels cannot affect ranking
 - candidate universe itself is historical
 - repeated lockbox access is logged and invalidates untouched status according to policy
+- validation generations become SPENT_FOR_MODEL_SELECTION after adaptive reuse
+- exact outcome snapshot/ledger/adjudication/identity-bridge commitment is verified before evaluation
 
 ---
 
@@ -409,7 +441,7 @@ If benchmark construction itself makes controls behave implausibly, stop and aud
 
 ---
 
-# BIG 7 — First Target Time-Machine Experiment (B-TGT v0)
+# BIG 7 — First Disease–Gene Time-Machine Experiment (B-TGT-A1 v0)
 
 ## Goal
 
@@ -458,8 +490,12 @@ No LLM, PLM, GNN, current graph, or future-trained representation.
 - result compared to research-attention and discoverability controls
 - zero-event disease policy enforced
 - fixed K accompanied by a candidate-universe-normalized metric
+- all-frame observed-event review-budget utility reported
+- disease-family/block CI sensitivity reported
 - null/placebo controls do not reproduce the claimed signal
-- locus-to-gene and novelty sensitivity analyses pass
+- strict novelty, phenotype-match, locus-to-gene, replication, and outcome-source sensitivities pass
+- exact Future Outcome snapshot commitment matches the frozen MAP
+- strongest L3 outcome adjudication is rank-blinded
 - results reported even if negative
 
 ---
@@ -814,7 +850,7 @@ The smallest valuable MVP is not a dashboard.
 
 It is:
 
-> **A reproducible historical experiment demonstrating whether transparent, temporally clean evidence ranking contains signal beyond research-attention baselines.**
+> **A reproducible historical disease–gene association experiment demonstrating whether transparent, temporally clean evidence ranking contains signal beyond research-attention and discoverability controls.**
 
 Practical MVP target:
 
@@ -834,9 +870,10 @@ It should contain:
 - research-attention baseline
 - attention-momentum/discoverability baseline
 - deterministic scientific baseline
-- explicit E1 endpoint subtype
-- scientific estimand + zero-event disease policy
-- OutcomeGeneAssignmentPolicy + HistoricalNoveltyAudit
+- explicit E1 endpoint subtype + PreTGeneticState
+- scientific estimand + zero-event disease policy + all-frame utility
+- OutcomeGeneAssignmentPolicy + OutcomePhenotypeMatchPolicy + GeneticReplicationPolicy + HistoricalNoveltyAudit
+- validation-generation lifecycle + exact Future Outcome snapshot commitment
 - MAP + MAR
 - temporal leakage and benchmark-falsification suite
 - complete provenance + BenchmarkDesignProvenance
@@ -875,7 +912,7 @@ If no: change cutoff/source design.
 
 ## Gate 2 — Benchmark validity
 
-Do temporal leakage tests, candidate-universe tests, outcome gene-assignment rules, historical-novelty audits, ascertainment controls, zero-event estimand rules, analyst-hindsight governance, and label semantics survive verification?
+Do temporal leakage tests, candidate-universe tests, strict-novelty state rules, phenotype matching, outcome gene-assignment rules, genetic replication rules, historical-novelty audits, ascertainment controls, zero-event/all-frame estimand rules, validation-generation governance, exact outcome commitments, analyst-hindsight governance, and label semantics survive verification?
 
 If no: do not model.
 
@@ -961,6 +998,9 @@ Implementation order is governed by:
 - [schemas/MAR_SCHEMA.md](schemas/MAR_SCHEMA.md)
 - [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md)
 - [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md)
+- [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md)
+- [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md)
+- [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.
