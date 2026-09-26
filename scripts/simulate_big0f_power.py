@@ -8,12 +8,15 @@ import random
 from pathlib import Path
 from statistics import NormalDist
 
+from scripts.verify_big0f_provenance import derive_nuisance_metrics
+
 
 ENGINE_DOMAIN = "forge-bio-big0f-power-v1"
 MIN_EFFECT = 0.05
 ALPHA = 0.05
 MIN_REPLICATES = 10000
 MIN_POSITIVES = 30
+SD_DERIVATION_METHOD = "PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1"
 
 
 def estimate_power(
@@ -85,13 +88,18 @@ def canonical_digest(payload: dict) -> str:
 def build_artifact(
     *,
     power_analysis_id: str,
-    disease_level_sd: float,
+    nuisance_run: dict,
     target_power: float,
     replicates: int,
     seed: int,
     input_provenance_ids: list[str],
     engine_sha256: str,
 ) -> dict:
+    nuisance_metrics = derive_nuisance_metrics(nuisance_run)
+    disease_level_sd = nuisance_metrics["disease_level_sd"]
+    nuisance_run_id = nuisance_run["run_id"]
+    nuisance_run_digest = nuisance_run["digest"]
+    provenance_ids = list(dict.fromkeys([*input_provenance_ids, nuisance_run_id]))
     n, power = required_diseases(
         effect=MIN_EFFECT,
         disease_level_sd=disease_level_sd,
@@ -104,6 +112,9 @@ def build_artifact(
         "power_analysis_id": power_analysis_id,
         "schema_version": "big0f-power-analysis-v1",
         "method": "PAIRED_DISEASE_MONTE_CARLO_NORMAL_APPROX",
+        "sd_derivation_method": SD_DERIVATION_METHOD,
+        "nuisance_run_id": nuisance_run_id,
+        "nuisance_run_digest": nuisance_run_digest,
         "alpha": ALPHA,
         "target_power": target_power,
         "minimum_scientifically_meaningful_effect": MIN_EFFECT,
@@ -113,26 +124,40 @@ def build_artifact(
         "estimated_power": power,
         "required_confirmatory_disease_count": n,
         "required_high_specificity_positive_count": MIN_POSITIVES,
-        "input_provenance_ids": input_provenance_ids,
+        "input_provenance_ids": provenance_ids,
         "engine_sha256": engine_sha256,
     }
     artifact["digest"] = canonical_digest(artifact)
     return artifact
 
 
-def verify_artifact(artifact: dict, *, engine_sha256: str) -> list[str]:
+def verify_artifact(
+    artifact: dict,
+    *,
+    engine_sha256: str,
+    nuisance_run: dict | None = None,
+) -> list[str]:
     errors: list[str] = []
     if artifact.get("engine_sha256") != engine_sha256:
         errors.append("power artifact engine_sha256 does not match current engine")
         return errors
+    if nuisance_run is None:
+        return ["power artifact verification requires the bound nuisance-run artifact"]
+    if artifact.get("nuisance_run_id") != nuisance_run.get("run_id"):
+        errors.append("power artifact nuisance_run_id does not match supplied nuisance run")
+    if artifact.get("nuisance_run_digest") != nuisance_run.get("digest"):
+        errors.append("power artifact nuisance_run_digest does not match supplied nuisance run")
     try:
         rebuilt = build_artifact(
             power_analysis_id=artifact["power_analysis_id"],
-            disease_level_sd=artifact["disease_level_sd"],
+            nuisance_run=nuisance_run,
             target_power=artifact["target_power"],
             replicates=artifact["simulation_replicates"],
             seed=artifact["simulation_seed"],
-            input_provenance_ids=artifact["input_provenance_ids"],
+            input_provenance_ids=[
+                x for x in artifact["input_provenance_ids"]
+                if x != nuisance_run.get("run_id")
+            ],
             engine_sha256=engine_sha256,
         )
     except Exception as exc:
@@ -151,7 +176,7 @@ def verify_artifact(artifact: dict, *, engine_sha256: str) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Compute/verify BIG 0F confirmatory power inputs")
     ap.add_argument("--id", default="BIG0F-POWER-V1")
-    ap.add_argument("--disease-level-sd", type=float, required=True)
+    ap.add_argument("--nuisance-run", type=Path, required=True)
     ap.add_argument("--target-power", type=float, default=0.80)
     ap.add_argument("--replicates", type=int, default=20000)
     ap.add_argument("--seed", type=int, required=True)
@@ -163,7 +188,15 @@ def main() -> int:
 
     if args.verify:
         artifact = json.loads(args.output.read_text(encoding="utf-8"), parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)))
-        errors = verify_artifact(artifact, engine_sha256=args.engine_sha256)
+        nuisance_run = json.loads(
+            args.nuisance_run.read_text(encoding="utf-8"),
+            parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)),
+        )
+        errors = verify_artifact(
+            artifact,
+            engine_sha256=args.engine_sha256,
+            nuisance_run=nuisance_run,
+        )
         if errors:
             for err in errors:
                 print(err)
@@ -171,9 +204,13 @@ def main() -> int:
         print("VALID")
         return 0
 
+    nuisance_run = json.loads(
+        args.nuisance_run.read_text(encoding="utf-8"),
+        parse_constant=lambda v: (_ for _ in ()).throw(ValueError(v)),
+    )
     artifact = build_artifact(
         power_analysis_id=args.id,
-        disease_level_sd=args.disease_level_sd,
+        nuisance_run=nuisance_run,
         target_power=args.target_power,
         replicates=args.replicates,
         seed=args.seed,
