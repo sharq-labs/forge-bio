@@ -74,20 +74,50 @@ class ExternalAuthorityVerifierTests(unittest.TestCase):
         beacon = {
             "source": "DRAND",
             "round_id": "101",
+            "previous_round_id": "100",
+            "published_at": "1970-01-01T01:06:40Z",
+            "previous_round_published_at": "1970-01-01T01:06:10Z",
             "randomness_hex": "11" * 32,
         }
-        fetcher = lambda url, timeout: json.dumps({
-            "round": 101,
-            "randomness": "11" * 32,
-            "signature": "22" * 48,
-        }).encode("utf-8")
+
+        def fetcher(url, timeout):
+            if url.endswith("/info"):
+                return json.dumps({"period": 30, "genesis_time": 1000}).encode("utf-8")
+            return json.dumps({
+                "round": 101,
+                "randomness": "11" * 32,
+                "signature": "22" * 48,
+            }).encode("utf-8")
+
         self.assertEqual([], verify_drand_beacon(beacon, fetcher=fetcher))
 
-        wrong = lambda url, timeout: json.dumps({
-            "round": 101,
-            "randomness": "ff" * 32,
-        }).encode("utf-8")
+        def wrong(url, timeout):
+            if url.endswith("/info"):
+                return json.dumps({"period": 30, "genesis_time": 1000}).encode("utf-8")
+            return json.dumps({
+                "round": 101,
+                "randomness": "ff" * 32,
+            }).encode("utf-8")
+
         self.assertTrue(verify_drand_beacon(beacon, fetcher=wrong))
+
+    def test_drand_forged_previous_round_time_is_rejected(self):
+        beacon = {
+            "source": "DRAND",
+            "round_id": "101",
+            "previous_round_id": "100",
+            "published_at": "1970-01-01T01:06:40Z",
+            "previous_round_published_at": "1970-01-01T00:00:00Z",
+            "randomness_hex": "11" * 32,
+        }
+
+        def fetcher(url, timeout):
+            if url.endswith("/info"):
+                return json.dumps({"period": 30, "genesis_time": 1000}).encode("utf-8")
+            return json.dumps({"round": 101, "randomness": "11" * 32}).encode("utf-8")
+
+        errors = verify_drand_beacon(beacon, fetcher=fetcher)
+        self.assertTrue(any("previous_round_published_at" in e for e in errors))
 
     def test_unsupported_beacon_source_fails_closed(self):
         self.assertTrue(verify_drand_beacon({
