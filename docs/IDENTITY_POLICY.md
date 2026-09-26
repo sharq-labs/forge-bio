@@ -216,7 +216,7 @@ Any nuisance feature using gene length, gene span, nearest-gene distance, region
 
 Current annotation may not silently define historical gene geometry.
 
-## 20. Gene / protein / target separation
+## 12. Gene / protein / target separation
 
 Never equate:
 
@@ -230,7 +230,7 @@ Target is a role in a disease/context-specific hypothesis.
 
 Protein complexes are first-class where required.
 
-## 12. Candidate eligibility
+## 13. Candidate eligibility
 
 Candidate inclusion is evidence-backed.
 
@@ -247,7 +247,7 @@ A present-day curated "druggable genes" list is prohibited unless its own knowle
 
 Historical identity eligibility does not imply that a candidate was equally genetically observable at T. Genetic observability is a separate sensitivity artifact governed by ADR-012 and must not be inferred from future outcomes.
 
-## 13. CandidateUniverse artifact
+## 14. CandidateUniverse artifact
 
 CandidateUniverse is separate from HistoricalKnowledgeView.
 
@@ -269,7 +269,7 @@ CandidateUniverse
 
 Membership records retain the provenance establishing historical eligibility.
 
-## 14. Deterministic hypothesis identity
+## 15. Deterministic hypothesis identity
 
 Every hypothesis has a deterministic scientific key independent of ranking/run.
 
@@ -289,7 +289,7 @@ canonical_hash(
 
 Run-specific prediction IDs are separate.
 
-## 15. Canonical serialization
+## 16. Canonical serialization
 
 Any object used for identity or content hashing follows a defined canonical serialization:
 - explicit schema version
@@ -303,7 +303,7 @@ Any object used for identity or content hashing follows a defined canonical seri
 
 Equivalent scientific content must not receive a different hash merely because a different JSON library was used.
 
-## 16. Mapping sensitivity
+## 17. Mapping sensitivity
 
 When an outcome match requires non-EXACT modern mapping, report:
 - exact-only result
@@ -313,7 +313,7 @@ When an outcome match requires non-EXACT modern mapping, report:
 
 No post-hoc mapping expansion may rescue a failed prediction.
 
-## 17. Gold-set verification
+## 18. Gold-set verification
 
 Before confirmatory benchmarking, create a reviewed fixture covering:
 - renamed genes
@@ -335,7 +335,7 @@ Before confirmatory benchmarking, create a reviewed fixture covering:
 
 Measure and retain resolution errors.
 
-## 18. Identity reconciliation vs outcome assignment
+## 19. Identity reconciliation vs outcome assignment
 
 Evaluation identity asks:
 
@@ -349,7 +349,7 @@ These operations are separate.
 
 Modern identifier reconciliation is allowed behind the evaluation boundary. Modern biological assignment (for example locus-to-gene inference) is not identity resolution and must follow the benchmark's outcome-assignment policy.
 
-## 19. Historical novelty mapping
+## 20. Historical novelty mapping
 
 Historical novelty audits may use evaluation-side identity reconciliation to search for pre-T evidence.
 
