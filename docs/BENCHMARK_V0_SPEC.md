@@ -17,13 +17,19 @@ A temporally clean benchmark is not automatically a valid discovery benchmark. T
 
 ## 2. Unit of prediction
 
-The V0 rankable object is:
+The V0 rankable object remains:
 
 ```text
 TargetAssociationCandidate
     disease_concept_as_of_T
     gene_entity_as_of_T
 ```
+
+The primary future gene label is **not** any gene mentioned near a qualifying locus. It must satisfy the high-specificity OutcomeGeneAssignmentPolicy defined by ADR-020.
+
+Author-named, nearest-gene, positional-only, generic database-gene, and modern-L2G-only assignments are secondary/sensitivity labels and cannot by themselves generate a primary positive.
+
+If BIG 0F shows that high-specificity gene assignment is too sparse or too attention-coupled to support an informative test, the benchmark REDESIGN fallback is locus-level primary credit rather than silently broadening gene assignment.
 
 Intervention direction remains outside the V0 endpoint.
 
@@ -197,7 +203,7 @@ A qualifying event must:
 6. pass disease and gene identity adjudication;
 7. pass OutcomePhenotypeMatchPolicy for the benchmark disease/trait;
 8. not be merely a post-T re-curation of pre-T evidence;
-9. satisfy OutcomeGeneAssignmentPolicy when a gene-level label depends on locus/variant assignment;
+9. satisfy the ADR-020 high-specificity OutcomeGeneAssignmentPolicy when a primary gene-level label depends on locus/variant assignment;
 10. satisfy GeneticReplicationPolicy when the subtype is E1-REPLICATION.
 
 The endpoint-quality payload retains, where applicable:
@@ -356,6 +362,8 @@ The primary universe policy is frozen before sealed evaluation. Alternative univ
 
 Diseases must not be selected because designers know famous later successes.
 
+The disease frame is constructed mechanically from as-of-T criteria and, for development/pilot sampling, uses a committed random seed or fully deterministic sampling rule sealed before adjudication.
+
 Before sealed outcome inspection, construct and freeze the sampling frame from as-of-T criteria including:
 - disease vocabulary/release;
 - genetic/disease regime;
@@ -432,16 +440,25 @@ A candidate may receive future support preferentially because it is:
 
 The benchmark therefore requires a historical discoverability control or nuisance model using only as-of-T information.
 
-Candidate variables may include, where available and scientifically justified:
+Candidate variables for the **Combined Nuisance Model** include, where historically reconstructable:
 - historical disease study count;
 - historical GWAS availability;
 - historical sample-size trajectory;
 - research-attention velocity;
 - prior association momentum;
+- global gene/entity popularity;
 - gene annotation density;
+- gene length / historical gene-model span;
+- variant density or callable/genotyped-variant opportunity;
+- regional gene density;
+- LD/locus architecture summaries;
+- cross-trait pre-T GWAS-hit burden / pleiotropy;
+- historical assay / array / measurement observability;
 - phenotype measurability proxies;
 - disease prevalence/recruitability proxies;
-- evidence-source coverage.
+- evidence-source/provider coverage.
+
+These variables must use as-of-T representations and may not silently use current gene models, current LD, current annotation, or future study design.
 
 These controls are benchmark comparators; they are not automatically allowed as ranker features.
 
@@ -460,24 +477,36 @@ Mandatory:
 - admissible evidence-volume ranking;
 - deterministic evidence-quality baseline;
 - historical attention momentum;
-- discoverability / observation-propensity baseline.
+- discoverability / observation-propensity baseline;
+- genomic-architecture baseline;
+- cross-trait pleiotropy baseline;
+- historical genetic-observability baseline;
+- **Combined Nuisance Model** combining the preregistered non-biological/discoverability/genomic-architecture variables.
 
 Graph degree/network proximity is added only when historically admissible.
 
+The Combined Nuisance Model is the primary comparator. Beating random or any single baseline is insufficient for the headline biological-predictive-value claim.
+
 ## 19. Primary and secondary metrics
 
-The primary statistic reports absolute performance and paired delta against the strongest preregistered non-biological attention/discoverability control.
+The primary statistic reports absolute performance and paired incremental value over the preregistered **Combined Nuisance Model**.
 
-A candidate form is:
+Primary scientific contrast:
 
 ```text
-DeltaRecall@K =
-    Recall@K(model)
+DeltaPrimaryMetric =
+    Metric(nuisance + biological signal)
     -
-    Recall@K(best_preregistered_attention_or_discoverability_control)
+    Metric(nuisance only)
 ```
 
-The MAP freezes the exact comparator.
+The two arms use the same frozen candidate universe, temporal protocol, and matched capacity constraints where practical.
+
+BIG 0F evaluates event-rank percentile as the preferred primary metric because sparse future events can make Recall@K highly discrete.
+
+Recall@K and a candidate-universe-normalized Recall@x% remain mandatory secondary metrics unless BIG 0F justifies a different freeze.
+
+The MAP freezes the exact comparator, metric, direction, and decision rule.
 
 Fixed K must be accompanied by at least one candidate-universe-normalized metric, such as:
 - Recall at x% of candidate universe;
@@ -515,13 +544,25 @@ Because related diseases may share genes, pathways, cohorts, consortia, or publi
 If the apparent signal disappears under family/block dependence, the MAR must report that limitation.
 
 Before sealed evaluation, MAP freezes:
+- null and alternative hypotheses;
+- test statistic;
+- test direction;
+- alpha;
+- minimum scientifically meaningful / detectable effect;
+- target power;
+- power-analysis artifact;
+- numeric success decision threshold;
 - resampling unit;
 - interval method;
 - resample count;
 - one primary endpoint subtype;
 - one primary metric;
-- one primary K/budget;
-- multiplicity policy for secondary endpoints, cutoffs, subgroups, and sensitivity analyses.
+- one primary K/budget if applicable;
+- primary Combined Nuisance comparator;
+- multiplicity policy for secondary endpoints, cutoffs, subgroups, and sensitivity analyses;
+- confirmatory-generation budget / alpha-spending policy across the research program.
+
+A free-text success rule is prohibited.
 
 ## 21. Coverage and ascertainment gates
 
@@ -681,3 +722,25 @@ The project must not call the result "discovery signal" if a plausible alternati
 - database curation;
 - known weak signals becoming mature;
 - modern locus-to-gene assignment artifacts.
+
+
+## 30. BIG 0F contamination and adjudication rule
+
+BIG 0F is governed by ADR-021.
+
+All diseases/events directly inspected in BIG 0F are permanently DEVELOPMENT_EXPOSED and cannot later enter a strongest-tier sealed confirmatory generation.
+
+At least 30% of pilot cases require independent second adjudication when such a reviewer is available; absence of an independent adjudicator is reported as a limitation and caps claim strength rather than being marked passed.
+
+The pilot protocol, sampling frame/random seed, target N, and numeric GO/REDESIGN/NO-GO thresholds are frozen before case adjudication.
+
+BIG 0F must also include:
+- a symmetric PreTGeneticState/novelty-audit cost sample on non-events;
+- a mini historical-provider availability audit;
+- assignment-method/attention audit;
+- development-only Combined Nuisance headroom analysis;
+- inputs for simulation-based confirmatory power analysis.
+
+Normative critical-path decisions:
+- [adr/ADR-020-e1-primary-comparator-confirmatory-rule.md](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
+- [adr/ADR-021-big-0f-pilot-protocol.md](adr/ADR-021-big-0f-pilot-protocol.md)
