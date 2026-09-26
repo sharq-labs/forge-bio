@@ -495,7 +495,8 @@ This observability sensitivity is constructed from as-of-T technology/source cri
 
 Mandatory:
 - random;
-- historical disease–gene publication/co-mention attention;
+- **disease-specific content-free attention volume** (disease–gene publication/study counts);
+- **disease-specific content-free attention momentum**;
 - global gene/entity popularity;
 - admissible evidence-volume ranking;
 - deterministic evidence-quality baseline;
@@ -504,7 +505,9 @@ Mandatory:
 - genomic-architecture baseline;
 - cross-trait pleiotropy baseline;
 - historical genetic-observability baseline;
-- **Combined Nuisance Model** combining the preregistered non-biological/discoverability/genomic-architecture variables.
+- **Combined Nuisance Model** combining the frozen disease-specific attention, discoverability, genomic-architecture, pleiotropy, observability, sample-size, and provider-coverage families.
+
+The disease-specific attention terms are mandatory for the headline comparator. They are volume/momentum counts only; semantic biological evidence content remains reserved for the biological feature block.
 
 Graph degree/network proximity is added only when historically admissible.
 
@@ -523,11 +526,11 @@ DeltaPrimaryMetric =
     Metric(nuisance only)
 ```
 
-The two arms use the same frozen candidate universe, temporal protocol, and matched capacity constraints where practical.
+The two arms use the same frozen candidate universe, temporal protocol, learner family, preprocessing, hyperparameter search space, tuning budget, early-stopping policy, and random-seed policy. Capacity parity is mandatory and encoded in the MAP.
 
-BIG 0F evaluates event-rank percentile as the preferred primary metric because sparse future events can make Recall@K highly discrete.
+B-TGT-E1-v0 fixes `EVENT_RANK_PERCENTILE_V1` as the primary metric because sparse future events can make Recall@K highly discrete.
 
-Recall@K and a candidate-universe-normalized Recall@x% remain mandatory secondary metrics unless BIG 0F justifies a different freeze.
+Recall@K and a candidate-universe-normalized Recall@x% remain mandatory secondary metrics; BIG 0F does not select a different primary metric after seeing pilot outcomes.
 
 The MAP freezes the exact comparator, metric, direction, and decision rule.
 
@@ -761,15 +764,15 @@ BIG 0F is governed by ADR-021.
 
 All diseases/events directly inspected in BIG 0F are permanently DEVELOPMENT_EXPOSED and cannot later enter a strongest-tier sealed confirmatory generation.
 
-At least 30% of pilot cases require independent second adjudication when such a reviewer is available; absence of an independent adjudicator is reported as a limitation and caps claim strength rather than being marked passed.
+BIG 0F scientific adjudication does not begin until an independent second adjudicator is assigned. At least max(30 cases, 30% of adjudicated event cases), capped at the pilot size, receives independent blinded review.
 
-The pilot protocol, sampling frame/random seed, target N, and numeric GO/REDESIGN/NO-GO thresholds are frozen before case adjudication.
+The pilot protocol, disease frame, post-frame public-randomness beacon binding, target-N rule, adjudication policy, nuisance manifest, evaluator/schema digests, and numeric GO/REDESIGN/NO-GO thresholds are externally sealed before case adjudication.
 
 BIG 0F must also include:
 - a symmetric PreTGeneticState/novelty-audit cost sample on non-events;
 - a mini historical-provider availability audit;
 - assignment-method/attention audit;
-- development-only Combined Nuisance headroom analysis;
+- development-only **nuisance-only** Combined Nuisance headroom analysis;
 - inputs for simulation-based confirmatory power analysis.
 
 Normative critical-path decisions:
