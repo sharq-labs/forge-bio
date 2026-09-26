@@ -16,7 +16,12 @@
     "result_status",
     "visibility",
     "relationship_to_prior_attempts",
-    "digest"
+    "digest",
+    "attempt_tier",
+    "registered_at",
+    "map_digest",
+    "disclosure_status",
+    "disclosure_due_at"
   ],
   "properties": {
     "attempt_id": {
@@ -72,6 +77,65 @@
     "digest": {
       "type": "string",
       "minLength": 1
+    },
+    "attempt_tier": {
+      "enum": [
+        "DEVELOPMENT",
+        "CONFIRMATORY",
+        "PROSPECTIVE"
+      ]
+    },
+    "registered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "map_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+    },
+    "external_seal_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "disclosure_status": {
+      "enum": [
+        "SCHEDULED",
+        "PUBLIC"
+      ]
+    },
+    "disclosure_due_at": {
+      "type": "string",
+      "format": "date-time"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "attempt_tier": {
+            "enum": [
+              "CONFIRMATORY",
+              "PROSPECTIVE"
+            ]
+          }
+        },
+        "required": [
+          "attempt_tier"
+        ]
+      },
+      "then": {
+        "required": [
+          "external_seal_attestation_id"
+        ],
+        "properties": {
+          "external_seal_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
 }
