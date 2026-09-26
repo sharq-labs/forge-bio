@@ -10,6 +10,7 @@ from scripts.build_seal_bundle import (
     build_manifest,
     manifest_digest,
     sha256_file,
+    verify_dual_attestations,
     verify_manifest,
 )
 
@@ -153,9 +154,41 @@ class SealBundleV2Tests(unittest.TestCase):
             "digest": "sha256:" + "9" * 64,
         }
 
+    def dual_attestations(self, manifest):
+        return [
+            self.attestation(manifest, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+            self.attestation(manifest, "PUBLIC_REGISTRY"),
+        ]
+
     def test_clean_bundle_verifies(self):
         m = self.build()
         self.assertEqual([], verify_manifest(m, attestation=self.attestation(m), component_paths=self.components()))
+        self.assertEqual([], verify_dual_attestations(
+            m,
+            attestations=self.dual_attestations(m),
+            component_paths=self.components(),
+        ))
+
+    def test_standalone_verifier_rejects_single_attestation(self):
+        m = self.build()
+        errors = verify_dual_attestations(
+            m,
+            attestations=[self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE")],
+            component_paths=self.components(),
+        )
+        self.assertTrue(any("both timestamp-service and public-registry" in e for e in errors))
+
+    def test_standalone_verifier_rejects_duplicate_authority(self):
+        m = self.build()
+        errors = verify_dual_attestations(
+            m,
+            attestations=[
+                self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+                self.attestation(m, "THIRD_PARTY_TIMESTAMP_SERVICE"),
+            ],
+            component_paths=self.components(),
+        )
+        self.assertTrue(any("PUBLIC_REGISTRY" in e for e in errors))
 
     def test_component_tamper_is_detected(self):
         m = self.build()
