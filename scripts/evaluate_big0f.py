@@ -403,7 +403,10 @@ def _verified_context_from_files(
     selection_provenance_path: Path,
     nuisance_run_path: Path,
     provider_audit_path: Path,
+    provider_evidence_paths: list[Path],
     adjudicator_independence_path: Path,
+    adjudicator_role_registry_path: Path,
+    adjudicator_independence_evidence_path: Path,
     sampling_code_path: Path,
     power_engine_path: Path,
 ) -> EvaluationContext:
@@ -556,6 +559,15 @@ def _verified_context_from_files(
     provider_errors = verify_provider_audit(provider_audit)
     if provider_errors:
         raise ValueError("provider audit failed deterministic verification: " + " | ".join(provider_errors))
+    expected_provider_evidence = set(provider_audit["provider_coupling"]["evidence_digests"])
+    expected_provider_evidence.update(provider_audit["ancestry_population_audit"]["evidence_digests"])
+    actual_provider_evidence = {sha256_file(path) for path in provider_evidence_paths}
+    if actual_provider_evidence != expected_provider_evidence:
+        raise ValueError(
+            "provider evidence files do not exactly match the immutable evidence digests "
+            f"(missing={sorted(expected_provider_evidence - actual_provider_evidence)}, "
+            f"extra={sorted(actual_provider_evidence - expected_provider_evidence)})"
+        )
     derived_provider = derive_provider_metrics(provider_audit)
     if derived_provider["source_family_ids"] != result["source_family_ids"]:
         raise ValueError("pilot source_family_ids do not match provider audit")
@@ -586,6 +598,10 @@ def _verified_context_from_files(
     adjudicator_errors = verify_adjudicator_independence(adjudicator_independence)
     if adjudicator_errors:
         raise ValueError("second-adjudicator independence verification failed: " + " | ".join(adjudicator_errors))
+    if sha256_file(adjudicator_role_registry_path) != adjudicator_independence["role_registry_digest"]:
+        raise ValueError("adjudicator role-registry evidence digest mismatch")
+    if sha256_file(adjudicator_independence_evidence_path) != adjudicator_independence["independence_evidence_digest"]:
+        raise ValueError("adjudicator independence-evidence digest mismatch")
     if adjudicator_independence["adjudicator_id"] != result["adjudication_metrics"]["second_adjudicator_id"]:
         raise ValueError("second-adjudicator identity mismatch")
     if adjudicator_independence["blinded_to_rankings"] != result["adjudication_metrics"]["second_adjudicator_blinded_to_rankings"]:
@@ -677,7 +693,10 @@ def main() -> int:
     ap.add_argument("--selection-provenance", type=Path, required=True)
     ap.add_argument("--nuisance-run", type=Path, required=True)
     ap.add_argument("--provider-audit", type=Path, required=True)
+    ap.add_argument("--provider-evidence", type=Path, action="append", required=True)
     ap.add_argument("--adjudicator-independence", type=Path, required=True)
+    ap.add_argument("--adjudicator-role-registry", type=Path, required=True)
+    ap.add_argument("--adjudicator-independence-evidence", type=Path, required=True)
     ap.add_argument("--sampling-code", type=Path, default=DEFAULT_SAMPLING_CODE_PATH)
     ap.add_argument("--power-engine", type=Path, default=DEFAULT_POWER_ENGINE_PATH)
     args = ap.parse_args()
@@ -702,7 +721,10 @@ def main() -> int:
         selection_provenance_path=args.selection_provenance,
         nuisance_run_path=args.nuisance_run,
         provider_audit_path=args.provider_audit,
+        provider_evidence_paths=args.provider_evidence,
         adjudicator_independence_path=args.adjudicator_independence,
+        adjudicator_role_registry_path=args.adjudicator_role_registry,
+        adjudicator_independence_evidence_path=args.adjudicator_independence_evidence,
         sampling_code_path=args.sampling_code,
         power_engine_path=args.power_engine,
     )
