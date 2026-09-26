@@ -458,6 +458,10 @@ Distinct publications or databases are not sufficient proof of independence. Whe
 
 For gene-level genetic outcomes, identity reconciliation and causal-gene assignment are separate operations. A modern identity bridge may reconcile identifiers, but it may not create a gene-level validation from a locus/variant event without passing the governed OutcomeGeneAssignmentPolicy.
 
+Disease/trait identity and phenotype applicability are also separate. A related biomarker, risk factor, intermediate phenotype, broader trait, or narrower trait is not automatically the same benchmark disease. OutcomePhenotypeMatchPolicy governs this relation.
+
+A later genetic record is not automatically replication. E1-REPLICATION requires a GeneticReplicationAssessment covering phenotype, locus/variant, allele harmonization, effect direction, LD relation where relevant, population, cohort independence, participant overlap, analysis compatibility, and heterogeneity.
+
 Benchmarks derive labels for a named endpoint.
 
 Examples of distinct endpoints:
@@ -578,6 +582,8 @@ Targets within one disease are not independent samples.
 
 Primary confidence intervals should resample at the disease/challenge level unless a justified alternative is preregistered.
 
+Related diseases may themselves share genes, pathways, cohorts, consortia, controls, or publication ecosystems. Confirmatory studies therefore include a preregistered disease-family/block or other cluster-aware dependence sensitivity. If the signal materially weakens, that limitation is part of the primary interpretation.
+
 ### 17.2 Unknown labels
 
 Do not compute ordinary classification metrics by treating UNKNOWN candidates as negatives.
@@ -609,6 +615,8 @@ At minimum it freezes:
 - primary K/review budget and normalized companion metric.
 
 Diseases may not be removed after outcome inspection merely because the chosen metric is undefined when no qualifying future event occurs.
+
+The conditional event-ranking estimand must be accompanied by an all-frame observed-event review-budget utility that includes zero-event diseases without treating non-observation as biological failure.
 
 ### 17.5 Multiplicity
 
@@ -712,11 +720,18 @@ baselines
 discoverability control
 endpoint family
 primary endpoint subtype
+pre-T genetic-state policy
 outcome gene-assignment policy
+outcome phenotype-match policy
+genetic replication policy
 historical novelty policy
 matching rules
 zero-event disease policy
+validation generation
+Future Outcome snapshot/ledger commitment
 primary/secondary metrics
+all-frame review-budget utility
+dependence-sensitivity method
 multiplicity policy
 success criteria
 uncertainty strategy
@@ -820,7 +835,7 @@ The system ranks hypotheses for qualified scientific investigation; experimental
 
 The first benchmark is intentionally narrow and is defined in [BENCHMARK_V0_SPEC.md](BENCHMARK_V0_SPEC.md).
 
-B-TGT-E1-v0 predicts disease–gene target-association prioritization and evaluates later independent human genetic support. It does **not** claim to validate intervention direction, clinical efficacy, or treatment success.
+B-TGT-A1 / B-TGT-E1-v0 predicts **disease–gene association prioritization** and evaluates later independent human genetic support. It does **not** by itself claim therapeutic-target validation, intervention direction, causal target status, clinical efficacy, or treatment success.
 
 The endpoint-quality threshold, H, primary K, success threshold, and coverage thresholds are development-time decisions that must be frozen in the MAP before sealed evaluation.
 
@@ -867,10 +882,17 @@ For B-TGT gene-level outcomes:
 - locus/variant discovery and gene assignment are distinct;
 - modern learned locus-to-gene scores are not unqualified strict-historical ground truth;
 - assignment method, evidence, availability, knowledge horizon, and uncertainty are provenance;
-- E1-NOVEL requires an independent HistoricalNoveltyAudit;
-- unresolved novelty or assignment becomes AMBIGUOUS, not a rescued positive.
+- every candidate relevant to novelty has an explicit PreTGeneticState;
+- E1-NOVEL-STRICT requires PreTGeneticState = NO_SIGNAL_OBSERVED plus HistoricalNoveltyAudit = NOVEL_CONFIRMED;
+- suggestive pre-T genetics followed by stronger post-T evidence is E1-MATURATION, not de novo novelty;
+- disease/trait phenotype matching is explicit and risk-factor/surrogate relations are not silently promoted to the primary disease endpoint;
+- E1-REPLICATION requires a governed GeneticReplicationAssessment rather than a repeated label;
+- unresolved novelty, phenotype match, replication, or assignment becomes AMBIGUOUS/INCONCLUSIVE rather than a rescued positive.
 
-Normative decision: [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md).
+Normative decisions:
+- [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome-gene-assignment.md)
+- [adr/ADR-008-outcome-phenotype-matching.md](adr/ADR-008-outcome-phenotype-matching.md)
+- [adr/ADR-009-genetic-replication-and-signal-state.md](adr/ADR-009-genetic-replication-and-signal-state.md)
 
 ---
 
@@ -878,17 +900,39 @@ Normative decision: [adr/ADR-006-outcome-gene-assignment.md](adr/ADR-006-outcome
 
 A sealed database does not erase modern biomedical knowledge from researchers.
 
-Confirmatory studies therefore maintain BenchmarkDesignProvenance and, where feasible:
-
-- separate ranking/model development from outcome adjudication;
-- blind outcome adjudicators to model rank/order;
+Confirmatory studies maintain BenchmarkDesignProvenance and:
+- separate ranking/model development from outcome adjudication where organizationally possible;
 - record researcher exposure to sealed diseases and future outcomes;
 - freeze feature families/algorithm/config before sealed outcome reveal;
-- keep sealed disease identities hidden from the ranking methodology team for the strongest retrospective claim.
+- keep sealed disease identities hidden from the ranking methodology team for the strongest retrospective claim when operationally possible.
+
+For the **strongest L3 SEALED_CONFIRMATORY tier**, sealed outcome adjudicators must be blinded to model rank/order. If rank/order is visible during sealed adjudication, the tier is automatically downgraded.
 
 A technically sealed benchmark with outcome-aware design may be downgraded to exploratory evidence.
 
-Normative decision: [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md).
+Normative decisions:
+- [adr/ADR-007-benchmark-design-provenance.md](adr/ADR-007-benchmark-design-provenance.md)
+- [adr/ADR-010-validation-generations-and-outcome-freeze.md](adr/ADR-010-validation-generations-and-outcome-freeze.md)
+
+### 31.1 Validation-generation contract
+
+VALIDATION is versioned into generations.
+
+If validation results materially influence features, model class, endpoint design, hyperparameters, thresholds, disease selection, or candidate selection, that generation becomes SPENT_FOR_MODEL_SELECTION.
+
+A spent generation remains reportable but is not called untouched validation.
+
+### 31.2 Future Outcome commitment contract
+
+Before sealed evaluation, freeze/commit the exact:
+- future outcome source releases;
+- Future Outcome snapshot/digest;
+- outcome-ledger digest;
+- adjudication-batch digest;
+- evaluation identity-bridge digest;
+- phenotype-match, gene-assignment, and replication policy versions.
+
+Changing these artifacts creates a new evaluation generation rather than silently changing ground truth.
 
 ---
 
