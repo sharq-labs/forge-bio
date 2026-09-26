@@ -152,7 +152,15 @@ Report:
 - minutes per case;
 - UNKNOWN/AMBIGUOUS fraction;
 - sources required;
-- reviewer disagreement on a 30% duplicate subset where feasible.
+- reviewer disagreement on a deterministically sized duplicate subset.
+
+The non-event duplicate-review minimum is:
+
+```text
+min(N_non_event, max(30, ceil(0.30 * N_non_event)))
+```
+
+The `big0f-curation-audit-v1` artifact records case-level historical-search state, source families, provenance, duplicate-review status/outcome, and the derived disagreement/agreement summaries. Failure to reach the frozen duplicate-review minimum makes the pilot INCONCLUSIVE rather than silently waiving the audit.
 
 ## 7. Mini provider-availability audit
 
@@ -178,7 +186,7 @@ criticality: CRITICAL | REQUIRED | OPTIONAL
 
 Current availability is not accepted as evidence of historical reconstructability.
 
-Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. Required-field availability, coverage distribution, source-family count/IDs, and ancestry metadata coverage are deterministically re-derived from that artifact before GO can be evaluated. Provider-coupling and ancestry adequacy assertions must carry immutable evidence digests.
+Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. Every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
 
 ### Required-field availability score
 
@@ -264,7 +272,7 @@ The nuisance manifest requires content-free disease-specific attention volume an
 
 This is a nuisance-saturation / feasibility analysis, not a Forge Bio performance experiment.
 
-The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact. Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The evaluator re-derives the headline nuisance metrics from the event-rank records.
+The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact under the frozen [Nuisance Execution Contract](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md). Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The run also binds historical source releases, candidate-universe digest, full rank-output digest, feature transforms, preprocessing, learner family, hyperparameter search space, tuning budget, early-stopping rule, seed policy, and fitted-model digest. Headline nuisance metrics are reconstructed from committed rank positions and candidate-universe sizes rather than accepted as free summary values.
 
 Report:
 - median percentile rank of positive events under nuisance only;
@@ -286,7 +294,9 @@ The pilot outputs:
 
 These feed a simulation-based confirmatory power analysis.
 
-V0 does **not** accept a caller-supplied disease-level standard deviation. Because BIG 0F is NUISANCE_ONLY and therefore cannot empirically observe the future paired biological-model lift, the power artifact uses a transparent planning proxy: the sample standard deviation of per-disease mean positive rank fractions from the bound nuisance-run artifact. The exact derivation method is recorded as `PILOT_NUISANCE_DISEASE_MEAN_RANK_SD_PROXY_V1` and is recomputed from raw rank records. This closes favorable manual-SD selection but must not be described as an empirical estimate of biological-lift variance; that model assumption remains part of confirmatory power sensitivity reporting.
+V0 does **not** accept a caller-supplied disease-level standard deviation. Because BIG 0F is NUISANCE_ONLY, its nuisance-rank dispersion cannot be treated as an empirical estimate of future paired biological-lift variance.
+
+The frozen [Power Input Derivation Contract](BIG_0F_POWER_INPUT_DERIVATION.md) therefore requires GO-capable variance evidence from at least one independent DEVELOPMENT source measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. The primary planning SD is the conservative bootstrap upper 95% bound after the frozen dependence adjustment. The nuisance-rank SD proxy remains a sensitivity diagnostic only and is explicitly **not GO-eligible**. If no eligible independent same-estimand variance source exists, the power gate is INCONCLUSIVE.
 
 Planning confirmatory defaults:
 
@@ -424,7 +434,7 @@ A future GO-capable pilot implementation must require all of the following indep
 - the fitted nuisance-only run with exact frozen feature families and immutable feature/model/preprocessing digests;
 - a field-level provider audit artifact;
 - a second-adjudicator independence attestation bound to role-registry and independence-evidence digests;
-- a power artifact deterministically rebuilt from the bound nuisance-run ranks;
+- a power artifact bound to the sealed Power Input Derivation Contract and eligible independent same-estimand variance evidence, with the nuisance-run proxy retained only as sensitivity;
 - real external-authority verification: OpenTimestamps proof verification for timestamp-service attestations, an independently fetched OSF record containing the exact committed digest for public-registry attestations, and an independently fetched DRAND round matching the sealed randomness.
 
 A JSON field that merely says `VERIFIED` is not sufficient for BIG 0F claim-valid execution.
