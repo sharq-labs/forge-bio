@@ -186,7 +186,7 @@ criticality: CRITICAL | REQUIRED | OPTIONAL
 
 Current availability is not accepted as evidence of historical reconstructability.
 
-Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. Every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
+Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. The disease/source/field audit scope is frozen before availability is inspected, and every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
 
 ### Required-field availability score
 
@@ -272,7 +272,7 @@ The nuisance manifest requires content-free disease-specific attention volume an
 
 This is a nuisance-saturation / feasibility analysis, not a Forge Bio performance experiment.
 
-The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact under the frozen [Nuisance Execution Contract](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md). Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The run also binds historical source releases, candidate-universe digest, full rank-output digest, feature transforms, preprocessing, learner family, hyperparameter search space, tuning budget, early-stopping rule, seed policy, and fitted-model digest. Headline nuisance metrics are reconstructed from committed rank positions and candidate-universe sizes rather than accepted as free summary values.
+The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact under the frozen [Nuisance Execution Contract](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md). Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The run also binds historical source releases, candidate-universe digest, full rank-output digest, feature transforms, preprocessing, learner family, hyperparameter search space, tuning budget, early-stopping rule, seed policy, and fitted-model digest. The eligible positive-event set is also committed by digest; event-rank records must exactly cover that set. Headline nuisance metrics are reconstructed from committed rank positions and candidate-universe sizes rather than accepted as free summary values.
 
 Report:
 - median percentile rank of positive events under nuisance only;
