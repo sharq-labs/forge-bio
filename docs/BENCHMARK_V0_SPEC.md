@@ -778,3 +778,24 @@ BIG 0F must also include:
 Normative critical-path decisions:
 - [adr/ADR-020-e1-primary-comparator-confirmatory-rule.md](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
 - [adr/ADR-021-big-0f-pilot-protocol.md](adr/ADR-021-big-0f-pilot-protocol.md)
+
+
+## 31. Round 2 confirmatory robustness sensitivities
+
+Before any strongest-tier confirmatory interpretation, MAP must preregister:
+
+```text
+AMBIGUOUS_EVENT_BEST_WORST_TIPPING_POINT_V1
+HIERARCHICAL_DISEASE_SENSITIVITY_V1
+    or PRECISION_WEIGHTED_DISEASE_SENSITIVITY_V1
+METHOD_FAMILY_STRATIFIED_LABEL_FEATURE_SENSITIVITY_V1
+```
+
+Purpose:
+- bound the effect of excluding ambiguous events rather than assuming missingness is ignorable;
+- test whether equal disease weighting is driven by extremely sparse one-event diseases;
+- test whether lift is concentrated where label construction and biological features share the same evidence/method family.
+
+These are sensitivity analyses, not alternate headline endpoints.
+
+If the headline conclusion depends materially on a favorable ambiguity assumption, weighting rule, or label/feature method family, claim strength is downgraded or the benchmark REDESIGNS.
