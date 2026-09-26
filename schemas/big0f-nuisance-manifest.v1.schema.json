@@ -11,8 +11,7 @@
     "pilot_model_evaluation_mode",
     "mandatory_feature_families",
     "disease_specific_attention_semantics",
-    "semantic_evidence_features_forbidden",
-    "digest"
+    "semantic_evidence_features_forbidden"
   ],
   "properties": {
     "manifest_id": {
@@ -48,10 +47,6 @@
     },
     "semantic_evidence_features_forbidden": {
       "const": true
-    },
-    "digest": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
   }
 }
