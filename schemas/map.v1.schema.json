@@ -475,11 +475,14 @@
         "power_target",
         "power_analysis_artifact_id",
         "success_threshold_numeric",
-        "confirmatory_generation_budget_id"
+        "confirmatory_generation_budget_id",
+        "primary_metric_kind",
+        "primary_review_budget"
       ],
       "properties": {
         "primary_metric_id": {
-          "type": "string"
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
         },
         "primary_k_or_budget": {
           "type": "string"
@@ -545,6 +548,23 @@
         "confirmatory_generation_budget_id": {
           "type": "string",
           "minLength": 1
+        },
+        "primary_metric_kind": {
+          "enum": [
+            "EVENT_RANK_PERCENTILE",
+            "RECALL_AT_K",
+            "RECALL_AT_PERCENT",
+            "NDCG",
+            "MRR",
+            "OTHER_PREREGISTERED"
+          ]
+        },
+        "primary_review_budget": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
         }
       }
     },
