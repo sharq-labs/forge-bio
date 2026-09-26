@@ -196,5 +196,124 @@ class ProfileSchemaTests(unittest.TestCase):
         self.assert_invalid("disease-profile.v1.schema.json", disease)
 
 
+class QuantitativeAndCredibilitySchemaTests(unittest.TestCase):
+    def validate(self, schema_name: str, instance: dict) -> None:
+        Draft202012Validator(load(schema_name)).validate(instance)
+
+    def assert_invalid(self, schema_name: str, instance: dict) -> None:
+        with self.assertRaises(ValidationError):
+            self.validate(schema_name, instance)
+
+    def test_unit_required_observation_needs_unit_and_dimension(self) -> None:
+        x = {
+            "observation_id": "O1",
+            "schema_version": "quantitative-observation-v1",
+            "quantity_definition_id": "Q1",
+            "value_state": "OBSERVED",
+            "value": 1.2,
+            "unit_required": True,
+            "measurement_scale": "RATIO",
+            "transform": "NONE",
+            "measurement_process_id": "MP1",
+            "provenance_ref": "prov-1",
+            "knowledge_watermark": "DATED(2010-01-01)",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("quantitative-observation.v1.schema.json", x)
+
+    def test_missing_observation_cannot_carry_numeric_value(self) -> None:
+        x = {
+            "observation_id": "O2",
+            "schema_version": "quantitative-observation-v1",
+            "quantity_definition_id": "Q1",
+            "value_state": "MISSING",
+            "value": 0,
+            "unit_required": False,
+            "measurement_scale": "RATIO",
+            "transform": "NONE",
+            "measurement_process_id": "MP1",
+            "provenance_ref": "prov-1",
+            "knowledge_watermark": "DATED(2010-01-01)",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("quantitative-observation.v1.schema.json", x)
+
+    def test_custom_transform_requires_artifact(self) -> None:
+        x = {
+            "observation_id": "O3",
+            "schema_version": "quantitative-observation-v1",
+            "quantity_definition_id": "Q1",
+            "value_state": "OBSERVED",
+            "value": 2.0,
+            "unit_required": False,
+            "measurement_scale": "STANDARDIZED",
+            "transform": "CUSTOM",
+            "measurement_process_id": "MP1",
+            "provenance_ref": "prov-1",
+            "knowledge_watermark": "DATED(2010-01-01)",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("quantitative-observation.v1.schema.json", x)
+
+    def test_adequate_numerical_verification_cannot_have_failed_convergence(self) -> None:
+        x = {
+            "verification_id": "NV1",
+            "schema_version": "numerical-verification-v1",
+            "model_artifact_id": "M1",
+            "solver_or_engine": "solver",
+            "solver_version": "1",
+            "numerical_method": "method",
+            "tolerances": {"relative": 1e-6},
+            "convergence_study_status": "FAIL",
+            "stochastic_replication_status": "NOT_APPLICABLE",
+            "numerical_error_estimate": 0.01,
+            "invariant_or_residual_checks": ["residual"],
+            "reproducibility_tolerance": "1e-6 relative",
+            "verdict": "ADEQUATE",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("numerical-verification.v1.schema.json", x)
+
+    def test_adequate_credibility_cannot_have_high_prediction_bias(self) -> None:
+        x = {
+            "assessment_id": "CA1",
+            "schema_version": "model-credibility-v1",
+            "model_artifact_id": "M1",
+            "context_of_use_id": "COU1",
+            "research_decision": "prioritize experiments",
+            "model_influence": "MATERIAL",
+            "consequence_if_wrong": "MODERATE_RESEARCH_COST",
+            "credibility_goal": "support ranking",
+            "verification_adequacy": "ADEQUATE",
+            "numerical_verification_adequacy": "NOT_APPLICABLE",
+            "validation_adequacy": "ADEQUATE",
+            "uncertainty_adequacy": "ADEQUATE",
+            "applicability_adequacy": "ADEQUATE",
+            "prediction_risk_of_bias": "HIGH",
+            "limitations": [],
+            "residual_risks": [],
+            "conclusion": "ADEQUATE_FOR_COU",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.assert_invalid("model-credibility.v1.schema.json", x)
+
+    def test_valid_effect_estimate(self) -> None:
+        x = {
+            "effect_id": "E1",
+            "schema_version": "effect-estimate-v1",
+            "estimand_id": "EST1",
+            "effect_measure_kind": "ODDS_RATIO",
+            "estimate": 1.4,
+            "scale": "NATURAL",
+            "transform": "NONE",
+            "reference_group_ref": "R",
+            "comparison_group_ref": "C",
+            "provenance_ref": "prov-1",
+            "digest": "sha256:test",
+        }
+        self.validate("effect-estimate.v1.schema.json", x)
+
+
 if __name__ == "__main__":
     unittest.main()
