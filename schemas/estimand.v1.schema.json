@@ -152,6 +152,31 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "STRUCTURE_FROZEN"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "exact_horizon": {
+            "type": "null"
+          },
+          "primary_endpoint_subtype": {
+            "type": "null"
+          },
+          "primary_metric_id": {
+            "type": "null"
+          }
+        }
+      }
     }
   ]
 }
