@@ -250,11 +250,26 @@ def validate_model_credibility(x: dict[str, Any]) -> list[str]:
 def validate_benchmark_exposure_ledger(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     if x.get("lifecycle_status") == "ACTIVE_CONFIRMATORY":
-        for ev in x.get("exposure_events") or []:
+        events = x.get("exposure_events") or []
+        aggregate_count = 0
+        subgroup_count = 0
+        for ev in events:
             if ev.get("downstream_change_ref"):
                 e.append("ACTIVE_CONFIRMATORY cannot survive evaluation-driven downstream change")
-            if ev.get("audience_role") == "RANKING_TEAM" and ev.get("disclosure_level") in {"PER_CASE", "FULL_LABEL"}:
-                e.append("ACTIVE_CONFIRMATORY cannot reveal per-case/full labels to ranking team")
+            if ev.get("disclosure_level") in {"PER_CASE", "FULL_LABEL"}:
+                e.append("ACTIVE_CONFIRMATORY cannot reveal per-case/full labels to any audience")
+            if ev.get("exposure_kind") == "LABEL_REVEAL":
+                e.append("ACTIVE_CONFIRMATORY cannot contain a label-reveal event")
+            if ev.get("disclosure_level") == "AGGREGATE_ONLY":
+                aggregate_count += 1
+            if ev.get("disclosure_level") == "SUBGROUP":
+                subgroup_count += 1
+        if not x.get("external_seal_attestation_id"):
+            e.append("ACTIVE_CONFIRMATORY requires an external seal")
+        if aggregate_count > x.get("max_aggregate_disclosures", -1):
+            e.append("aggregate disclosure count exceeds frozen active-generation budget")
+        if subgroup_count > x.get("max_subgroup_disclosures", -1):
+            e.append("subgroup disclosure count exceeds frozen active-generation budget")
     return e
 
 
@@ -294,12 +309,26 @@ def validate_external_seal(x: dict[str, Any]) -> list[str]:
 def validate_research_program_attempt(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     try:
-        _parse_datetime(x["registered_at"])
-        _parse_datetime(x["disclosure_due_at"])
+        registered = _parse_datetime(x["registered_at"])
+        result_time = _parse_datetime(x["result_recorded_at"])
+        disclosure_due = _parse_datetime(x["disclosure_due_at"])
+        if registered > result_time:
+            e.append("research attempt must be registered before result recording")
+        if result_time > disclosure_due:
+            e.append("disclosure due date cannot precede result recording")
     except Exception:
-        e.append("attempt registration/disclosure dates must be valid timestamps")
-    if x.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"} and not x.get("external_seal_attestation_id"):
-        e.append("confirmatory/prospective attempt requires external seal")
+        e.append("attempt registration/result/disclosure dates must be valid timestamps")
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("attempt must belong to the fixed Forge Bio B-TGT-E1 research program")
+    if x.get("attempt_tier") in {"CONFIRMATORY", "PROSPECTIVE"}:
+        if not x.get("external_seal_attestation_id"):
+            e.append("confirmatory/prospective attempt requires external seal")
+        if x.get("confirmatory_program_budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+            e.append("confirmatory/prospective attempt must link the single program-wide budget")
+        if not x.get("allocation_generation_id"):
+            e.append("confirmatory/prospective attempt requires an allocation generation")
+        if not isinstance(x.get("allocated_alpha"), (int, float)) or not 0 < x["allocated_alpha"] <= 0.05:
+            e.append("confirmatory/prospective attempt requires allocated alpha in (0, 0.05]")
     if x.get("disclosure_status") not in {"SCHEDULED", "PUBLIC"}:
         e.append("every attempt requires scheduled/public disclosure")
     return e
@@ -308,11 +337,20 @@ def validate_research_program_attempt(x: dict[str, Any]) -> list[str]:
 def validate_confirmatory_program_budget(x: dict[str, Any]) -> list[str]:
     e: list[str] = []
     allocations = x.get("generation_allocations") or []
+    if x.get("research_program_id") != "FORGE-BIO-B-TGT-E1-V0":
+        e.append("confirmatory budget research_program_id is not the canonical program")
+    if x.get("budget_id") != "CPB-FORGE-BIO-B-TGT-E1-V0":
+        e.append("confirmatory budget ID is not canonical")
+    if x.get("familywise_alpha") != 0.05:
+        e.append("familywise alpha must equal 0.05")
     if len(allocations) > x.get("max_confirmatory_generations", 0):
         e.append("generation allocations exceed confirmatory-generation budget")
+    generation_ids = [a.get("generation_id") for a in allocations]
+    if len(generation_ids) != len(set(generation_ids)):
+        e.append("generation IDs must be unique within the program-wide alpha budget")
     total = sum(float(a.get("allocated_alpha", 0)) for a in allocations)
-    if total > float(x.get("familywise_alpha", 0)) + 1e-12:
-        e.append("allocated alpha exceeds familywise alpha budget")
+    if total > 0.05 + 1e-12:
+        e.append("allocated alpha exceeds the single program-wide 0.05 budget")
     return e
 
 
