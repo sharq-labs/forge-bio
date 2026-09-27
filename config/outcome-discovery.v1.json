@@ -1,0 +1,58 @@
+{
+  "procedure_id": "OUTCOME-DISCOVERY-V1",
+  "schema_version": "outcome-discovery-v1",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "executor_role": "SELECTION_CUSTODIAN",
+  "discovery_sources": [
+    {
+      "source_id": "GWAS_CATALOG_FULL_ASSOCIATIONS",
+      "role": "DISCOVERY_INDEX",
+      "release_pinning": "FIXED_IN_PROTOCOL_REGISTRATION",
+      "min_release_lag_after_latest_window_end_months": 12
+    },
+    {
+      "source_id": "PUBMED_FROZEN_QUERY_TEMPLATE_V1",
+      "role": "DISCOVERY_INDEX",
+      "release_pinning": "SINGLE_EXECUTION_DATE_AND_PMID_LIST_DIGEST"
+    }
+  ],
+  "adjudication_evidence_sources": [
+    "PRIMARY_PUBLICATION_FULL_TEXT_AND_SUPPLEMENT",
+    "DEPOSITED_SUMMARY_STATISTICS"
+  ],
+  "catalog_is_label_authority": false,
+  "phenotype_scope_rule": "DISEASE_CONCEPT_PLUS_SYNONYMS_PLUS_NARROWER_DESCENDANTS_ONLY",
+  "candidate_event_predicate": {
+    "max_p_value": 5e-08,
+    "stages_accepted": [
+      "DISCOVERY",
+      "REPLICATION",
+      "COMBINED"
+    ],
+    "study_designs_accepted": "ANY_DESIGN_CLASS_ADJUDICATED_LATER",
+    "date_rule": "EARLIEST_JOURNAL_ONLINE_OR_PREPRINT_DATE_NEVER_CURATION_DATE"
+  },
+  "event_family_grouping": {
+    "method": "SINGLE_LINKAGE_LEAD_VARIANT_DISTANCE",
+    "window_bp": 500000,
+    "genome_build": "GRCh38"
+  },
+  "pre_t_locus_tag": {
+    "window_bp": 500000,
+    "tag": "PRE_T_LOCUS",
+    "qualifying_association": "SAME_CANDIDATE_EVENT_PREDICATE_P_LE_5E_8_FIRST_PUBLIC_AVAILABILITY_LE_T",
+    "tagged_families": "EXCLUDED_FROM_RAW_COUNT_CAP_AND_NOVEL_STRICT_ADJUDICATION"
+  },
+  "raw_candidate_count_definition": "EVENT_FAMILIES_WITHOUT_PRE_T_LOCUS_TAG",
+  "recall_audit": {
+    "fraction_of_selected_diseases": 0.25,
+    "rounding": "CEIL",
+    "min_diseases": 3,
+    "selection": "KEYED_HASH_ORDER_DOMAIN_RECALL_AUDIT",
+    "recall_gate_ref": "OUTCOME_DISCOVERY_RECALL",
+    "on_failure": "REDESIGN",
+    "missed_families_added_to_pilot": false
+  },
+  "stopping_rule": "ONE_EXECUTION_PER_DISEASE_CUTOFF_HORIZON_RERUN_IS_NEW_VERSION"
+}

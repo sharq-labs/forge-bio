@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-provider-audit-scope.v2.schema.json",
+  "title": "Forge Bio BIG 0F Provider Audit Scope v2",
+  "description": "Mechanically derived scope: the selected pilot diseases crossed with every field in the required-field registry. Nothing in the scope is chosen by the study team.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scope_id",
+    "schema_version",
+    "scope_rule",
+    "required_field_registry_id",
+    "required_field_registry_digest",
+    "selection_provenance_id",
+    "selection_provenance_digest",
+    "disease_ids",
+    "field_ids",
+    "expected_cell_count",
+    "digest"
+  ],
+  "properties": {
+    "scope_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-provider-audit-scope-v2"
+    },
+    "scope_rule": {
+      "const": "SELECTED_PILOT_DISEASES_CROSS_ALL_REGISTRY_FIELDS"
+    },
+    "required_field_registry_id": {
+      "const": "BIG0F-REQUIRED-FIELD-REGISTRY-V1"
+    },
+    "required_field_registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_provenance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selection_provenance_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "disease_ids": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 15,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Must equal selected_disease_ids in the bound selection provenance (harness check)."
+    },
+    "field_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Must equal every field_id in the bound registry (harness check); no subset."
+    },
+    "expected_cell_count": {
+      "type": "integer",
+      "minimum": 12,
+      "description": "= |disease_ids| x |field_ids|."
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

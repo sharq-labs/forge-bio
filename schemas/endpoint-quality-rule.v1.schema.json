@@ -15,7 +15,10 @@
     "phenotype_policy_ref",
     "gene_assignment_policy_ref",
     "genomic_harmonization_policy_ref",
-    "digest"
+    "digest",
+    "sealed_by_attestation_id",
+    "tightening_only_relative_to",
+    "applicability"
   ],
   "properties": {
     "rule_id": {
@@ -27,8 +30,15 @@
     },
     "status": {
       "enum": [
-        "CANDIDATE",
-        "FROZEN"
+        "DRAFT",
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
       ]
     },
     "endpoint_subtype": {
@@ -129,7 +139,8 @@
             ]
           },
           "required": {
-            "type": "boolean"
+            "const": true,
+            "description": "Every criterion is binding. Descriptive, non-binding criteria are not allowed (INV-Q3)."
           },
           "justification": {
             "type": "string",
@@ -265,21 +276,612 @@
       "const": "ADR-008"
     },
     "gene_assignment_policy_ref": {
-      "const": "BIG0F-ADJUDICATION-V1"
+      "const": "BIG0F-ADJUDICATION-V2"
     },
     "genomic_harmonization_policy_ref": {
       "const": "ADR-011"
     },
-    "frozen_at": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "format": "date-time"
-    },
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "tightening_only_relative_to": {
+      "const": "BIG0F-ADJUDICATION-V2",
+      "description": "Every criterion must be equal to or stricter than the corresponding adjudication-policy definition (INV-T8)."
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "STUDY_DESIGN",
+        "STATISTICAL_STRENGTH",
+        "SAMPLE_SIZE",
+        "INDEPENDENCE",
+        "PHENOTYPE_MATCH",
+        "GENOMIC_HARMONIZATION",
+        "ALLELE_DIRECTION",
+        "POPULATION_ANCESTRY",
+        "REPLICATION",
+        "HETEROGENEITY",
+        "GENE_ASSIGNMENT",
+        "HISTORICAL_NOVELTY",
+        "SOURCE_QUALITY"
+      ],
+      "properties": {
+        "STUDY_DESIGN": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "STATISTICAL_STRENGTH": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "SAMPLE_SIZE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "INDEPENDENCE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "PHENOTYPE_MATCH": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "GENOMIC_HARMONIZATION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "ALLELE_DIRECTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "POPULATION_ANCESTRY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "REPLICATION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "HETEROGENEITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "GENE_ASSIGNMENT": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "HISTORICAL_NOVELTY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "SOURCE_QUALITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reason"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "APPLICABLE",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "description": "Applicability matrix over all 13 dimensions (INV-Q1)."
     }
   },
   "allOf": [
@@ -287,7 +889,7 @@
       "if": {
         "properties": {
           "status": {
-            "const": "FROZEN"
+            "const": "SEALED"
           }
         },
         "required": [
@@ -295,19 +897,176 @@
         ]
       },
       "then": {
-        "required": [
-          "frozen_at"
-        ],
         "properties": {
-          "frozen_at": {
+          "sealed_by_attestation_id": {
             "type": "string",
-            "format": "date-time"
-          },
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "SEAL_CANDIDATE",
+              "SEALED"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
           "independence_requirement": {
             "const": "REQUIRED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "endpoint_subtype": {
+            "const": "E1-NOVEL-STRICT"
+          }
+        },
+        "required": [
+          "endpoint_subtype"
+        ]
+      },
+      "then": {
+        "properties": {
+          "applicability": {
+            "properties": {
+              "STUDY_DESIGN": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "STATISTICAL_STRENGTH": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "SAMPLE_SIZE": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "INDEPENDENCE": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "PHENOTYPE_MATCH": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "GENOMIC_HARMONIZATION": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "ALLELE_DIRECTION": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "POPULATION_ANCESTRY": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "REPLICATION": {
+                "properties": {
+                  "status": {
+                    "const": "NOT_APPLICABLE"
+                  }
+                }
+              },
+              "HETEROGENEITY": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "GENE_ASSIGNMENT": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "HISTORICAL_NOVELTY": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              },
+              "SOURCE_QUALITY": {
+                "properties": {
+                  "status": {
+                    "const": "APPLICABLE"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "endpoint_subtype": {
+            "const": "E1-NOVEL-STRICT"
           },
+          "status": {
+            "enum": [
+              "SEAL_CANDIDATE",
+              "SEALED"
+            ]
+          }
+        },
+        "required": [
+          "endpoint_subtype",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
           "criteria": {
-            "minItems": 11,
+            "minItems": 12,
             "allOf": [
               {
                 "contains": {
@@ -409,6 +1168,18 @@
                 "contains": {
                   "properties": {
                     "scientific_dimension": {
+                      "const": "HETEROGENEITY"
+                    }
+                  },
+                  "required": [
+                    "scientific_dimension"
+                  ]
+                }
+              },
+              {
+                "contains": {
+                  "properties": {
+                    "scientific_dimension": {
                       "const": "GENE_ASSIGNMENT"
                     }
                   },
@@ -441,7 +1212,21 @@
                   ]
                 }
               }
-            ]
+            ],
+            "not": {
+              "contains": {
+                "properties": {
+                  "scientific_dimension": {
+                    "enum": [
+                      "REPLICATION"
+                    ]
+                  }
+                },
+                "required": [
+                  "scientific_dimension"
+                ]
+              }
+            }
           }
         }
       }

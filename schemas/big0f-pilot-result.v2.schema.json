@@ -1,0 +1,1759 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-pilot-result.v2.schema.json",
+  "title": "Forge Bio BIG 0F Pilot Result v2",
+  "description": "BIG 0F decision record. Every gate in threshold manifest v2 appears by ID with its value and outcome under the base, stricter and looser bound sets. Values are recomputed by the verifier from the bound source artifacts; free numbers are not accepted.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "gate_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "base",
+        "stricter",
+        "looser",
+        "source_artifact_digest"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "base": {
+          "enum": [
+            "PASS",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE"
+          ]
+        },
+        "stricter": {
+          "enum": [
+            "PASS",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE",
+            "EXEMPT"
+          ]
+        },
+        "looser": {
+          "enum": [
+            "PASS",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE",
+            "EXEMPT"
+          ]
+        },
+        "source_artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        }
+      }
+    },
+    "task_agreement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statistic",
+        "n_cases",
+        "ac1",
+        "ac1_lower90",
+        "cohen_kappa",
+        "percent_agreement",
+        "confusion_matrix"
+      ],
+      "properties": {
+        "statistic": {
+          "const": "GWET_AC1"
+        },
+        "n_cases": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ac1": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "ac1_lower90": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "cohen_kappa": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "percent_agreement": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "confusion_matrix": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "pilot_id",
+    "schema_version",
+    "protocol_version",
+    "primary_endpoint_subtype",
+    "primary_metric_id",
+    "pilot_model_evaluation_mode",
+    "cutoff",
+    "horizon",
+    "disease_count",
+    "candidate_event_family_count",
+    "event_bearing_disease_count",
+    "high_specificity_positive_family_count",
+    "untouched_pool_disease_count",
+    "bound_artifacts",
+    "seal_attestation_ids",
+    "gate_results",
+    "agreement",
+    "power",
+    "nuisance_headroom",
+    "reported_diagnostics",
+    "prior_inconclusive_count",
+    "decision_by_bound_set",
+    "decision",
+    "decision_reasons",
+    "digest"
+  ],
+  "properties": {
+    "pilot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-pilot-result-v2"
+    },
+    "protocol_version": {
+      "const": "BIG-0F-v0"
+    },
+    "primary_endpoint_subtype": {
+      "const": "E1-NOVEL-STRICT"
+    },
+    "primary_metric_id": {
+      "const": "EVENT_RANK_PERCENTILE_V1"
+    },
+    "pilot_model_evaluation_mode": {
+      "const": "NUISANCE_ONLY"
+    },
+    "cutoff": {
+      "enum": [
+        "2005-12-31",
+        "2008-12-31",
+        "2011-12-31",
+        "2014-12-31"
+      ]
+    },
+    "horizon": {
+      "enum": [
+        "3y",
+        "5y",
+        "7y",
+        "10y"
+      ]
+    },
+    "disease_count": {
+      "type": "integer",
+      "minimum": 12,
+      "maximum": 15
+    },
+    "candidate_event_family_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 150
+    },
+    "event_bearing_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "high_specificity_positive_family_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "untouched_pool_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bound_artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_digest",
+        "seal_bundle_digest",
+        "threshold_manifest_digest",
+        "adjudication_policy_digest",
+        "nuisance_manifest_digest",
+        "power_policy_digest",
+        "outcome_discovery_spec_digest",
+        "frame_rule_digest",
+        "required_field_registry_digest",
+        "selection_registration_digest",
+        "randomness_beacon_digest",
+        "selection_provenance_digest",
+        "outcome_discovery_run_digest",
+        "recall_audit_digest",
+        "nuisance_run_digest",
+        "power_analysis_digest",
+        "provider_audit_scope_digest",
+        "provider_audit_digest",
+        "curation_audit_digest",
+        "adjudicator_independence_attestation_digest",
+        "custodian_independence_attestation_digest",
+        "exposure_ledger_digest",
+        "release_log_digest",
+        "first_review_label_set_registration_digest",
+        "review_salt_reveal_digest",
+        "post_revision_label_set_registration_digest",
+        "retest_salt_reveal_digest",
+        "nuisance_code_digest"
+      ],
+      "properties": {
+        "protocol_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "seal_bundle_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "threshold_manifest_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "adjudication_policy_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "nuisance_manifest_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "power_policy_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "outcome_discovery_spec_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "frame_rule_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "required_field_registry_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "selection_registration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "randomness_beacon_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "selection_provenance_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "outcome_discovery_run_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "recall_audit_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "nuisance_run_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "power_analysis_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "provider_audit_scope_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "provider_audit_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "curation_audit_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "adjudicator_independence_attestation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "custodian_independence_attestation_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "exposure_ledger_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "release_log_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "first_review_label_set_registration_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "review_salt_reveal_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "post_revision_label_set_registration_digest": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          ]
+        },
+        "retest_salt_reveal_digest": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          ]
+        },
+        "nuisance_code_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        }
+      },
+      "description": "Digest of every artifact this result depends on. release_log proves that adjudication began after seal_time(S6) (INV-C11)."
+    },
+    "seal_attestation_ids": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "PUBLIC_REGISTRY and THIRD_PARTY_TIMESTAMP_SERVICE attestations over the seal bundle digest (INV-S2)."
+    },
+    "gate_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION",
+        "AGREEMENT_AC1_MIN_OVER_GATED_TASKS",
+        "AGREEMENT_AC1_LOWER90_MIN_OVER_GATED_TASKS",
+        "DUPLICATE_REVIEW_COVERAGE_RATIO",
+        "NON_EVENT_AUDIT_COMPLETION_RATIO",
+        "NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO",
+        "REQUIRED_FIELD_AVAILABILITY",
+        "SOURCE_FAMILY_KINDS_PRESENT",
+        "ANCESTRY_METADATA_COVERAGE",
+        "SHARED_PIPELINE_FRACTION_PRIMARY",
+        "UNKNOWN_SAMPLE_OVERLAP_FRACTION",
+        "PRIMARY_ELIGIBLE_FRACTION",
+        "AUTHOR_NEAREST_FRACTION",
+        "HIGH_SPECIFICITY_POSITIVE_COUNT",
+        "HYPOTHESIS_FREE_DISCOVERY_FRACTION",
+        "LABEL_FEATURE_METHOD_COUPLING_FRACTION",
+        "ATTENTION_ASSIGNMENT_ASSOC_UPPER95",
+        "LABEL_RESOLUTION_BIAS_UPPER95",
+        "LOCUS_TO_MANY_GENE_FRACTION",
+        "PRE_T_COHORT_REUSE_FRACTION",
+        "NUISANCE_MEAN_POSITIVE_PERCENTILE",
+        "NUISANCE_MEDIAN_POSITIVE_PERCENTILE",
+        "NUISANCE_TOP1_POSITIVE_FRACTION",
+        "NUISANCE_ADEQUACY_MARGIN",
+        "MEDIAN_EVENT_CURATION_MINUTES",
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MIN",
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MAX",
+        "EVENT_BEARING_DISEASE_FRACTION",
+        "OUTCOME_DISCOVERY_RECALL",
+        "FRAME_COVERAGE_FRACTION",
+        "FRAME_COVERED_DISEASE_COUNT",
+        "MEAN_RAW_CANDIDATES_PER_COVERED_DISEASE",
+        "POWER_POOL_SUFFICIENCY",
+        "POWER_POOL_OPTIMISTIC_FLOOR"
+      ],
+      "properties": {
+        "ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "AGREEMENT_AC1_MIN_OVER_GATED_TASKS": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "AGREEMENT_AC1_LOWER90_MIN_OVER_GATED_TASKS": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "DUPLICATE_REVIEW_COVERAGE_RATIO": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "NON_EVENT_AUDIT_COMPLETION_RATIO": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "REQUIRED_FIELD_AVAILABILITY": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "SOURCE_FAMILY_KINDS_PRESENT": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "ANCESTRY_METADATA_COVERAGE": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "SHARED_PIPELINE_FRACTION_PRIMARY": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "UNKNOWN_SAMPLE_OVERLAP_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "PRIMARY_ELIGIBLE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "AUTHOR_NEAREST_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "HIGH_SPECIFICITY_POSITIVE_COUNT": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "HYPOTHESIS_FREE_DISCOVERY_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "LABEL_FEATURE_METHOD_COUPLING_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "ATTENTION_ASSIGNMENT_ASSOC_UPPER95": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "LABEL_RESOLUTION_BIAS_UPPER95": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "LOCUS_TO_MANY_GENE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "PRE_T_COHORT_REUSE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NUISANCE_MEAN_POSITIVE_PERCENTILE": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NUISANCE_MEDIAN_POSITIVE_PERCENTILE": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NUISANCE_TOP1_POSITIVE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NUISANCE_ADEQUACY_MARGIN": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "MEDIAN_EVENT_CURATION_MINUTES": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MIN": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MAX": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "EVENT_BEARING_DISEASE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "OUTCOME_DISCOVERY_RECALL": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                },
+                "looser": {
+                  "enum": [
+                    "PASS",
+                    "REDESIGN",
+                    "NO_GO",
+                    "INCONCLUSIVE"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "FRAME_COVERAGE_FRACTION": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "FRAME_COVERED_DISEASE_COUNT": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "MEAN_RAW_CANDIDATES_PER_COVERED_DISEASE": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "POWER_POOL_SUFFICIENCY": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        },
+        "POWER_POOL_OPTIMISTIC_FLOOR": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/gate_result"
+            },
+            {
+              "properties": {
+                "stricter": {
+                  "const": "EXEMPT"
+                },
+                "looser": {
+                  "const": "EXEMPT"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "agreement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gated_tasks",
+        "reported_tasks",
+        "duplicate_review_required_count",
+        "duplicate_review_count",
+        "duplicate_review_selection_digest",
+        "rule_revision_count",
+        "evaluated_on",
+        "pre_revision_gated_tasks"
+      ],
+      "properties": {
+        "gated_tasks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "PRIMARY_ASSIGNMENT_ELIGIBILITY",
+            "PHENOTYPE_QUALIFICATION",
+            "NOVELTY_ELIGIBILITY",
+            "PRIMARY_POSITIVE_STATUS"
+          ],
+          "properties": {
+            "PRIMARY_ASSIGNMENT_ELIGIBILITY": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "PHENOTYPE_QUALIFICATION": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "NOVELTY_ELIGIBILITY": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "PRIMARY_POSITIVE_STATUS": {
+              "$ref": "#/$defs/task_agreement"
+            }
+          }
+        },
+        "reported_tasks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ASSIGNMENT_CLASS_FULL",
+            "PRE_T_GENETIC_STATE",
+            "EVENT_FAMILY_IDENTITY",
+            "SAMPLE_OVERLAP"
+          ],
+          "properties": {
+            "ASSIGNMENT_CLASS_FULL": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "PRE_T_GENETIC_STATE": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "EVENT_FAMILY_IDENTITY": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "SAMPLE_OVERLAP": {
+              "$ref": "#/$defs/task_agreement"
+            }
+          }
+        },
+        "duplicate_review_required_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "min(N, max(30, ceil(0.30 N)))."
+        },
+        "duplicate_review_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_review_selection_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "rule_revision_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evaluated_on": {
+          "enum": [
+            "ORIGINAL_SET",
+            "RETEST_SET"
+          ]
+        },
+        "retest_case_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "pre_revision_gated_tasks": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "PRIMARY_ASSIGNMENT_ELIGIBILITY": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "PHENOTYPE_QUALIFICATION": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "NOVELTY_ELIGIBILITY": {
+              "$ref": "#/$defs/task_agreement"
+            },
+            "PRIMARY_POSITIVE_STATUS": {
+              "$ref": "#/$defs/task_agreement"
+            }
+          }
+        }
+      }
+    },
+    "power": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "method",
+        "alpha_one_sided",
+        "planning_effect",
+        "target_power",
+        "f_req_planning",
+        "f_req_optimistic",
+        "untouched_pool_disease_count",
+        "event_bearing_fraction_wilson_lower95",
+        "pool_sufficiency_margin",
+        "dlvs_reservation",
+        "optimistic_floor_margin"
+      ],
+      "properties": {
+        "stage": {
+          "const": "STAGE_A_POOL_SUFFICIENCY"
+        },
+        "method": {
+          "const": "HIERARCHICAL_HETEROSKEDASTIC_T5_SIMULATION_EXACT_SIGNFLIP_V1"
+        },
+        "alpha_one_sided": {
+          "const": 0.05
+        },
+        "planning_effect": {
+          "const": 0.05
+        },
+        "target_power": {
+          "const": 0.8
+        },
+        "f_req_planning": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "f_req_optimistic": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "untouched_pool_disease_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "event_bearing_fraction_wilson_lower95": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "pool_sufficiency_margin": {
+          "type": "integer",
+          "description": "U - N_DLVS - f_req_planning; value of gate POWER_POOL_SUFFICIENCY."
+        },
+        "dlvs_reservation": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "N_DLVS = max(0, ceil((20 - event-bearing pilot diseases) / p_eb,lower)); power policy §2."
+        },
+        "optimistic_floor_margin": {
+          "type": "integer",
+          "description": "U - N_DLVS - f_req_optimistic; value of gate POWER_POOL_OPTIMISTIC_FLOOR."
+        }
+      }
+    },
+    "nuisance_headroom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mean_positive_event_percentile",
+        "median_positive_event_percentile",
+        "top_1pct_fraction",
+        "top_5pct_fraction",
+        "combined_minus_best_single"
+      ],
+      "properties": {
+        "mean_positive_event_percentile": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Higher = less headroom for biology. Gate NUISANCE_MEAN_POSITIVE_PERCENTILE."
+        },
+        "median_positive_event_percentile": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Gate NUISANCE_MEDIAN_POSITIVE_PERCENTILE."
+        },
+        "top_1pct_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Gate NUISANCE_TOP1_POSITIVE_FRACTION."
+        },
+        "top_5pct_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "combined_minus_best_single": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Gate NUISANCE_ADEQUACY_MARGIN."
+        }
+      }
+    },
+    "reported_diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_family_deduplication_fraction",
+        "coverage_grade_distribution",
+        "pessimistic_f_req",
+        "heterogeneous_f_req"
+      ],
+      "properties": {
+        "event_family_deduplication_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "coverage_grade_distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "HIGH",
+            "MODERATE",
+            "LOW",
+            "UNKNOWN"
+          ],
+          "properties": {
+            "HIGH": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "MODERATE": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "LOW": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "UNKNOWN": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "pessimistic_f_req": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "heterogeneous_f_req": {
+          "type": "integer",
+          "minimum": 2
+        }
+      }
+    },
+    "prior_inconclusive_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "decision_by_bound_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "BASE",
+        "STRICTER",
+        "LOOSER"
+      ],
+      "properties": {
+        "BASE": {
+          "enum": [
+            "GO",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE"
+          ]
+        },
+        "STRICTER": {
+          "enum": [
+            "GO",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE"
+          ]
+        },
+        "LOOSER": {
+          "enum": [
+            "GO",
+            "REDESIGN",
+            "NO_GO",
+            "INCONCLUSIVE"
+          ]
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "GO",
+        "REDESIGN",
+        "NO_GO",
+        "INCONCLUSIVE"
+      ]
+    },
+    "decision_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "GO"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "gate_results": {
+            "additionalProperties": false,
+            "patternProperties": {
+              "^[A-Z0-9_]+$": {
+                "properties": {
+                  "base": {
+                    "const": "PASS"
+                  },
+                  "stricter": {
+                    "enum": [
+                      "PASS",
+                      "EXEMPT"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "decision_by_bound_set": {
+            "properties": {
+              "BASE": {
+                "const": "GO"
+              },
+              "STRICTER": {
+                "const": "GO"
+              },
+              "LOOSER": {
+                "const": "GO"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "prior_inconclusive_count": {
+            "const": 2
+          }
+        },
+        "required": [
+          "prior_inconclusive_count"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "GO",
+              "REDESIGN",
+              "NO_GO"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "agreement": {
+            "properties": {
+              "rule_revision_count": {
+                "const": 1
+              }
+            },
+            "required": [
+              "rule_revision_count"
+            ]
+          }
+        },
+        "required": [
+          "agreement"
+        ]
+      },
+      "then": {
+        "properties": {
+          "agreement": {
+            "required": [
+              "retest_case_count"
+            ],
+            "properties": {
+              "evaluated_on": {
+                "const": "RETEST_SET"
+              },
+              "retest_case_count": {
+                "type": "integer",
+                "minimum": 30
+              },
+              "pre_revision_gated_tasks": {
+                "type": "object",
+                "required": [
+                  "PRIMARY_ASSIGNMENT_ELIGIBILITY",
+                  "PHENOTYPE_QUALIFICATION",
+                  "NOVELTY_ELIGIBILITY",
+                  "PRIMARY_POSITIVE_STATUS"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "agreement": {
+            "properties": {
+              "evaluated_on": {
+                "const": "ORIGINAL_SET"
+              },
+              "pre_revision_gated_tasks": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "agreement": {
+            "properties": {
+              "rule_revision_count": {
+                "const": 1
+              }
+            },
+            "required": [
+              "rule_revision_count"
+            ]
+          }
+        },
+        "required": [
+          "agreement"
+        ]
+      },
+      "then": {
+        "properties": {
+          "bound_artifacts": {
+            "properties": {
+              "post_revision_label_set_registration_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-fA-F]{64}$"
+              },
+              "retest_salt_reveal_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-fA-F]{64}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

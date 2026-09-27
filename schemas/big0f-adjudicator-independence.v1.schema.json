@@ -1,15 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/big0f-adjudicator-independence.v1.schema.json",
-  "title": "Forge Bio BIG 0F Adjudicator Independence Attestation v1",
+  "title": "Forge Bio BIG 0F Role Independence Attestation v1 (second adjudicator or selection custodian)",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "attestation_id",
     "schema_version",
+    "role",
     "adjudicator_id",
     "study_team_member",
     "ranking_team_member",
+    "design_team_member",
+    "confirmatory_ranking_role",
+    "confirmatory_adjudication_role",
     "first_reviewer",
     "blinded_to_rankings",
     "blinded_to_first_review",
@@ -21,19 +25,125 @@
     "digest"
   ],
   "properties": {
-    "attestation_id": {"type": "string", "minLength": 1},
-    "schema_version": {"const": "big0f-adjudicator-independence-v1"},
-    "adjudicator_id": {"type": "string", "minLength": 1},
-    "study_team_member": {"const": false},
-    "ranking_team_member": {"const": false},
-    "first_reviewer": {"const": false},
-    "blinded_to_rankings": {"const": true},
-    "blinded_to_first_review": {"const": true},
-    "conflict_status": {"enum": ["NONE", "MANAGED"]},
-    "role_registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
-    "independence_evidence_digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"},
-    "signed_at": {"type": "string", "format": "date-time"},
-    "signer_identity": {"type": "string", "minLength": 1},
-    "digest": {"type": "string", "pattern": "^sha256:[0-9a-fA-F]{64}$"}
-  }
+    "attestation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-adjudicator-independence-v1"
+    },
+    "role": {
+      "enum": [
+        "SECOND_ADJUDICATOR",
+        "SELECTION_CUSTODIAN"
+      ]
+    },
+    "adjudicator_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "study_team_member": {
+      "const": false
+    },
+    "ranking_team_member": {
+      "const": false
+    },
+    "first_reviewer": {
+      "type": "boolean"
+    },
+    "blinded_to_rankings": {
+      "type": "boolean"
+    },
+    "blinded_to_first_review": {
+      "type": "boolean"
+    },
+    "conflict_status": {
+      "enum": [
+        "NONE",
+        "MANAGED"
+      ]
+    },
+    "role_registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "independence_evidence_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "signed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signer_identity": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "design_team_member": {
+      "const": false
+    },
+    "confirmatory_ranking_role": {
+      "const": false,
+      "description": "Holds no ranking role in the confirmatory generation."
+    },
+    "confirmatory_adjudication_role": {
+      "type": "boolean"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "SECOND_ADJUDICATOR"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "first_reviewer": {
+            "const": false
+          },
+          "blinded_to_rankings": {
+            "const": true
+          },
+          "blinded_to_first_review": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "SELECTION_CUSTODIAN"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "first_reviewer": {
+            "const": false
+          },
+          "blinded_to_rankings": {
+            "const": true
+          },
+          "confirmatory_adjudication_role": {
+            "const": false
+          }
+        }
+      }
+    }
+  ]
 }

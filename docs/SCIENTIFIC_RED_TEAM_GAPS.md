@@ -8,6 +8,8 @@ A gap marked **CLOSED-POLICY** has an accepted normative design but may still re
 
 A gap marked **OPEN-P0** blocks production scientific implementation.
 
+**Status vocabulary (ADR-022 D15; INV-D2).** Closure status is `SPEC-CLOSED` (normative design accepted) or `IMPLEMENTATION-PENDING` (the check exists only as specification; no code, test or CI enforces it). CLOSED-POLICY and CLOSED on documentation-only items mean SPEC-CLOSED. P1-IMPLEMENTATION, P1-VERIFY and IMPLEMENTATION-OPEN mean IMPLEMENTATION-PENDING. OPEN-FEASIBILITY, DATA-OPEN and PARTIAL mean EMPIRICAL-OPEN. OPEN-OPERATIONAL, P1-OPERATIONAL and PARTIAL-OPERATIONAL mean OPERATIONAL-OPEN. CLOSED-ROADMAP means SPEC-CLOSED (roadmap only), and DEFERRED means SUPERSEDED or out of V0 scope. The former code- or test-backed labels (CLOSED-ENGINE, CLOSED-TEST, EXECUTABLE-SCHEMA and similar) are replaced below: the code and tests were removed and the verification harness does not exist yet. [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) wins where this register disagrees with it.
+
 ## 1. Failure classes
 
 Forge Bio treats these as distinct scientific failure modes:
@@ -40,11 +42,12 @@ Resolved by:
 - E1-MATURATION;
 - E1-REPLICATION;
 - E1-CROSSMODAL;
-- one primary subtype frozen per confirmatory MAP.
+- one primary subtype frozen per confirmatory MAP; for V0 it is fixed now as E1-NOVEL-STRICT (ADR-022 D2; INV-E1).
 
 Normative source:
 - BENCHMARK_V0_SPEC.md
 - ADR-009
+- [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1
 
 ### P0-R2 — Locus-to-gene outcome contamination
 
@@ -81,7 +84,7 @@ Required controls now include:
 
 ### P0-R5 — Zero-future-event disease estimand
 
-**Status:** CLOSED-POLICY / OPEN-P0 FINAL FREEZE
+**Status:** SPEC-CLOSED (ADR-022 D2, D3, D18) / IMPLEMENTATION-PENDING
 
 Policy now:
 - zero-event diseases remain in benchmark accounting;
@@ -89,7 +92,7 @@ Policy now:
 - no fabricated negatives;
 - secondary all-frame observed-event review-budget utility is mandatory.
 
-Final numerical estimand choices are frozen only after feasibility.
+Superseded: "final numerical estimand choices are frozen only after feasibility". Subtype, metric, α, planning effect, power and the confirmatory test are fixed now ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1, §3). Zero-event diseases are excluded from Δ̄ and reported (INV-E6). Only (T\*, H\*) is instantiated later, by the custodian rule (Freeze Statement §2).
 
 ### P0-R6 — Researcher hindsight / design-time leakage
 
@@ -196,7 +199,7 @@ Normative source:
 
 ### P0-R13 — Weak genetic replication semantics
 
-**Status:** CLOSED-POLICY / OPEN-P0 QUALITY THRESHOLD
+**Status:** SPEC-CLOSED (ADR-022 D7, D17) / IMPLEMENTATION-PENDING — rule values instantiated after BIG 0F under a frozen constraint
 
 Replication assessment now includes:
 - phenotype;
@@ -212,10 +215,12 @@ Replication assessment now includes:
 
 Genome-wide significance alone is not a complete endpoint-quality rule.
 
-The final endpoint-quality threshold remains OPEN-P0 until the feasibility/provider audit.
+Superseded: "the final endpoint-quality threshold remains OPEN-P0 until the feasibility/provider audit". Assignment, phenotype, novelty and coverage definitions are fixed before BIG 0F in adjudication policy v2 (`BIG0F-ADJUDICATION-V2`). The endpoint-quality rule values are set after BIG 0F, before the confirmatory seal, and may only be equal to or stricter than that policy (Freeze Statement §2; INV-T8). The applicability matrix is fixed by ADR-022 D17 (INV-Q1–Q3).
 
 Normative source:
 - ADR-009
+- [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md)
+- [ENDPOINT_QUALITY_RULE.md](ENDPOINT_QUALITY_RULE.md)
 
 ### P1-R11 — Validation-set adaptive reuse
 
@@ -382,7 +387,7 @@ Validation generations now record maximum disclosure level:
 
 **Status:** CLOSED-POLICY / P1-IMPLEMENTATION
 
-Executable JSON Schemas now exist for QoI/MAP/MAR under `/schemas`. Runtime freeze validation still must be implemented/tested.
+JSON Schemas now exist for QoI/MAP/MAR under `/schemas`. No validator runs them yet; runtime freeze validation still must be implemented/tested (verification harness, ADR-022 §6).
 
 ### P1-R18 — Repository governance not enforced
 
@@ -400,21 +405,21 @@ GitHub branch protection/ruleset must still be enabled and verified before FROZE
 
 Production scientific implementation remains blocked by the following evidence/owner decisions:
 
-1. **Final B-TGT-E1 estimand freeze**
-   - primary metric;
-   - K/review budget;
-   - normalized companion metric;
-   - acceptable zero-event fraction;
-   - minimum event-bearing disease count;
-   - CI-width requirement.
+1. **Final B-TGT-E1 estimand freeze** — SPEC-CLOSED by ADR-022 D2, D3, D10, D18 ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1–§3). The former sub-items resolve as follows:
+   - primary metric — fixed: EVENT_RANK_PERCENTILE_V1;
+   - K/review budget — secondary only (Recall@K is a companion metric, INV-E9); K is chosen on development data (PRE_CODE_CHECKLIST P1);
+   - normalized companion metric — secondary (METRIC_EVENT_RANK_PERCENTILE_V1.md §8);
+   - acceptable zero-event fraction — in BIG 0F, gate `EVENT_BEARING_DISEASE_FRACTION` in `config/big0f-thresholds.v2.json`; for confirmation, zero-event diseases stay in the frame and enter sizing through p_eb,lower (power policy §5);
+   - minimum event-bearing disease count — derived by the power policy (Stage A N_req/F_req; Stage B ≥ 20 event-bearing development diseases; [BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md));
+   - CI-width requirement — superseded: sample size comes from the power policy, and magnitude claims use the CI (Freeze Statement §3).
 
-2. **Final endpoint evidence-quality threshold**
+2. **Final endpoint evidence-quality threshold** — SPEC-CLOSED by ADR-022 D7, D17: definitions fixed before BIG 0F in adjudication policy v2; rule values set after BIG 0F, equal or stricter (INV-T8).
    - exact qualifying statistical/evidence rule;
    - required replication quality;
    - handling of heterogeneity;
    - minimum lineage/phenotype/gene-assignment quality.
 
-3. **Manual outcome feasibility pilot**
+3. **BIG 0F** (formerly "manual outcome feasibility pilot"; the manual pilot is BIG 0F, ADR-022 D14) — EMPIRICAL-OPEN
    must measure:
    - canonical variant/locus resolution;
    - genome-build/liftover/allele-harmonization ambiguity;
@@ -435,10 +440,10 @@ Production scientific implementation remains blocked by the following evidence/o
    - adjudicator disagreement;
    - label-construction workload.
 
-4. **Pilot GO / REDESIGN / NO-GO verdict**
-   for B-TGT-E1-v0.
+4. **BIG 0F GO / REDESIGN / NO_GO / INCONCLUSIVE decision**
+   for B-TGT-E1-v0, under threshold manifest v2 (ADR-022 D9, §6).
 
-These are not documentation gaps and must not be checked off without evidence.
+Items 3 and 4 are not documentation gaps and must not be checked off without evidence.
 
 ## 6. P1 requirements before sealed confirmation
 
@@ -461,6 +466,7 @@ At minimum:
 - publication/reporting-bias sensitivity planned;
 - all-frame utility implemented;
 - disease-family/block dependence sensitivity frozen;
+- Stage B Development Lift & Variance Study completed and its power gate passed (ADR-022 D10; INV-P5);
 - negative/null controls frozen;
 - MAP/ranking/outcome commitments verified;
 - genomic identity/harmonization gold sets measured;
@@ -500,7 +506,7 @@ Those explanations must be controlled, stratified, falsified, or retained explic
 
 ### R4-01 — Twin maturity text not machine-enforced
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 The Scientific Twin JSON Schema now uses maturity-specific conditional requirements:
 - T1 requires dynamic state + update-policy artifact;
@@ -508,11 +514,11 @@ The Scientific Twin JSON Schema now uses maturity-specific conditional requireme
 - T3 requires prediction spec + MAP + MAR + ValidationGeneration + BenchmarkDesignProvenance + validation artifact;
 - T4 inherits T3 and adds perturbation/sensitivity/causal/intervention/identifiability requirements.
 
-Executable positive/negative schema tests enforce these cases.
+The positive/negative schema tests that exercised these cases were removed with the code; they are IMPLEMENTATION-PENDING (ADR-022 D15).
 
 ### R4-02 — Historical twin had no explicit cutoff
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 STRICT_HISTORICAL and HISTORICAL_INPUT_MODERN_PRIOR twin/profile artifacts require explicit cutoff T. `valid_at` is not a substitute.
 
@@ -536,9 +542,9 @@ DEPENDENCY_RULES now prohibits historical profile/twin construction from importi
 
 ### R4-06 — Profiles were Markdown-only
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
-Executable schemas now exist for Disease, Pathogen, Virus extension, PathogenHost, and Therapeutic profiles.
+JSON Schemas now exist for Disease, Pathogen, Virus extension, PathogenHost, and Therapeutic profiles; no validator or schema test runs them yet.
 
 ### R4-07 — T4 associational simulation could masquerade as intervention
 
@@ -560,9 +566,9 @@ DigitalTwinMaturityLevel T0–T4 and ClaimMaturityLevel L0–L6 are independent 
 
 ### R4-10 — Spec CI only checked file shape
 
-**Status:** CLOSED-TEST-HARNESS
+**Status:** SPEC-CLOSED / IMPLEMENTATION-PENDING (formerly CLOSED-TEST-HARNESS)
 
-Spec Integrity now executes JSON Schema positive/negative tests, including invalid T1/T2/T3/T4 and missing historical cutoff cases.
+Superseded: the Spec Integrity CI job and its JSON Schema positive/negative tests (invalid T1/T2/T3/T4 and missing historical cutoff cases) were removed with the code. Schema/config validation is a deliverable of the minimal pre-BIG 0F verification harness (ADR-022 §6, phase 1; D15).
 
 ### R4-11 — Repository enforcement
 
@@ -581,13 +587,13 @@ CredibilityAssessmentArtifact now ties model credibility to the exact research d
 
 ### R5-02 — Quantitative values could carry ambiguous unit/scale/transform semantics
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 QuantityDefinition, QuantitativeObservation, EffectEstimate, and MeasurementProcessArtifact are first-class. Unit/dimension/scale/transform/missingness/censoring rules fail closed where comparability is required.
 
 ### R5-03 — Numerical solver error could masquerade as biological/model certainty
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 NumericalVerificationArtifact separates solver/discretization/stochastic numerical error from measurement, parameter, sampling, and model-form uncertainty.
 
@@ -623,7 +629,7 @@ Predictive evaluation now audits data/source, predictors/features, outcome/label
 
 ### R5-09 — Measurement/batch process could be hidden behind one numeric field
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 MeasurementProcessArtifact and normalization/batch provenance are explicit; future-fitted normalization remains temporal leakage.
 
@@ -638,7 +644,7 @@ Credibility is explicitly CoU-specific. "Validated model" without the validated 
 
 ### RX-01 — Source quality could be undermined by extraction error
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 ExtractionArtifact now preserves source grounding, extractor/version/config, horizon/watermark, output schema, abstention, review state, and provenance.
 
@@ -671,13 +677,13 @@ Extraction never creates a new biological observation. Multiple claims from one 
 
 ### RP-01 — Retractions/corrections could rewrite history
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 SourceLifecycleEvent preserves correction/retraction/withdrawal/supersession/restoration events with public timing. Historical reconstruction resolves status as-of-T; later lifecycle events trigger current fragility analysis instead of rewriting history.
 
 ### RP-02 — Repeated benchmark reuse could overfit the benchmark
 
-**Status:** CLOSED-POLICY / EXECUTABLE-SCHEMA
+**Status:** SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING
 
 BenchmarkExposureLedger tracks disclosure and downstream adaptation. Generations transition through ACTIVE_CONFIRMATORY, DEVELOPMENT_EXPOSED, EXHAUSTED, and RETIRED states. EXHAUSTED generations cannot support new strongest-tier confirmation.
 
@@ -715,31 +721,31 @@ The previous statement that no major design gap remained is not used after this 
 | ID | Finding | Status after BIG 0F-0 hardening |
 |---|---|---|
 | HR-01 | Gene assignment can re-import research attention | CLOSED-POLICY / EMPIRICAL-OPEN — high-specificity primary classes; attention audit required |
-| HR-02 | Genomic-architecture / pleiotropy baselines missing | CLOSED-POLICY / DATA-OPEN — mandatory nuisance families added |
+| HR-02 | Genomic-architecture / pleiotropy baselines missing | CLOSED-POLICY / DATA-OPEN — mandatory nuisance families added; 14 families in manifest v2 (ADR-022 D11) |
 | HR-03 | Strongest-single comparator is inadequate | CLOSED-POLICY — Combined Nuisance Model is primary comparator |
-| HR-04 | No confirmatory alpha / power / MDE / numeric success rule | CLOSED-SCHEMA / EMPIRICAL-OPEN — MAP fields required; pilot supplies power inputs |
-| HR-05 | Repeated confirmatory generations mine one finite history | CLOSED-POLICY / SCHEMA — ConfirmatoryProgramBudget + attempt ledger |
-| HR-06 | Solo designer/adjudicator/custodian cannot support strongest tier | OPERATIONAL-OPEN — independent adjudicator/custodian required |
+| HR-04 | No confirmatory alpha / power / MDE / numeric success rule | SPEC-CLOSED (ADR-022 D10, D18) / EMPIRICAL-OPEN — α, planning effect, power, test and success rule fixed (Freeze Statement §1, §3); Stage A inputs come from BIG 0F artifacts, Stage B variance from the DLVS |
+| HR-05 | Repeated confirmatory generations mine one finite history | SPEC-CLOSED (ADR-022 D16) / IMPLEMENTATION-PENDING — ConfirmatoryProgramBudget + attempt ledger; ledger invariants INV-L1–L11 |
+| HR-06 | Solo designer/adjudicator/custodian cannot support strongest tier | OPERATIONAL-OPEN — independent second adjudicator and independent selection custodian are BIG 0F start gates (ADR-022 D12, §9) |
 | HR-07 | Strict novelty may be power maturation | EMPIRICAL-OPEN — pre-T cohort reuse + power-maturation audit in BIG 0F |
 | HR-08 | Positive-only historical audit can be asymmetric | CLOSED-POLICY / EMPIRICAL-OPEN — seeded non-event audit required |
-| HR-09 | Disease frame can be chosen with hindsight | CLOSED-POLICY / OPERATIONAL-OPEN — mechanical frame + sealed seed |
-| HR-10 | Schemas accepted policy-invalid artifacts | CLOSED-TEST — JSON Schema + semantic validator + hostile regression suite pass in CI |
+| HR-09 | Disease frame can be chosen with hindsight | SPEC-CLOSED (ADR-022 D6, D13) / OPERATIONAL-OPEN — mechanical MeSH frame rule; pinned drand quicknet round pre-declared in the S4 registration |
+| HR-10 | Schemas accepted policy-invalid artifacts | SPEC-CLOSED / IMPLEMENTATION-PENDING (formerly CLOSED-TEST) — semantic rules are specified in SEMANTIC_INVARIANTS.md; the validator, regression suite and CI were removed and are rebuilt in the verification harness (ADR-022 D15, §6) |
 | HR-11 | Knowledge-bearingness was too self-declared | CLOSED-POLICY — biomedical-domain dependencies default UNKNOWN/knowledge-bearing |
 | HR-12 | Same curation pipeline can feed Past and Future | CLOSED-POLICY / EMPIRICAL-OPEN — primary-source/independent outcome path required |
-| HR-13 | External seals / null reporting were self-attestable | CLOSED-SCHEMA / OPERATIONAL-OPEN — approved external authority types + disclosure schedule |
-| HR-14 | Recall@K is discrete under sparse events | CLOSED-POLICY / EMPIRICAL-OPEN — event-rank percentile preferred for pilot |
+| HR-13 | External seals / null reporting were self-attestable | SPEC-CLOSED (ADR-022 D1, D13; JSON Schema present) / IMPLEMENTATION-PENDING / OPERATIONAL-OPEN — approved external authority types + disclosure schedule; seal_time rule in ADR-022 §5 (INV-S2–S4) |
+| HR-14 | Recall@K is discrete under sparse events | SPEC-CLOSED (ADR-022 D2, D3) — EVENT_RANK_PERCENTILE_V1 is the fixed V0 primary metric; Recall@K is a secondary companion only (INV-E9) |
 | HR-15 | Cross-disease shared controls create dependence | CLOSED-POLICY / IMPLEMENTATION-OPEN — shared-control/study-family blocks required |
 | HR-16 | Gene annotation release was not first-class | CLOSED-POLICY / SCHEMA — GeneModelRelease added |
-| HR-17 | EffectEstimate could not safely represent GWAS effects | CLOSED-SCHEMA — allele/variant/context + ratio/HR constraints added |
+| HR-17 | EffectEstimate could not safely represent GWAS effects | SPEC-CLOSED (JSON Schema present) / IMPLEMENTATION-PENDING — allele/variant/context + ratio/HR constraints added |
 | HR-18 | Scientific Twin / VVUQ gates were too weak and off critical path | DEFERRED — advanced Twin work frozen until core B-TGT evidence exists |
-| HR-19 | Extraction qualification could be vacuous | CLOSED-SCHEMA / EMPIRICAL-OPEN — task thresholds and negation/null metrics required |
+| HR-19 | Extraction qualification could be vacuous | SPEC-CLOSED (JSON Schema present) / EMPIRICAL-OPEN — task thresholds and negation/null metrics required |
 | HR-20 | Prospective validation starts too late | CLOSED-ROADMAP — private externally timestamped ledger starts with stable BIG 7 ranker |
 
 ### Critical interpretation
 
-BIG 0F-0 is complete only when HR-10 regression tests pass and HR-06/HR-09 operational prerequisites required for pilot start are satisfied.
+Superseded by ADR-022 §6 and §9: BIG 0F adjudication starts only when the minimal pre-BIG 0F verification harness exists (it implements the HR-10 regression checks), an external-seal dry run has succeeded, and an independent second adjudicator and an independent selection custodian are in place (HR-06). HR-09 closes operationally through the S1/S4/S6 registrations ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2).
 
-BIG 0F then determines whether HR-01, HR-04, HR-07, HR-08, HR-12, HR-14, HR-19 and related feasibility risks are scientifically tolerable.
+BIG 0F then determines whether HR-01, HR-04, HR-07, HR-08, HR-12, HR-19 and related feasibility risks are scientifically tolerable. HR-14 is no longer an empirical question: the primary metric is fixed (ADR-022 D2).
 
 No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
 
@@ -748,10 +754,10 @@ No documentation-only closure may convert an EMPIRICAL-OPEN item into PASS.
 
 | ID | Finding | Status |
 |---|---|---|
-| HR-21 | Cutoff/horizon feasibility procedure had an unspecified selection order | CLOSED-POLICY — deterministic T/H order; no post-hoc expansion |
-| HR-22 | GO/REDESIGN thresholds had ambiguous denominators/statistic semantics | CLOSED-POLICY — field-availability formula, critical fields, agreement statistic, and sensitivity reporting defined |
-| HR-23 | Nuisance+biology arm could win through larger learner/tuning capacity | CLOSED-POLICY — primary comparison is nested and capacity/tuning-budget matched |
-| HR-24 | "External seal" lacked an operational implementation candidate | PARTIAL-OPERATIONAL — dual OpenTimestamps + OSF Registration runbook identified; dry run and independent custodian remain open |
+| HR-21 | Cutoff/horizon feasibility procedure had an unspecified selection order | CLOSED-POLICY — deterministic T/H order; no post-hoc expansion; five custodian predicates, first passing pair (ADR-022 D12; INV-C2) |
+| HR-22 | GO/REDESIGN thresholds had ambiguous denominators/statistic semantics | CLOSED-POLICY — field-availability formula, critical fields, agreement statistic, and sensitivity reporting defined; Gwet AC1 fixed (ADR-022 D8) and threshold manifest v2 (D9) |
+| HR-23 | Nuisance+biology arm could win through larger learner/tuning capacity | CLOSED-POLICY — primary comparison is nested and capacity/tuning-budget matched, plus the K = 19 permuted-biology placebo guard (ADR-022 D11) |
+| HR-24 | "External seal" lacked an operational implementation candidate | PARTIAL-OPERATIONAL — dual OpenTimestamps + OSF Registration runbook identified; seal_time rule fixed (ADR-022 §5, D13); dry run and independent custodian remain open |
 
 
 ## Independent hostile review — Round 2 action ledger
@@ -770,33 +776,34 @@ The project does not self-rescore after applying these fixes.
 
 | ID | Round 2 finding | Current closure status |
 |---|---|---|
-| R2-01 | Disease-specific attention volume/momentum not mandatory in the primary nuisance block | CLOSED-SCHEMA/CONFIG/TEST — both are mandatory content-free nuisance families |
-| R2-02 | BIG 0F evaluator admitted false GO paths | CLOSED-ENGINE/TEST — strict finite JSON, schema validation, cross-field bounds, deterministic thresholds, bounded INCONCLUSIVE |
-| R2-03 | Decision code/result schema/sampling/power code outside seal root | CLOSED-SEAL/TEST — bundle v2 commits all decision-critical code/schemas/manifests |
-| R2-04 | Random seed could be ground before commitment | CLOSED-DESIGN/TEST — externally sealed frame then first verified post-seal public randomness beacon; exact frame-seal artifact committed |
-| R2-05 | Pilot augmented biological arm could tune later contrast | CLOSED-POLICY/CONFIG — pilot mode is NUISANCE_ONLY; V0 subtype/metric are frozen |
-| R2-06 | Alpha budget could reset by renaming benchmark family | CLOSED-SCHEMA/VALIDATOR/TEST — canonical research_program_id/budget plus cross-artifact generation allocation validation |
-| R2-07 | Primary-positive ascertainment could include targeted candidate-gene studies | CLOSED-POLICY/CONFIG/EXECUTOR — V0 primary study designs are genome/exome/biobank-wide only |
-| R2-08 | Comparator capacity parity lived mainly in prose | CLOSED-MAP/SEMANTIC — learner/search/tuning/preprocessing/early-stop/seed parity are first-class MAP fields |
-| R2-09 | Endpoint-quality FROZEN rule could be non-executable | CLOSED-EXECUTOR/TEST — frozen field registry/operators/mandatory dimensions and event evaluation |
-| R2-10 | Ambiguity used component max rather than unique-case union | CLOSED-RESULT/ENGINE/TEST — any_primary_endpoint_ambiguity_fraction is required and consistency-checked |
-| R2-11 | Threshold sensitivity was self-reported | CLOSED-ENGINE — sealed sensitivity variants are re-evaluated; unstable conclusion becomes REDESIGN |
-| R2-12 | INCONCLUSIVE could be carried indefinitely | CLOSED-ENGINE — bounded attempts; repeated INCONCLUSIVE becomes REDESIGN |
-| R2-13 | Power could be self-reported | CLOSED-ARTIFACT/ENGINE — power artifact is schema-bound, code-sealed and deterministically recomputed |
-| R2-14 | Exposure ledger allowed adaptive disclosure routes | CLOSED-SCHEMA/SEMANTIC/TEST — active confirmatory generation forbids label/per-case/full disclosures and enforces aggregate/subgroup budgets |
-| R2-15 | External seal could be internally asserted | CLOSED-SCHEMA/SEMANTIC for BIG 0F — frame/bundle require external timestamp/public-registry authority; real service dry run remains OPERATIONAL-OPEN |
-| R2-16 | Empirical adjudicator/custodian independence not yet instantiated | OPERATIONAL-OPEN — real independent second adjudicator and custodian remain start gates |
+| R2-01 | Disease-specific attention volume/momentum not mandatory in the primary nuisance block | SPEC-CLOSED (ADR-022 D11) / IMPLEMENTATION-PENDING — both are mandatory content-free nuisance families among the 14 in manifest v2, alongside global attention volume and momentum |
+| R2-02 | BIG 0F evaluator admitted false GO paths | SPEC-CLOSED (ADR-022 D9; INV-T1–T7) / IMPLEMENTATION-PENDING — strict finite values, schema validation, cross-field bounds, deterministic thresholds, bounded INCONCLUSIVE; no evaluator exists yet |
+| R2-03 | Decision code/result schema/sampling/power code outside seal root | SPEC-CLOSED (INV-S7) / IMPLEMENTATION-PENDING — the seal-bundle schema (`big0f-seal-bundle-v3`) requires the digests of every decision-critical schema, manifest, normative document and future engine/verifier; no code exists yet to commit |
+| R2-04 | Random seed could be ground before commitment | SPEC-CLOSED (ADR-022 D13; INV-C6–C9) / IMPLEMENTATION-PENDING — superseded design: the drand quicknet chain is pinned and round R is pre-declared in the public S4 registration ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §7), replacing "first verified post-seal round" |
+| R2-05 | Pilot augmented biological arm could tune later contrast | SPEC-CLOSED (config `SEAL_CANDIDATE`) — pilot mode is NUISANCE_ONLY (INV-P6); V0 subtype/metric are fixed (ADR-022 D2) |
+| R2-06 | Alpha budget could reset by renaming benchmark family | SPEC-CLOSED (ADR-022 D16; INV-L1–L11) / IMPLEMENTATION-PENDING — canonical research_program_id/budget plus cross-artifact generation allocation validation |
+| R2-07 | Primary-positive ascertainment could include targeted candidate-gene studies | SPEC-CLOSED (ADR-022 D7) / IMPLEMENTATION-PENDING — V0 primary study designs are genome/exome/biobank-wide only |
+| R2-08 | Comparator capacity parity lived mainly in prose | SPEC-CLOSED (ADR-022 D11) / IMPLEMENTATION-PENDING — learner/search/tuning/preprocessing/early-stop/seed parity are first-class MAP fields; semantic checks are harness items |
+| R2-09 | Endpoint-quality FROZEN rule could be non-executable | SPEC-CLOSED (ADR-022 D17; INV-Q1–Q3) / IMPLEMENTATION-PENDING — frozen field registry/operators/mandatory dimensions and event evaluation |
+| R2-10 | Ambiguity used component max rather than unique-case union | SPEC-CLOSED (ADR-022 D9) / IMPLEMENTATION-PENDING — gate `ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION` (union of unique cases) in threshold manifest v2 |
+| R2-11 | Threshold sensitivity was self-reported | SPEC-CLOSED (ADR-022 D9; INV-T6) / IMPLEMENTATION-PENDING — base/stricter/looser bound sets are re-evaluated; an unstable conclusion resolves as INV-T6 states |
+| R2-12 | INCONCLUSIVE could be carried indefinitely | SPEC-CLOSED (INV-T7) / IMPLEMENTATION-PENDING — bounded attempts; repeated INCONCLUSIVE becomes REDESIGN |
+| R2-13 | Power could be self-reported | SPEC-CLOSED (ADR-022 D10; INV-P1–P6) / IMPLEMENTATION-PENDING — power artifact is schema-bound and must be recomputed; the Stage A power engine is a Phase 1 harness deliverable (ADR-022 §6) |
+| R2-14 | Exposure ledger allowed adaptive disclosure routes | SPEC-CLOSED (ADR-022 D12; INV-X1–X6) / IMPLEMENTATION-PENDING — active confirmatory generation forbids label/per-case/full disclosures and enforces aggregate/subgroup budgets |
+| R2-15 | External seal could be internally asserted | SPEC-CLOSED (ADR-022 D1, D13; INV-S2–S4) / IMPLEMENTATION-PENDING — frame/bundle require external timestamp/public-registry authority; real service dry run remains OPERATIONAL-OPEN |
+| R2-16 | Empirical adjudicator/custodian independence not yet instantiated | OPERATIONAL-OPEN — real independent second adjudicator and independent selection custodian (ADR-022 D12) remain start gates |
 | R2-17 | BIG 0F evidence/provider feasibility is untested | EMPIRICAL-OPEN — this is the purpose of BIG 0F, not a documentation closure |
 | R2-18 | Twin/quantitative side surfaces have residual P2 issues | DEFERRED/NON-BLOCKING — no T2+ twin claim is on the BIG 0F critical path |
 
 ### Round 2 closure boundary
 
-BIG 0F may not begin scientific adjudication merely because R2-01..R2-15 are implemented.
+BIG 0F may not begin scientific adjudication merely because R2-01..R2-15 are SPEC-CLOSED; none of them is implemented yet.
 
-The remaining start gates are operational:
+The remaining start gates (ADR-022 §6, §9):
+- build the minimal pre-BIG 0F verification harness;
 - assign an independent second adjudicator;
-- assign an independent custodian;
-- complete an external frame/bundle seal dry run with real third-party/public-registry evidence;
-- seal the real protocol/frame/policies before the first case is seen.
+- assign an independent selection custodian (ADR-022 D12);
+- complete an external-seal dry run with real third-party/public-registry evidence;
+- seal the real protocol and policies (S1), the selection registration (S4) and the seal bundle (S6) before the first case is released to adjudicators ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2).
 
 Empirical BIG 0F findings remain open by design.

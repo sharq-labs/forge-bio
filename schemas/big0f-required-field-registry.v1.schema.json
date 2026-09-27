@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-required-field-registry.v1.schema.json",
+  "title": "Forge Bio BIG 0F Required-Field Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "registry_id",
+    "schema_version",
+    "status",
+    "sealed_by_attestation_id",
+    "criticality_rule",
+    "optional_fields_in_scope",
+    "availability_predicate",
+    "provider_audit_scope_rule",
+    "critical_missing_consequence",
+    "fields"
+  ],
+  "properties": {
+    "registry_id": {
+      "const": "BIG0F-REQUIRED-FIELD-REGISTRY-V1"
+    },
+    "schema_version": {
+      "const": "big0f-required-field-registry-v1"
+    },
+    "status": {
+      "enum": [
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "criticality_rule": {
+      "const": "CRITICAL_IF_PRIMARY_POSITIVE_STATUS_OR_SCREEN_SIGNAL_OR_FRAME_CANNOT_BE_DETERMINED_WITHOUT_IT_REQUIRED_IF_USED_BY_A_MANDATORY_NUISANCE_FAMILY_OR_ENDPOINT_DIMENSION"
+    },
+    "optional_fields_in_scope": {
+      "const": false
+    },
+    "availability_predicate": {
+      "const": {
+        "AS_OF_T": "OBTAINABLE_AND_VERSION_IDENTIFIABLE_AND_EXISTED_AT_T_AND_VALUE_RECONSTRUCTABLE_AND_NOT_RETROSPECTIVELY_CURATED",
+        "EVALUATION": "OBTAINABLE_AND_VERSION_IDENTIFIABLE_AND_VALUE_RECONSTRUCTABLE"
+      }
+    },
+    "provider_audit_scope_rule": {
+      "const": "SELECTED_PILOT_DISEASES_CROSS_ALL_REGISTRY_FIELDS"
+    },
+    "critical_missing_consequence": {
+      "const": "AFFECTED_CASE_AMBIGUOUS_OR_UNUSABLE"
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field_id",
+          "source_family_kind",
+          "time_scope",
+          "criticality",
+          "used_by"
+        ],
+        "properties": {
+          "field_id": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "source_family_kind": {
+            "enum": [
+              "PRIMARY_PUBLICATION_METADATA",
+              "GWAS_HISTORICAL",
+              "IDENTITY_ONTOLOGY",
+              "HISTORICAL_GENE_MODEL_ANNOTATION"
+            ]
+          },
+          "time_scope": {
+            "enum": [
+              "AS_OF_T",
+              "EVALUATION"
+            ]
+          },
+          "criticality": {
+            "enum": [
+              "CRITICAL",
+              "REQUIRED"
+            ]
+          },
+          "used_by": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "properties": {
+        "fields": {
+          "allOf": [
+            {
+              "contains": {
+                "properties": {
+                  "source_family_kind": {
+                    "const": "PRIMARY_PUBLICATION_METADATA"
+                  }
+                },
+                "required": [
+                  "source_family_kind"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "source_family_kind": {
+                    "const": "GWAS_HISTORICAL"
+                  }
+                },
+                "required": [
+                  "source_family_kind"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "source_family_kind": {
+                    "const": "IDENTITY_ONTOLOGY"
+                  }
+                },
+                "required": [
+                  "source_family_kind"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "source_family_kind": {
+                    "const": "HISTORICAL_GENE_MODEL_ANNOTATION"
+                  }
+                },
+                "required": [
+                  "source_family_kind"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SEALED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

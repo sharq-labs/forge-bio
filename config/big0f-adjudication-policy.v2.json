@@ -1,0 +1,187 @@
+{
+  "policy_id": "BIG0F-ADJUDICATION-V2",
+  "schema_version": "big0f-adjudication-policy-v2",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "primary_endpoint_subtype": "E1-NOVEL-STRICT",
+  "primary_metric_id": "EVENT_RANK_PERCENTILE_V1",
+  "primary_study_ascertainment_classes": [
+    "GENOME_WIDE",
+    "EXOME_WIDE",
+    "BIOBANK_WIDE"
+  ],
+  "assignment_classes": {
+    "primary": {
+      "HYPOTHESIS_FREE_CODING_OR_LOF": {
+        "variant_rule": "LEAD_OR_PIP_GE_0_5_OR_R2_GE_0_8_WITH_LEAD_IN_DISCOVERY_ANCESTRY",
+        "min_pip": 0.5,
+        "min_r2_with_lead_when_no_fine_mapping": 0.8,
+        "qualifying_consequences": [
+          "missense_variant",
+          "stop_gained",
+          "frameshift_variant",
+          "splice_donor_variant",
+          "splice_acceptor_variant",
+          "start_lost",
+          "stop_lost"
+        ],
+        "single_gene_required": true,
+        "single_variant_max_p": 5e-08,
+        "gene_burden_max_p": 2.5e-06
+      },
+      "HIGH_CONFIDENCE_FINE_MAPPING": {
+        "credible_set_level": 0.95,
+        "max_credible_set_size": 5,
+        "min_summed_pip_of_gene_linked_variants": 0.8,
+        "variant_to_gene_link": "CODING_OR_SPLICE_CONSEQUENCE_IN_ONE_GENE_OR_QUALIFYING_COLOCALIZATION",
+        "nearest_gene_or_intronic_position_sufficient": false
+      },
+      "PREREGISTERED_COLOCALIZATION": {
+        "method": "COLOC_ABF",
+        "prior_p1": 0.0001,
+        "prior_p2": 0.0001,
+        "prior_p12": 5e-06,
+        "min_pp_h4": 0.8,
+        "cis_window_bp": 500000,
+        "qtl_resources": [
+          "GTEX_V8_CIS_EQTL_ALL_TISSUES",
+          "EQTLGEN_PHASE1_CIS_EQTL"
+        ],
+        "unique_gene_at_locus_required": true,
+        "run_by": "OUTCOME_ADJUDICATION_TEAM",
+        "author_reported_coloc_accepted_only_if_criteria_met": true
+      }
+    },
+    "secondary": [
+      "AUTHOR_NAMED",
+      "NEAREST_GENE",
+      "POSITIONAL_PROXIMITY_ONLY",
+      "GENERIC_DATABASE_GENE_FIELD",
+      "MODERN_L2G_ONLY",
+      "CURRENT_CURATED_TARGET_ONLY",
+      "TARGETED_CANDIDATE_GENE_CODING"
+    ],
+    "unresolved_locus_class": "LOCUS_ONLY",
+    "other_high_specificity_method_allowed": false
+  },
+  "phenotype_policy": {
+    "primary_qualifying_relations": [
+      "EXACT",
+      "SAME_CONCEPT_DIFFERENT_DEFINITION"
+    ],
+    "same_concept_different_definition_requires_both_reviewers": true,
+    "non_qualifying_relations": [
+      "NARROWER",
+      "BROADER",
+      "SURROGATE",
+      "RISK_FACTOR",
+      "INTERMEDIATE_PHENOTYPE",
+      "RELATED"
+    ],
+    "unresolved": "FAIL_CLOSED"
+  },
+  "pre_t_genetic_state": {
+    "qualifying_max_p": 5e-08,
+    "suggestive_max_p": 1e-05,
+    "candidate_gene_clause": "NOMINAL_P_LE_0_05_IN_AT_LEAST_2_INDEPENDENT_PRE_T_STUDIES_IS_SUGGESTIVE",
+    "candidate_gene_clause_sensitivity_required": true,
+    "gene_window_bp": 500000,
+    "gene_model": "AS_OF_T_GENE_MODEL_RELEASE",
+    "event_novelty_distance_bp": 500000,
+    "event_novelty_min_r2": 0.1,
+    "event_novelty_ld_panel": "1000G_PHASE3_MATCHED_ANCESTRY_MODERN_EVALUATION_LD",
+    "min_coverage_grade_for_novel_strict": "MODERATE",
+    "coverage_grade_definitions": {
+      "HIGH": "AT_LEAST_ONE_PRE_T_GENOME_WIDE_STUDY_WITH_GE_2000_CASES_AND_PUBLIC_SUMMARY_STATS_OR_TOP_HIT_TABLE_TO_P_1E_5",
+      "MODERATE": "AT_LEAST_ONE_PRE_T_GENOME_WIDE_STUDY_OF_THE_DISEASE",
+      "LOW": "ONLY_CANDIDATE_GENE_OR_LINKAGE_STUDIES_PRE_T",
+      "UNKNOWN": "NOT_DETERMINABLE_FROM_PINNED_SOURCES"
+    },
+    "coverage_sensitivity": "HIGH_ONLY_REPORTED"
+  },
+  "agreement_policy": {
+    "statistic": "GWET_AC1",
+    "reported_alongside": [
+      "COHEN_KAPPA",
+      "PERCENT_AGREEMENT",
+      "CONFUSION_MATRIX"
+    ],
+    "ci_method": "CASE_BOOTSTRAP_BCA",
+    "bootstrap_replicates": 10000,
+    "seed_domain": "agreement-ci",
+    "gated_tasks": {
+      "PRIMARY_ASSIGNMENT_ELIGIBILITY": [
+        "PRIMARY_ELIGIBLE",
+        "NOT_PRIMARY_ELIGIBLE",
+        "AMBIGUOUS"
+      ],
+      "PHENOTYPE_QUALIFICATION": [
+        "QUALIFIES",
+        "DOES_NOT_QUALIFY",
+        "UNRESOLVED"
+      ],
+      "NOVELTY_ELIGIBILITY": [
+        "NOVEL_STRICT_ELIGIBLE",
+        "NOT_ELIGIBLE",
+        "AMBIGUOUS"
+      ],
+      "PRIMARY_POSITIVE_STATUS": [
+        "PRIMARY_POSITIVE",
+        "NOT_PRIMARY_POSITIVE",
+        "AMBIGUOUS"
+      ]
+    },
+    "reported_tasks": [
+      "ASSIGNMENT_CLASS_FULL",
+      "PRE_T_GENETIC_STATE",
+      "EVENT_FAMILY_IDENTITY",
+      "SAMPLE_OVERLAP"
+    ],
+    "duplicate_review_selection": {
+      "method": "SALTED_KEYED_HASH_ORDER_STRATIFIED",
+      "key_domain": "dup-review",
+      "salt": "S_REV_COMMITTED_IN_S6_USED_PRIVATELY_AFTER_FIRST_REVIEW_LABEL_SET_REGISTERED_PUBLISHED_AFTER_SECOND_REVIEW_LABELS",
+      "strata": [
+        "DISEASE"
+      ],
+      "allocation": "PROPORTIONAL_MIN_ONE_PER_NONEMPTY_STRATUM",
+      "size_rule": "MIN_N_MAX_30_CEIL_0_30_N",
+      "applies_to": [
+        "EVENT_CASES",
+        "NON_EVENT_CASES"
+      ]
+    },
+    "rule_revision": {
+      "max_revisions": 1,
+      "retest_set": "SALTED_ORDER_S_RET_OVER_ALL_CASES_STRATIFIED_BY_DISEASE_SAME_SIZE_RULE",
+      "min_retest_cases": 30,
+      "gates_evaluated_on": "RETEST_SET_WHEN_REVISED",
+      "insufficient_cases": "INCONCLUSIVE",
+      "pre_revision_agreement_reported": true,
+      "allowed_scope": "CLARIFICATION_THAT_CHANGES_NO_VALUE_IN_THIS_POLICY_APPLIED_TO_ALL_CASES_ELSE_PROTOCOL_AMENDMENT",
+      "retest_salt": "S_RET_COMMITTED_IN_S6_USED_PRIVATELY_AFTER_POST_REVISION_LABEL_SET_REGISTERED_PUBLISHED_AFTER_RETEST_LABELS"
+    },
+    "both_reviewer_labels_stored": true,
+    "same_concept_mandatory_review": "UNDRAWN_SAME_CONCEPT_CASES_MIXED_INTO_SECOND_REVIEWER_BATCH_EXCLUDED_FROM_AC1_AND_COVERAGE"
+  },
+  "attention_assignment_association": {
+    "statistic": "SPEARMAN_RHO",
+    "attention_variable": "PRE_T_DISEASE_SPECIFIC_ATTENTION_PERCENTILE_OF_ASSIGNED_GENE",
+    "outcome_variable": "ATTENTION_SENSITIVE_ASSIGNMENT_INDICATOR",
+    "attention_sensitive_classes": [
+      "AUTHOR_NAMED",
+      "NEAREST_GENE"
+    ],
+    "population": "ALL_ADJUDICATED_POST_T_EVENT_FAMILIES_IN_PILOT",
+    "matched_comparison_sample": "NONE",
+    "ci_method": "FISHER_Z_95_TWO_SIDED"
+  },
+  "label_resolution_bias_audit": {
+    "statistic": "SPEARMAN_RHO",
+    "attention_variable": "PRE_T_DISEASE_SPECIFIC_ATTENTION_PERCENTILE_OF_NEAREST_GENE",
+    "outcome_variable": "PRIMARY_RESOLVABLE_INDICATOR",
+    "population": "ALL_POST_T_EVENT_FAMILIES_IN_PILOT",
+    "ci_method": "FISHER_Z_95_TWO_SIDED"
+  },
+  "label_feature_method_coupling_sensitivity_required": true
+}

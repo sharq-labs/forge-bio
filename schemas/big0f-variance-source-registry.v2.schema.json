@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-variance-source-registry.v2.schema.json",
+  "title": "Forge Bio Variance Source Registry v2 (optional Stage B supplement; can only raise planning SD)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "registry_id",
+    "schema_version",
+    "role",
+    "search_protocol",
+    "screened_record_count",
+    "source_records",
+    "digest"
+  ],
+  "properties": {
+    "registry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-variance-source-registry-v2"
+    },
+    "role": {
+      "const": "STAGE_B_SUPPLEMENT_CAN_ONLY_RAISE_PLANNING_SD"
+    },
+    "search_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "databases",
+        "query_strings",
+        "search_executed_on",
+        "inclusion_criteria",
+        "exclusion_criteria",
+        "deduplication_rule",
+        "screening",
+        "stopping_rule",
+        "protocol_registered_before_search",
+        "protocol_attestation_id"
+      ],
+      "properties": {
+        "databases": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "query_strings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "search_executed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "inclusion_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "exclusion_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "deduplication_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "screening": {
+          "const": "TWO_INDEPENDENT_SCREENERS_WITH_RECORDED_DISAGREEMENTS"
+        },
+        "stopping_rule": {
+          "const": "ALL_RECORDS_RETURNED_BY_FROZEN_QUERIES_SCREENED_NO_SUPPLEMENTARY_SEARCH"
+        },
+        "protocol_registered_before_search": {
+          "const": true
+        },
+        "protocol_attestation_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "screened_record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_records": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_identity_digest",
+          "disease_level_values_digest",
+          "estimand_id",
+          "primary_metric_id",
+          "same_estimand",
+          "same_primary_metric",
+          "confirmatory_overlap",
+          "big0f_biological_arm_used",
+          "disease_level_value_count",
+          "eligibility_status",
+          "eligibility_evidence_digest",
+          "screening_record_id"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_identity_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "disease_level_values_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "estimand_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "primary_metric_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "same_estimand": {
+            "type": "boolean"
+          },
+          "same_primary_metric": {
+            "type": "boolean"
+          },
+          "confirmatory_overlap": {
+            "type": "boolean"
+          },
+          "big0f_biological_arm_used": {
+            "type": "boolean"
+          },
+          "disease_level_value_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "eligibility_status": {
+            "enum": [
+              "ELIGIBLE",
+              "INELIGIBLE"
+            ]
+          },
+          "eligibility_evidence_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "screening_record_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "exclusion_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "eligibility_status": {
+                  "const": "ELIGIBLE"
+                }
+              },
+              "required": [
+                "eligibility_status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "same_estimand": {
+                  "const": true
+                },
+                "same_primary_metric": {
+                  "const": true
+                },
+                "confirmatory_overlap": {
+                  "const": false
+                },
+                "big0f_biological_arm_used": {
+                  "const": false
+                },
+                "disease_level_value_count": {
+                  "type": "integer",
+                  "minimum": 20
+                },
+                "exclusion_reason": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "eligibility_status": {
+                  "const": "INELIGIBLE"
+                }
+              },
+              "required": [
+                "eligibility_status"
+              ]
+            },
+            "then": {
+              "required": [
+                "exclusion_reason"
+              ],
+              "properties": {
+                "exclusion_reason": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

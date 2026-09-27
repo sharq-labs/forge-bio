@@ -1,7 +1,8 @@
 # ADR-006 — Outcome Gene Assignment and Historical Novelty
 
 **Status:** Accepted — pre-code hardening  
-**Decision scope:** B-TGT gene-level future outcomes
+**Decision scope:** B-TGT gene-level future outcomes  
+**Amended by:** [ADR-022](ADR-022-final-scientific-consistency-closure.md) D7 (threshold timing and class vocabulary); [V0_FREEZE_STATEMENT.md](../V0_FREEZE_STATEMENT.md) takes precedence
 
 ## Decision
 
@@ -32,18 +33,21 @@ evaluation_bridge_version
 
 Assignment methods are classified explicitly.
 
-Primary-eligible classes may include only preregistered high-specificity methods such as:
+Primary-eligible classes are exactly the preregistered high-specificity classes of adjudication policy v2 (`BIG0F-ADJUDICATION-V2`, `config/big0f-adjudication-policy.v2.json`):
 
 ```text
-DIRECT_CODING_OR_LOF
+HYPOTHESIS_FREE_CODING_OR_LOF
 HIGH_CONFIDENCE_FINE_MAPPING
 PREREGISTERED_COLOCALIZATION
-OTHER_HIGH_SPECIFICITY_METHOD
 ```
 
-The exact evidentiary threshold for each class is frozen after BIG 0F feasibility work and before confirmatory evaluation.
+`OTHER_HIGH_SPECIFICITY_METHOD` does not exist in V0 (`other_high_specificity_method_allowed: false`).
 
-The following are not primary-eligible by themselves:
+The exact evidentiary threshold for each class is frozen **before** BIG 0F in adjudication policy v2 ([BIG_0F_ADJUDICATION_DEFINITIONS.md](../BIG_0F_ADJUDICATION_DEFINITIONS.md) §1). The later endpoint-quality rule may only be equal or stricter (INV-T8); a looser definition needs a new pilot on untouched cases.
+
+> Superseded by ADR-022 D7: "the exact evidentiary threshold for each class is frozen after BIG 0F feasibility work and before confirmatory evaluation".
+
+The following secondary classes are not primary-eligible by themselves:
 
 ```text
 AUTHOR_NAMED
@@ -52,7 +56,10 @@ POSITIONAL_PROXIMITY_ONLY
 GENERIC_DATABASE_GENE_FIELD
 MODERN_L2G_ONLY
 CURRENT_CURATED_TARGET_ONLY
+TARGETED_CANDIDATE_GENE_CODING
 ```
+
+A locus that meets no primary rule is `LOCUS_ONLY`: it earns locus-level sensitivity credit, never a gene-level primary positive.
 
 Author naming or nearest-gene assignment may be preserved as provenance/sensitivity labels, but cannot independently create a primary disease–gene positive.
 
@@ -67,11 +74,11 @@ BIG 0F must measure:
 - event yield after keeping only primary-eligible high-specificity assignments;
 - locus-level one-credit sensitivity.
 
-If primary-eligible gene assignments are too sparse or remain materially attention-coupled, the benchmark must REDESIGN to a locus-level or otherwise attention-resistant primary endpoint rather than relaxing the assignment rule.
+If primary-eligible gene assignments are too sparse or remain materially attention-coupled, the benchmark must REDESIGN to a locus-level or otherwise attention-resistant primary endpoint rather than relaxing the assignment rule. For B-TGT-E1 that redesign is a new version (V1), not a V0 option ([V0_FREEZE_STATEMENT.md](../V0_FREEZE_STATEMENT.md) §4).
 
 ## HistoricalNoveltyAudit
 
-A candidate classified as E1-NOVEL-STRICT must pass an evaluation-side HistoricalNoveltyAudit and satisfy the ADR-012 historical-search-coverage threshold.
+A candidate classified as E1-NOVEL-STRICT must pass an evaluation-side HistoricalNoveltyAudit and satisfy the ADR-012 historical-search-coverage threshold (minimum grade and novelty definitions frozen in adjudication policy v2 → `pre_t_genetic_state`; [BIG_0F_ADJUDICATION_DEFINITIONS.md](../BIG_0F_ADJUDICATION_DEFINITIONS.md) §3).
 
 The audit:
 - may use sources unavailable to the ranker;

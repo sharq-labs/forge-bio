@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/outcome-discovery.v1.schema.json",
+  "title": "Forge Bio Outcome-Discovery Procedure v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "procedure_id",
+    "schema_version",
+    "status",
+    "sealed_by_attestation_id",
+    "executor_role",
+    "discovery_sources",
+    "adjudication_evidence_sources",
+    "catalog_is_label_authority",
+    "phenotype_scope_rule",
+    "candidate_event_predicate",
+    "event_family_grouping",
+    "pre_t_locus_tag",
+    "raw_candidate_count_definition",
+    "recall_audit",
+    "stopping_rule"
+  ],
+  "properties": {
+    "procedure_id": {
+      "const": "OUTCOME-DISCOVERY-V1"
+    },
+    "schema_version": {
+      "const": "outcome-discovery-v1"
+    },
+    "status": {
+      "enum": [
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "executor_role": {
+      "const": "SELECTION_CUSTODIAN"
+    },
+    "discovery_sources": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "role",
+          "release_pinning"
+        ],
+        "properties": {
+          "source_id": {
+            "enum": [
+              "GWAS_CATALOG_FULL_ASSOCIATIONS",
+              "PUBMED_FROZEN_QUERY_TEMPLATE_V1"
+            ]
+          },
+          "role": {
+            "const": "DISCOVERY_INDEX"
+          },
+          "release_pinning": {
+            "type": "string",
+            "minLength": 1
+          },
+          "min_release_lag_after_latest_window_end_months": {
+            "type": "integer",
+            "minimum": 12
+          }
+        }
+      }
+    },
+    "adjudication_evidence_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "PRIMARY_PUBLICATION_FULL_TEXT_AND_SUPPLEMENT",
+          "DEPOSITED_SUMMARY_STATISTICS"
+        ]
+      }
+    },
+    "catalog_is_label_authority": {
+      "const": false
+    },
+    "phenotype_scope_rule": {
+      "const": "DISEASE_CONCEPT_PLUS_SYNONYMS_PLUS_NARROWER_DESCENDANTS_ONLY"
+    },
+    "candidate_event_predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_p_value",
+        "stages_accepted",
+        "study_designs_accepted",
+        "date_rule"
+      ],
+      "properties": {
+        "max_p_value": {
+          "const": 5e-08
+        },
+        "stages_accepted": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "DISCOVERY",
+              "REPLICATION",
+              "COMBINED"
+            ]
+          }
+        },
+        "study_designs_accepted": {
+          "const": "ANY_DESIGN_CLASS_ADJUDICATED_LATER"
+        },
+        "date_rule": {
+          "const": "EARLIEST_JOURNAL_ONLINE_OR_PREPRINT_DATE_NEVER_CURATION_DATE"
+        }
+      }
+    },
+    "event_family_grouping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "window_bp",
+        "genome_build"
+      ],
+      "properties": {
+        "method": {
+          "const": "SINGLE_LINKAGE_LEAD_VARIANT_DISTANCE"
+        },
+        "window_bp": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "genome_build": {
+          "const": "GRCh38"
+        }
+      }
+    },
+    "pre_t_locus_tag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_bp",
+        "tag",
+        "qualifying_association",
+        "tagged_families"
+      ],
+      "properties": {
+        "window_bp": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tag": {
+          "const": "PRE_T_LOCUS"
+        },
+        "qualifying_association": {
+          "const": "SAME_CANDIDATE_EVENT_PREDICATE_P_LE_5E_8_FIRST_PUBLIC_AVAILABILITY_LE_T"
+        },
+        "tagged_families": {
+          "const": "EXCLUDED_FROM_RAW_COUNT_CAP_AND_NOVEL_STRICT_ADJUDICATION"
+        }
+      }
+    },
+    "raw_candidate_count_definition": {
+      "const": "EVENT_FAMILIES_WITHOUT_PRE_T_LOCUS_TAG"
+    },
+    "recall_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fraction_of_selected_diseases",
+        "rounding",
+        "min_diseases",
+        "selection",
+        "recall_gate_ref",
+        "on_failure",
+        "missed_families_added_to_pilot"
+      ],
+      "properties": {
+        "fraction_of_selected_diseases": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "min_diseases": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "on_failure": {
+          "const": "REDESIGN"
+        },
+        "missed_families_added_to_pilot": {
+          "const": false
+        },
+        "rounding": {
+          "const": "CEIL"
+        },
+        "selection": {
+          "const": "KEYED_HASH_ORDER_DOMAIN_RECALL_AUDIT"
+        },
+        "recall_gate_ref": {
+          "const": "OUTCOME_DISCOVERY_RECALL",
+          "description": "The recall threshold lives only in the threshold manifest (INV-T1)."
+        }
+      }
+    },
+    "stopping_rule": {
+      "const": "ONE_EXECUTION_PER_DISEASE_CUTOFF_HORIZON_RERUN_IS_NEW_VERSION"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SEALED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

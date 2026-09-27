@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-frame-rule.v1.schema.json",
+  "title": "Forge Bio BIG 0F Disease Frame Rule v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "rule_id",
+    "schema_version",
+    "status",
+    "sealed_by_attestation_id",
+    "vocabulary",
+    "included_trees",
+    "excluded_trees",
+    "min_pubmed_records_at_t",
+    "exclude_inborn_genetic_disease_branch",
+    "hierarchy_resolution",
+    "ordering",
+    "coverage_eligible_min_grade",
+    "manual_additions_allowed",
+    "pubmed_count_mode",
+    "multiple_tree_numbers",
+    "disease_family"
+  ],
+  "properties": {
+    "rule_id": {
+      "const": "BIG0F-FRAME-RULE-V1"
+    },
+    "schema_version": {
+      "const": "big0f-frame-rule-v1"
+    },
+    "status": {
+      "enum": [
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "vocabulary": {
+      "const": "MESH_DESCRIPTORS_RELEASE_IN_FORCE_AT_T"
+    },
+    "included_trees": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][0-9]{0,2}$"
+      }
+    },
+    "excluded_trees": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][0-9]{0,2}$"
+      }
+    },
+    "min_pubmed_records_at_t": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "exclude_inborn_genetic_disease_branch": {
+      "const": true
+    },
+    "hierarchy_resolution": {
+      "const": "KEEP_MOST_SPECIFIC_QUALIFYING_DESCRIPTOR"
+    },
+    "ordering": {
+      "const": "DESCRIPTOR_UI_ASCENDING_CANONICAL_JSON"
+    },
+    "coverage_eligible_min_grade": {
+      "enum": [
+        "MODERATE",
+        "HIGH"
+      ]
+    },
+    "manual_additions_allowed": {
+      "const": false
+    },
+    "pubmed_count_mode": {
+      "const": "DESCRIPTOR_ITSELF_NOT_EXPLODED"
+    },
+    "multiple_tree_numbers": {
+      "const": "QUALIFIES_IF_ANY_TREE_NUMBER_INCLUDED_AND_NONE_EXCLUDED"
+    },
+    "disease_family": {
+      "const": "TOP_LEVEL_CATEGORY_OF_FIRST_QUALIFYING_TREE_NUMBER"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SEALED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

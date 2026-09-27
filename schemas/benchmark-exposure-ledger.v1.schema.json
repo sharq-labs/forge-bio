@@ -42,12 +42,14 @@
           "exposure_time",
           "exposure_kind",
           "disclosure_level",
-          "audience_role"
+          "audience_role",
+          "disease_ids"
         ],
         "properties": {
           "exposure_time": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Informational; order is proven by the release log and seal_time, not by this field."
           },
           "exposure_kind": {
             "enum": [
@@ -56,6 +58,10 @@
               "PER_CASE_RESULT",
               "LABEL_REVEAL",
               "ADJUDICATION_DISCUSSION",
+              "RAW_EVENT_UNIVERSE",
+              "SELECTION_AGGREGATE",
+              "EVENT_RELEASE_TO_ADJUDICATORS",
+              "SHOWCASE_CASE",
               "OTHER"
             ]
           },
@@ -75,13 +81,25 @@
           },
           "audience_role": {
             "enum": [
+              "STUDY_TEAM",
+              "DESIGN_TEAM",
               "RANKING_TEAM",
+              "SELECTION_CUSTODIAN",
               "OUTCOME_ADJUDICATOR",
               "LOCKBOX_CUSTODIAN",
               "INDEPENDENT_REVIEWER",
               "PUBLIC",
               "OTHER"
             ]
+          },
+          "disease_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Diseases whose post-T information the disclosure concerns. Empty only for frame-level aggregates."
           }
         }
       }
@@ -132,44 +150,65 @@
           "exposure_events": {
             "not": {
               "contains": {
-                "anyOf": [
+                "allOf": [
                   {
                     "properties": {
-                      "disclosure_level": {
+                      "audience_role": {
                         "enum": [
-                          "PER_CASE",
-                          "FULL_LABEL"
+                          "STUDY_TEAM",
+                          "DESIGN_TEAM",
+                          "RANKING_TEAM",
+                          "PUBLIC",
+                          "OTHER"
                         ]
                       }
                     },
                     "required": [
-                      "disclosure_level"
+                      "audience_role"
                     ]
                   },
                   {
-                    "properties": {
-                      "exposure_kind": {
-                        "const": "LABEL_REVEAL"
+                    "anyOf": [
+                      {
+                        "properties": {
+                          "disclosure_level": {
+                            "enum": [
+                              "PER_CASE",
+                              "FULL_LABEL"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "disclosure_level"
+                        ]
+                      },
+                      {
+                        "properties": {
+                          "exposure_kind": {
+                            "const": "LABEL_REVEAL"
+                          }
+                        },
+                        "required": [
+                          "exposure_kind"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "downstream_change_ref"
+                        ],
+                        "properties": {
+                          "downstream_change_ref": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
                       }
-                    },
-                    "required": [
-                      "exposure_kind"
                     ]
-                  },
-                  {
-                    "required": [
-                      "downstream_change_ref"
-                    ],
-                    "properties": {
-                      "downstream_change_ref": {
-                        "type": "string",
-                        "minLength": 1
-                      }
-                    }
                   }
                 ]
               }
-            }
+            },
+            "description": "Role-separated audiences (selection custodian, lockbox custodian, blinded outcome adjudicators, independent reviewers) may hold per-case or label access; the study team, ranking team and public may not (INV-X1, INV-X3)."
           },
           "external_seal_attestation_id": {
             "type": "string",

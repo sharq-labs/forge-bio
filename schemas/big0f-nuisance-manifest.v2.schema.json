@@ -1,0 +1,687 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-nuisance-manifest.v2.schema.json",
+  "title": "Forge Bio Combined Nuisance Manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "schema_version",
+    "status",
+    "sealed_by_attestation_id",
+    "pilot_model_evaluation_mode",
+    "families",
+    "prespecified_interactions",
+    "disease_level_families_enter_only_via_interactions",
+    "as_of_t_rule",
+    "literature_feature_classification_rule",
+    "semantic_evidence_features_forbidden",
+    "big0f_learner",
+    "adequacy_check",
+    "confirmatory_comparator",
+    "missing_family_consequence"
+  ],
+  "properties": {
+    "manifest_id": {
+      "const": "BIG0F-NUISANCE-V2"
+    },
+    "schema_version": {
+      "const": "big0f-nuisance-manifest-v2"
+    },
+    "status": {
+      "enum": [
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pilot_model_evaluation_mode": {
+      "const": "NUISANCE_ONLY"
+    },
+    "families": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+        "GLOBAL_ATTENTION_VOLUME",
+        "GLOBAL_ATTENTION_MOMENTUM",
+        "GLOBAL_GENE_POPULARITY",
+        "ANNOTATION_DENSITY",
+        "GENE_LENGTH",
+        "VARIANT_OPPORTUNITY",
+        "REGIONAL_GENE_DENSITY",
+        "LD_ARCHITECTURE",
+        "CROSS_TRAIT_PLEIOTROPY",
+        "GENETIC_OBSERVABILITY",
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        "PROVIDER_COVERAGE"
+      ],
+      "properties": {
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "GLOBAL_ATTENTION_VOLUME": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "GLOBAL_ATTENTION_MOMENTUM": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "GLOBAL_GENE_POPULARITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "ANNOTATION_DENSITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "GENE_LENGTH": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "VARIANT_OPPORTUNITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "REGIONAL_GENE_DENSITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "LD_ARCHITECTURE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "CROSS_TRAIT_PLEIOTROPY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "GENETIC_OBSERVABILITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "PROVIDER_COVERAGE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "level",
+            "class",
+            "definition",
+            "transform"
+          ],
+          "properties": {
+            "level": {
+              "enum": [
+                "GENE",
+                "GENE_DISEASE",
+                "DISEASE"
+              ]
+            },
+            "class": {
+              "enum": [
+                "ATTENTION",
+                "MEASUREMENT_OPPORTUNITY",
+                "GENOMIC_DETECTABILITY",
+                "GENOMIC_ARCHITECTURE",
+                "PLEIOTROPY",
+                "PROVIDER_COVERAGE"
+              ]
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "transform": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "prespecified_interactions": {
+      "const": [
+        [
+          "VARIANT_OPPORTUNITY",
+          "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+        ],
+        [
+          "GENETIC_OBSERVABILITY",
+          "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+        ],
+        [
+          "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+          "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+        ]
+      ]
+    },
+    "disease_level_families_enter_only_via_interactions": {
+      "const": true
+    },
+    "as_of_t_rule": {
+      "const": "EVERY_SOURCE_RELEASE_AND_RECORD_DATED_LE_T_NO_POST_T_SYNONYM_OR_INDEXING"
+    },
+    "literature_feature_classification_rule": {
+      "const": "FEATURES_DERIVED_ONLY_FROM_PUBLICATION_METADATA_COUNTS_OR_TIMING_ARE_ATTENTION_AND_MUST_BE_IN_THE_NUISANCE_BLOCK_FEATURES_REQUIRING_EXTRACTED_BIOLOGICAL_ASSERTIONS_ARE_BIOLOGY"
+    },
+    "semantic_evidence_features_forbidden": {
+      "const": true
+    },
+    "big0f_learner": {
+      "const": {
+        "family": "L2_PENALIZED_LOGISTIC_WITH_NATURAL_SPLINES",
+        "spline_df_per_continuous_family": 3,
+        "penalty_grid": [
+          0.01,
+          0.1,
+          1,
+          10
+        ],
+        "tuning": "INNER_LEAVE_ONE_DISEASE_OUT",
+        "outer_protocol": "LEAVE_ONE_DISEASE_OUT_CROSS_FIT",
+        "ranks_used": "OUT_OF_FOLD_ONLY",
+        "labels": "PILOT_NOVEL_STRICT_PRIMARY_POSITIVES",
+        "universe": "NOVEL_STRICT_ELIGIBILITY_FILTERED",
+        "tie_rule": "MID_RANK",
+        "tuning_objective": "INNER_LODO_DISEASE_MACRO_EVENT_RANK_PERCENTILE_V1",
+        "tuning_tie_break": "LARGER_PENALTY",
+        "negatives": "ALL_NON_POSITIVE_GENES_IN_U_D_EXCLUDING_X_D",
+        "missing_features": "ZERO_FILL_WITH_PER_FAMILY_MISSING_INDICATOR_NO_POST_T_IMPUTATION",
+        "best_single_family_model": "SAME_LEARNER_AND_TUNING_WITH_ONE_FAMILY_PLUS_ITS_PRESPECIFIED_INTERACTIONS",
+        "headline_aggregation": "MEAN_IS_DISEASE_MACRO_M_D_MEDIAN_AND_TOP1_ARE_OVER_FAMILY_CREDITS",
+        "change_after_pilot_labels": "PROHIBITED"
+      }
+    },
+    "adequacy_check": {
+      "const": {
+        "rule": "COMBINED_NUISANCE_METRIC_GE_BEST_SINGLE_FAMILY_METRIC_MINUS_MARGIN",
+        "margin_threshold_id": "NUISANCE_ADEQUACY_MARGIN",
+        "on_failure": "REDESIGN_LEARNER_NEVER_CHANGED_AFTER_PILOT_LABELS"
+      }
+    },
+    "confirmatory_comparator": {
+      "const": {
+        "learner": "FROZEN_IN_MAP_SAME_FAMILY_BOTH_ARMS",
+        "training": "NESTED_TEMPORAL_ANCHORS",
+        "placebo_arm": "WITHIN_DISEASE_PERMUTED_BIOLOGY_BLOCK_K19",
+        "adequacy_check_on_development_data": true
+      }
+    },
+    "missing_family_consequence": {
+      "const": "REDESIGN"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SEALED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,485 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-power-analysis.v2.schema.json",
+  "title": "Forge Bio Power Analysis Artifact v2 (Stage A screen or Stage B gate)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "power_analysis_id",
+    "schema_version",
+    "stage",
+    "power_policy_digest",
+    "method",
+    "input_artifact_digests",
+    "sealed_key_commitment_digest",
+    "sd_seed_domain",
+    "simulation_seed_domain",
+    "simulation_datasets",
+    "signflips_per_dataset",
+    "bootstrap_replicates",
+    "events_per_disease",
+    "event_level_sd_estimate",
+    "event_level_sd_chisq_upper95",
+    "event_level_sd_bca_upper95",
+    "event_level_sd_planning",
+    "event_bearing_fraction",
+    "event_bearing_fraction_wilson_lower95",
+    "scenario_results",
+    "untouched_pool_frame_diseases",
+    "decision",
+    "engine_sha256",
+    "digest",
+    "event_bearing_pilot_disease_count",
+    "dlvs_reservation",
+    "untouched_pool_digest"
+  ],
+  "properties": {
+    "power_analysis_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-power-analysis-v2"
+    },
+    "stage": {
+      "enum": [
+        "STAGE_A_POOL_SUFFICIENCY",
+        "STAGE_B_CONFIRMATORY_GATE"
+      ]
+    },
+    "power_policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "method": {
+      "const": "HIERARCHICAL_HETEROSKEDASTIC_T5_SIMULATION_EXACT_SIGNFLIP_V1"
+    },
+    "input_artifact_digests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-fA-F]{64}$"
+      }
+    },
+    "sealed_key_commitment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "sd_seed_domain": {
+      "const": "power-sd"
+    },
+    "simulation_seed_domain": {
+      "const": "power-sim"
+    },
+    "simulation_datasets": {
+      "const": 10000
+    },
+    "signflips_per_dataset": {
+      "const": 2000
+    },
+    "bootstrap_replicates": {
+      "const": 10000
+    },
+    "events_per_disease": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "event_level_sd_estimate": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "event_level_sd_chisq_upper95": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "event_level_sd_bca_upper95": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "event_level_sd_planning": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "event_bearing_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "event_bearing_fraction_wilson_lower95": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "scenario_results": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "OPTIMISTIC",
+        "PLANNING",
+        "HETEROGENEOUS",
+        "PESSIMISTIC"
+      ],
+      "properties": {
+        "OPTIMISTIC": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rho",
+            "tau",
+            "sigma_e",
+            "n_req_event_bearing",
+            "f_req_frame_diseases",
+            "power_at_n_req",
+            "mcse_at_n_req",
+            "normal_approx_n_req"
+          ],
+          "properties": {
+            "rho": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "tau": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sigma_e": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "n_req_event_bearing": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "f_req_frame_diseases": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "power_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "mcse_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.05
+            },
+            "normal_approx_n_req": {
+              "type": "integer",
+              "minimum": 2
+            }
+          }
+        },
+        "PLANNING": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rho",
+            "tau",
+            "sigma_e",
+            "n_req_event_bearing",
+            "f_req_frame_diseases",
+            "power_at_n_req",
+            "mcse_at_n_req",
+            "normal_approx_n_req"
+          ],
+          "properties": {
+            "rho": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "tau": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sigma_e": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "n_req_event_bearing": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "f_req_frame_diseases": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "power_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "mcse_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.05
+            },
+            "normal_approx_n_req": {
+              "type": "integer",
+              "minimum": 2
+            }
+          }
+        },
+        "HETEROGENEOUS": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rho",
+            "tau",
+            "sigma_e",
+            "n_req_event_bearing",
+            "f_req_frame_diseases",
+            "power_at_n_req",
+            "mcse_at_n_req",
+            "normal_approx_n_req"
+          ],
+          "properties": {
+            "rho": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "tau": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sigma_e": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "n_req_event_bearing": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "f_req_frame_diseases": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "power_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "mcse_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.05
+            },
+            "normal_approx_n_req": {
+              "type": "integer",
+              "minimum": 2
+            }
+          }
+        },
+        "PESSIMISTIC": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rho",
+            "tau",
+            "sigma_e",
+            "n_req_event_bearing",
+            "f_req_frame_diseases",
+            "power_at_n_req",
+            "mcse_at_n_req",
+            "normal_approx_n_req"
+          ],
+          "properties": {
+            "rho": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "tau": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sigma_e": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "n_req_event_bearing": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "f_req_frame_diseases": {
+              "type": "integer",
+              "minimum": 2
+            },
+            "power_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "mcse_at_n_req": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.05
+            },
+            "normal_approx_n_req": {
+              "type": "integer",
+              "minimum": 2
+            }
+          }
+        }
+      }
+    },
+    "untouched_pool_frame_diseases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "decision": {
+      "enum": [
+        "POWER_GATE_PASS",
+        "REDESIGN",
+        "NO_GO",
+        "INCONCLUSIVE",
+        "CONFIRMATORY_SEAL_ALLOWED",
+        "REDESIGN_NEW_VERSION"
+      ]
+    },
+    "stage_b_inputs": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "engine_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "event_bearing_pilot_disease_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dlvs_reservation": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "N_DLVS = max(0, ceil((20 - event_bearing_pilot_disease_count) / event_bearing_fraction_wilson_lower95)). Stage A compares U - N_DLVS with F_req."
+    },
+    "untouched_pool_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$",
+      "description": "Digest of the frozen U (disease identifiers) registered with the BIG 0F result; the only permitted later removal is the custodian's DLVS draw (INV-P7)."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "STAGE_A_POOL_SUFFICIENCY"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "POWER_GATE_PASS",
+              "REDESIGN",
+              "NO_GO",
+              "INCONCLUSIVE"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "STAGE_B_CONFIRMATORY_GATE"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "required": [
+          "stage_b_inputs"
+        ],
+        "properties": {
+          "decision": {
+            "enum": [
+              "CONFIRMATORY_SEAL_ALLOWED",
+              "REDESIGN_NEW_VERSION",
+              "INCONCLUSIVE"
+            ]
+          },
+          "stage_b_inputs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dlvs_artifact_digest",
+              "dlvs_event_bearing_disease_count",
+              "sigma_e_measured",
+              "tau_upper95",
+              "rho_lower95",
+              "variance_source_registry_digest",
+              "dlvs_disease_draw_digest",
+              "untouched_pool_after_dlvs"
+            ],
+            "properties": {
+              "dlvs_artifact_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-fA-F]{64}$"
+              },
+              "dlvs_event_bearing_disease_count": {
+                "type": "integer",
+                "minimum": 20
+              },
+              "sigma_e_measured": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "tau_upper95": {
+                "type": "number",
+                "minimum": 0.02
+              },
+              "rho_lower95": {
+                "type": "number",
+                "minimum": -1,
+                "maximum": 1,
+                "description": "Reported only; Stage B uses the directly measured paired-difference sigma_e."
+              },
+              "variance_source_registry_digest": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^sha256:[0-9a-fA-F]{64}$"
+              },
+              "dlvs_disease_draw_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-fA-F]{64}$",
+                "description": "Custodian draw of additional DLVS diseases from U in ascending HMAC(key, 'dlvs' || disease UI) order."
+              },
+              "untouched_pool_after_dlvs": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "U minus every DLVS disease; the Stage B gate compares this with F_req."
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -2,25 +2,36 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/randomness-beacon.v1.schema.json",
   "title": "Forge Bio External Randomness Beacon v1",
+  "description": "A drand quicknet round that was pre-declared in the public selection registration (S4). Order is proven only by seal_time (INV-S3, INV-C7); fields named *_time here are derived values that the verifier recomputes.",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "beacon_id",
     "schema_version",
     "source",
-    "round_id",
-    "published_at",
-    "randomness_hex",
-    "verification_status",
-    "verification_evidence_ref",
-    "frame_digest",
-    "frame_sealed_at",
-    "frame_seal_attestation_id",
-    "digest",
+    "chain_hash",
+    "scheme",
+    "period_seconds",
+    "genesis_time",
+    "round",
+    "round_time",
     "selection_rule",
-    "previous_round_id",
-    "previous_round_published_at",
-    "frame_seal_attestation_digest"
+    "selection_registration_digest",
+    "selection_registration_public_registry_attestation_id",
+    "selection_registration_timestamp_attestation_id",
+    "selection_registration_seal_time",
+    "frame_cov_digest",
+    "randomness_hex",
+    "signature_hex",
+    "verification_status",
+    "custodian_verification_evidence_ref",
+    "evaluator_verification_evidence_ref",
+    "sampling_key_derivation",
+    "sampling_key_commitment_digest",
+    "subsample_domains",
+    "digest",
+    "selection_registration_proof_public_time",
+    "s4_archive_ref"
   ],
   "properties": {
     "beacon_id": {
@@ -31,60 +42,104 @@
       "const": "randomness-beacon-v1"
     },
     "source": {
-      "enum": [
-        "DRAND",
-        "NIST_RANDOMNESS_BEACON"
-      ]
+      "const": "DRAND"
     },
-    "round_id": {
+    "chain_hash": {
+      "const": "52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971",
+      "description": "drand quicknet. No other chain is accepted (INV-C6)."
+    },
+    "scheme": {
+      "const": "bls-unchained-g1-rfc9380"
+    },
+    "period_seconds": {
+      "const": 3
+    },
+    "genesis_time": {
+      "const": 1692803367
+    },
+    "round": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Must equal the round pre-declared in the selection registration (INV-C6)."
+    },
+    "round_time": {
+      "type": "integer",
+      "description": "= genesis_time + period_seconds * (round - 1), Unix seconds."
+    },
+    "selection_rule": {
+      "const": "PREDECLARED_ROUND_IN_SELECTION_REGISTRATION"
+    },
+    "selection_registration_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_registration_public_registry_attestation_id": {
       "type": "string",
       "minLength": 1
     },
-    "published_at": {
+    "selection_registration_timestamp_attestation_id": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1
+    },
+    "selection_registration_seal_time": {
+      "type": "integer",
+      "description": "seal_time(S4) in Unix seconds = max(OTS Bitcoin block time, public registration time). The verifier requires seal_time <= round_time - 86400 (INV-C7)."
+    },
+    "frame_cov_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
     "randomness_hex": {
       "type": "string",
-      "pattern": "^[0-9a-fA-F]{64}$"
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature_hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{96}$"
     },
     "verification_status": {
       "const": "VERIFIED"
     },
-    "verification_evidence_ref": {
+    "custodian_verification_evidence_ref": {
       "type": "string",
       "minLength": 1
     },
-    "frame_digest": {
+    "evaluator_verification_evidence_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sampling_key_derivation": {
+      "const": "SHA256(UTF8('forge-bio/big0f/sampling/v1') || frame_cov_digest[32] || uint64be(round) || randomness[32])"
+    },
+    "sampling_key_commitment_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "frame_sealed_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "frame_seal_attestation_id": {
-      "type": "string",
-      "minLength": 1
+    "subsample_domains": {
+      "const": [
+        "dup-review",
+        "retest",
+        "non-event",
+        "cap",
+        "agreement-ci",
+        "power-sd",
+        "power-sim",
+        "dlvs",
+        "recall-audit"
+      ]
     },
     "digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "selection_rule": {
-      "const": "FIRST_VERIFIED_ROUND_AFTER_FRAME_SEAL"
+    "selection_registration_proof_public_time": {
+      "type": "integer",
+      "description": "Unix time at which the upgraded OTS proof became part of the public S4 record, as recorded by the registry itself (never self-reported). Must be <= round_time - 86400 (INV-C7)."
     },
-    "previous_round_id": {
+    "s4_archive_ref": {
       "type": "string",
-      "minLength": 1
-    },
-    "previous_round_published_at": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "frame_seal_attestation_digest": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+      "minLength": 1,
+      "description": "Independent public web-archive capture of the S4 record and its OTS proof, taken before round_time - 86400; authoritative if the registry record later becomes unavailable."
     }
   }
 }

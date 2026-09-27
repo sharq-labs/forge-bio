@@ -36,8 +36,11 @@
     },
     "artifact_type": {
       "enum": [
-        "BIG0F_DISEASE_FRAME",
+        "BIG0F_PROTOCOL_REGISTRATION",
+        "BIG0F_SELECTION_REGISTRATION",
         "BIG0F_SEAL_BUNDLE",
+        "RESEARCH_PROGRAM_LEDGER_STATE",
+        "CONFIRMATORY_SEAL_BUNDLE",
         "MAP",
         "RANKING_ARTIFACT",
         "OTHER"
@@ -45,7 +48,8 @@
     },
     "sealed_at": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "description": "The time asserted by the external authority itself: the Bitcoin block time of the earliest attesting block for THIRD_PARTY_TIMESTAMP, or the public registration time for PUBLIC_REGISTRY. Never a study-team clock. seal_time of an artifact = max over its paired attestations (INV-S3)."
     },
     "external_registry_or_custodian_ref": {
       "type": "string",
@@ -98,6 +102,27 @@
     "independence_evidence_ref": {
       "type": "string",
       "minLength": 1
+    },
+    "paired_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The complementary attestation (PUBLIC_REGISTRY <-> THIRD_PARTY_TIMESTAMP) over the same artifact_digest."
+    },
+    "bitcoin_block_height": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "registry_record_public": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "true only if the registry record is publicly retrievable without embargo at verification time (INV-S4)."
     }
   },
   "allOf": [
@@ -182,8 +207,11 @@
         "properties": {
           "artifact_type": {
             "enum": [
-              "BIG0F_DISEASE_FRAME",
-              "BIG0F_SEAL_BUNDLE"
+              "BIG0F_PROTOCOL_REGISTRATION",
+              "BIG0F_SELECTION_REGISTRATION",
+              "BIG0F_SEAL_BUNDLE",
+              "RESEARCH_PROGRAM_LEDGER_STATE",
+              "CONFIRMATORY_SEAL_BUNDLE"
             ]
           }
         },
@@ -201,6 +229,87 @@
           },
           "verification_status": {
             "const": "VERIFIED"
+          },
+          "paired_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "paired_attestation_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority_type": {
+            "const": "THIRD_PARTY_TIMESTAMP_SERVICE"
+          }
+        },
+        "required": [
+          "authority_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "bitcoin_block_height"
+        ],
+        "properties": {
+          "bitcoin_block_height": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority_type": {
+            "const": "PUBLIC_REGISTRY"
+          }
+        },
+        "required": [
+          "authority_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "registry_record_public"
+        ],
+        "properties": {
+          "registry_record_public": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "artifact_type": {
+            "enum": [
+              "BIG0F_PROTOCOL_REGISTRATION",
+              "BIG0F_SELECTION_REGISTRATION",
+              "BIG0F_SEAL_BUNDLE",
+              "RESEARCH_PROGRAM_LEDGER_STATE",
+              "CONFIRMATORY_SEAL_BUNDLE"
+            ]
+          },
+          "authority_type": {
+            "const": "PUBLIC_REGISTRY"
+          }
+        },
+        "required": [
+          "artifact_type",
+          "authority_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "registry_record_public": {
+            "const": true
           }
         }
       }

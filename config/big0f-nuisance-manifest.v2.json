@@ -1,0 +1,146 @@
+{
+  "manifest_id": "BIG0F-NUISANCE-V2",
+  "schema_version": "big0f-nuisance-manifest-v2",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "pilot_model_evaluation_mode": "NUISANCE_ONLY",
+  "families": {
+    "DISEASE_SPECIFIC_ATTENTION_VOLUME": {
+      "level": "GENE_DISEASE",
+      "class": "ATTENTION",
+      "definition": "MEDLINE records dated <= T indexed with the disease descriptor or its descendants that name the gene by an as-of-T symbol or synonym in title or abstract",
+      "transform": "LOG1P_COUNT"
+    },
+    "DISEASE_SPECIFIC_ATTENTION_MOMENTUM": {
+      "level": "GENE_DISEASE",
+      "class": "ATTENTION",
+      "definition": "Same records split into (T-3y, T] and (T-6y, T-3y]",
+      "transform": "LOG_RATIO_OF_1_PLUS_COUNTS"
+    },
+    "GLOBAL_ATTENTION_VOLUME": {
+      "level": "GENE",
+      "class": "ATTENTION",
+      "definition": "All MEDLINE records dated <= T naming the gene",
+      "transform": "LOG1P_COUNT"
+    },
+    "GLOBAL_ATTENTION_MOMENTUM": {
+      "level": "GENE",
+      "class": "ATTENTION",
+      "definition": "All MEDLINE records naming the gene split into (T-3y, T] and (T-6y, T-3y]",
+      "transform": "LOG_RATIO_OF_1_PLUS_COUNTS"
+    },
+    "GLOBAL_GENE_POPULARITY": {
+      "level": "GENE",
+      "class": "ATTENTION",
+      "definition": "Distinct MeSH disease descriptors co-indexed with records naming the gene, dated <= T",
+      "transform": "LOG1P_COUNT"
+    },
+    "ANNOTATION_DENSITY": {
+      "level": "GENE",
+      "class": "MEASUREMENT_OPPORTUNITY",
+      "definition": "GO annotations for the gene in the last release dated <= T",
+      "transform": "LOG1P_COUNT"
+    },
+    "GENE_LENGTH": {
+      "level": "GENE",
+      "class": "GENOMIC_ARCHITECTURE",
+      "definition": "Genomic span in the as-of-T gene model release",
+      "transform": "LOG_BP"
+    },
+    "VARIANT_OPPORTUNITY": {
+      "level": "GENE",
+      "class": "GENOMIC_DETECTABILITY",
+      "definition": "Variants on genotyping arrays or imputation reference panels released <= T within gene +/- 50 kb",
+      "transform": "LOG1P_COUNT"
+    },
+    "REGIONAL_GENE_DENSITY": {
+      "level": "GENE",
+      "class": "GENOMIC_ARCHITECTURE",
+      "definition": "Genes in the as-of-T gene model within gene +/- 500 kb",
+      "transform": "COUNT"
+    },
+    "LD_ARCHITECTURE": {
+      "level": "GENE",
+      "class": "GENOMIC_ARCHITECTURE",
+      "definition": "Tag SNPs needed at r2 >= 0.8 to cover common variants within gene +/- 50 kb in the reference panel released <= T",
+      "transform": "LOG1P_COUNT"
+    },
+    "CROSS_TRAIT_PLEIOTROPY": {
+      "level": "GENE",
+      "class": "PLEIOTROPY",
+      "definition": "Distinct other traits with a pre-T association p <= 5e-8 whose lead variant lies within gene +/- 500 kb",
+      "transform": "LOG1P_COUNT"
+    },
+    "GENETIC_OBSERVABILITY": {
+      "level": "GENE",
+      "class": "MEASUREMENT_OPPORTUNITY",
+      "definition": "Fraction of common variants within gene +/- 50 kb tagged at r2 >= 0.8 by arrays released <= T",
+      "transform": "PROPORTION"
+    },
+    "DISEASE_SAMPLE_SIZE_TRAJECTORY": {
+      "level": "DISEASE",
+      "class": "MEASUREMENT_OPPORTUNITY",
+      "definition": "Largest pre-T genome-wide case count for the disease and its 3-year log growth",
+      "transform": "LOG_CASES_AND_LOG_GROWTH"
+    },
+    "PROVIDER_COVERAGE": {
+      "level": "GENE",
+      "class": "PROVIDER_COVERAGE",
+      "definition": "Past provider snapshots in which the gene has at least one record dated <= T",
+      "transform": "COUNT"
+    }
+  },
+  "prespecified_interactions": [
+    [
+      "VARIANT_OPPORTUNITY",
+      "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+    ],
+    [
+      "GENETIC_OBSERVABILITY",
+      "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+    ],
+    [
+      "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+      "DISEASE_SAMPLE_SIZE_TRAJECTORY"
+    ]
+  ],
+  "disease_level_families_enter_only_via_interactions": true,
+  "as_of_t_rule": "EVERY_SOURCE_RELEASE_AND_RECORD_DATED_LE_T_NO_POST_T_SYNONYM_OR_INDEXING",
+  "literature_feature_classification_rule": "FEATURES_DERIVED_ONLY_FROM_PUBLICATION_METADATA_COUNTS_OR_TIMING_ARE_ATTENTION_AND_MUST_BE_IN_THE_NUISANCE_BLOCK_FEATURES_REQUIRING_EXTRACTED_BIOLOGICAL_ASSERTIONS_ARE_BIOLOGY",
+  "semantic_evidence_features_forbidden": true,
+  "big0f_learner": {
+    "family": "L2_PENALIZED_LOGISTIC_WITH_NATURAL_SPLINES",
+    "spline_df_per_continuous_family": 3,
+    "penalty_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "tuning": "INNER_LEAVE_ONE_DISEASE_OUT",
+    "outer_protocol": "LEAVE_ONE_DISEASE_OUT_CROSS_FIT",
+    "ranks_used": "OUT_OF_FOLD_ONLY",
+    "labels": "PILOT_NOVEL_STRICT_PRIMARY_POSITIVES",
+    "universe": "NOVEL_STRICT_ELIGIBILITY_FILTERED",
+    "tie_rule": "MID_RANK",
+    "tuning_objective": "INNER_LODO_DISEASE_MACRO_EVENT_RANK_PERCENTILE_V1",
+    "tuning_tie_break": "LARGER_PENALTY",
+    "negatives": "ALL_NON_POSITIVE_GENES_IN_U_D_EXCLUDING_X_D",
+    "missing_features": "ZERO_FILL_WITH_PER_FAMILY_MISSING_INDICATOR_NO_POST_T_IMPUTATION",
+    "best_single_family_model": "SAME_LEARNER_AND_TUNING_WITH_ONE_FAMILY_PLUS_ITS_PRESPECIFIED_INTERACTIONS",
+    "headline_aggregation": "MEAN_IS_DISEASE_MACRO_M_D_MEDIAN_AND_TOP1_ARE_OVER_FAMILY_CREDITS",
+    "change_after_pilot_labels": "PROHIBITED"
+  },
+  "adequacy_check": {
+    "rule": "COMBINED_NUISANCE_METRIC_GE_BEST_SINGLE_FAMILY_METRIC_MINUS_MARGIN",
+    "margin_threshold_id": "NUISANCE_ADEQUACY_MARGIN",
+    "on_failure": "REDESIGN_LEARNER_NEVER_CHANGED_AFTER_PILOT_LABELS"
+  },
+  "confirmatory_comparator": {
+    "learner": "FROZEN_IN_MAP_SAME_FAMILY_BOTH_ARMS",
+    "training": "NESTED_TEMPORAL_ANCHORS",
+    "placebo_arm": "WITHIN_DISEASE_PERMUTED_BIOLOGY_BLOCK_K19",
+    "adequacy_check_on_development_data": true
+  },
+  "missing_family_consequence": "REDESIGN"
+}

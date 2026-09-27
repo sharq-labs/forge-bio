@@ -2,14 +2,85 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/big0f-selection-provenance.v1.schema.json",
   "title": "Forge Bio BIG 0F Selection Provenance v1",
+  "description": "Custodian-produced record of the 16-pair cutoff/horizon audit, the selected pair, and the beacon-ordered disease prefix. Contains aggregates and digests only; per-event raw universes stay in custody.",
   "type": "object",
   "additionalProperties": false,
+  "$defs": {
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pass",
+        "evidence_digest"
+      ],
+      "properties": {
+        "pass": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "evidence_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        }
+      }
+    },
+    "aggregates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_size",
+        "frame_cov_count",
+        "frame_cov_fraction",
+        "mean_raw_candidates_per_covered_disease"
+      ],
+      "properties": {
+        "frame_size": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frame_cov_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frame_cov_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "mean_raw_candidates_per_covered_disease": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    }
+  },
   "required": [
     "selection_id",
     "schema_version",
+    "produced_by_role",
+    "custodian_independence_attestation_digest",
+    "frame_rule_digest",
+    "required_field_registry_digest",
+    "outcome_discovery_spec_digest",
+    "threshold_manifest_digest",
     "candidate_pairs",
+    "selected_pair_index",
+    "frame_cov_digest",
+    "selection_registration_digest",
+    "randomness_beacon_digest",
+    "ordered_prefix",
+    "expansion_steps",
+    "cap",
     "selected_disease_ids",
-    "selected_event_ids",
+    "selected_event_family_ids",
     "digest"
   ],
   "properties": {
@@ -20,85 +91,943 @@
     "schema_version": {
       "const": "big0f-selection-provenance-v1"
     },
+    "produced_by_role": {
+      "const": "SELECTION_CUSTODIAN"
+    },
+    "custodian_independence_attestation_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_rule_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "required_field_registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "outcome_discovery_spec_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "threshold_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
     "candidate_pairs": {
       "type": "array",
       "minItems": 16,
       "maxItems": 16,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2005-12-31"
+            },
+            "horizon": {
+              "const": "3y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2005-12-31"
+            },
+            "horizon": {
+              "const": "5y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2005-12-31"
+            },
+            "horizon": {
+              "const": "7y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2005-12-31"
+            },
+            "horizon": {
+              "const": "10y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2008-12-31"
+            },
+            "horizon": {
+              "const": "3y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2008-12-31"
+            },
+            "horizon": {
+              "const": "5y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2008-12-31"
+            },
+            "horizon": {
+              "const": "7y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2008-12-31"
+            },
+            "horizon": {
+              "const": "10y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2011-12-31"
+            },
+            "horizon": {
+              "const": "3y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2011-12-31"
+            },
+            "horizon": {
+              "const": "5y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2011-12-31"
+            },
+            "horizon": {
+              "const": "7y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2011-12-31"
+            },
+            "horizon": {
+              "const": "10y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2014-12-31"
+            },
+            "horizon": {
+              "const": "3y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2014-12-31"
+            },
+            "horizon": {
+              "const": "5y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2014-12-31"
+            },
+            "horizon": {
+              "const": "7y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cutoff",
+            "horizon",
+            "P_prov",
+            "P_obs",
+            "P_cov",
+            "P_anchor",
+            "P_evt",
+            "pair_passes",
+            "aggregates",
+            "raw_universe_digest"
+          ],
+          "properties": {
+            "cutoff": {
+              "const": "2014-12-31"
+            },
+            "horizon": {
+              "const": "10y"
+            },
+            "P_prov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_obs": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_cov": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_anchor": {
+              "$ref": "#/$defs/predicate"
+            },
+            "P_evt": {
+              "$ref": "#/$defs/predicate"
+            },
+            "pair_passes": {
+              "type": "boolean",
+              "description": "Conjunction of the five predicates (recomputed by the verifier)."
+            },
+            "aggregates": {
+              "$ref": "#/$defs/aggregates"
+            },
+            "raw_universe_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$",
+              "description": "Digest of the custody-held per-event raw universe. The universe itself is never released to the study team (INV-C3)."
+            }
+          }
+        }
+      ],
+      "items": false,
+      "description": "Exactly the 16 pairs in the frozen order: cutoff ascending, then horizon 3y, 5y, 7y, 10y (INV-C1)."
+    },
+    "selected_pair_index": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 15,
+      "description": "Index of the first pair with pair_passes = true; null if none passes (then the decision is REDESIGN). Recomputed by the verifier (INV-C2)."
+    },
+    "frame_cov_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_registration_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "randomness_beacon_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "ordered_prefix": {
+      "type": "array",
+      "maxItems": 15,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "cutoff",
-          "horizon",
-          "provider_availability_pass",
-          "provider_availability_evidence_digest",
-          "observation_window_pass",
-          "observation_window_evidence_digest",
-          "raw_event_records"
+          "position",
+          "disease_id",
+          "hmac_order_key",
+          "cumulative_raw_family_count"
         ],
         "properties": {
-          "cutoff": {
-            "enum": [
-              "2005-12-31",
-              "2008-12-31",
-              "2011-12-31",
-              "2014-12-31"
-            ]
+          "position": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 15
           },
-          "horizon": {
-            "enum": [
-              "3y",
-              "5y",
-              "7y",
-              "10y"
-            ]
-          },
-          "provider_availability_pass": {
-            "type": "boolean"
-          },
-          "provider_availability_evidence_digest": {
+          "disease_id": {
             "type": "string",
-            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            "minLength": 1
           },
-          "observation_window_pass": {
-            "type": "boolean"
-          },
-          "observation_window_evidence_digest": {
+          "hmac_order_key": {
             "type": "string",
-            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            "pattern": "^[0-9a-f]{64}$"
           },
-          "raw_event_records": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "event_id",
-                "disease_id",
-                "event_provenance_digest"
-              ],
-              "properties": {
-                "event_id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "disease_id": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "event_provenance_digest": {
-                  "type": "string",
-                  "pattern": "^sha256:[0-9a-fA-F]{64}$"
-                }
-              }
-            }
+          "cumulative_raw_family_count": {
+            "type": "integer",
+            "minimum": 0
           }
+        }
+      },
+      "description": "Only the positions actually used. Positions beyond the last used one are never revealed."
+    },
+    "expansion_steps": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "cap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied",
+        "pre_cap_family_count",
+        "retained_family_count",
+        "cap_rule"
+      ],
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "pre_cap_family_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retained_family_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 150
+        },
+        "cap_rule": {
+          "const": "ONE_FAMILY_PER_EVENT_BEARING_DISEASE_THEN_ASCENDING_CAP_KEY"
         }
       }
     },
     "selected_disease_ids": {
       "type": "array",
-      "minItems": 12,
       "maxItems": 15,
       "uniqueItems": true,
       "items": {
@@ -106,7 +1035,7 @@
         "minLength": 1
       }
     },
-    "selected_event_ids": {
+    "selected_event_family_ids": {
       "type": "array",
       "maxItems": 150,
       "uniqueItems": true,
@@ -119,5 +1048,42 @@
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "selected_pair_index": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "selected_pair_index"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ordered_prefix": {
+            "maxItems": 0
+          },
+          "selected_disease_ids": {
+            "maxItems": 0
+          },
+          "selected_event_family_ids": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "ordered_prefix": {
+            "minItems": 12
+          },
+          "selected_disease_ids": {
+            "minItems": 12
+          }
+        }
+      }
+    }
+  ]
 }

@@ -16,7 +16,8 @@
     "external_anchor_attestation_id",
     "external_anchor_attestation_digest",
     "cumulative_confirmatory_alpha_spent",
-    "generation_state_transitions"
+    "generation_state_transitions",
+    "external_anchor_authority_type"
   ],
   "properties": {
     "ledger_id": {
@@ -83,7 +84,47 @@
               "FAILED_EXECUTION"
             ]
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "attempt_tier": {
+                  "enum": [
+                    "CONFIRMATORY",
+                    "PROSPECTIVE"
+                  ]
+                }
+              },
+              "required": [
+                "attempt_tier"
+              ]
+            },
+            "then": {
+              "properties": {
+                "allocation_generation_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "allocated_alpha": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 0.05
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "allocation_generation_id": {
+                  "type": "null"
+                },
+                "allocated_alpha": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "digest": {
@@ -153,14 +194,61 @@
           },
           "transitioned_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Informational. Order of ledger states is proven by ledger_sequence and the anchor attestation's seal_time, not by this field."
           },
           "evidence_digest": {
             "type": "string",
             "pattern": "^sha256:[0-9a-fA-F]{64}$"
           }
-        }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "from_state": {
+                "const": "PLANNED"
+              },
+              "to_state": {
+                "const": "ACTIVE"
+              }
+            }
+          },
+          {
+            "properties": {
+              "from_state": {
+                "const": "ACTIVE"
+              },
+              "to_state": {
+                "const": "SPENT"
+              }
+            }
+          },
+          {
+            "properties": {
+              "from_state": {
+                "const": "PLANNED"
+              },
+              "to_state": {
+                "const": "RETIRED"
+              }
+            }
+          },
+          {
+            "properties": {
+              "from_state": {
+                "const": "ACTIVE"
+              },
+              "to_state": {
+                "const": "RETIRED"
+              }
+            }
+          }
+        ]
       }
+    },
+    "external_anchor_authority_type": {
+      "const": "PUBLIC_REGISTRY",
+      "description": "Every ledger state is anchored in a public registry; the published head is the only valid head (INV-L2)."
     }
   },
   "allOf": [

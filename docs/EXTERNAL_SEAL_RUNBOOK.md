@@ -1,20 +1,26 @@
 # External Seal Runbook — BIG 0F
 
-**Status:** OPERATIONAL CANDIDATE — identified, not yet end-to-end tested  
-**Purpose:** create independent evidence that the BIG 0F protocol/frame/seed commitment existed before adjudication
+**Status:** SPEC-CLOSED / IMPLEMENTATION-PENDING. The procedure is identified; it has not yet been tested end to end (§7). Amended by [ADR-022](adr/ADR-022-final-scientific-consistency-closure.md) D13.  
+**Purpose:** create independent evidence that the BIG 0F protocol, selection and randomness commitments existed before adjudication
+
+**seal_time.** The single authoritative timestamp of any artifact is:
+
+seal_time = max(earliest Bitcoin block time in its verified OTS proof, public registry registration time)
+
+Every "before" relation below uses seal_time (INV-S3).
 
 ## 1. Seal strategy
 
 Use a **dual seal**:
 
 1. **Content commitment timestamp** — OpenTimestamps proof over the canonical manifest digest.
-2. **Research registration** — OSF Registration containing or referencing the protocol/manifest, public or embargoed according to confidentiality needs.
+2. **Research registration** — an OSF Registration containing or referencing the protocol or manifest. For the BIG 0F commitments (S1, S4, S6), the registration must be **public and not embargoed** (INV-S4).
 
 Neither Git commit time nor a project-controlled repository alone satisfies the strongest external-seal requirement.
 
 ## 2. Canonical seal bundle
 
-Create a canonical JSON manifest:
+Create a canonical JSON manifest. The normative field list is `schemas/seal-bundle-manifest.v1.schema.json` (bundle version `big0f-seal-bundle-v3`). It binds the Freeze Statement, the semantic invariants, every v2 config, the frame rule, outcome discovery, the required-field registry, the power policy, the custody artifacts and the verification harness. The list below is the historical v2 subset, kept for reference only:
 
 ```text
 seal_bundle_version
@@ -57,7 +63,16 @@ The study team does **not** choose a random seed.
 
 The evaluator independently fetches the sealed DRAND round and requires the returned round/randomness to equal the beacon artifact. Unsupported beacon providers fail closed in V0 until a code-backed verifier exists for them.
 
-The disease frame is externally sealed first. The exact verified frame-seal attestation artifact is hashed into the root bundle. A verified public randomness-beacon round published after that frame seal is then bound to both the frame digest and the exact frame-seal attestation digest. The sampling key is derived deterministically from frame digest + beacon randomness. This makes pre-commitment seed grinding detectable/prohibited.
+Randomness follows [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §7:
+
+- **Chain.** Only drand quicknet is accepted (chain hash `52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971`).
+- **Round.** R is **pre-declared** in the public S4 selection registration, about 7 days after submission. The upgraded OTS proof is attached to the public S4 record before time(R) − 24 h, and S4 can no longer be voided after that point.
+- **Timing.** seal_time(S4) ≤ time(R) − 24 h is required.
+- **Key.** Sampling key = SHA-256("forge-bio/big0f/sampling/v1" ‖ frame_cov(T\*) digest ‖ R ‖ randomness).
+
+The team never picks "the first round after" an event, so neither the round nor the chain can be ground.
+
+*Superseded (ADR-022 D13):* "first verified round published after the frame seal".
 
 ## 3. Canonicalization
 
@@ -99,7 +114,7 @@ For a claim-valid BIG 0F evaluation, the future external-authority verifier must
 
 Submit the protocol/manifest as an OSF Registration before first case adjudication.
 
-Use an embargo when revealing the protocol/frame would compromise the study or create avoidable research-attention exposure.
+For BIG 0F registrations (S1, S4, S6), embargo is **not allowed**. They contain digests and aggregates only, so publishing them creates no per-disease outcome exposure. An embargoed record gives no seal_time (INV-S4).
 
 Record:
 
@@ -111,7 +126,7 @@ sealed_at = registration submission/approval timestamp under the registry record
 verification_evidence_ref = <registration record reference>
 ```
 
-If embargoed, preserve evidence needed later to show the original registration date and content identity.
+For non-BIG 0F registrations that are embargoed for another reason, preserve the evidence needed later to show the original registration date and content identity. Such a record still gives no seal_time until it is public.
 
 For BIG 0F claim-valid evaluation, the verification evidence reference must resolve through an approved HTTPS OSF host and the independently fetched registry evidence must contain the exact committed artifact digest. If the record is embargoed or otherwise inaccessible to the verifier at evaluation time, the external-verification gate remains closed rather than trusting a local assertion.
 
@@ -132,10 +147,10 @@ Custodian responsibilities:
 Perform a dry run with synthetic/non-study content:
 
 1. generate a mock protocol file;
-2. generate a mock frame;
-3. externally seal the mock frame digest;
-4. obtain/use a mock verified beacon artifact whose publication time is after the mock frame seal;
-5. derive the sampling key through the frozen sampling contract;
+2. generate a mock frame_cov and a mock S4 selection registration that pre-declares a real drand quicknet round R (about 7 days ahead, or a shorter test offset marked TEST);
+3. publicly register and OTS-timestamp the mock S4; compute seal_time(S4) and check seal_time(S4) ≤ time(R) − 24 h;
+4. at time(R), fetch round R from quicknet and verify its BLS signature against the pinned group key;
+5. derive the sampling key through the frozen sampling contract, and check that a wrong round, chain or late seal_time fails;
 6. create the canonical manifest;
 7. hash every claim-bearing component, including the future evaluator/sampling implementations when they exist, plus pilot-result and policy schemas;
 8. create timestamp proof;
@@ -152,7 +167,10 @@ Perform a dry run with synthetic/non-study content:
 19. record both verified ExternalSealAttestation artifacts;
 20. run the independent OpenTimestamps verification procedure against the exact committed bytes and proof;
 21. fetch the OSF verification record independently and match the exact artifact digest;
-22. fetch the selected DRAND round independently and match its randomness to the sealed beacon artifact.
+22. fetch the pre-declared quicknet round R independently, verify its BLS signature, and match its randomness to the sealed beacon artifact;
+23. verify that the release log's first release to adjudicators follows seal_time(S6);
+24. verify, from the registry's own timestamps, that the upgraded OTS proof was part of the public S4 record before time(R) − 24 h, and that a public web-archive capture of S4 exists from before that time;
+25. verify that each review salt (S8, S9) is published only after the label sets it selects for are registered, and that it matches its commitment in S6.
 
 Only after this dry run succeeds may the checklist item "seal mechanism identified and tested" be closed.
 
@@ -161,15 +179,17 @@ Only after this dry run succeeds may the checklist item "seal mechanism identifi
 The following must occur **before first case adjudication**:
 
 ```text
-protocol + threshold + adjudication + nuisance freeze
-→ disease frame freeze
-→ external frame timestamp/registration
-→ later public randomness-beacon round
-→ deterministic sample-order derivation
-→ canonical bundle including evaluator/sampling/schema digests
-→ dual external timestamp + public registration of bundle digest
-→ independent verification
+S1  protocol registration (public OSF + OTS): every SEAL_CANDIDATE config and normative document
+→ S2/S3  custodian computes cutoff/horizon predicates; first passing pair (T*, H*)
+→ S4  selection registration (public OSF + OTS) pre-declaring drand quicknet round R;
+      seal_time(S4) ≤ time(R) − 24 h
+→ S5  at time(R): verify round, derive key, order diseases, expansion/cap on the S2 universe (no re-query); events held
+→ S6  canonical seal bundle (public OSF + OTS)
+→ independent verification of seal_time(S6)
+→ S7  custodian releases events to adjudicators (release log)
 → adjudication begins
+→ S8  first-review label set registered → custodian privately forms the duplicate batch with s_rev → second-review labels registered → s_rev published
+→ S9  (only after a rule revision) post-revision label set registered → custodian privately draws the retest with s_ret → retest labels registered → s_ret published
 ```
 
 If adjudication starts first, the pilot is DEVELOPMENT-EXPOSED and the seal cannot retroactively repair the chronology.

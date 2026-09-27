@@ -1,6 +1,6 @@
 # B-TGT-E1-v0 Estimand Contract
 
-**Status:** STRUCTURE FROZEN — exact confirmatory H / primary subtype / primary metric instantiated after BIG 0F under the sealed selection rules
+**Status:** NORMATIVE — SEAL_CANDIDATE. Structure, primary subtype (`E1-NOVEL-STRICT`) and primary metric (`EVENT_RANK_PERCENTILE_V1`) are fixed now; only (T\*, H\*) and the other values in [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §2 are instantiated later, by frozen rules. The Freeze Statement takes precedence over this page.
 
 ## 1. Target question
 
@@ -26,7 +26,7 @@ Those regimes may receive separate benchmark families/strata later.
 
 ## 3. Frozen disease frame
 
-The disease sampling frame is chosen using only as-of-T criteria.
+The disease sampling frame is chosen using only as-of-T criteria. For V0 it is the mechanical MeSH frame rule with no manual additions ([BIG_0F_FRAME_RULE.md](BIG_0F_FRAME_RULE.md), `config/big0f-frame-rule.v1.json`); pilot sampling and the untouched confirmatory pool are drawn only from the coverage-eligible frame frame_cov(T\*).
 
 After frame freeze, diseases remain accounted for even if they later have zero qualifying events.
 
@@ -88,29 +88,21 @@ metric(nuisance + biological signal)
 metric(nuisance only)
 ```
 
-The nuisance model combines historically reconstructable non-biological / detectability predictors, including attention, genomic architecture, cross-trait pleiotropy, observability, and provider/source coverage.
+The nuisance model combines historically reconstructable non-biological / detectability predictors, including attention, genomic architecture, cross-trait pleiotropy, observability, and provider/source coverage. For V0 its families are exactly the 14 mandatory families of `config/big0f-nuisance-manifest.v2.json` (ADR-022 D11).
 
-The comparator identity, feature families, capacity constraints, temporal training protocol, and source releases are frozen in MAP.
+The comparator identity, feature families, capacity constraints, temporal training protocol, and source releases are frozen in MAP. The feature families and their definitions are already fixed by the nuisance manifest before BIG 0F.
 
 Single baselines remain diagnostic controls, not the headline comparator.
 
 ## 8. Primary metric and candidate-universe normalization
 
-BIG 0F evaluates **event rank percentile** as the preferred primary statistic because sparse events make Recall@K discrete and K-sensitive.
+The primary metric is **`EVENT_RANK_PERCENTILE_V1`**, fixed now ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1; ADR-022 D2; INV-E1). It was chosen because sparse events make Recall@K discrete and K-sensitive. Its canonical definition (ranking universe, filtered competitor set, mid-rank ties, family credit, disease-macro mean) is [METRIC_EVENT_RANK_PERCENTILE_V1.md](METRIC_EVENT_RANK_PERCENTILE_V1.md); the formula is not restated here.
 
-Candidate primary form:
+The primary confirmatory contrast is the paired difference between nuisance+biology and nuisance-only. The test, placebo guard and success rule are in Freeze Statement §3.
 
-```text
-MacroDiseaseMean(
-    mean percentile rank of qualifying future event genes
-)
-```
+Recall@K and Recall@x% are mandatory secondary (companion) metrics only. They are never promoted to primary in V0 (INV-E9).
 
-The primary confirmatory contrast is the paired difference between nuisance+biology and nuisance-only.
-
-Recall@K and Recall@x% remain mandatory secondary metrics unless BIG 0F provides a documented reason to freeze one as primary.
-
-Any final primary metric is selected using DEVELOPMENT-only information and frozen before sealed evaluation.
+> Superseded by the Freeze Statement §6: "BIG 0F evaluates event rank percentile as the preferred primary statistic", the informal "MacroDiseaseMean(mean percentile rank…)" form, the Recall@K promotion route, and "any final primary metric is selected using DEVELOPMENT-only information".
 
 ## 9. Horizon feasibility policy
 
@@ -120,11 +112,11 @@ Candidate horizons are fixed at:
 3, 5, 7, 10 years
 ```
 
-The provider/outcome audit may remove horizons with inadequate observable coverage.
+V0 has one confirmatory cutoff and horizon (T\*, H\*), with no pooling across cutoffs. (T\*, H\*) is the first of the 16 (T, H) pairs, in lexicographic order, whose five frozen predicates all pass, computed by the independent selection custodian; if none passes, the result is REDESIGN ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2–§3; INV-C2).
 
-The development procedure selects the smallest remaining H meeting preregistered event-yield, event-bearing-disease, ambiguity/censoring, and CI-width requirements.
+> Superseded by the Freeze Statement §6: the "smallest remaining H meeting preregistered event-yield, event-bearing-disease, ambiguity/censoring and CI-width requirements" rule, and horizon removal by the provider/outcome audit.
 
-The model's lift/performance is not an H-selection criterion.
+The model's lift/performance is not an H-selection criterion, and no predicate uses a per-disease outcome visible to the study team.
 
 ## 10. Dependence sensitivity
 
@@ -132,7 +124,7 @@ Primary event-bearing-disease analysis uses disease-level paired resampling.
 
 A preregistered disease-family/block resampling sensitivity is also required to test whether shared biology/cohorts/publication ecosystems make ordinary disease-level intervals overconfident.
 
-If results materially weaken under family/block resampling, that limitation is part of the primary interpretation.
+If results materially weaken under family/block resampling, that limitation is part of the primary interpretation. In V0, a non-significant family-level sign-flip result labels the claim dependence-fragile ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §3 item 7).
 
 Provider-lineage sensitivity is also required when Past inputs and Future outcome sources share material upstream/curation machinery. The primary interpretation must state whether lift survives same-pipeline exclusion or an external-source comparison when feasible.
 
@@ -140,7 +132,7 @@ LD/reference-panel sensitivity is required when proxy-variant matching materiall
 
 ## 11. Frozen structure vs confirmatory instantiation
 
-The following are **frozen now**:
+The following are **fixed now** (status SEAL_CANDIDATE until externally sealed):
 - primary population/regime;
 - equal disease weighting across event-bearing diseases;
 - zero-event disease retention/accounting rule;
@@ -148,46 +140,38 @@ The following are **frozen now**:
 - secondary all-frame utility requirement;
 - primary nested comparator family;
 - no headline claim from beating random/single popularity controls;
-- horizon selection procedure;
-- high-specificity gene-assignment requirement / locus-level redesign fallback.
+- cutoff/horizon selection rule (custodian first-passing pair; §9);
+- high-specificity gene-assignment requirement (adjudication policy v2); locus-level credit is a V1 redesign only ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §4);
+- every other item in [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1, including the primary subtype `E1-NOVEL-STRICT`, the primary metric `EVENT_RANK_PERCENTILE_V1`, the ranking universe, α, the planning effect, target power and the confirmatory test.
 
-The following are **confirmatory instance parameters** and are intentionally selected only after BIG 0F using the already-frozen rules:
-- exact H;
-- exact primary E1 subtype;
-- exact primary metric;
-- endpoint-quality threshold values;
-- exact Combined Nuisance feature sources;
-- confirmatory minimum effect / power inputs.
+The following are **confirmatory instance parameters**. Their values are produced later, by rules that are fixed now ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §2):
+- T\* and H\* (produced by the custodian predicates, not chosen);
+- endpoint-quality rule values (equal to or stricter than adjudication policy v2; INV-T8);
+- exact Combined Nuisance feature source releases as of T\*, under the frozen definitions of nuisance manifest v2;
+- planning variance for confirmation (Stage B Development Lift & Variance Study);
+- the untouched confirmatory pool and the confirmatory disease sample.
 
-This distinction is machine-readable in `schemas/estimand.v1.schema.json`.
+> Superseded by ADR-022 D2 and the Freeze Statement §6: "exact primary E1 subtype", "exact primary metric" and "confirmatory minimum effect" as parameters selected after BIG 0F.
 
-The pilot/provider audit must determine:
-- exact primary E1 subtype, including strict novelty vs maturation;
-- final H;
-- whether high-specificity gene-level assignment yields enough events or locus-level redesign is required;
-- exact eligible gene-assignment classes;
-- primary metric and any K/review-budget secondary metric;
-- Combined Nuisance feature set and matched-capacity protocol;
-- minimum number of event-bearing diseases;
-- acceptable zero-event fraction;
-- CI-width requirement;
-- simulation-based power target inputs;
-- minimum scientifically meaningful effect;
-- confirmatory alpha / test direction / test statistic;
-- confirmatory-generation multiplicity budget;
-- minimum HistoricalGeneticSearchCoverage grade for E1-NOVEL-STRICT;
-- acceptable variant/harmonization ambiguity;
-- ScientificEventFamily credit policy thresholds if the default one-credit rule needs refinement;
-- acceptable Past/Future provider-coupling level;
-- observability sensitivity policy details;
-- pilot sampling rule, N, second-adjudication fraction, and contamination rule.
+This distinction is machine-readable in `schemas/estimand.v1.schema.json` (`instance_state` = STRUCTURE or CONFIRMATORY_INSTANCE).
+
+The pilot/provider audit no longer determines the primary subtype, H, the eligible assignment classes, the primary metric, the nuisance family set, the minimum effect, α, test direction or statistic, the minimum HistoricalGeneticSearchCoverage grade, the event-family credit rule, the pilot sampling rule, N, the second-adjudication fraction or the contamination rule. These are fixed now or produced by frozen rules (Freeze Statement §1–§2; ADR-022 D2–D13). BIG 0F measures, under the gates of `config/big0f-thresholds.v2.json`:
+- whether high-specificity gene-level assignment yields enough events (otherwise REDESIGN to V1);
+- the event-bearing disease fraction and the Stage A pool-sufficiency power screen ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §2);
+- provider availability, source-family coverage and Past/Future provider coupling.
+
+Still to be set in the MAP before the confirmatory seal:
+- the confirmatory learner and matched-capacity protocol (nuisance manifest v2 `confirmatory_comparator`);
+- K for the secondary Recall@K;
+- acceptable variant/harmonization ambiguity and the other MAP coverage-gate values;
+- observability sensitivity policy details.
 
 These empirical instance parameters remaining open do not reopen the frozen estimand structure. They block a sealed confirmatory run, not implementation of the parameterized metric/benchmark machinery.
 
 
 ## 12. Assignment-attention robustness
 
-The primary gene-level estimand excludes author-named, nearest-gene, positional-only, generic database-gene, and modern-L2G-only assignments unless they also independently satisfy a preregistered high-specificity assignment class.
+The primary gene-level estimand excludes author-named, nearest-gene, positional-only, generic database-gene, modern-L2G-only, current-curated-target-only and targeted candidate-gene coding assignments unless they also independently satisfy a preregistered high-specificity assignment class (adjudication policy v2; [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §1).
 
 BIG 0F reports:
 - assignment-class distribution;
@@ -196,6 +180,6 @@ BIG 0F reports:
 - pre-T attention-rank correlation by assignment class;
 - locus-level one-credit sensitivity.
 
-If the primary gene label remains materially attention-coupled or too sparse after restriction, the benchmark REDESIGNS to a locus-level or otherwise attention-resistant primary endpoint.
+If the primary gene label remains materially attention-coupled or too sparse after restriction, the benchmark REDESIGNS to a locus-level or otherwise attention-resistant primary endpoint. That redesign is a new version (V1), not a V0 option ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §4).
 
 Normative decision: [adr/ADR-020-e1-primary-comparator-confirmatory-rule.md](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md).

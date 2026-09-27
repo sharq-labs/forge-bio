@@ -1,0 +1,639 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-nuisance-run.v2.schema.json",
+  "title": "Forge Bio BIG 0F Nuisance Run v2 (out-of-fold, adequacy-checked)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "schema_version",
+    "nuisance_manifest_digest",
+    "pilot_model_evaluation_mode",
+    "feature_family_records",
+    "semantic_evidence_features_used",
+    "learner",
+    "fold_assignment_digest",
+    "penalty_by_fold",
+    "fitted_model_digests",
+    "candidate_universe_digest",
+    "eligibility_screen_digest",
+    "oof_rank_output_digest",
+    "eligible_positive_event_set_digest",
+    "event_rank_records",
+    "adequacy",
+    "digest",
+    "nuisance_code_digest"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-nuisance-run-v2"
+    },
+    "nuisance_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "pilot_model_evaluation_mode": {
+      "const": "NUISANCE_ONLY"
+    },
+    "feature_family_records": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+        "GLOBAL_ATTENTION_VOLUME",
+        "GLOBAL_ATTENTION_MOMENTUM",
+        "GLOBAL_GENE_POPULARITY",
+        "ANNOTATION_DENSITY",
+        "GENE_LENGTH",
+        "VARIANT_OPPORTUNITY",
+        "REGIONAL_GENE_DENSITY",
+        "LD_ARCHITECTURE",
+        "CROSS_TRAIT_PLEIOTROPY",
+        "GENETIC_OBSERVABILITY",
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        "PROVIDER_COVERAGE"
+      ],
+      "properties": {
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "GLOBAL_ATTENTION_VOLUME": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "GLOBAL_ATTENTION_MOMENTUM": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "GLOBAL_GENE_POPULARITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "ANNOTATION_DENSITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "GENE_LENGTH": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "VARIANT_OPPORTUNITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "REGIONAL_GENE_DENSITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "LD_ARCHITECTURE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "CROSS_TRAIT_PLEIOTROPY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "GENETIC_OBSERVABILITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        },
+        "PROVIDER_COVERAGE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_release_ids",
+            "feature_artifact_digest",
+            "transform_digest"
+          ],
+          "properties": {
+            "source_release_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "feature_artifact_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            },
+            "transform_digest": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-fA-F]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "semantic_evidence_features_used": {
+      "const": false
+    },
+    "learner": {
+      "const": {
+        "family": "L2_PENALIZED_LOGISTIC_WITH_NATURAL_SPLINES",
+        "spline_df_per_continuous_family": 3,
+        "penalty_grid": [
+          0.01,
+          0.1,
+          1,
+          10
+        ],
+        "tuning": "INNER_LEAVE_ONE_DISEASE_OUT",
+        "outer_protocol": "LEAVE_ONE_DISEASE_OUT_CROSS_FIT",
+        "ranks_used": "OUT_OF_FOLD_ONLY",
+        "labels": "PILOT_NOVEL_STRICT_PRIMARY_POSITIVES",
+        "universe": "NOVEL_STRICT_ELIGIBILITY_FILTERED",
+        "tie_rule": "MID_RANK",
+        "tuning_objective": "INNER_LODO_DISEASE_MACRO_EVENT_RANK_PERCENTILE_V1",
+        "tuning_tie_break": "LARGER_PENALTY",
+        "negatives": "ALL_NON_POSITIVE_GENES_IN_U_D_EXCLUDING_X_D",
+        "missing_features": "ZERO_FILL_WITH_PER_FAMILY_MISSING_INDICATOR_NO_POST_T_IMPUTATION",
+        "best_single_family_model": "SAME_LEARNER_AND_TUNING_WITH_ONE_FAMILY_PLUS_ITS_PRESPECIFIED_INTERACTIONS",
+        "headline_aggregation": "MEAN_IS_DISEASE_MACRO_M_D_MEDIAN_AND_TOP1_ARE_OVER_FAMILY_CREDITS",
+        "change_after_pilot_labels": "PROHIBITED"
+      }
+    },
+    "fold_assignment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "penalty_by_fold": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "enum": [
+          0.01,
+          0.1,
+          1,
+          10
+        ]
+      }
+    },
+    "fitted_model_digests": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-fA-F]{64}$"
+      }
+    },
+    "candidate_universe_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "eligibility_screen_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "oof_rank_output_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "eligible_positive_event_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "event_rank_records": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_family_id",
+          "gene_id",
+          "disease_id",
+          "competitor_count",
+          "competitors_below",
+          "competitors_tied",
+          "event_percentile"
+        ],
+        "properties": {
+          "event_family_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gene_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disease_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "competitor_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "competitors_below": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "competitors_tied": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "event_percentile": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "adequacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "combined_metric",
+        "best_single_family_id",
+        "best_single_family_metric",
+        "combined_minus_best_single",
+        "gate_go_bound",
+        "passed"
+      ],
+      "properties": {
+        "combined_metric": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "best_single_family_id": {
+          "enum": [
+            "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+            "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+            "GLOBAL_ATTENTION_VOLUME",
+            "GLOBAL_ATTENTION_MOMENTUM",
+            "GLOBAL_GENE_POPULARITY",
+            "ANNOTATION_DENSITY",
+            "GENE_LENGTH",
+            "VARIANT_OPPORTUNITY",
+            "REGIONAL_GENE_DENSITY",
+            "LD_ARCHITECTURE",
+            "CROSS_TRAIT_PLEIOTROPY",
+            "GENETIC_OBSERVABILITY",
+            "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+            "PROVIDER_COVERAGE"
+          ]
+        },
+        "best_single_family_metric": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "passed": {
+          "type": "boolean",
+          "description": "combined_minus_best_single >= gate_go_bound (recomputed by the verifier)."
+        },
+        "combined_minus_best_single": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1,
+          "description": "Value of gate NUISANCE_ADEQUACY_MARGIN."
+        },
+        "gate_go_bound": {
+          "type": "number",
+          "description": "GO bound copied from the bound threshold manifest; the verifier checks equality."
+        }
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_code_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    }
+  }
+}

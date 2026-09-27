@@ -36,19 +36,19 @@
     "status": {
       "enum": [
         "DRAFT",
-        "FROZEN",
+        "SEAL_CANDIDATE",
+        "SEALED",
         "RETIRED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
       ]
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
-    },
-    "frozen_at": {
-      "type": [
-        "string",
-        "null"
-      ],
       "format": "date-time"
     },
     "digest": {
@@ -438,8 +438,10 @@
           "uniqueItems": true,
           "items": {
             "enum": [
-              "ATTENTION",
-              "ATTENTION_MOMENTUM",
+              "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+              "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+              "GLOBAL_ATTENTION_VOLUME",
+              "GLOBAL_ATTENTION_MOMENTUM",
               "GLOBAL_GENE_POPULARITY",
               "ANNOTATION_DENSITY",
               "GENE_LENGTH",
@@ -449,9 +451,7 @@
               "CROSS_TRAIT_PLEIOTROPY",
               "GENETIC_OBSERVABILITY",
               "DISEASE_SAMPLE_SIZE_TRAJECTORY",
-              "PROVIDER_COVERAGE",
-              "DISEASE_SPECIFIC_ATTENTION_VOLUME",
-              "DISEASE_SPECIFIC_ATTENTION_MOMENTUM"
+              "PROVIDER_COVERAGE"
             ]
           },
           "allOf": [
@@ -517,7 +517,9 @@
         "success_threshold_numeric",
         "confirmatory_generation_budget_id",
         "primary_metric_kind",
-        "primary_review_budget"
+        "primary_review_budget",
+        "success_threshold_semantics",
+        "success_rule_ref"
       ],
       "properties": {
         "primary_metric_id": {
@@ -603,6 +605,16 @@
             "null"
           ],
           "minimum": 1
+        },
+        "success_threshold_semantics": {
+          "enum": [
+            "ONE_SIDED_P_VALUE_STRICTLY_BELOW",
+            "OTHER_PREREGISTERED"
+          ]
+        },
+        "success_rule_ref": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
@@ -618,7 +630,9 @@
         "evaluation_identity_bridge_digest",
         "scientific_event_family_ledger_digest",
         "provider_coupling_assessment_digest",
-        "outcome_event_discovery_frozen_at"
+        "outcome_discovery_spec_digest",
+        "outcome_discovery_run_digest",
+        "outcome_discovery_seal_attestation_id"
       ],
       "properties": {
         "future_outcome_source_release_ids": {
@@ -651,8 +665,18 @@
         "provider_coupling_assessment_digest": {
           "type": "string"
         },
-        "outcome_event_discovery_frozen_at": {
-          "type": "string"
+        "outcome_discovery_spec_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "outcome_discovery_run_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "outcome_discovery_seal_attestation_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Order is proven by seal_time of this attestation pair (INV-S3), not by a self-reported date."
         }
       }
     },
@@ -867,7 +891,9 @@
         "hyperparameter_search_space_digest",
         "tuning_budget_id",
         "early_stopping_policy_id",
-        "random_seed_policy_id"
+        "random_seed_policy_id",
+        "placebo_arm_policy_id",
+        "ranking_universe_rule_id"
       ],
       "properties": {
         "primary_comparison_semantics": {
@@ -915,6 +941,14 @@
         "random_seed_policy_id": {
           "type": "string",
           "minLength": 1
+        },
+        "placebo_arm_policy_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ranking_universe_rule_id": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
@@ -924,7 +958,7 @@
       "if": {
         "properties": {
           "status": {
-            "const": "FROZEN"
+            "const": "SEALED"
           }
         },
         "required": [
@@ -933,17 +967,24 @@
       },
       "then": {
         "required": [
-          "frozen_at",
-          "digest"
+          "digest",
+          "sealed_by_attestation_id"
         ],
         "properties": {
-          "frozen_at": {
-            "type": "string",
-            "format": "date-time"
-          },
           "digest": {
             "type": "string",
-            "pattern": "^sha256:[0-9a-fA-F]{8,}$"
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
           }
         }
       }
@@ -1007,6 +1048,130 @@
               },
               "min_lineage_completeness_fraction": {
                 "exclusiveMinimum": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "benchmark": {
+            "properties": {
+              "benchmark_id": {
+                "const": "B-TGT-E1-v0"
+              }
+            },
+            "required": [
+              "benchmark_id"
+            ]
+          }
+        },
+        "required": [
+          "benchmark"
+        ]
+      },
+      "then": {
+        "properties": {
+          "benchmark": {
+            "properties": {
+              "cutoff": {
+                "enum": [
+                  "2005-12-31",
+                  "2008-12-31",
+                  "2011-12-31",
+                  "2014-12-31"
+                ]
+              },
+              "horizon": {
+                "enum": [
+                  "3y",
+                  "5y",
+                  "7y",
+                  "10y"
+                ]
+              }
+            }
+          },
+          "statistics": {
+            "properties": {
+              "primary_metric_id": {
+                "const": "EVENT_RANK_PERCENTILE_V1"
+              },
+              "primary_metric_kind": {
+                "const": "EVENT_RANK_PERCENTILE"
+              },
+              "primary_review_budget": {
+                "type": "null"
+              },
+              "test_statistic_id": {
+                "const": "PAIRED_SIGNFLIP_MEAN_DELTA_ONE_SIDED_V1"
+              },
+              "test_direction": {
+                "const": "ONE_SIDED_GREATER"
+              },
+              "resampling_unit": {
+                "const": "DISEASE"
+              },
+              "ci_method": {
+                "const": "DISEASE_LEVEL_BCA_BOOTSTRAP_95"
+              },
+              "dependence_sensitivity_method": {
+                "const": "DISEASE_FAMILY_BLOCK_BOOTSTRAP_AND_FAMILY_LEVEL_SIGNFLIP"
+              },
+              "alpha": {
+                "const": 0.05
+              },
+              "minimum_scientifically_meaningful_effect": {
+                "const": 0.05
+              },
+              "power_target": {
+                "const": 0.8
+              },
+              "success_threshold_numeric": {
+                "const": 0.05
+              },
+              "success_threshold_semantics": {
+                "const": "ONE_SIDED_P_VALUE_STRICTLY_BELOW"
+              },
+              "success_rule_ref": {
+                "const": "docs/V0_FREEZE_STATEMENT.md#3"
+              },
+              "confirmatory_generation_budget_id": {
+                "const": "CPB-FORGE-BIO-B-TGT-E1-V0"
+              }
+            }
+          },
+          "baselines": {
+            "properties": {
+              "nuisance_feature_family_ids": {
+                "minItems": 14,
+                "maxItems": 14
+              }
+            }
+          },
+          "comparison_design": {
+            "properties": {
+              "placebo_arm_policy_id": {
+                "const": "PERMUTED_BIOLOGY_WITHIN_DISEASE_K19_V1"
+              },
+              "ranking_universe_rule_id": {
+                "const": "NOVEL-STRICT-ELIGIBILITY-FILTERED-V1"
+              }
+            }
+          },
+          "policies": {
+            "properties": {
+              "endpoint_primary_subtype": {
+                "const": "E1-NOVEL-STRICT"
+              }
+            }
+          },
+          "coverage_gates": {
+            "properties": {
+              "min_historical_genetic_coverage_grade": {
+                "const": "MODERATE"
               }
             }
           }

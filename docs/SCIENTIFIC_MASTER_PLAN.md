@@ -4,7 +4,9 @@
 **Project:** Forge Bio  
 **Execution principle:** prove temporal scientific value before expensive model complexity
 
-**Pre-code repository rule:** this phase contains specification artifacts only. Runtime implementation code and executable test harnesses are deferred until the pre-code gate is passed.
+**Pre-code repository rule:** this phase contains specification artifacts only. Runtime implementation code and executable test harnesses are deferred until PLAN FROZEN. The first code permitted is the minimal pre-BIG 0F verification harness ([ADR-022](adr/ADR-022-final-scientific-consistency-closure.md) §6, §9).
+
+**Precedence:** [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) wins where this plan disagrees with it. Phase order (ADR-022 §6, D14): SPEC FREEZE → minimal pre-BIG 0F verification harness → BIG 0F → core. The manual pilot is BIG 0F.
 
 ---
 
@@ -169,7 +171,7 @@ Freeze what the system is allowed to claim and define the core scientific types 
 
 ## Goal
 
-Close genetics-specific semantic gaps before collecting the manual feasibility pilot.
+Close genetics-specific semantic gaps before collecting the manual feasibility pilot (BIG 0F; ADR-022 D14).
 
 ## Outputs
 
@@ -277,7 +279,7 @@ Actual T2–T4 twin implementation is **frozen/deferred until after the core B-T
 
 Close fit-for-purpose model-credibility, quantitative-semantics, numerical-verification, and applicability gaps before advanced mechanistic/predictive models are allowed to influence scientific claims.
 
-BIG 0R5 is a platform-hardening layer. It does not delay the manual BIG 0F endpoint-feasibility pilot, but its contracts are mandatory before T2+ Scientific Twin claims or endpoint-calibrated probability claims.
+BIG 0R5 is a platform-hardening layer. It does not delay BIG 0F (the endpoint-feasibility pilot), but its contracts are mandatory before T2+ Scientific Twin claims or endpoint-calibrated probability claims.
 
 ## Outputs
 
@@ -348,7 +350,7 @@ This milestone is intentionally narrow. It precedes BIG 0F and blocks it.
 - confirmatory alpha / MDE / power workflow
 - ConfirmatoryProgramBudget
 - research-program multiplicity / attempt accounting
-- BIG 0F sampling frame + random seed commitment procedure
+- BIG 0F sampling frame + random seed commitment procedure (now the frame rule and the pinned drand round pre-declared in S4; ADR-022 D6, D13)
 - deterministic seal-bundle builder + tamper verification
 - executable estimand structure contract
 - executable endpoint-quality rule template
@@ -360,24 +362,11 @@ This milestone is intentionally narrow. It precedes BIG 0F and blocks it.
 - mini historical-provider availability audit
 - development-only nuisance-headroom study
 
+Status (ADR-022 D15): the contracts above are SPEC-CLOSED. Every code-bearing output (builder, evaluator, validators) is IMPLEMENTATION-PENDING and is built in the minimal pre-BIG 0F verification harness (ADR-022 §6, phase 1).
+
 ## Combined Nuisance Model
 
-Required families, where historically reconstructable:
-
-```text
-attention
-attention momentum
-global popularity
-annotation density
-gene length / historical gene geometry
-variant opportunity
-regional gene density
-LD architecture
-cross-trait pleiotropy
-historical genetic observability
-disease sample-size trajectory
-provider/source coverage
-```
+Required families: the 14 mandatory families of `config/big0f-nuisance-manifest.v2.json` (ADR-022 D11; [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md) §1). These include disease-specific and global attention volume and momentum. A family that cannot be historically reconstructed forces REDESIGN; it is never silently dropped. The earlier 12-family list ("where historically reconstructable") is superseded.
 
 The headline contrast becomes:
 
@@ -387,13 +376,15 @@ vs
 Nuisance Only
 ```
 
+It is nested and capacity-matched, and it is guarded by the K = 19 permuted-biology placebo ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1, §3).
+
 ## Primary label rule
 
 The primary gene-level endpoint accepts only frozen high-specificity assignment classes.
 
 AUTHOR_NAMED, NEAREST_GENE, positional-only, generic database-gene, and modern-L2G-only mappings cannot independently create a primary positive.
 
-If this leaves inadequate event yield or remains attention-coupled, REDESIGN to a locus-level primary endpoint.
+If this leaves inadequate event yield or remains attention-coupled, REDESIGN to a locus-level primary endpoint. That redesign is a new version (V1), not a V0 option (Freeze Statement §4).
 
 ## Statistical gate
 
@@ -408,19 +399,19 @@ Before a confirmatory generation exists, freeze:
 - numeric success rule;
 - confirmatory-generation budget / alpha-spending rule.
 
+For V0, the test statistic, direction, α (0.05 one-sided), planning effect (0.05, planning only, never a success threshold), target power (0.80) and success rule are already fixed ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1, §3; ADR-022 D18). The simulation-based power artifact is produced by Stage A in BIG 0F and Stage B before the confirmatory seal ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md); D10). Budget and α-spending follow INV-L1–L9 (D16).
+
 A free-text success threshold is prohibited.
 
 ## BIG 0F entry gate
 
-BIG 0F cannot start until:
-- local seal-bundle/tamper dry-run passes CI;
-- pilot-result and deterministic-decision contracts pass CI;
-- pilot sampling rule is frozen;
-- target pilot N is frozen from source availability without outcome adjudication;
-- numeric GO / REDESIGN / NO-GO threshold categories are defined;
-- second-adjudication plan is assigned or the reduced claim ceiling is accepted;
-- pilot contamination rule is frozen;
-- schemas + semantic invariants reject the hostile-review probes.
+The binding gate is ADR-022 §6 and §9. BIG 0F adjudication cannot start until all of these exist:
+- PLAN FROZEN, and the minimal pre-BIG 0F verification harness is complete. The harness covers schema/config validation, INV-* checks, canonical hashing, OTS/OSF/drand verifiers, the metric reference implementation and the Stage A power engine;
+- a successful external-seal dry run;
+- an independent second adjudicator. Superseded: the former "or the reduced claim ceiling is accepted" alternative;
+- an independent selection custodian (ADR-022 D12).
+
+Sampling, target size, thresholds, adjudication definitions, contamination/exposure rules, nuisance manifest and power policy are registered at S1. Adjudicators receive events only after seal_time(S6) ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2; ADR-022 §5). Superseded: the former "passes CI" items, because no code or CI exists (ADR-022 D15).
 
 ---
 
@@ -436,7 +427,7 @@ A small **DEVELOPMENT-only Combined Nuisance headroom analysis** is allowed beca
 
 ## Manual pilot
 
-Adjudicate a small heterogeneous set of future genetic events and measure:
+The manual pilot **is** BIG 0F (ADR-022 D14); there is no separate manual pilot. Adjudicate the event families that the selection custodian samples and caps from the sealed frame ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2, §8). Superseded: "a small heterogeneous set". Sampling is mechanical; the set is not chosen for heterogeneity. Measure:
 - canonical variant/locus resolution and genome-build/allele harmonization ambiguity;
 - LD/reference-panel dependence where proxy matching is used;
 - historical genetic-search coverage grade;
@@ -460,7 +451,7 @@ Adjudicate a small heterogeneous set of future genetic events and measure:
 - symmetric non-event audit cost;
 - archived field-level source availability;
 - Combined Nuisance headroom;
-- event-count / rank-variance inputs for simulation-based power.
+- the Stage A pool-sufficiency screen inputs ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §2). The Stage B variance comes from the DLVS, not from BIG 0F.
 
 ## Outputs
 
@@ -473,14 +464,14 @@ Adjudicate a small heterogeneous set of future genetic events and measure:
 - externally sealed BIG 0F protocol;
 - second-adjudicator agreement report;
 - development-only Combined Nuisance headroom report;
-- simulation-based power inputs/report;
-- GO / REDESIGN / NO-GO recommendation for B-TGT-E1-v0.
+- Stage A pool-sufficiency screen report;
+- GO / REDESIGN / NO_GO / INCONCLUSIVE decision for B-TGT-E1-v0 under threshold manifest v2 (ADR-022 §6).
 
 ## Gate
 
 Do not build provider-scale benchmark machinery if the endpoint cannot be adjudicated with acceptable ambiguity, assignment independence, power/headroom, source availability, and reconstruction burden.
 
-All BIG 0F diseases/events are permanently DEVELOPMENT_EXPOSED and cannot enter a strongest-tier sealed generation.
+Exposure follows [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §4–§5. Diseases whose events are released in BIG 0F (the final sampled prefix), and any disease whose per-disease post-T information reaches the study or ranking team, are permanently DEVELOPMENT_EXPOSED and cannot enter a strongest-tier sealed generation. Frame diseases seen only at AGGREGATE_ONLY, and unrevealed diseases 13–15, stay untouched. The custodian's role-separated access does not remove a disease from the untouched pool. Confirmatory families within 500 kb of an adjudicated pilot family are excluded from primary positives (custody §6). Superseded: "All BIG 0F diseases/events are permanently DEVELOPMENT_EXPOSED".
 
 ---
 
@@ -514,7 +505,7 @@ Evaluate approximately:
 2014
 ```
 
-The initial production cutoff is selected from evidence coverage and outcome observability, not assumed in advance.
+The initial production cutoff is selected from evidence coverage and outcome observability, not assumed in advance. For B-TGT-E1-v0 the cutoff/horizon is the BIG 0F-selected (T\*, H\*), which the custodian's first-passing-pair rule produces. There is one cutoff, with no pooling across cutoffs, and this audit does not re-select it (Freeze Statement §1–§2).
 
 ## Acceptance
 
@@ -717,7 +708,7 @@ Establish the real performance floor.
 
 ## North-star comparison
 
-Primary value is expressed as a baseline delta, for example:
+For B-TGT-E1-v0 the primary comparison is fixed: Δ = M(nuisance + biology) − M(nuisance only) on EVENT_RANK_PERCENTILE_V1. The comparator is the 14-family Combined Nuisance Model (manifest v2), with the placebo guard. See [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1, §3. The single-baseline deltas below are secondary diagnostics only; they never replace the primary contrast or metric in V0 (INV-E9):
 
 ```text
 ΔRecall@K vs research attention
@@ -746,7 +737,7 @@ Answer the first scientific question with the smallest credible model.
 
 ## Design
 
-Start with a provider-audit-selected cutoff, likely within the 2005–2014 range.
+Start with a provider-audit-selected cutoff, likely within the 2005–2014 range. For V0 this is the BIG 0F-selected (T\*, H\*) (Freeze Statement §1–§2).
 
 Use a modest disease set with:
 
@@ -756,6 +747,8 @@ Use a modest disease set with:
 - varied research intensity
 - varied evidence density
 - varied candidate-universe sizes
+
+For V0 the disease sets are not designed by hand. Development diseases are DEVELOPMENT_EXPOSED only. The sealed confirmatory sample is drawn from the untouched pool by the beacon/hash-sort mechanism, and its size comes from the power policy (Freeze Statement §2; [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §5). The attributes above are not selection criteria.
 
 ## Initial features
 
@@ -784,6 +777,7 @@ No LLM, PLM, GNN, current graph, or future-trained representation.
 - zero unresolved temporal-integrity violations
 - reproducible historical snapshot
 - sealed evaluation completed
+- confirmatory success judged only by the V0 test and success rule (paired sign-flip on Δ̄ against the nuisance-only arm, plus the K = 19 placebo guard; Freeze Statement §3)
 - result compared to research-attention and discoverability controls
 - zero-event disease policy enforced
 - fixed K accompanied by a candidate-universe-normalized metric
@@ -830,6 +824,8 @@ Determine whether learned weighting adds predictive information beyond transpare
 - sealed confirmation at milestone boundary
 - confidence interval for lift over best simpler baseline
 - no degradation hidden by aggregate averages
+
+For B-TGT-E1 any sealed confirmation uses the V0 primary contrast against the 14-family nuisance-only comparator (manifest v2), with the success rule of [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §3. It consumes the research-program α budget (INV-L5, INV-L7). Lift over a simpler baseline is secondary.
 
 ---
 
@@ -1202,12 +1198,13 @@ BIG 0 → BIG 7
 
 It should contain:
 
-- one provider-audit-selected cutoff era
+- one provider-audit-selected cutoff era (for V0, the BIG 0F-selected (T\*, H\*); Freeze Statement §2)
 - one B-TGT endpoint family
-- a small multi-disease set
+- a small multi-disease set (for V0, sized by the power policy and drawn from the untouched pool; Freeze Statement §2)
 - development + sealed cases
 - 2–3 defensible evidence modalities
 - historical candidate universe
+- the 14-family Combined Nuisance comparator as the primary comparator (manifest v2; Freeze Statement §1)
 - random baseline
 - research-attention baseline
 - attention-momentum/discoverability baseline
@@ -1300,8 +1297,8 @@ This is the ultimate long-term evidence.
 # 7. Current execution state
 
 ```text
-Current milestone: BIG 0F-0 critical-path hardening → BIG 0F
-Implementation status: intentionally not started; runtime implementation code deferred
+Current milestone: Phase 0 SPEC FREEZE (ADR-022 §6) → minimal pre-BIG 0F verification harness → BIG 0F → core
+Implementation status: intentionally not started; runtime implementation code deferred; no check is machine-enforced (ADR-022 D15)
 Architecture status: PRE-CODE CANDIDATE V1
 Scientific contract: PRE-CODE CANDIDATE V1
 Historical benchmark result: none yet
@@ -1310,7 +1307,7 @@ Repurposing result: none yet
 Prospective result: none yet
 ```
 
-The next implementation work must start only after the BIG 0F false-GO closure contracts are frozen and the pre-code gate is explicitly passed; it should not skip directly to models.
+The next implementation work must start only after PLAN FROZEN (ADR-022 §9). It is the minimal pre-BIG 0F verification harness, then BIG 0F, and it should not skip directly to models.
 
 
 ---
@@ -1319,8 +1316,17 @@ The next implementation work must start only after the BIG 0F false-GO closure c
 
 The current hostile-review closure contract is:
 
+- [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) — single source of truth; wins over every other document
+- [adr/ADR-022-final-scientific-consistency-closure.md](adr/ADR-022-final-scientific-consistency-closure.md)
+- [SEMANTIC_INVARIANTS.md](SEMANTIC_INVARIANTS.md)
+- [METRIC_EVENT_RANK_PERCENTILE_V1.md](METRIC_EVENT_RANK_PERCENTILE_V1.md)
+- [NOVEL_STRICT_ELIGIBILITY_RULE.md](NOVEL_STRICT_ELIGIBILITY_RULE.md)
+- [OUTCOME_DISCOVERY_SPEC_V1.md](OUTCOME_DISCOVERY_SPEC_V1.md)
+- [BIG_0F_FRAME_RULE.md](BIG_0F_FRAME_RULE.md)
+- [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md)
+- [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md)
 - [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
-- [BIG_0F_POWER_INPUT_DERIVATION.md](BIG_0F_POWER_INPUT_DERIVATION.md)
+- [BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) (replaces the removed v1 Power Input Derivation Contract)
 - [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md)
 - [BIG_0F_EVIDENCE_BINDING_CONTRACT.md](BIG_0F_EVIDENCE_BINDING_CONTRACT.md)
 
@@ -1367,6 +1373,7 @@ Implementation order is governed by:
 - [adr/ADR-017-quantitative-semantics.md](adr/ADR-017-quantitative-semantics.md)
 - [adr/ADR-018-evidence-extraction-quality.md](adr/ADR-018-evidence-extraction-quality.md)
 - [adr/ADR-019-source-benchmark-lifecycle.md](adr/ADR-019-source-benchmark-lifecycle.md)
+- [adr/ADR-022-final-scientific-consistency-closure.md](adr/ADR-022-final-scientific-consistency-closure.md)
 - [adr/](adr/)
 
 No milestone status may be advanced merely because code exists. Acceptance requires its scientific/verification gate.

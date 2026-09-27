@@ -2,7 +2,8 @@
 
 **Status:** PRE-CODE NORMATIVE PLAN  
 **Scope:** close the Round 2 false-GO attack surface before any runtime implementation or BIG 0F adjudication  
-**Implementation rule:** this document defines contracts and scientific decision semantics only. It does not authorize implementation code.
+**Implementation rule:** this document defines contracts and scientific decision semantics only. It does not authorize implementation code.  
+**Precedence and status:** [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) and [ADR-022](adr/ADR-022-final-scientific-consistency-closure.md) win where this plan disagrees with them. Each section below carries a status in the ADR-022 D15 vocabulary: SPEC-CLOSED (with the ADR-022 decision ID) or IMPLEMENTATION-PENDING. No section is machine-enforced; the verification harness does not exist yet.
 
 ---
 
@@ -31,6 +32,8 @@ This plan closes the currently known false-GO classes without opening another un
 
 ## 3. P0 — Event-bearing disease diversity
 
+**Status:** SPEC-CLOSED (ADR-022 D9) / IMPLEMENTATION-PENDING
+
 ### Problem
 
 A pilot can meet the total event-count threshold while nearly all events come from a very small number of diseases. That can create a false impression that the benchmark is broadly constructible.
@@ -50,9 +53,9 @@ The event-bearing disease fraction is:
 event_bearing_disease_count / disease_count
 ```
 
-A claim-valid GO requires the fraction to meet the sealed `min_event_bearing_disease_fraction` threshold.
+A claim-valid GO requires the fraction to meet the sealed gate `EVENT_BEARING_DISEASE_FRACTION` in `config/big0f-thresholds.v2.json`.
 
-Threshold-sensitivity variants must vary this gate together with the other frozen thresholds. If the final decision changes under a sealed plausible variant, the outcome is REDESIGN rather than selective threshold choice.
+Threshold-sensitivity variants must vary this gate together with the other frozen thresholds. If the final decision changes under a sealed plausible variant, the outcome is REDESIGN rather than selective threshold choice. A base NO_GO stays NO_GO (INV-T6).
 
 ### Failure semantics
 
@@ -63,6 +66,8 @@ Threshold-sensitivity variants must vary this gate together with the other froze
 ---
 
 ## 4. P0 — Cutoff/horizon first-passing rule
+
+**Status:** SPEC-CLOSED (ADR-022 D12) / IMPLEMENTATION-PENDING. The predicates, the actor and the exposure rules are now defined in [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2–§5. The independent selection custodian computes five frozen predicates (P_prov, P_obs, P_cov, P_anchor, P_evt) for all 16 pairs, and the study team sees aggregates and digests only (INV-C1–C3). Where the input list below differs, custody §3 wins.
 
 ### Problem
 
@@ -92,6 +97,8 @@ No ambiguity rate, nuisance performance, biological rank, assignment quality, or
 
 ## 5. P0 — Disease sample expansion 12 -> 15
 
+**Status:** SPEC-CLOSED (ADR-022 D12, D13) / IMPLEMENTATION-PENDING. Expansion counts raw candidate **event families**, not raw records ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §8; INV-C10). The disease order comes from the pinned drand round pre-declared in S4 (custody §7).
+
 ### Problem
 
 The study can expand beyond the first 12 sampled diseases in a favorable direction unless the expansion trigger is reconstructable.
@@ -120,6 +127,8 @@ Any non-prefix disease inclusion, unnecessary expansion after the threshold was 
 
 ## 6. P0 — More than 150 candidate events
 
+**Status:** SPEC-CLOSED (ADR-022 D12) / IMPLEMENTATION-PENDING. The cap samples event families, not raw events: one family per event-bearing disease (lowest `cap` key), then ascending `cap` key ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §8; INV-C10). Where the text below says "events", custody §8 governs.
+
 ### Problem
 
 A favorable subset of 150 events can be selected from a larger raw event universe.
@@ -147,6 +156,8 @@ Unreconstructable or outcome-aware capped-event selection -> INVALID pilot / RED
 
 ## 7. P0 — Power-input provenance and variance uncertainty
 
+**Status:** SPEC-CLOSED (ADR-022 D10; INV-P1–P6) / IMPLEMENTATION-PENDING. The Stage A power engine is a Phase 1 harness deliverable (ADR-022 §6).
+
 ### Problem
 
 A freely supplied disease-level SD can make a weak design appear adequately powered.
@@ -155,29 +166,25 @@ BIG 0F also cannot legitimately estimate the variance of biological incremental 
 
 ### Frozen design
 
-A single analyst-entered SD is prohibited. The frozen normative contract is [BIG_0F_POWER_INPUT_DERIVATION.md](BIG_0F_POWER_INPUT_DERIVATION.md).
+A single analyst-entered SD is prohibited. The normative contract is [BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md), with machine-readable source `config/big0f-power-policy.v2.json`. It replaces the removed v1 Power Input Derivation Contract. The policy defines everything the v1 contract had to define:
 
-Before adjudication, a **Power Input Derivation Contract** must define:
+- pilot-safe inputs (m_d, s_e, p_eb);
+- external sources (Stage B only; they can only raise the planning SD);
+- transforms and the variance model;
+- the frozen scenario family, with PLANNING as the GO boundary and OPTIMISTIC as the NO_GO boundary;
+- clustered events;
+- zero-event diseases;
+- the untouched pool, from [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §5.
 
-- which pilot-safe quantities may enter power planning;
-- which independent external/development quantities may enter;
-- the deterministic transforms applied to them;
-- the allowed variance/dependence scenario family;
-- the conservative primary planning scenario;
-- the sensitivity scenarios;
-- the rule for clustered/dependent events;
-- the rule for zero-event diseases;
-- how many untouched confirmatory diseases are actually available.
+Superseded by ADR-022 D10: "GO-capable power requires at least one independent DEVELOPMENT source measuring the same estimand and primary metric". That v1 route is gone. BIG 0F GO now depends on the model-free **Stage A** pool-sufficiency screen. The **Stage B** Development Lift & Variance Study (≥ 20 event-bearing development diseases) gates the confirmatory seal (P1). Neither stage may use observed BIG 0F biological-model lift (INV-P6).
 
-The contract may use nuisance-only and structural pilot outputs for sensitivity, but nuisance-rank dispersion is not GO-eligible variance evidence. GO-capable power requires at least one independent DEVELOPMENT source measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. It may not use observed BIG 0F biological-model lift.
-
-The primary confirmatory design must achieve target power under the sealed conservative planning scenario. If scientifically plausible sealed variance/dependence scenarios produce materially different feasibility conclusions, BIG 0F returns REDESIGN or INCONCLUSIVE rather than selecting the favorable scenario.
+Superseded: "REDESIGN or INCONCLUSIVE rather than selecting the favorable scenario". The Stage A decision semantics are now fixed in the power policy §2 (pass, REDESIGN or NO_GO by scenario boundary), with gate `POWER_POOL_SUFFICIENCY` in threshold manifest v2.
 
 ### Required future artifact
 
-A power-analysis artifact must bind:
+A power-analysis artifact (`schemas/big0f-power-analysis.v2.schema.json`) must bind:
 
-- derivation-contract digest;
+- power-policy digest (formerly the derivation-contract digest);
 - raw input artifact digests;
 - derived planning quantities;
 - dependence assumptions;
@@ -187,11 +194,13 @@ A power-analysis artifact must bind:
 
 ### Failure semantics
 
-Free scalar SD, missing derivation provenance, or post-result scenario choice -> INCONCLUSIVE/REDESIGN and no GO.
+Free scalar SD, missing derivation provenance, or post-result scenario choice -> INCONCLUSIVE/REDESIGN and no GO. See the power policy §4 prohibitions; under `config/big0f-power-policy.v2.json` a missing or unreconstructable input is INCONCLUSIVE.
 
 ---
 
 ## 8. P1 — Bind actual nuisance execution to the frozen manifest
+
+**Status:** SPEC-CLOSED (ADR-022 D11) / IMPLEMENTATION-PENDING. Manifest v2 (`config/big0f-nuisance-manifest.v2.json`) has 14 families and **freezes** the BIG 0F learner rather than merely recording it. It also requires out-of-fold ranks and an adequacy check.
 
 ### Problem
 
@@ -225,11 +234,15 @@ Reported nuisance headroom metrics must be reproducible from the committed rank 
 
 ### Failure semantics
 
-Missing mandatory family, mismatched model/output digest, or unreconstructable summary metric -> INCONCLUSIVE; intentional substitution after seeing results -> REDESIGN.
+Mismatched model/output digest, unreconstructable summary metric, or failed adequacy check -> INCONCLUSIVE; intentional substitution after seeing results -> REDESIGN.
+
+A mandatory family that cannot be historically reconstructed -> REDESIGN; it is never silently dropped (manifest v2 `missing_family_consequence`; [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md) §1). This supersedes the earlier "missing mandatory family -> INCONCLUSIVE".
 
 ---
 
 ## 9. P0/P1 — External seal and randomness trust root
+
+**Status:** SPEC-CLOSED (ADR-022 D1, D13; INV-S2–S4, INV-C6–C8) / IMPLEMENTATION-PENDING (the OTS/OSF/drand verifiers are Phase 1 harness deliverables) / OPERATIONAL-OPEN (the external-seal dry run is a BIG 0F start gate, ADR-022 §9).
 
 ### Problem
 
@@ -249,10 +262,12 @@ For public preregistration:
 - verify the exact committed digest/content identity and registration time;
 - preserve the registry identifier and retrieval evidence.
 
-For DRAND or equivalent public randomness:
+For drand public randomness (the pinned **quicknet** chain only; "or equivalent" beacons are superseded by ADR-022 D13):
 - independently retrieve the stated round;
-- verify round identity, publication time, randomness, and the service's authenticity/signature mechanism;
-- verify that it is the first eligible round after the frame seal under the frozen rule.
+- verify round identity, publication time, randomness, and the service's authenticity/signature mechanism (BLS against the pinned group key, INV-C8);
+- verify that it is the round R pre-declared in the S4 selection registration, and that seal_time(S4) ≤ time(R) − 24 h ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §7; INV-C6–C7). This supersedes "the first eligible round after the frame seal".
+
+The authoritative time of any seal is seal_time = max(earliest Bitcoin block time in the verified OTS proof, public-registry registration time). Both attestations are required; an embargoed registry record gives no seal_time (ADR-022 §5; INV-S3–S4).
 
 A local `verification_status=VERIFIED` field is metadata only and cannot establish trust.
 
@@ -263,6 +278,8 @@ If independent verification cannot be performed, the artifact remains UNVERIFIED
 ---
 
 ## 10. P1 — Provider, ancestry, curation, and adjudicator evidence binding
+
+**Status:** SPEC-CLOSED (v2 schemas: provider-audit, provider-audit-scope, curation-audit; adjudicator-independence v1) / IMPLEMENTATION-PENDING
 
 ### Problem
 
@@ -317,6 +334,8 @@ A summary state that cannot be regenerated from its evidence artifact is INCONCL
 
 ## 11. P1 — Append-only confirmatory program history
 
+**Status:** SPEC-CLOSED (ADR-022 D16; INV-L1–L9) / IMPLEMENTATION-PENDING
+
 ### Problem
 
 A fresh ledger could omit earlier failed/spent attempts and recreate an apparently unused alpha budget.
@@ -346,6 +365,8 @@ Broken chain, missing prior head, or unexplained attempt disappearance -> confir
 
 ## 12. P2 — One canonical endpoint decision source
 
+**Status:** SPEC-CLOSED (ADR-022 D17; INV-Q1–Q3) / IMPLEMENTATION-PENDING
+
 ### Problem
 
 Multiple endpoint validators can silently diverge on field names or allowed states.
@@ -362,6 +383,8 @@ Any material change to endpoint criteria creates a versioned endpoint rule and s
 
 ## 13. P2 — Threshold provenance and digest hygiene
 
+**Status:** SPEC-CLOSED (ADR-022 D9; INV-T1–T3) / IMPLEMENTATION-PENDING. Threshold manifest v2 carries these fields for every gate.
+
 Every GO-critical numeric threshold must have:
 
 - threshold ID;
@@ -371,7 +394,7 @@ Every GO-critical numeric threshold must have:
 - scientific/operational rationale;
 - sensitivity range;
 - decision consequence;
-- freeze time/version.
+- version and seal attestation. Superseded: "freeze time". A self-reported freeze time proves nothing; order comes only from seal_time (ADR-022 D1, §5; INV-S3).
 
 Zero/self-placeholder digests are not claim-valid evidence. Claim-valid artifact digests are computed externally over the exact serialized artifact and committed by the seal bundle/registry process.
 
@@ -379,30 +402,35 @@ Zero/self-placeholder digests are not claim-valid evidence. Claim-valid artifact
 
 ## 14. P2 — Gene-level robustness
 
+**Status:** SPEC-CLOSED / IMPLEMENTATION-PENDING. Locus-level *primary* credit is a V1 redesign only (Freeze Statement §4).
+
 Primary high-specificity gene labels remain the V0 design, but every confirmatory analysis must preserve a locus-level one-credit sensitivity where gene assignment can be method- or attention-dependent.
 
-If the headline conclusion materially changes under the preregistered locus-level sensitivity or under removal of attention-sensitive assignment classes, the result is reported as fragile and cannot be presented as robust gene-level discovery value.
+If the headline conclusion materially changes under the preregistered locus-level sensitivity or under removal of attention-sensitive assignment classes, the result is reported as fragile and cannot be presented as robust gene-level discovery value. This is a reporting label, not a veto on success: only the BLOCKING analyses of Freeze Statement §3a decide success (INV-E11).
 
 ---
 
 ## 15. BIG 0F start gate after this planning round
 
-Architecture hardening stops after the contracts above are frozen.
+Architecture hardening stops after the contracts above are frozen. The binding gate is now ADR-022 §6 and §9. The list below must agree with it.
 
 Before actual BIG 0F adjudication, all of the following must be true:
 
-- selection provenance contract frozen;
+- selection provenance contract frozen (custody §2–§3; ADR-022 D12);
 - event-bearing disease gate frozen;
-- Power Input Derivation Contract frozen;
-- Nuisance Execution Artifact contract frozen;
+- Power and Variance Policy frozen (ADR-022 D10). This replaces the removed Power Input Derivation Contract;
+- Nuisance Execution Artifact contract frozen (manifest v2; ADR-022 D11);
 - external timestamp/registry/beacon verification procedure frozen and dry-run successfully;
 - provider/applicability/curation/adjudicator evidence artifacts frozen;
 - append-only research-program ledger contract frozen;
 - canonical endpoint decision semantics identified;
-- hostile false-GO cases are preserved as mandatory future regression-test requirements;
-- independent second adjudicator and external seal process are operationally available.
+- hostile false-GO cases are preserved as mandatory regression checks, **implemented** in the minimal pre-BIG 0F verification harness (INV-*; ADR-022 §6, phase 1);
+- independent second adjudicator and external seal process are operationally available;
+- independent selection custodian in place (ADR-022 D12, §9).
 
-No runtime implementation is authorized by this document. Implementation begins only after the pre-code gate is explicitly passed.
+"Frozen" here means registered and sealed at S1 ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §5; custody §2). Until then every item is SEAL_CANDIDATE.
+
+No runtime implementation is authorized by this document. Implementation begins after PLAN FROZEN (ADR-022 §9), starting with the minimal pre-BIG 0F verification harness.
 
 ---
 
@@ -410,4 +438,6 @@ No runtime implementation is authorized by this document. Implementation begins 
 
 After these closures receive one final hostile scientific review, do not open another broad architecture round unless that review identifies a new P0 threat capable of producing a false confirmatory claim.
 
-The next phase is then implementation of the frozen contracts, followed by BIG 0F empirical work.
+That review took place on `a1326e3` and found false-GO P0 gaps. [ADR-022](adr/ADR-022-final-scientific-consistency-closure.md) is the bounded closure change that answered it. From here on only a targeted consistency attack on ADR-022 D1–D19 is run, not an open review (ADR-022 §9).
+
+The next phase is then implementation of the frozen contracts, followed by BIG 0F empirical work. Per ADR-022 §6 that means the minimal pre-BIG 0F verification harness first, then BIG 0F, then core.

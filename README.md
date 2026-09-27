@@ -85,6 +85,8 @@ E1 is explicitly split into:
 - **E1-REPLICATION** — genuine independent replication under allele/direction/phenotype/lineage rules;
 - **E1-CROSSMODAL** — pre-T non-genetic evidence anticipating later genetics.
 
+The V0 primary subtype (`E1-NOVEL-STRICT`) and primary metric (`EVENT_RANK_PERCENTILE_V1`) are fixed now; see the [V0 Freeze Statement](docs/V0_FREEZE_STATEMENT.md) §1, which takes precedence over every other document.
+
 The benchmark also governs:
 - canonical genomic variant/locus identity;
 - genome-build/liftover/allele harmonization;
@@ -110,23 +112,34 @@ Primary gene-level positives use high-specificity outcome-assignment classes. AU
 
 ## Pre-code status
 
-Current phase: **BIG 0F Operational Preparation → BIG 0F**
+Current phase: **0. SPEC FREEZE** in the phase order of [ADR-022](docs/adr/ADR-022-final-scientific-consistency-closure.md) §6: SPEC FREEZE → minimal pre-BIG 0F verification harness → BIG 0F → core B-TGT-E1. The "manual pilot" is BIG 0F; there is no separate manual pilot (ADR-022 D14).
 
 BIG 0R4/BIG 0R5 platform-extension work is frozen/deferred while BIG 0F-0 repairs the B-TGT-E1 critical path identified by independent hostile review.
 
 The high-level architecture is stable, but V1 is not frozen until every P0 item in the readiness checklist is closed or explicitly superseded by ADR.
 
-Do not start production scientific code before that gate.
+Do not start production scientific (core) code before BIG 0F returns GO (ADR-022 §6).
 
-Repository scope during this phase is specification-only: plans, ADRs, schemas, checklists, and runbooks. Runtime Python implementation, executable validators, test suites, and implementation CI are intentionally deferred until the pre-code gate is passed.
+Repository scope during this phase is specification-only: plans, ADRs, schemas, checklists, and runbooks. Runtime implementation, executable validators, test suites, and implementation CI do not exist. The first code permitted is the minimal pre-BIG 0F verification harness, after PLAN FROZEN (ADR-022 §9).
+
+Status vocabulary: artifacts are `SEAL_CANDIDATE` or `SEALED`; nothing is `SEALED` yet. Checklist and gap items are `SPEC-CLOSED` or `IMPLEMENTATION-PENDING`. No check is machine-enforced until the harness implements it (ADR-022 D1, D15; [Semantic Invariants](docs/SEMANTIC_INVARIANTS.md) INV-D2).
 
 ## Core documents
 
+- [V0 Freeze Statement](docs/V0_FREEZE_STATEMENT.md) — single source of truth; wins over every other document
+- [ADR-022 — Final Scientific Consistency Closure](docs/adr/ADR-022-final-scientific-consistency-closure.md) — decision register D1–D19 and phase order
+- [Semantic Invariants](docs/SEMANTIC_INVARIANTS.md) — INV-* rules; enforcement SCHEMA or HARNESS (harness not yet built)
 - [Architecture V1 Candidate](docs/ARCHITECTURE_V1.md)
 - [Scientific Contract V1 Candidate](docs/SCIENTIFIC_CONTRACT.md)
 - [Scientific Master Plan](docs/SCIENTIFIC_MASTER_PLAN.md)
 - [BIG 0F False-GO Closure Plan](docs/BIG_0F_FALSE_GO_CLOSURE_PLAN.md)
-- [BIG 0F Power Input Derivation Contract](docs/BIG_0F_POWER_INPUT_DERIVATION.md)
+- [EVENT_RANK_PERCENTILE_V1 Metric](docs/METRIC_EVENT_RANK_PERCENTILE_V1.md)
+- [NOVEL-STRICT Eligibility Rule](docs/NOVEL_STRICT_ELIGIBILITY_RULE.md)
+- [Outcome-Discovery Specification v1](docs/OUTCOME_DISCOVERY_SPEC_V1.md)
+- [BIG 0F Disease Frame Rule](docs/BIG_0F_FRAME_RULE.md)
+- [BIG 0F Selection Custody](docs/BIG_0F_SELECTION_CUSTODY.md)
+- [BIG 0F Adjudication Definitions](docs/BIG_0F_ADJUDICATION_DEFINITIONS.md)
+- [BIG 0F Power and Variance Policy](docs/BIG_0F_POWER_AND_VARIANCE_POLICY.md) (replaces the removed Power Input Derivation Contract)
 - [BIG 0F Nuisance Execution Contract](docs/BIG_0F_NUISANCE_EXECUTION_CONTRACT.md)
 - [BIG 0F Evidence Binding Contract](docs/BIG_0F_EVIDENCE_BINDING_CONTRACT.md)
 - [Benchmark V0 Specification](docs/BENCHMARK_V0_SPEC.md)
@@ -179,6 +192,7 @@ Repository scope during this phase is specification-only: plans, ADRs, schemas, 
 - [ADR-019 — Source & Benchmark Lifecycle](docs/adr/ADR-019-source-benchmark-lifecycle.md)
 - [ADR-020 — E1 Endpoint, Nuisance Comparator & Confirmatory Rule](docs/adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
 - [ADR-021 — BIG 0F Pilot Protocol](docs/adr/ADR-021-big-0f-pilot-protocol.md)
+- [ADR-022 — Final Scientific Consistency Closure (pre-BIG 0F)](docs/adr/ADR-022-final-scientific-consistency-closure.md)
 - [Architecture Decision Records](docs/adr/)
 
 ## Current unresolved P0 decisions
@@ -187,22 +201,23 @@ The readiness checklist and red-team gap register are authoritative.
 
 Current P0 work is **not** limited to empirical feasibility. BIG 0F-0 also contains critical protocol/operational gates identified by independent hostile review.
 
-Important remaining P0 work includes:
-
-Already machine-enforced in the operational-prep layer:
+Specified (`SPEC-CLOSED`) but not implemented (`IMPLEMENTATION-PENDING`). The code and tests that once covered these were removed, so none of them is machine-enforced (ADR-022 D15):
 - B-TGT-E1 estimand structure / zero-event / weighting contract;
 - endpoint-quality decision structure;
 - canonical seal-bundle builder and tamper detection;
-- BIG 0F result schema;
+- BIG 0F result schema (the JSON Schema exists; no validator runs it);
 - deterministic GO / REDESIGN / NO_GO evaluator.
-- exact confirmatory estimand instance (H, subtype, metric) after feasibility evidence;
-- final primary E1 subtype and endpoint evidence-quality threshold;
-- manual outcome-feasibility pilot and its ambiguity/coverage/curation/lineage measurements;
-- pilot GO / REDESIGN / NO-GO verdict;
-- hostile-review regression suite passing on the current branch;
-- externally sealed BIG 0F frame/seed/protocol before adjudication;
+
+Important remaining P0 work includes:
+- targeted consistency attack on ADR-022 D1–D19 with no new false-GO P0 → PLAN FROZEN (ADR-022 §9);
+- the minimal pre-BIG 0F verification harness, including INV-* regression checks and a successful external-seal dry run (ADR-022 §6, phase 1);
 - assignment of an independent second adjudicator;
-- independent custodian / third-party sealing mechanism.
+- assignment of an independent selection custodian (ADR-022 D12);
+- externally sealed S1 protocol registration, S4 selection registration (pre-declared drand round) and S6 seal bundle before adjudication ([BIG 0F Selection Custody](docs/BIG_0F_SELECTION_CUSTODY.md) §2; ADR-022 §5);
+- BIG 0F itself (the manual pilot is BIG 0F) and its ambiguity/coverage/curation/lineage measurements;
+- BIG 0F GO / REDESIGN / NO_GO / INCONCLUSIVE decision under threshold manifest v2.
+
+Superseded: "exact confirmatory estimand instance (H, subtype, metric) after feasibility evidence" and "final primary E1 subtype". Subtype and metric are fixed now; only (T\*, H\*) is produced later, by the custodian's first-passing-pair rule. Endpoint-quality rule values are set after BIG 0F and may only be equal to or stricter than adjudication policy v2 ([V0 Freeze Statement](docs/V0_FREEZE_STATEMENT.md) §1–§2; ADR-022 D2, D7, D12).
 
 ADR-005 is decided: commercial-later engineering posture; repository code/docs Apache-2.0; provider-data licenses remain source-specific.
 
@@ -210,7 +225,7 @@ The V0 primary genetic regime, H candidate procedure, strict novelty/maturation 
 
 Do **not** start production scientific code while any P0 blocker remains active.
 
-Once P0 is closed, run a final red-team review against the frozen commit. Only then declare **GO FOR CORE SCIENTIFIC CODE**.
+After ADR-022 there is no further open review, only the targeted consistency attack on D1–D19 (ADR-022 §9). **GO FOR CORE SCIENTIFIC CODE** is declared only when BIG 0F returns GO (ADR-022 §6, phase 3).
 
 
 ## Forge Bio Scientific Twins

@@ -1,0 +1,30 @@
+{
+  "rule_id": "BIG0F-FRAME-RULE-V1",
+  "schema_version": "big0f-frame-rule-v1",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "vocabulary": "MESH_DESCRIPTORS_RELEASE_IN_FORCE_AT_T",
+  "included_trees": [
+    "C",
+    "F03"
+  ],
+  "excluded_trees": [
+    "C01",
+    "C04",
+    "C16",
+    "C21",
+    "C22",
+    "C23",
+    "C25",
+    "C26"
+  ],
+  "min_pubmed_records_at_t": 500,
+  "exclude_inborn_genetic_disease_branch": true,
+  "hierarchy_resolution": "KEEP_MOST_SPECIFIC_QUALIFYING_DESCRIPTOR",
+  "ordering": "DESCRIPTOR_UI_ASCENDING_CANONICAL_JSON",
+  "coverage_eligible_min_grade": "MODERATE",
+  "manual_additions_allowed": false,
+  "pubmed_count_mode": "DESCRIPTOR_ITSELF_NOT_EXPLODED",
+  "multiple_tree_numbers": "QUALIFIES_IF_ANY_TREE_NUMBER_INCLUDED_AND_NONE_EXCLUDED",
+  "disease_family": "TOP_LEVEL_CATEGORY_OF_FIRST_QUALIFYING_TREE_NUMBER"
+}

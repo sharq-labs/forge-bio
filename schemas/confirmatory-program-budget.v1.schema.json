@@ -15,7 +15,8 @@
     "development_results_can_support_confirmatory_claim",
     "digest",
     "research_program_id",
-    "program_scope_lock"
+    "program_scope_lock",
+    "post_failure_policy"
   ],
   "properties": {
     "budget_id": {
@@ -31,12 +32,8 @@
       "const": 0.05
     },
     "allocation_method": {
-      "enum": [
-        "FIXED_SPLIT",
-        "ALPHA_SPENDING",
-        "SEQUENTIAL_BOUNDARY",
-        "OTHER_PREREGISTERED"
-      ]
+      "const": "FIXED_SPLIT",
+      "description": "V0 holds the full 0.05 (INV-L11)."
     },
     "max_confirmatory_generations": {
       "const": 2
@@ -79,8 +76,8 @@
       "const": false
     },
     "post_failure_policy": {
-      "type": "string",
-      "minLength": 1
+      "const": "V1_REDESIGN_STAYS_IN_PROGRAM_BUDGET_NO_ALPHA_RESET_TWO_GENERATION_CAP_SPANS_VERSIONS",
+      "description": "Budget carryover (INV-L7)."
     },
     "digest": {
       "type": "string",

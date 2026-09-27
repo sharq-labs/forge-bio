@@ -1,0 +1,213 @@
+{
+  "registry_id": "BIG0F-REQUIRED-FIELD-REGISTRY-V1",
+  "schema_version": "big0f-required-field-registry-v1",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "criticality_rule": "CRITICAL_IF_PRIMARY_POSITIVE_STATUS_OR_SCREEN_SIGNAL_OR_FRAME_CANNOT_BE_DETERMINED_WITHOUT_IT_REQUIRED_IF_USED_BY_A_MANDATORY_NUISANCE_FAMILY_OR_ENDPOINT_DIMENSION",
+  "optional_fields_in_scope": false,
+  "availability_predicate": {
+    "AS_OF_T": "OBTAINABLE_AND_VERSION_IDENTIFIABLE_AND_EXISTED_AT_T_AND_VALUE_RECONSTRUCTABLE_AND_NOT_RETROSPECTIVELY_CURATED",
+    "EVALUATION": "OBTAINABLE_AND_VERSION_IDENTIFIABLE_AND_VALUE_RECONSTRUCTABLE"
+  },
+  "provider_audit_scope_rule": "SELECTED_PILOT_DISEASES_CROSS_ALL_REGISTRY_FIELDS",
+  "critical_missing_consequence": "AFFECTED_CASE_AMBIGUOUS_OR_UNUSABLE",
+  "fields": [
+    {
+      "field_id": "PUB_FIRST_PUBLIC_DATE",
+      "source_family_kind": "PRIMARY_PUBLICATION_METADATA",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "ENDPOINT_DATE_RULE"
+      ]
+    },
+    {
+      "field_id": "PUB_STUDY_DESIGN_CLASS",
+      "source_family_kind": "PRIMARY_PUBLICATION_METADATA",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "PRIMARY_ASCERTAINMENT"
+      ]
+    },
+    {
+      "field_id": "PUB_CASE_CONTROL_COUNTS",
+      "source_family_kind": "PRIMARY_PUBLICATION_METADATA",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "DISEASE_SAMPLE_SIZE_TRAJECTORY",
+        "COVERAGE_GRADE"
+      ]
+    },
+    {
+      "field_id": "MEDLINE_RECORD_DATE_AND_INDEXING",
+      "source_family_kind": "PRIMARY_PUBLICATION_METADATA",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME",
+        "DISEASE_SPECIFIC_ATTENTION_MOMENTUM",
+        "GLOBAL_ATTENTION_VOLUME",
+        "GLOBAL_ATTENTION_MOMENTUM",
+        "GLOBAL_GENE_POPULARITY",
+        "FRAME_RULE"
+      ]
+    },
+    {
+      "field_id": "ASSOC_LEAD_VARIANT_AND_POSITION",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "EVENT_FAMILY_GROUPING",
+        "ASSIGNMENT"
+      ]
+    },
+    {
+      "field_id": "ASSOC_P_VALUE",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "CANDIDATE_EVENT_PREDICATE"
+      ]
+    },
+    {
+      "field_id": "ASSOC_REPORTED_TRAIT",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "PHENOTYPE_QUALIFICATION"
+      ]
+    },
+    {
+      "field_id": "ASSOC_EFFECT_ALLELE_AND_DIRECTION",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "GENOMIC_HARMONIZATION"
+      ]
+    },
+    {
+      "field_id": "ASSOC_ANCESTRY",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "APPLICABILITY",
+        "EVENT_NOVELTY_LD"
+      ]
+    },
+    {
+      "field_id": "PRE_T_ASSOCIATION_RECORDS_WITH_DATES",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "AS_OF_T",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "SCREEN_SIGNAL",
+        "PRE_T_GENETIC_STATE",
+        "CROSS_TRAIT_PLEIOTROPY",
+        "COVERAGE_GRADE"
+      ]
+    },
+    {
+      "field_id": "SUMMARY_STATISTICS_AVAILABILITY",
+      "source_family_kind": "GWAS_HISTORICAL",
+      "time_scope": "EVALUATION",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "FINE_MAPPING",
+        "COLOCALIZATION"
+      ]
+    },
+    {
+      "field_id": "MESH_DESCRIPTOR_TREE",
+      "source_family_kind": "IDENTITY_ONTOLOGY",
+      "time_scope": "AS_OF_T",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "FRAME_RULE"
+      ]
+    },
+    {
+      "field_id": "GENE_SYMBOLS_AND_SYNONYMS",
+      "source_family_kind": "IDENTITY_ONTOLOGY",
+      "time_scope": "AS_OF_T",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "CANDIDATE_UNIVERSE",
+        "DISEASE_SPECIFIC_ATTENTION_VOLUME"
+      ]
+    },
+    {
+      "field_id": "TRAIT_ONTOLOGY_MAPPING",
+      "source_family_kind": "IDENTITY_ONTOLOGY",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "PHENOTYPE_SCOPE"
+      ]
+    },
+    {
+      "field_id": "GENE_COORDINATES",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "AS_OF_T",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "CANDIDATE_UNIVERSE",
+        "SCREEN_SIGNAL",
+        "GENE_LENGTH",
+        "REGIONAL_GENE_DENSITY"
+      ]
+    },
+    {
+      "field_id": "GO_ANNOTATIONS",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "ANNOTATION_DENSITY"
+      ]
+    },
+    {
+      "field_id": "GENOTYPING_ARRAY_CONTENT",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "VARIANT_OPPORTUNITY",
+        "GENETIC_OBSERVABILITY"
+      ]
+    },
+    {
+      "field_id": "LD_REFERENCE_PANEL",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "LD_ARCHITECTURE"
+      ]
+    },
+    {
+      "field_id": "PROVIDER_SNAPSHOT_GENE_PRESENCE",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "AS_OF_T",
+      "criticality": "REQUIRED",
+      "used_by": [
+        "PROVIDER_COVERAGE"
+      ]
+    },
+    {
+      "field_id": "CODING_CONSEQUENCE_ANNOTATION",
+      "source_family_kind": "HISTORICAL_GENE_MODEL_ANNOTATION",
+      "time_scope": "EVALUATION",
+      "criticality": "CRITICAL",
+      "used_by": [
+        "ASSIGNMENT"
+      ]
+    }
+  ]
+}

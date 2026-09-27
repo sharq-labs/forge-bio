@@ -1,0 +1,94 @@
+{
+  "policy_id": "BIG0F-POWER-POLICY-V2",
+  "schema_version": "big0f-power-policy-v2",
+  "status": "SEAL_CANDIDATE",
+  "sealed_by_attestation_id": null,
+  "biological_arm_observed_in_big0f": false,
+  "confirmatory_test_ref": "V0_FREEZE_STATEMENT_SECTION_3_PAIRED_SIGN_FLIP_MEAN_DELTA_V1",
+  "alpha_one_sided": 0.05,
+  "planning_effect": 0.05,
+  "target_power": 0.8,
+  "stage_a_pool_sufficiency_screen": {
+    "gate_role": "BIG0F_GO_GATE",
+    "event_level_sd_upper_bound": "MAX_OF_CHI_SQUARE_UPPER95_AND_DISEASE_CLUSTER_BCA_UPPER95",
+    "percentile_bootstrap_alone_allowed": false,
+    "bootstrap_replicates": 10000,
+    "sd_seed_domain": "power-sd",
+    "variance_model": "TAU2_PLUS_SIGMA_E2_OVER_M_WITH_SIGMA_E_EQUAL_SQRT_2_1_MINUS_RHO_TIMES_S_E_UP",
+    "innovation_distribution": "STANDARDIZED_STUDENT_T_DF5",
+    "clip_range": [
+      -1,
+      1
+    ],
+    "simulation_datasets": 10000,
+    "signflips_per_dataset": 2000,
+    "simulation_seed_domain": "power-sim",
+    "power_decision_rule": "POWER_MINUS_2_MCSE_GE_TARGET",
+    "event_bearing_fraction_bound": "WILSON_LOWER_95",
+    "normal_approximation_role": "SECONDARY_REPORT_ONLY",
+    "scenarios": {
+      "OPTIMISTIC": {
+        "rho": 0.8,
+        "tau": 0.05,
+        "role": "NO_GO_BOUNDARY"
+      },
+      "PLANNING": {
+        "rho": 0.5,
+        "tau": 0.05,
+        "role": "GO_BOUNDARY"
+      },
+      "HETEROGENEOUS": {
+        "rho": 0.5,
+        "tau": 0.1,
+        "role": "REPORTED"
+      },
+      "PESSIMISTIC": {
+        "rho": 0.0,
+        "tau": 0.05,
+        "role": "REPORTED"
+      }
+    },
+    "decision_semantics": {
+      "pool_minus_reservation_ge_f_req_planning": "POWER_GATE_PASS",
+      "pool_minus_reservation_between_optimistic_and_planning": "REDESIGN",
+      "pool_minus_reservation_lt_f_req_optimistic": "NO_GO",
+      "missing_or_unreconstructable_input": "INCONCLUSIVE"
+    },
+    "dlvs_reservation_rule": "MAX_0_CEIL_20_MINUS_EVENT_BEARING_PILOT_DISEASES_OVER_P_EB_WILSON_LOWER",
+    "threshold_gates": [
+      "POWER_POOL_SUFFICIENCY",
+      "POWER_POOL_OPTIMISTIC_FLOOR"
+    ]
+  },
+  "stage_b_confirmatory_power_gate": {
+    "gate_role": "P1_BEFORE_CONFIRMATORY_SEAL",
+    "study": "DEVELOPMENT_LIFT_AND_VARIANCE_STUDY",
+    "allowed_diseases": "DEVELOPMENT_EXPOSED_ONLY",
+    "min_event_bearing_diseases": 20,
+    "model_requirement": "INTENDED_CONFIRMATORY_MODEL_FAMILY_AND_VERSION",
+    "sigma_e_planning": "MAX_OF_CHI_SQUARE_UPPER95_AND_DISEASE_FAMILY_CLUSTER_BCA_UPPER95",
+    "tau_planning": "BOOTSTRAP_UPPER95_FLOOR_0_02",
+    "rho_planning": "REPORTED_ONLY_NOT_USED_SIGMA_E_IS_MEASURED_PAIRED_DIFFERENCE_SD",
+    "bootstrap_replicates": 10000,
+    "external_sources": {
+      "allowed": true,
+      "registry_schema": "big0f-variance-source-registry-v2",
+      "min_diseases_per_source": 20,
+      "combination_rule": "MAX_PLANNING_SD_SOURCES_CAN_ONLY_RAISE"
+    },
+    "decision_semantics": {
+      "pool_after_dlvs_ge_f_req": "CONFIRMATORY_SEAL_ALLOWED",
+      "pool_after_dlvs_lt_f_req": "REDESIGN_NEW_VERSION"
+    },
+    "additional_disease_draw": "CUSTODIAN_FROM_UNTOUCHED_POOL_ASCENDING_HMAC_DLVS_DOMAIN_UNTIL_20_EVENT_BEARING",
+    "variance_model": "TAU2_PLUS_MEASURED_PAIRED_SIGMA_E2_OVER_M",
+    "bootstrap_seed_domain": "power-sd"
+  },
+  "zero_event_policy": "RETAIN_IN_FRAME_NO_FABRICATED_RANK_SCORE_REPORT_ALL_FRAME_UTILITY",
+  "prohibitions": [
+    "CALLER_SUPPLIED_SD",
+    "BIG0F_BIOLOGICAL_ARM",
+    "ANALYST_CHOSEN_SEED",
+    "POST_RESULT_SCENARIO_CHOICE"
+  ]
+}

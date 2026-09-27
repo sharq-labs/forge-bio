@@ -8,17 +8,27 @@
     "estimand_id",
     "schema_version",
     "status",
+    "sealed_by_attestation_id",
+    "instance_state",
     "benchmark_id",
     "primary_population",
     "conditioning_rule",
     "disease_weighting",
     "zero_event_policy",
     "primary_contrast",
+    "primary_endpoint_subtype",
+    "primary_metric_id",
+    "ranking_universe_rule_id",
+    "eligibility_sensitivity",
+    "cutoff_policy",
     "horizon_selection_policy_ref",
-    "subtype_selection_policy_ref",
-    "primary_metric_selection_policy_ref",
+    "confirmatory_test_id",
+    "placebo_guard_id",
+    "alpha_one_sided",
+    "planning_effect",
+    "target_power",
+    "freeze_statement_ref",
     "all_frame_utility_metric_id",
-    "frozen_at",
     "digest"
   ],
   "properties": {
@@ -31,9 +41,22 @@
     },
     "status": {
       "enum": [
-        "STRUCTURE_FROZEN",
-        "CONFIRMATORY_INSTANCE_FROZEN"
+        "SEAL_CANDIDATE",
+        "SEALED"
       ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "instance_state": {
+      "enum": [
+        "STRUCTURE",
+        "CONFIRMATORY_INSTANCE"
+      ],
+      "description": "STRUCTURE: every fixed-now element set, (T*, H*) not yet produced. CONFIRMATORY_INSTANCE: (T*, H*) produced by the custodian predicates."
     },
     "benchmark_id": {
       "const": "B-TGT-E1-v0"
@@ -53,17 +76,58 @@
     "primary_contrast": {
       "const": "ASCERTAINMENT_OPPORTUNITY_PLUS_DISEASE_EVIDENCE_MINUS_ASCERTAINMENT_OPPORTUNITY_ONLY"
     },
+    "primary_endpoint_subtype": {
+      "const": "E1-NOVEL-STRICT"
+    },
+    "primary_metric_id": {
+      "const": "EVENT_RANK_PERCENTILE_V1"
+    },
+    "ranking_universe_rule_id": {
+      "const": "NOVEL-STRICT-ELIGIBILITY-FILTERED-V1"
+    },
+    "eligibility_sensitivity": {
+      "const": "SYMMETRIC_SCREEN_INDICATOR_IN_BOTH_NUISANCE_BLOCKS"
+    },
+    "cutoff_policy": {
+      "const": "SINGLE_CONFIRMATORY_CUTOFF_NO_POOLING"
+    },
     "horizon_selection_policy_ref": {
-      "const": "BIG0F-FIRST-PASSING-T_H-V1"
+      "const": "BIG0F-CUSTODIAN-FIRST-PASSING-T_H-V1"
     },
-    "subtype_selection_policy_ref": {
-      "const": "E1-NOVEL-STRICT-OR-REDESIGN-V1"
+    "confirmatory_test_id": {
+      "const": "PAIRED_SIGNFLIP_MEAN_DELTA_ONE_SIDED_V1"
     },
-    "primary_metric_selection_policy_ref": {
-      "const": "EVENT-RANK-PERCENTILE-V1"
+    "placebo_guard_id": {
+      "const": "PERMUTED_BIOLOGY_WITHIN_DISEASE_K19_V1"
+    },
+    "alpha_one_sided": {
+      "const": 0.05
+    },
+    "planning_effect": {
+      "const": 0.05,
+      "description": "Planning effect for power only; never a success threshold (INV-E7)."
+    },
+    "target_power": {
+      "const": 0.8
+    },
+    "freeze_statement_ref": {
+      "const": "docs/V0_FREEZE_STATEMENT.md"
     },
     "all_frame_utility_metric_id": {
       "const": "OBSERVED_EVENT_YIELD_AT_TOTAL_REVIEW_BUDGET"
+    },
+    "exact_cutoff": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "2005-12-31",
+        "2008-12-31",
+        "2011-12-31",
+        "2014-12-31",
+        null
+      ]
     },
     "exact_horizon": {
       "type": [
@@ -78,28 +142,11 @@
         null
       ]
     },
-    "primary_endpoint_subtype": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "enum": [
-        "E1-NOVEL-STRICT",
-        "E1-MATURATION",
-        "E1-REPLICATION",
-        "E1-CROSSMODAL",
-        null
-      ]
-    },
-    "primary_metric_id": {
+    "selection_registration_attestation_id": {
       "type": [
         "string",
         "null"
       ]
-    },
-    "frozen_at": {
-      "type": "string",
-      "format": "date-time"
     },
     "digest": {
       "type": "string",
@@ -111,7 +158,7 @@
       "if": {
         "properties": {
           "status": {
-            "const": "CONFIRMATORY_INSTANCE_FROZEN"
+            "const": "SEALED"
           }
         },
         "required": [
@@ -119,12 +166,48 @@
         ]
       },
       "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "instance_state": {
+            "const": "CONFIRMATORY_INSTANCE"
+          }
+        },
         "required": [
+          "instance_state"
+        ]
+      },
+      "then": {
+        "required": [
+          "exact_cutoff",
           "exact_horizon",
-          "primary_endpoint_subtype",
-          "primary_metric_id"
+          "selection_registration_attestation_id"
         ],
         "properties": {
+          "exact_cutoff": {
+            "type": "string",
+            "enum": [
+              "2005-12-31",
+              "2008-12-31",
+              "2011-12-31",
+              "2014-12-31"
+            ]
+          },
           "exact_horizon": {
             "type": "string",
             "enum": [
@@ -134,35 +217,21 @@
               "10y"
             ]
           },
-          "primary_endpoint_subtype": {
-            "const": "E1-NOVEL-STRICT"
-          },
-          "primary_metric_id": {
-            "const": "EVENT_RANK_PERCENTILE_V1"
+          "selection_registration_attestation_id": {
+            "type": "string",
+            "minLength": 1
           }
         }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "status": {
-            "const": "STRUCTURE_FROZEN"
-          }
-        },
-        "required": [
-          "status"
-        ]
       },
-      "then": {
+      "else": {
         "properties": {
+          "exact_cutoff": {
+            "type": "null"
+          },
           "exact_horizon": {
             "type": "null"
           },
-          "primary_endpoint_subtype": {
-            "type": "null"
-          },
-          "primary_metric_id": {
+          "selection_registration_attestation_id": {
             "type": "null"
           }
         }

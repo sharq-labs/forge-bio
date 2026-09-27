@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://forge-bio.local/schemas/seal-bundle-manifest.v1.schema.json",
-  "title": "Forge Bio BIG 0F Seal Bundle Manifest v2",
+  "title": "Forge Bio BIG 0F Seal Bundle Manifest (bundle version big0f-seal-bundle-v3)",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -10,8 +10,6 @@
     "created_by_role",
     "protocol_version",
     "protocol_sha256",
-    "disease_frame_sha256",
-    "frame_seal_attestation_sha256",
     "randomness_beacon_id",
     "randomness_beacon_sha256",
     "derived_sampling_key_commitment_sha256",
@@ -36,16 +34,43 @@
     "adjudicator_independence_schema_sha256",
     "external_authority_verifier_sha256",
     "curation_audit_schema_sha256",
-    "power_input_derivation_contract_sha256",
-    "power_input_derivation_schema_sha256",
-    "variance_source_registry_sha256",
-    "variance_source_registry_schema_sha256",
     "provider_audit_scope_sha256",
-    "provider_audit_scope_schema_sha256"
+    "provider_audit_scope_schema_sha256",
+    "freeze_statement_sha256",
+    "semantic_invariants_sha256",
+    "metric_spec_sha256",
+    "eligibility_rule_sha256",
+    "selection_custody_sha256",
+    "frame_rule_sha256",
+    "frame_rule_schema_sha256",
+    "frame_cov_sha256",
+    "outcome_discovery_spec_sha256",
+    "outcome_discovery_config_sha256",
+    "outcome_discovery_schema_sha256",
+    "outcome_discovery_run_sha256",
+    "recall_audit_sha256",
+    "required_field_registry_sha256",
+    "required_field_registry_schema_sha256",
+    "power_policy_sha256",
+    "power_policy_schema_sha256",
+    "power_policy_contract_sha256",
+    "protocol_registration_sha256",
+    "protocol_registration_public_registry_attestation_sha256",
+    "protocol_registration_timestamp_attestation_sha256",
+    "selection_registration_sha256",
+    "selection_registration_public_registry_attestation_sha256",
+    "selection_registration_timestamp_attestation_sha256",
+    "selection_provenance_sha256",
+    "randomness_beacon_schema_sha256",
+    "custodian_independence_attestation_sha256",
+    "verification_harness_sha256",
+    "review_salt_commitment_sha256",
+    "nuisance_code_sha256",
+    "retest_salt_commitment_sha256"
   ],
   "properties": {
     "seal_bundle_version": {
-      "const": "big0f-seal-bundle-v2"
+      "const": "big0f-seal-bundle-v3"
     },
     "created_at": {
       "type": "string",
@@ -61,10 +86,6 @@
       "const": "BIG-0F-v0"
     },
     "protocol_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
-    "disease_frame_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
@@ -97,7 +118,7 @@
       ]
     },
     "sampling_algorithm_version": {
-      "const": "external-beacon-hash-sort-v1"
+      "const": "drand-quicknet-predeclared-round-hmac-sort-v1"
     },
     "threshold_manifest_sha256": {
       "type": "string",
@@ -143,10 +164,6 @@
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "frame_seal_attestation_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
     "selection_provenance_schema_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
@@ -175,22 +192,6 @@
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
     },
-    "power_input_derivation_contract_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
-    "power_input_derivation_schema_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
-    "variance_source_registry_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
-    "variance_source_registry_schema_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[0-9a-fA-F]{64}$"
-    },
     "provider_audit_scope_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
@@ -198,6 +199,131 @@
     "provider_audit_scope_schema_sha256": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "freeze_statement_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "semantic_invariants_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "metric_spec_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "eligibility_rule_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_custody_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_rule_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_rule_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "frame_cov_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "outcome_discovery_spec_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "outcome_discovery_config_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "outcome_discovery_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "outcome_discovery_run_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "recall_audit_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "required_field_registry_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "required_field_registry_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_policy_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_policy_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "power_policy_contract_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "protocol_registration_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "protocol_registration_public_registry_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "protocol_registration_timestamp_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_registration_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_registration_public_registry_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_registration_timestamp_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_provenance_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "randomness_beacon_schema_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "custodian_independence_attestation_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "verification_harness_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "review_salt_commitment_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "nuisance_code_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "retest_salt_commitment_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
     }
-  }
+  },
+  "description": "Root commitment of BIG 0F (S6). Binds every normative document, config, schema, custody artifact and verifier by digest. Its seal_time is max(OTS block time, public registration time); adjudicators receive events only after it (INV-C11)."
 }

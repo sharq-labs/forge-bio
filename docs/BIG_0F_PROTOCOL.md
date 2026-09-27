@@ -1,12 +1,19 @@
 # BIG 0F V0 Pilot Protocol
 
-**Status:** PRE-ADJUDICATION FROZEN CANDIDATE — must be externally sealed before first case review  
-**Purpose:** decide whether B-TGT-E1-v0 is scientifically constructible  
+**Status:** SEAL_CANDIDATE — SPEC-CLOSED / IMPLEMENTATION-PENDING. It is registered at S1 ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2) before any cutoff/horizon predicate is computed.
+**Precedence:** [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) wins over this page. The decisions are recorded in [ADR-022](adr/ADR-022-final-scientific-consistency-closure.md).
+**Purpose:** decide whether B-TGT-E1-v0 is scientifically constructible
 **Claim level:** DEVELOPMENT only; this pilot cannot support a confirmatory performance claim
+**Start gates (ADR-022 §9):** BIG 0F adjudication cannot begin until all four exist:
+
+- the minimal verification harness;
+- a successful external-seal dry run;
+- an independent second adjudicator;
+- an independent selection custodian.
 
 ## 1. Pilot cutoff and horizon
 
-Cutoff/horizon selection is deterministic and sealed before event adjudication.
+Cutoff/horizon selection is deterministic and completed by the selection custodian before event adjudication.
 
 The candidate cutoff order is:
 
@@ -26,120 +33,83 @@ The candidate horizon order is:
 10y
 ```
 
-Evaluate candidate pairs lexicographically in the order above and choose the **first pair** that passes only the preregistered provider-availability, observation-window, and minimum event-count feasibility criteria.
+The 16 pairs are evaluated in cutoff-major order (cutoff ascending, then 3y, 5y, 7y, 10y). The selected pair (T\*, H\*) is the **first pair** for which all five frozen predicates pass: P_prov, P_obs, P_cov, P_anchor and P_evt ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §3).
 
-Model lift, biological-model rankings, nuisance-model lift, or ambiguity outcomes are not inspected to choose T/H.
+Model lift, biological-model rankings, nuisance-model lift and ambiguity outcomes are never inspected to choose T/H. No predicate uses a per-disease outcome that the study team can see.
 
-If none pass, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
+If no pair passes, BIG 0F returns REDESIGN rather than choosing a new cutoff/horizon post hoc.
 
-Machine-enforcement requirement for the future implementation: the pilot must emit a `big0f-selection-provenance-v1` artifact containing the complete 16-pair lexicographic feasibility audit, the raw event universe for every pair with per-event provenance digests, and evidence digests for provider availability and observation-window feasibility. The future evaluator must reconstruct the first passing pair; a later favorable pair cannot be declared manually.
+**Required artifact.** The custodian emits `big0f-selection-provenance-v1` (`schemas/big0f-selection-provenance.v1.schema.json`). It contains:
+
+- the complete 16-pair audit in the frozen order;
+- per-predicate results with evidence digests;
+- frame-level aggregates;
+- the **digest** of each custody-held raw event universe.
+
+The raw universes themselves are never released to the study team (INV-C3). The future evaluator must reconstruct the first passing pair (INV-C2); a later favorable pair cannot be declared manually.
 
 ## 2. Disease sampling
 
-Construct the eligible disease frame mechanically from the as-of-T vocabulary and B-TGT common-complex germline regime.
+The disease frame is a deterministic function of the frozen frame rule ([BIG_0F_FRAME_RULE.md](BIG_0F_FRAME_RULE.md)) and of pinned as-of-T releases. Sampling uses only frame_cov(T\*), the coverage-eligible subset.
 
-Before any event adjudication:
+Before any event adjudication, the custody sequence S1–S7 runs exactly as written in [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2:
 
-1. serialize and hash the disease frame;
-2. externally timestamp/register the frame digest;
-3. after that frame seal exists, obtain a verified public randomness-beacon round;
-4. bind the beacon artifact to the already-sealed frame digest;
-5. derive the sampling key deterministically from frame digest + beacon randomness;
-6. order eligible diseases with the frozen deterministic BIG 0F hash-sort sampling contract.
+1. protocol registration;
+2. predicates;
+3. selection of (T\*, H\*);
+4. selection registration with a **pre-declared** drand quicknet round R;
+5. key derivation and ordering at time(R);
+6. seal bundle;
+7. release of events to adjudicators after seal_time(S6).
 
-The study team does not choose or grind candidate seeds. A beacon published before the frame seal is invalid.
+The study team does not choose, see or grind seeds. A round other than the pre-declared R, or a chain other than quicknet, is invalid (INV-C6). The ordering condition is seal_time(S4) ≤ time(R) − 24 h (INV-C7).
 
-Pilot selection proceeds down that immutable order.
+Pilot selection proceeds down the keyed order:
 
-Target:
+- **Start** with the first 12 diseases.
+- **Expand** one disease at a time, up to 15, only while the cumulative **raw candidate event-family count** is below 60.
+- **Cap.** If more than 150 families exist, apply the family-level cap in custody §8. At least one family is kept per disease that has at least one raw candidate family; the remaining slots are filled in ascending `cap` key order.
 
-```text
-12 diseases
-```
+No famous or manual disease additions enter the decision dataset. Showcase cases are governed by custody §4.
 
-Allowed expansion:
-
-```text
-up to 15 diseases
-```
-
-only if fewer than 60 candidate future genetic events are available after the first 12.
-
-The pilot stops adding diseases once either:
-- at least 60 candidate events are available; or
-- 15 diseases have been included.
-
-If more than 150 candidate events exist, select 150 with a sealed stratified random rule that preserves disease representation.
-
-No famous/manual disease additions enter the decision dataset.
-
-The future evaluator must reconstruct the first 15 diseases from the sealed frame + verified beacon. It must then recompute the 12→15 expansion mechanically from the raw event universe. A pilot result that stops early, expands unnecessarily, or reports a different disease order is invalid.
+The future evaluator must reconstruct the ordered prefix from the sealed frame_cov digest and the verified beacon, and then recompute expansion and cap mechanically (INV-C9, INV-C10). A pilot result that stops early, expands unnecessarily or reports a different disease order is invalid.
 
 ## 3. Pilot event sampling
 
-For each selected disease, enumerate candidate post-T genetic events in (T, T+H] using the frozen outcome-discovery procedure.
+For each selected disease, the custodian enumerates candidate post-T genetic events in (T\*, T\* + H\*] using the frozen outcome-discovery procedure ([OUTCOME_DISCOVERY_SPEC_V1.md](OUTCOME_DISCOVERY_SPEC_V1.md), executed once, INV-O1).
 
-All enumerated events are retained unless the 150-event cap applies.
+- Events are grouped into event families (500 kb single linkage) before adjudication.
+- Counts, expansion and cap all operate on families, never on raw records.
+- Families tagged PRE_T_LOCUS do not count toward the raw candidate count (INV-O2).
 
-When the cap applies, the frozen deterministic event-sampling contract performs keyed sampling over the immutable raw event universe, first preserving at least one event from every event-bearing disease and then filling remaining slots by keyed hash order. The selected event IDs must be recorded in the selection-provenance artifact and independently reconstructable by the future evaluator implementation.
+## 4. Development exposure
 
-Events are grouped into ScientificEventFamily / GeneticDiscoveryEventFamily before adjudication.
+Exposure is accounted for per disease in the exposure ledger ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §4–§6):
 
-## 4. Permanent development contamination
+- Any per-disease post-T information that reaches the study, design or ranking team, or any other audience that is not role-separated, by any route, makes that disease DEVELOPMENT_EXPOSED (INV-X1).
+- Every pilot disease whose events were released is DEVELOPMENT_EXPOSED.
+- Frame-level aggregates do not expose a disease.
+- The custodian's role-separated access does not expose a disease either (INV-X3).
+- Confirmatory NOVEL-STRICT families within 500 kb of an adjudicated family of any DEVELOPMENT_EXPOSED disease at (T\*, H\*) are excluded from primary positives. Those diseases are the pilot, the DLVS and any showcase (INV-X5).
 
-Every disease/event inspected in BIG 0F is tagged:
-
-```text
-DEVELOPMENT_EXPOSED
-```
-
-These diseases/events may never enter the strongest-tier sealed confirmatory generation.
-
-Changing this rule requires a new pilot on untouched diseases.
+DEVELOPMENT_EXPOSED diseases may never enter the strongest-tier sealed confirmatory generation. Changing this rule requires a new pilot on untouched diseases.
 
 ## 5. Independent adjudication
 
-A second independent reviewer adjudicates a seeded stratified sample of:
+The agreement policy is frozen in `config/big0f-adjudication-policy.v2.json` → `agreement_policy` and explained in [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §4.
 
-```text
-max(30 cases, 30% of adjudicated event cases)
-```
-
-capped at the total pilot size.
-
-The second reviewer is blind to:
-- first-reviewer decisions;
-- Forge Bio rankings;
-- Combined Nuisance rankings.
-
-Agreement is reported for:
-- phenotype relation;
-- assignment class;
-- PreTGeneticState;
-- novelty verdict;
-- event-family identity;
-- sample-overlap verdict.
-
-Record both:
-- adjudicated_event_case_count;
-- duplicate_review_count;
-- duplicate_review_fraction = duplicate_review_count / adjudicated_event_case_count.
-
-A GO decision is invalid unless duplicate_review_count reaches `min(N_event_cases, max(30, ceil(0.30 * N_event_cases)))`.
-
-Report percent agreement plus a chance-corrected agreement statistic.
-
-Cohen's kappa is used only when category prevalence/balance makes it interpretable. For strongly imbalanced categorical decisions, also report a prevalence-robust agreement statistic (for example Gwet's AC1/AC2 or a preregistered equivalent) and the full confusion matrix.
-
-The GO/REDESIGN threshold is applied to the **preregistered primary agreement statistic for each adjudication task**, not automatically to kappa for every task.
-
-One frozen rule revision is allowed after disagreement review. The revised rules are then re-tested on a new held-out subset of the pilot cases.
+- **Duplicate-review set.** A second independent reviewer reviews min(N, max(30, ⌈0.30·N⌉)) event cases. They are stratified by disease and selected in **salted** keyed-hash order (`dup-review` domain plus the custodian review salt). The custodian uses the salt privately once the complete first-review label set is registered, and publishes it only after the second-review labels are registered. Neither reviewer can foresee or infer the audit set. The set must equal the recomputed selection (INV-A3).
+- **Blinding.** The second reviewer is blind to first-reviewer decisions, to Forge Bio rankings and to the Combined Nuisance rankings.
+- **Statistic.** Gwet AC1 for each of the four gated tasks: primary assignment eligibility, phenotype qualification, novelty eligibility and primary-positive status. Each task must clear its thresholds on **both** the point estimate and the lower one-sided 90% BCa bound.
+- **Also reported.** Cohen κ, percent agreement and the full confusion matrix are reported for every task, including the reported-only tasks (full assignment class, PreTGeneticState, event-family identity, sample overlap). κ is never gated, and no statistic is chosen after prevalence is seen (INV-A1).
+- **Stored labels.** Both reviewers' labels are stored for every duplicate-reviewed case (`big0f-curation-audit-v2`, INV-A4).
+- **Rule revision.** One clarification-only rule revision is allowed; it changes no policy value and applies to all cases. The re-labelled set is registered first. The retest set is then drawn from all cases, stratified by disease, with a second salt that is still secret, and gates are evaluated on it (INV-A5; custody S9).
 
 ## 6. Symmetric non-event historical audit
 
-Historical-search / PreTGeneticState burden cannot be measured only on future positives.
+Historical-search and PreTGeneticState burden cannot be measured only on future positives.
 
-Draw a seeded random sample of non-event disease–gene pairs from the same pilot diseases:
+The custodian draws a keyed random sample (`non-event` domain) of non-event disease–gene pairs from the same pilot diseases:
 
 ```text
 N_non_event =
@@ -152,7 +122,7 @@ Report:
 - minutes per case;
 - UNKNOWN/AMBIGUOUS fraction;
 - sources required;
-- reviewer disagreement on a deterministically sized duplicate subset.
+- reviewer agreement (AC1 with its lower bound) on a deterministically sized duplicate subset.
 
 The non-event duplicate-review minimum is:
 
@@ -160,84 +130,77 @@ The non-event duplicate-review minimum is:
 min(N_non_event, max(30, ceil(0.30 * N_non_event)))
 ```
 
-The `big0f-curation-audit-v1` artifact records case-level historical-search state, source families, provenance, duplicate-review status/outcome, and the derived disagreement/agreement summaries. Failure to reach the frozen duplicate-review minimum makes the pilot INCONCLUSIVE rather than silently waiving the audit.
+The `big0f-curation-audit-v2` artifact records:
+
+- case-level historical-search state;
+- source families and provenance;
+- both reviewers' labels;
+- keyed selection ranks;
+- the derived agreement summaries.
+
+Failing to reach the frozen sample size or the duplicate-review minimum makes the pilot INCONCLUSIVE (gates `NON_EVENT_AUDIT_COMPLETION_RATIO` and `NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO`). The audit is never silently waived.
 
 ## 7. Mini provider-availability audit
 
-Audit at least four source families before GO:
+Audit the four mandatory source-family kinds:
 
 1. primary publications / publication metadata;
 2. GWAS primary reports and/or historical summary-statistic sources;
 3. disease/gene/variant identity or ontology releases;
 4. historical gene-model / annotation releases.
 
-For every field needed by the proposed benchmark, record:
+**Scope.** The scope is derived mechanically: the selected pilot diseases × every field in `config/big0f-required-field-registry.v1.json` (`big0f-provider-audit-scope-v2`). The study team does not choose fields or diseases, and OPTIONAL fields are not in scope.
+
+**Recorded per cell:**
 
 ```text
 historical release obtainable?
 release/version identifiable?
-field existed at T?
+field existed at T?            (AS_OF_T fields)
+value reconstructable?
 retrospectively curated?
 mapping needed?
 license/access constraint?
-coverage fraction?
-criticality: CRITICAL | REQUIRED | OPTIONAL
+coverage grade
+criticality: CRITICAL | REQUIRED
+time_scope: AS_OF_T | EVALUATION
 ```
 
 Current availability is not accepted as evidence of historical reconstructability.
 
-Provider metrics used by the decision engine are not accepted as free scalar assertions. A `big0f-provider-audit-v1` artifact must enumerate the source families and field-level audit cells. It must contain at least one source from each of the four mandatory family kinds above; four arbitrary/OTHER entries do not satisfy the rule. The disease/source/field audit scope is frozen under `big0f-provider-audit-scope-v1` before availability is inspected, and every source release and required-field cell carries immutable evidence provenance. Required-field availability, coverage distribution, source-family count/IDs, provider coupling, and ancestry metadata coverage are re-derived from that artifact before GO can be evaluated.
+**Derived metrics.** The `big0f-provider-audit-v2` artifact binds the registry digest and the selection-provenance digest. Required-field availability, source-family kinds present, ancestry metadata coverage and the shared-pipeline fraction are all re-derived from its cells before GO can be evaluated.
 
 ### Required-field availability score
 
-The GO/REDESIGN/NO-GO "archived required-field availability" metric is computed as:
-
 ```text
-available_required_field_cells
+available cells (registry availability predicate for the cell's time_scope)
 /
-all_required_field_cells
+all cells in scope
 ```
 
-across the sealed disease/source sample.
-
 Rules:
-- CRITICAL fields are not averaged away: any missing CRITICAL field required to determine the primary endpoint forces the affected case to AMBIGUOUS/UNUSABLE;
-- REQUIRED fields enter the denominator equally unless a weighting scheme was frozen before audit;
-- OPTIONAL fields do not improve the availability score;
-- source families and fields are enumerated before the first audit;
-- no field may be reclassified after seeing its availability rate without a versioned REDESIGN.
+- CRITICAL fields are not averaged away. A missing CRITICAL field makes the affected case AMBIGUOUS or UNUSABLE.
+- CRITICAL and REQUIRED cells enter the denominator equally.
+- No field may be reclassified after its availability rate has been seen. Doing so needs a new registry version and a versioned REDESIGN.
 
 ## 8. Assignment-attention audit
 
-Every gene-level outcome receives one assignment class under the externally sealed `config/big0f-adjudication-policy.v1.json`.
+Every gene-level outcome receives one assignment class under `config/big0f-adjudication-policy.v2.json`:
 
-A **primary** gene-level positive additionally requires the discovery/test ascertainment to be hypothesis-free at the relevant scale (GENOME_WIDE, EXOME_WIDE, or BIOBANK_WIDE). Targeted candidate-gene follow-up cannot independently create a primary positive.
+- **Primary:** HYPOTHESIS_FREE_CODING_OR_LOF, HIGH_CONFIDENCE_FINE_MAPPING, PREREGISTERED_COLOCALIZATION
+- **Secondary:** AUTHOR_NAMED, NEAREST_GENE, POSITIONAL_PROXIMITY_ONLY, GENERIC_DATABASE_GENE_FIELD, MODERN_L2G_ONLY, CURRENT_CURATED_TARGET_ONLY, TARGETED_CANDIDATE_GENE_CODING
+- **Unresolved:** LOCUS_ONLY
 
-`OTHER_HIGH_SPECIFICITY_METHOD` is not an open primary category in V0. New assignment methods require a versioned REDESIGN before use.
-
-Every gene-level outcome receives one assignment class:
-
-```text
-HYPOTHESIS_FREE_CODING_OR_LOF
-HIGH_CONFIDENCE_FINE_MAPPING
-PREREGISTERED_COLOCALIZATION
-AUTHOR_NAMED
-NEAREST_GENE
-POSITIONAL_PROXIMITY_ONLY
-GENERIC_DATABASE_GENE_FIELD
-MODERN_L2G_ONLY
-TARGETED_CANDIDATE_GENE_CODING
-```
+A **primary** gene-level positive also requires hypothesis-free ascertainment at the relevant scale: GENOME_WIDE, EXOME_WIDE or BIOBANK_WIDE. Targeted candidate-gene follow-up cannot create a primary positive on its own. There is no `OTHER_HIGH_SPECIFICITY_METHOD`. A new assignment method requires a versioned REDESIGN.
 
 Report:
 - class fractions;
 - primary-eligible high-specificity fraction;
-- author-named fraction;
-- nearest-gene fraction;
+- author-named and nearest-gene fractions;
 - pre-T attention-rank distribution by assignment class;
-- a preregistered association statistic comparing attention rank with probability of receiving an attention-sensitive assignment, using the event set plus a frozen matched comparison sample where required;
-- event yield after removing non-primary assignment classes;
-- locus-level one-credit sensitivity.
+- the attention–assignment association and the label-resolution-bias audit (adjudication definitions §5), each computed over all adjudicated post-T event families in the pilot, with no matched sample;
+- event yield after removing non-primary classes;
+- locus-level one-credit sensitivity. This is a diagnostic only; locus-level credit is a V1 redesign.
 
 A raw correlation computed only among already-positive author-named genes is not sufficient to establish attention circularity.
 
@@ -254,11 +217,11 @@ preT_summary_statistics_available?
 preT_signal_state
 ```
 
-A development-only power-maturation baseline is constructed from historically available sample-size trajectory and observability variables.
+The power-maturation pathway enters the nuisance comparator through the pre-specified interaction of variant opportunity with disease sample-size trajectory (nuisance manifest v2).
 
 ## 10. Combined Nuisance headroom
 
-On pilot-only DEVELOPMENT data, build **only the Combined Nuisance Model** using the frozen nuisance manifest.
+On pilot-only DEVELOPMENT data, build **only the Combined Nuisance Model**, using `config/big0f-nuisance-manifest.v2.json` with its 14 mandatory families, global attention volume and momentum included.
 
 Canonical pilot model-evaluation mode:
 
@@ -266,122 +229,78 @@ Canonical pilot model-evaluation mode:
 NUISANCE_ONLY
 ```
 
-BIG 0F **must not run the nuisance + disease-specific biological-evidence arm** and must not inspect Forge Bio biological-model lift. This prevents the pilot from tuning subtype, nuisance definition, metric, or minimum effect toward a favorable biological result.
+BIG 0F **must not run the nuisance + disease-specific biological-evidence arm** and must not inspect Forge Bio biological-model lift (INV-P6).
 
-The nuisance manifest requires content-free disease-specific attention volume and attention momentum in addition to genomic architecture, pleiotropy, observability, sample-size trajectory, and provider coverage.
+The run follows the [Nuisance Execution Contract](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md):
 
-This is a nuisance-saturation / feasibility analysis, not a Forge Bio performance experiment.
+- the frozen learner;
+- out-of-fold ranks only;
+- the eligibility-filtered universe;
+- mid-rank ties;
+- the adequacy check.
 
-The actual fitted nuisance execution must be recorded as a `big0f-nuisance-run-v1` artifact under the frozen [Nuisance Execution Contract](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md). Its feature-family set and per-family feature-artifact digests must match the frozen nuisance manifest exactly; semantic biological evidence remains prohibited. The run also binds historical source releases, candidate-universe digest, full rank-output digest, feature transforms, preprocessing, learner family, hyperparameter search space, tuning budget, early-stopping rule, seed policy, and fitted-model digest. The eligible positive-event set is also committed by digest; event-rank records must exactly cover that set. Headline nuisance metrics are reconstructed from committed rank positions and candidate-universe sizes rather than accepted as free summary values.
+It is recorded as a `big0f-nuisance-run-v2` artifact. Headline metrics are reconstructed from the committed ranks.
 
 Report:
-- median percentile rank of positive events under nuisance only;
+- mean and median positive event percentile under the nuisance comparator (higher = less headroom);
 - distribution by disease;
-- fraction of events already in the top 1% and top 5%;
-- remaining rank-space/headroom available beyond nuisance-only prediction;
-- sensitivity to removing attention variables as a diagnostic only; the mandatory disease-specific attention volume/momentum families are not removable from the eventual headline comparator.
+- fraction of positives in the top 1% and top 5%;
+- combined-minus-best-single-family adequacy;
+- attention-family removal, as a labelled diagnostic only.
 
-## 11. Power-analysis inputs
+## 11. Power
 
-The pilot outputs:
-- event-bearing disease count;
-- high-specificity positive count;
-- event-count distribution by disease;
-- candidate-universe size distribution;
-- within-disease positive rank variance;
-- nuisance-model rank distribution;
-- observed dependence clusters.
+BIG 0F runs the **Stage A pool-sufficiency screen** of [BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §2.
 
-These feed a simulation-based confirmatory power analysis.
+- **What it is.** The screen is model-free. It simulates the frozen sign-flip test under the frozen scenario family, using the event-level SD bound from the nuisance run.
+- **Reservation.** It reserves N_DLVS diseases for Stage B.
+- **Inputs.** No caller-supplied SD is accepted, and no scenario is chosen after results are seen.
+- **Stage B.** Confirmatory variance is measured later, in the Development Lift & Variance Study. That is a P1 item and gates the confirmatory seal, not BIG 0F.
 
-V0 does **not** accept a caller-supplied disease-level standard deviation. Because BIG 0F is NUISANCE_ONLY, its nuisance-rank dispersion cannot be treated as an empirical estimate of future paired biological-lift variance.
+α = 0.05 one-sided, planning effect = 0.05 (planning only) and target power = 0.80 are fixed in [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1. BIG 0F cannot change them.
 
-The frozen [Power Input Derivation Contract](BIG_0F_POWER_INPUT_DERIVATION.md) therefore requires GO-capable variance evidence from the frozen exhaustive registry of independent DEVELOPMENT sources measuring the same estimand and primary metric, disjoint from the untouched confirmatory pool. The primary planning SD is the conservative bootstrap upper 95% bound after the frozen dependence adjustment. The nuisance-rank SD proxy remains a sensitivity diagnostic only and is explicitly **not GO-eligible**. If no eligible independent same-estimand variance source exists, the power gate is INCONCLUSIVE.
+## 12. GO / REDESIGN / NO-GO / INCONCLUSIVE
 
-Planning confirmatory defaults:
+**Every numeric threshold is a gate in `config/big0f-thresholds.v2.json`.** This page deliberately restates no values (INV-T1). For each gate the manifest gives:
 
-```text
-one-sided alpha = 0.05
-target power >= 0.80
-```
+- the metric definition;
+- the source artifact;
+- the direction;
+- the GO bound;
+- the fail consequence;
+- the NO_GO bound;
+- the stricter and looser bounds;
+- the rationale.
 
-The minimum scientifically meaningful effect is frozen in the sealed threshold manifest at **0.05 rank-fraction units** for V0. BIG 0F may estimate variance/power inputs but may not change that effect threshold in response to Forge Bio biological-model performance.
+The gates cover:
 
-## 12. GO / REDESIGN / NO-GO thresholds
+| Area | Gate IDs |
+|---|---|
+| Ambiguity | ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION, UNKNOWN_SAMPLE_OVERLAP_FRACTION |
+| Agreement | AGREEMENT_AC1_MIN_OVER_GATED_TASKS, AGREEMENT_AC1_LOWER90_MIN_OVER_GATED_TASKS, DUPLICATE_REVIEW_COVERAGE_RATIO |
+| Provider | REQUIRED_FIELD_AVAILABILITY, SOURCE_FAMILY_KINDS_PRESENT, ANCESTRY_METADATA_COVERAGE, SHARED_PIPELINE_FRACTION_PRIMARY |
+| Assignment and attention | PRIMARY_ELIGIBLE_FRACTION, AUTHOR_NEAREST_FRACTION, HIGH_SPECIFICITY_POSITIVE_COUNT, HYPOTHESIS_FREE_DISCOVERY_FRACTION, LABEL_FEATURE_METHOD_COUPLING_FRACTION, ATTENTION_ASSIGNMENT_ASSOC_UPPER95, LABEL_RESOLUTION_BIAS_UPPER95, LOCUS_TO_MANY_GENE_FRACTION, PRE_T_COHORT_REUSE_FRACTION |
+| Nuisance headroom | NUISANCE_MEAN_POSITIVE_PERCENTILE, NUISANCE_MEDIAN_POSITIVE_PERCENTILE, NUISANCE_TOP1_POSITIVE_FRACTION, NUISANCE_ADEQUACY_MARGIN |
+| Curation burden | MEDIAN_EVENT_CURATION_MINUTES, NON_EVENT_TO_EVENT_TIME_RATIO_MIN, NON_EVENT_TO_EVENT_TIME_RATIO_MAX, NON_EVENT_AUDIT_COMPLETION_RATIO, NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO |
+| Yield and discovery | EVENT_BEARING_DISEASE_FRACTION, OUTCOME_DISCOVERY_RECALL |
+| Selection predicates (custodian; always PASS for the selected pair) | FRAME_COVERAGE_FRACTION, FRAME_COVERED_DISEASE_COUNT, MEAN_RAW_CANDIDATES_PER_COVERED_DISEASE |
+| Power | POWER_POOL_SUFFICIENCY (REDESIGN), POWER_POOL_OPTIMISTIC_FLOOR (NO_GO) |
 
-These thresholds are frozen before adjudication.
+**Decision rules (manifest `decision_semantics`, SEMANTIC_INVARIANTS INV-T):**
 
-### Hard NO-GO for current B-TGT-E1 design
+- A missing or non-finite value → INCONCLUSIVE.
+- Precedence: NO_GO > REDESIGN > INCONCLUSIVE > GO.
+- GO requires every gate to PASS at the base bounds, and every non-exempt gate to PASS at its **stricter** bound. The decision must also be GO under all three bound sets (INV-T6).
+- If the terminal decision differs across bound sets, the decision is the higher-precedence of the BASE decision and REDESIGN.
+- Every evaluation is registered (public OSF + OTS). Between evaluations, only procedural completion is allowed. After two INCONCLUSIVE evaluations, the next result cannot be INCONCLUSIVE (INV-T7).
+- The result is recorded as `big0f-pilot-result-v2`. Every gate appears by ID with its value and outcome under all three bound sets, and all bound artifacts are included by digest.
 
-NO-GO if any remains true after one allowed rule clarification/revision:
+**V0 subtype.** The V0 pilot does not switch to E1-MATURATION, E1-REPLICATION or E1-CROSSMODAL after results are seen. The V0 primary subtype is E1-NOVEL-STRICT and the primary metric is EVENT_RANK_PERCENTILE_V1 (Freeze Statement §1). REDESIGN leads to V1 with a new pilot on untouched diseases (Freeze Statement §4). Typical V1 redesign options:
 
-- archived/as-of-T required-field availability < 70%;
-- fraction of unique cases AMBIGUOUS on **any** primary-endpoint dimension > 40%;
-- preregistered primary agreement statistic < 0.60 on either primary gene-assignment class or phenotype match;
-- simulation-based confirmatory power < 0.80 at alpha 0.05 for the frozen scientifically meaningful effect even after using all feasible untouched confirmatory diseases/cutoff resources;
-- no plausible untouched disease pool remains after excluding pilot contamination;
-- high-specificity assignment yields too few positives to support the planned confirmatory test and locus-level redesign is not feasible.
-
-### REDESIGN triggers
-
-REDESIGN if any occurs:
-
-- author-named + nearest-gene assignments > 50% of candidate gene-level positives;
-- the confidence interval for the preregistered attention/assignment association reaches or exceeds the sealed absolute boundary 0.30;
-- primary-eligible high-specificity assignments < 50% of gene-level positives;
-- strict novelty is dominated by pre-T cohort reuse / power maturation;
-- same curation pipeline materially dominates both inputs and outcomes;
-- fraction of unique cases AMBIGUOUS on any primary-endpoint dimension is >20% and <=40%;
-- preregistered primary agreement statistic is >=0.60 and <0.70;
-- archived required-field availability is >=70% and <90%;
-- Combined Nuisance already ranks the median positive in the top 1% of its disease candidate universe, leaving little plausible headroom.
-
-Default redesign options:
-- move primary endpoint to locus level;
-- create a **new versioned pilot** if a different E1 subtype is scientifically preferred;
-- replace shared curation outcomes with independently re-extracted primary-source outcomes;
-- narrow disease era/regime;
-- strengthen assignment criteria.
-
-The current V0 pilot does not switch to E1-MATURATION/E1-REPLICATION/E1-CROSSMODAL after inspecting results. V0's primary subtype is E1-NOVEL-STRICT and its primary metric is EVENT_RANK_PERCENTILE_V1.
-
-### GO requirements
-
-GO requires all:
-
-- archived required-field availability >= 90%;
-- fraction of unique cases AMBIGUOUS on any primary-endpoint dimension <= 20%;
-- preregistered primary agreement statistic >= 0.70 for primary assignment and phenotype match;
-- high-specificity primary-eligible assignment fraction >= 50%;
-- hypothesis-free study-design fraction among primary positives meets the sealed threshold;
-- label/feature method-family coupling remains below the sealed threshold;
-- no material unmitigated Past/Future curation coupling;
-- sample-overlap / lineage ambiguity within the frozen acceptable policy;
-- ancestry/population metadata adequate for the intended primary interpretation;
-- retrospective curation burden assessed ACCEPTABLE under the sealed operational-capacity rule;
-- symmetric non-event audit completed at the frozen sample size;
-- independent duplicate-adjudication minimum coverage completed;
-- nuisance headroom not saturated under both the median-rank and sealed top-1%-positive-fraction rules;
-- event-bearing disease fraction meets the sealed diversity threshold;
-- power variance evidence is GO-eligible under the frozen Power Input Derivation Contract;
-- simulation-based target power >= 0.80 at the frozen alpha/effect under the primary conservative scenario;
-- untouched diseases remain available for sealed confirmation.
-
-### Incomplete prerequisite rule
-
-The deterministic evaluator returns `INCONCLUSIVE` rather than GO when a mandatory decision prerequisite is unresolved, including:
-- union ambiguity is internally inconsistent with component ambiguity;
-- independent duplicate-review coverage is below the frozen minimum;
-- ancestry/population adequacy is UNKNOWN;
-- provider-coupling risk is UNKNOWN;
-- retrospective-curation burden is UNKNOWN;
-- symmetric non-event audit is incomplete/undersized;
-- no eligible independent same-estimand variance source exists for a GO-capable power conclusion;
-- a mandatory prerequisite remains unresolved.
-
-Threshold sensitivity is not self-declared: the evaluator reloads the sealed threshold manifest, evaluates all sealed sensitivity variants, and returns REDESIGN if the terminal decision changes.
-
-INCONCLUSIVE may occur at most twice for V0. Reaching the frozen limit forces REDESIGN rather than indefinite re-evaluation.
+- locus-level primary credit;
+- independently re-extracted primary-source outcomes;
+- a narrower era or regime;
+- stronger assignment criteria.
 
 Passing GO means only:
 
@@ -389,54 +308,43 @@ Passing GO means only:
 
 ## 13. Protocol amendment rule
 
-After external sealing and first adjudication, a material change to:
-- sampling;
-- thresholds;
-- assignment eligibility;
-- disease frame;
-- provider families;
-- adjudication rules;
-- nuisance families
+After S1, any change to a sealed artifact requires a new protocol version (INV-S6; custody §9). This covers sampling, thresholds, assignment eligibility, the disease frame, provider families, adjudication rules and nuisance families.
 
-spends this pilot protocol.
-
-A changed design requires:
-- explicit REDESIGN;
-- a new protocol version;
-- a new externally sealed seed/frame;
-- untouched development cases for the revised pilot where the change could have learned from outcomes.
-
+- The old registration is never overwritten.
+- If any per-disease post-T information has reached the design team, the revised pilot uses untouched diseases, even if no case has been adjudicated (INV-X6).
 
 ## 14. Threshold provenance
 
 Numeric pilot thresholds are decision rules, not universal scientific constants.
 
-Before external sealing, every threshold receives:
+Each gate in `config/big0f-thresholds.v2.json` carries:
 
-```text
-threshold_id
-metric_definition
-direction
-value
-rationale
-sensitivity_range
-decision_consequence
-```
+- its metric definition and source artifact;
+- its direction;
+- GO, NO_GO, stricter and looser bounds, or an exemption reason;
+- its fail consequence;
+- a rationale type (CONVENTION, JUDGEMENT, OPERATIONAL, DERIVED) and a rationale.
 
-The MAR must report a sensitivity table around each threshold that materially changes GO/REDESIGN/NO-GO.
+The MAR reports the base/stricter/looser table. A conclusion that flips across bound sets resolves under INV-T6. The favorable threshold is never chosen selectively.
 
-If the conclusion flips under a small scientifically plausible threshold change, the correct outcome is REDESIGN / INCONCLUSIVE rather than selectively choosing the favorable threshold.
+## 15. Evidence binding
 
+A GO-capable pilot result binds, by digest, every artifact listed in `big0f-pilot-result-v2` → `bound_artifacts` ([BIG_0F_EVIDENCE_BINDING_CONTRACT.md](BIG_0F_EVIDENCE_BINDING_CONTRACT.md)). These include:
 
-## 15. Evidence-binding contract added by preflight hardening
+- selection provenance, the selection registration and the beacon;
+- the outcome-discovery run and its recall audit;
+- the nuisance-only run;
+- the provider-audit scope and the provider audit;
+- the curation audit;
+- the independence attestations for the second adjudicator and the selection custodian;
+- the Stage A power analysis under power policy v2;
+- the exposure ledger;
+- the release log.
 
-A future GO-capable pilot implementation must require all of the following independently reconstructable artifacts in addition to the scalar result:
+External-authority verification must be real:
 
-- selection provenance for the full cutoff/horizon grid, deterministic disease expansion, raw event universe, and capped event IDs;
-- the fitted nuisance-only run with exact frozen feature families and immutable feature/model/preprocessing digests;
-- a field-level provider audit artifact;
-- a second-adjudicator independence attestation bound to role-registry and independence-evidence digests;
-- a power artifact bound to the sealed Power Input Derivation Contract and eligible independent same-estimand variance evidence, with the nuisance-run proxy retained only as sensitivity;
-- real external-authority verification: OpenTimestamps proof verification for timestamp-service attestations, an independently fetched OSF record containing the exact committed digest for public-registry attestations, and an independently fetched DRAND round matching the sealed randomness.
+- OpenTimestamps proof verification;
+- an independently fetched, **public** OSF record containing the exact committed digest;
+- an independently fetched drand quicknet round R, with its BLS signature verified against the pinned chain.
 
 A JSON field that merely says `VERIFIED` is not sufficient for BIG 0F claim-valid execution.

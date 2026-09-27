@@ -1,0 +1,4667 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-threshold-manifest.v2.schema.json",
+  "title": "Forge Bio BIG 0F Threshold Manifest v2 (closed gate set with provenance)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "schema_version",
+    "status",
+    "sealed_by_attestation_id",
+    "decision_semantics",
+    "sensitivity_rule",
+    "sensitivity_rule_consequence_stated",
+    "design_constants",
+    "gates",
+    "reported_diagnostics"
+  ],
+  "properties": {
+    "manifest_id": {
+      "const": "BIG0F-THRESHOLDS-V2"
+    },
+    "schema_version": {
+      "const": "big0f-threshold-manifest-v2"
+    },
+    "status": {
+      "enum": [
+        "SEAL_CANDIDATE",
+        "SEALED"
+      ]
+    },
+    "sealed_by_attestation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decision_semantics": {
+      "const": {
+        "MAX_ALLOWED": "PASS_IF_VALUE_LE_GO_BOUND_ELSE_FAIL_CONSEQUENCE_NO_GO_IF_VALUE_GT_NO_GO_BOUND",
+        "MIN_REQUIRED": "PASS_IF_VALUE_GE_GO_BOUND_ELSE_FAIL_CONSEQUENCE_NO_GO_IF_VALUE_LT_NO_GO_BOUND",
+        "missing_or_non_finite_value": "INCONCLUSIVE",
+        "precedence": "NO_GO_OVER_REDESIGN_OVER_INCONCLUSIVE_OVER_GO"
+      }
+    },
+    "sensitivity_rule": {
+      "const": "EVALUATE_BASE_STRICTER_AND_LOOSER_BOUND_SETS_ANY_TERMINAL_DECISION_CHANGE_FORCES_REDESIGN"
+    },
+    "sensitivity_rule_consequence_stated": {
+      "const": "GO_REQUIRES_EVERY_NON_EXEMPT_GATE_TO_PASS_AT_ITS_STRICTER_BOUND"
+    },
+    "design_constants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alpha_one_sided",
+        "planning_effect",
+        "target_power",
+        "min_disease_count",
+        "max_disease_count",
+        "min_candidate_event_families",
+        "max_candidate_event_families",
+        "observation_lag_months",
+        "max_inconclusive_evaluations"
+      ],
+      "properties": {
+        "alpha_one_sided": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "planning_effect": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "target_power": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "min_disease_count": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "max_disease_count": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "min_candidate_event_families": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "max_candidate_event_families": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "observation_lag_months": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "max_inconclusive_evaluations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION",
+        "AGREEMENT_AC1_MIN_OVER_GATED_TASKS",
+        "AGREEMENT_AC1_LOWER90_MIN_OVER_GATED_TASKS",
+        "DUPLICATE_REVIEW_COVERAGE_RATIO",
+        "NON_EVENT_AUDIT_COMPLETION_RATIO",
+        "NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO",
+        "REQUIRED_FIELD_AVAILABILITY",
+        "SOURCE_FAMILY_KINDS_PRESENT",
+        "ANCESTRY_METADATA_COVERAGE",
+        "SHARED_PIPELINE_FRACTION_PRIMARY",
+        "UNKNOWN_SAMPLE_OVERLAP_FRACTION",
+        "PRIMARY_ELIGIBLE_FRACTION",
+        "AUTHOR_NEAREST_FRACTION",
+        "HIGH_SPECIFICITY_POSITIVE_COUNT",
+        "HYPOTHESIS_FREE_DISCOVERY_FRACTION",
+        "LABEL_FEATURE_METHOD_COUPLING_FRACTION",
+        "ATTENTION_ASSIGNMENT_ASSOC_UPPER95",
+        "LABEL_RESOLUTION_BIAS_UPPER95",
+        "LOCUS_TO_MANY_GENE_FRACTION",
+        "PRE_T_COHORT_REUSE_FRACTION",
+        "NUISANCE_MEAN_POSITIVE_PERCENTILE",
+        "NUISANCE_MEDIAN_POSITIVE_PERCENTILE",
+        "NUISANCE_TOP1_POSITIVE_FRACTION",
+        "NUISANCE_ADEQUACY_MARGIN",
+        "MEDIAN_EVENT_CURATION_MINUTES",
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MIN",
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MAX",
+        "EVENT_BEARING_DISEASE_FRACTION",
+        "OUTCOME_DISCOVERY_RECALL",
+        "FRAME_COVERAGE_FRACTION",
+        "FRAME_COVERED_DISEASE_COUNT",
+        "MEAN_RAW_CANDIDATES_PER_COVERED_DISEASE",
+        "POWER_POOL_SUFFICIENCY",
+        "POWER_POOL_OPTIMISTIC_FLOOR"
+      ],
+      "properties": {
+        "ANY_PRIMARY_ENDPOINT_AMBIGUITY_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "AGREEMENT_AC1_MIN_OVER_GATED_TASKS": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "AGREEMENT_AC1_LOWER90_MIN_OVER_GATED_TASKS": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "DUPLICATE_REVIEW_COVERAGE_RATIO": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NON_EVENT_AUDIT_COMPLETION_RATIO": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NON_EVENT_DUPLICATE_REVIEW_COVERAGE_RATIO": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "REQUIRED_FIELD_AVAILABILITY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "SOURCE_FAMILY_KINDS_PRESENT": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "ANCESTRY_METADATA_COVERAGE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "SHARED_PIPELINE_FRACTION_PRIMARY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "UNKNOWN_SAMPLE_OVERLAP_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "PRIMARY_ELIGIBLE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "AUTHOR_NEAREST_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "HIGH_SPECIFICITY_POSITIVE_COUNT": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "HYPOTHESIS_FREE_DISCOVERY_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "LABEL_FEATURE_METHOD_COUPLING_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "ATTENTION_ASSIGNMENT_ASSOC_UPPER95": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "LABEL_RESOLUTION_BIAS_UPPER95": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "LOCUS_TO_MANY_GENE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "PRE_T_COHORT_REUSE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NUISANCE_MEAN_POSITIVE_PERCENTILE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NUISANCE_MEDIAN_POSITIVE_PERCENTILE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NUISANCE_TOP1_POSITIVE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NUISANCE_ADEQUACY_MARGIN": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "MEDIAN_EVENT_CURATION_MINUTES": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MIN": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "NON_EVENT_TO_EVENT_TIME_RATIO_MAX": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "EVENT_BEARING_DISEASE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "OUTCOME_DISCOVERY_RECALL": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "FRAME_COVERAGE_FRACTION": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "FRAME_COVERED_DISEASE_COUNT": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "MEAN_RAW_CANDIDATES_PER_COVERED_DISEASE": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "POWER_POOL_SUFFICIENCY": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        },
+        "POWER_POOL_OPTIMISTIC_FLOOR": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric_definition",
+            "source_artifact",
+            "direction",
+            "go_bound",
+            "fail_consequence",
+            "no_go_bound",
+            "stricter_go_bound",
+            "looser_go_bound",
+            "sensitivity_exempt_reason",
+            "rationale_type",
+            "rationale"
+          ],
+          "properties": {
+            "metric_definition": {
+              "type": "string",
+              "minLength": 20
+            },
+            "source_artifact": {
+              "type": "string",
+              "minLength": 1
+            },
+            "direction": {
+              "enum": [
+                "MAX_ALLOWED",
+                "MIN_REQUIRED"
+              ]
+            },
+            "go_bound": {
+              "type": "number"
+            },
+            "fail_consequence": {
+              "enum": [
+                "REDESIGN",
+                "INCONCLUSIVE",
+                "NO_GO",
+                "PAIR_FAILS"
+              ]
+            },
+            "no_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "stricter_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "looser_go_bound": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "sensitivity_exempt_reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rationale_type": {
+              "enum": [
+                "CONVENTION",
+                "JUDGEMENT",
+                "DERIVED",
+                "OPERATIONAL"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 10
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "number"
+                  },
+                  "looser_go_bound": {
+                    "type": "number"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "stricter_go_bound": {
+                    "type": "null"
+                  },
+                  "looser_go_bound": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "direction": {
+                    "const": "MAX_ALLOWED"
+                  },
+                  "sensitivity_exempt_reason": {
+                    "type": "null"
+                  }
+                }
+              },
+              "then": {
+                "description": "stricter <= go <= looser for MAX_ALLOWED is a semantic invariant (INV-T2)"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "reported_diagnostics": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SEALED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "sealed_by_attestation_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

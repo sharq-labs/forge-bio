@@ -1,7 +1,7 @@
 # ADR-021 — BIG 0F Pilot Sampling, Independent Adjudication, and Contamination Control
 
-**Status:** Accepted — BIG 0F-0 critical-path hardening  
-**Decision scope:** manual feasibility pilot before B-TGT-E1 implementation
+**Status:** Accepted — BIG 0F-0 critical-path hardening. **Amended by [ADR-022](ADR-022-final-scientific-consistency-closure.md)** (D6, D8, D10, D12, D13, D14). Where they differ, ADR-022 and [V0_FREEZE_STATEMENT.md](../V0_FREEZE_STATEMENT.md) win.  
+**Decision scope:** the BIG 0F feasibility pilot before B-TGT-E1 implementation. The "manual pilot" **is** BIG 0F; there is no separate manual pilot (ADR-022 D14).
 
 ## 1. Purpose
 
@@ -15,16 +15,19 @@ It does not estimate final model performance.
 
 Pilot cases may not be hand-picked famous examples.
 
-Before adjudication:
+Before adjudication, the independent selection custodian runs custody steps S1–S7 ([BIG_0F_SELECTION_CUSTODY.md](../BIG_0F_SELECTION_CUSTODY.md) §2):
 
-1. evaluate cutoff/horizon pairs in the fixed lexicographic order from BIG_0F_PROTOCOL;
-2. construct an as-of-T disease frame mechanically from frozen vocabulary/regime rules;
-3. externally timestamp/register the frame digest;
-4. obtain a verified public randomness-beacon round **after** the frame seal;
-5. derive the disease order with the frozen external-beacon hash-sort algorithm;
-6. include all qualifying candidate outcome events for sampled diseases within the pilot horizon, subject only to the frozen 150-event cap rule.
+1. The protocol registration is public, with OTS.
+2. The five frozen cutoff/horizon predicates are evaluated over the 16 pairs in the fixed order; the first passing pair is (T\*, H\*).
+3. The frame is built mechanically by the frame rule ([BIG_0F_FRAME_RULE.md](../BIG_0F_FRAME_RULE.md)), and sampling uses frame_cov(T\*).
+4. The selection registration is public and **pre-declares** a drand quicknet round R, with seal_time(S4) ≤ time(R) − 24 h.
+5. The disease order is ascending HMAC(key, disease UI), where the key is derived from the frame_cov digest, R and its randomness.
+6. All qualifying candidate event **families** for the sampled diseases are included, subject only to the frozen 150-family cap.
+7. The seal bundle is registered, and only then are events released to adjudicators.
 
-Manual showcase cases may be examined separately and cannot influence GO/REDESIGN/NO-GO.
+*Superseded (ADR-022 D13):* "externally timestamp/register the frame digest; obtain a verified public randomness-beacon round **after** the frame seal". A post-seal "first round" on an unpinned chain left grinding room.
+
+Showcase cases may come only from diseases that are already DEVELOPMENT_EXPOSED. Each one is logged in the exposure ledger (custody §4; INV-X4), and none can influence GO/REDESIGN/NO-GO.
 
 ## 3. Pilot size
 
@@ -34,15 +37,15 @@ Frozen V0 rule:
 
 ```text
 start with 12 diseases
-expand deterministically up to 15 only if <60 candidate events
-retain 60–150 candidate events under the frozen cap rule
+expand one disease at a time, up to 15, only while < 60 raw candidate event families
+retain at most 150 event families under the frozen family-level cap (custody §8)
 ```
 
 The team does not hand-select N after seeing event quality or ambiguity.
 
 ## 4. Independent adjudication
 
-At least 30% of pilot cases are independently adjudicated by a second reviewer blind to the first reviewer's decision.
+A keyed, stratified set of min(N, max(30, ⌈0.30·N⌉)) pilot cases is independently adjudicated by a second reviewer who is blind to the first reviewer's decision (ADR-022 D8; [BIG_0F_ADJUDICATION_DEFINITIONS.md](../BIG_0F_ADJUDICATION_DEFINITIONS.md) §4).
 
 Report separately for:
 - phenotype match;
@@ -52,7 +55,7 @@ Report separately for:
 - event-family identity;
 - sample/cohort overlap.
 
-Report percent agreement plus a chance-corrected agreement statistic when mathematically appropriate.
+The gated statistic is Gwet AC1 per gated task, with a lower one-sided 90% BCa bound. It is fixed now. Percent agreement, Cohen κ and the confusion matrix are reported and never gated. *Superseded (ADR-022 D8):* "a chance-corrected agreement statistic when mathematically appropriate". Choosing the statistic after prevalence is seen was a GO lever.
 
 Disagreement remains visible and is adjudicated under a frozen rule.
 
@@ -60,7 +63,7 @@ An independent second adjudicator is a **start gate** for BIG 0F scientific adju
 
 ## 5. Pilot contamination rule
 
-All diseases/events directly inspected during BIG 0F are permanently tagged:
+Any disease for which per-disease post-T information reaches the study or ranking team, **by any route**, is permanently tagged as follows (INV-X1; custody §4). *Superseded:* "directly inspected".
 
 ```text
 DEVELOPMENT_EXPOSED
@@ -127,6 +130,8 @@ nuisance_top1_positive_fraction
 
 ## 9. Power simulation input
 
+*Amended by ADR-022 D10.* These outputs feed the **Stage A pool-sufficiency screen** of [BIG_0F_POWER_AND_VARIANCE_POLICY.md](../BIG_0F_POWER_AND_VARIANCE_POLICY.md). The confirmatory variance is measured later, in the Stage B Development Lift & Variance Study.
+
 BIG 0F runs the **nuisance-only** arm and produces:
 - event-bearing disease count;
 - event count distribution;
@@ -138,7 +143,7 @@ These feed a simulation-based power / precision analysis before a confirmatory g
 
 ## 10. GO / REDESIGN / NO-GO
 
-Numeric thresholds must be externally sealed before adjudication begins.
+Numeric thresholds are the gates of `config/big0f-thresholds.v2.json`. They are registered at S1 and sealed in the S6 bundle before adjudication begins (ADR-022 D9).
 
 The threshold document distinguishes:
 - hard STOP conditions;

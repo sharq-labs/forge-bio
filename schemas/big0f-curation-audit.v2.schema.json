@@ -1,0 +1,876 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-bio.local/schemas/big0f-curation-audit.v2.schema.json",
+  "title": "Forge Bio BIG 0F Curation Audit v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id",
+    "schema_version",
+    "operational_capacity_rule_id",
+    "event_case_records",
+    "non_event_case_records",
+    "digest",
+    "non_event_duplicate_review_min_fraction",
+    "non_event_duplicate_review_min_count_floor",
+    "non_event_review_summary",
+    "event_case_set_digest",
+    "non_event_case_set_digest",
+    "duplicate_review_selection_digest",
+    "adjudication_policy_digest",
+    "sampling_key_commitment_digest",
+    "review_salt_commitment_digest",
+    "first_review_label_set_registration_digest",
+    "retest_salt_commitment_digest",
+    "post_revision_label_set_registration_digest"
+  ],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_version": {
+      "const": "big0f-curation-audit-v2"
+    },
+    "operational_capacity_rule_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_case_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "disease_id",
+          "minutes",
+          "provenance_digest",
+          "historical_search_status",
+          "source_family_ids_used",
+          "duplicate_reviewed",
+          "review_phase",
+          "selection_key_rank",
+          "reviewer_labels"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disease_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "provenance_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "historical_search_status": {
+            "enum": [
+              "RESOLVED",
+              "UNKNOWN",
+              "AMBIGUOUS",
+              "UNUSABLE"
+            ]
+          },
+          "source_family_ids_used": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "duplicate_reviewed": {
+            "type": "boolean"
+          },
+          "review_phase": {
+            "enum": [
+              "ORIGINAL",
+              "RETEST_AFTER_REVISION",
+              "MANDATORY_SAME_CONCEPT"
+            ],
+            "description": "MANDATORY_SAME_CONCEPT reviews are excluded from AC1 and from the coverage ratios."
+          },
+          "selection_key_rank": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Rank in HMAC-SHA256(key, UTF8('dup-review') || 0x00 || s_rev || 0x00 || UTF8(case_id)) order (custody §7 encoding; retest phase uses domain 'retest' and s_ret). The verifier recomputes the selection (INV-A3, INV-A5)."
+          },
+          "reviewer_labels": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "PRIMARY_ASSIGNMENT_ELIGIBILITY",
+              "PHENOTYPE_QUALIFICATION",
+              "NOVELTY_ELIGIBILITY",
+              "PRIMARY_POSITIVE_STATUS",
+              "ASSIGNMENT_CLASS_FULL",
+              "PRE_T_GENETIC_STATE",
+              "EVENT_FAMILY_IDENTITY",
+              "SAMPLE_OVERLAP"
+            ],
+            "properties": {
+              "PRIMARY_ASSIGNMENT_ELIGIBILITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "PRIMARY_ELIGIBLE",
+                      "NOT_PRIMARY_ELIGIBLE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "PRIMARY_ELIGIBLE",
+                      "NOT_PRIMARY_ELIGIBLE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PHENOTYPE_QUALIFICATION": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "QUALIFIES",
+                      "DOES_NOT_QUALIFY",
+                      "UNRESOLVED"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "QUALIFIES",
+                      "DOES_NOT_QUALIFY",
+                      "UNRESOLVED",
+                      null
+                    ]
+                  }
+                }
+              },
+              "NOVELTY_ELIGIBILITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "NOVEL_STRICT_ELIGIBLE",
+                      "NOT_ELIGIBLE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "NOVEL_STRICT_ELIGIBLE",
+                      "NOT_ELIGIBLE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PRIMARY_POSITIVE_STATUS": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "PRIMARY_POSITIVE",
+                      "NOT_PRIMARY_POSITIVE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "PRIMARY_POSITIVE",
+                      "NOT_PRIMARY_POSITIVE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "ASSIGNMENT_CLASS_FULL": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "HYPOTHESIS_FREE_CODING_OR_LOF",
+                      "HIGH_CONFIDENCE_FINE_MAPPING",
+                      "PREREGISTERED_COLOCALIZATION",
+                      "AUTHOR_NAMED",
+                      "NEAREST_GENE",
+                      "POSITIONAL_PROXIMITY_ONLY",
+                      "GENERIC_DATABASE_GENE_FIELD",
+                      "MODERN_L2G_ONLY",
+                      "CURRENT_CURATED_TARGET_ONLY",
+                      "TARGETED_CANDIDATE_GENE_CODING",
+                      "LOCUS_ONLY"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "HYPOTHESIS_FREE_CODING_OR_LOF",
+                      "HIGH_CONFIDENCE_FINE_MAPPING",
+                      "PREREGISTERED_COLOCALIZATION",
+                      "AUTHOR_NAMED",
+                      "NEAREST_GENE",
+                      "POSITIONAL_PROXIMITY_ONLY",
+                      "GENERIC_DATABASE_GENE_FIELD",
+                      "MODERN_L2G_ONLY",
+                      "CURRENT_CURATED_TARGET_ONLY",
+                      "TARGETED_CANDIDATE_GENE_CODING",
+                      "LOCUS_ONLY",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PRE_T_GENETIC_STATE": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "NO_SIGNAL_OBSERVED",
+                      "SUGGESTIVE",
+                      "QUALIFYING",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "NO_SIGNAL_OBSERVED",
+                      "SUGGESTIVE",
+                      "QUALIFYING",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "EVENT_FAMILY_IDENTITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "second": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  }
+                }
+              },
+              "SAMPLE_OVERLAP": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "DOCUMENTED_INDEPENDENT",
+                      "DOCUMENTED_OVERLAP",
+                      "UNKNOWN"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "DOCUMENTED_INDEPENDENT",
+                      "DOCUMENTED_OVERLAP",
+                      "UNKNOWN",
+                      null
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Both reviewers' categorical labels for every task (INV-A4). EVENT_FAMILY_IDENTITY labels are canonical family identifiers."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": false
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "reviewer_labels": {
+                  "additionalProperties": {
+                    "properties": {
+                      "second": {
+                        "const": null
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": true
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "reviewer_labels": {
+                  "additionalProperties": {
+                    "properties": {
+                      "second": {
+                        "not": {
+                          "const": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "non_event_case_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "disease_id",
+          "minutes",
+          "provenance_digest",
+          "historical_search_status",
+          "source_family_ids_used",
+          "duplicate_reviewed",
+          "review_phase",
+          "selection_key_rank",
+          "reviewer_labels"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disease_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minutes": {
+            "type": "number",
+            "minimum": 0
+          },
+          "provenance_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "historical_search_status": {
+            "enum": [
+              "RESOLVED",
+              "UNKNOWN",
+              "AMBIGUOUS",
+              "UNUSABLE"
+            ]
+          },
+          "source_family_ids_used": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "duplicate_reviewed": {
+            "type": "boolean"
+          },
+          "review_phase": {
+            "enum": [
+              "ORIGINAL",
+              "RETEST_AFTER_REVISION",
+              "MANDATORY_SAME_CONCEPT"
+            ],
+            "description": "MANDATORY_SAME_CONCEPT reviews are excluded from AC1 and from the coverage ratios."
+          },
+          "selection_key_rank": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Rank in HMAC-SHA256(key, UTF8('dup-review') || 0x00 || s_rev || 0x00 || UTF8(case_id)) order (custody §7 encoding; retest phase uses domain 'retest' and s_ret). The verifier recomputes the selection (INV-A3, INV-A5)."
+          },
+          "reviewer_labels": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "PRIMARY_ASSIGNMENT_ELIGIBILITY",
+              "PHENOTYPE_QUALIFICATION",
+              "NOVELTY_ELIGIBILITY",
+              "PRIMARY_POSITIVE_STATUS",
+              "ASSIGNMENT_CLASS_FULL",
+              "PRE_T_GENETIC_STATE",
+              "EVENT_FAMILY_IDENTITY",
+              "SAMPLE_OVERLAP"
+            ],
+            "properties": {
+              "PRIMARY_ASSIGNMENT_ELIGIBILITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "PRIMARY_ELIGIBLE",
+                      "NOT_PRIMARY_ELIGIBLE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "PRIMARY_ELIGIBLE",
+                      "NOT_PRIMARY_ELIGIBLE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PHENOTYPE_QUALIFICATION": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "QUALIFIES",
+                      "DOES_NOT_QUALIFY",
+                      "UNRESOLVED"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "QUALIFIES",
+                      "DOES_NOT_QUALIFY",
+                      "UNRESOLVED",
+                      null
+                    ]
+                  }
+                }
+              },
+              "NOVELTY_ELIGIBILITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "NOVEL_STRICT_ELIGIBLE",
+                      "NOT_ELIGIBLE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "NOVEL_STRICT_ELIGIBLE",
+                      "NOT_ELIGIBLE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PRIMARY_POSITIVE_STATUS": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "PRIMARY_POSITIVE",
+                      "NOT_PRIMARY_POSITIVE",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "PRIMARY_POSITIVE",
+                      "NOT_PRIMARY_POSITIVE",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "ASSIGNMENT_CLASS_FULL": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "HYPOTHESIS_FREE_CODING_OR_LOF",
+                      "HIGH_CONFIDENCE_FINE_MAPPING",
+                      "PREREGISTERED_COLOCALIZATION",
+                      "AUTHOR_NAMED",
+                      "NEAREST_GENE",
+                      "POSITIONAL_PROXIMITY_ONLY",
+                      "GENERIC_DATABASE_GENE_FIELD",
+                      "MODERN_L2G_ONLY",
+                      "CURRENT_CURATED_TARGET_ONLY",
+                      "TARGETED_CANDIDATE_GENE_CODING",
+                      "LOCUS_ONLY"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "HYPOTHESIS_FREE_CODING_OR_LOF",
+                      "HIGH_CONFIDENCE_FINE_MAPPING",
+                      "PREREGISTERED_COLOCALIZATION",
+                      "AUTHOR_NAMED",
+                      "NEAREST_GENE",
+                      "POSITIONAL_PROXIMITY_ONLY",
+                      "GENERIC_DATABASE_GENE_FIELD",
+                      "MODERN_L2G_ONLY",
+                      "CURRENT_CURATED_TARGET_ONLY",
+                      "TARGETED_CANDIDATE_GENE_CODING",
+                      "LOCUS_ONLY",
+                      null
+                    ]
+                  }
+                }
+              },
+              "PRE_T_GENETIC_STATE": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "NO_SIGNAL_OBSERVED",
+                      "SUGGESTIVE",
+                      "QUALIFYING",
+                      "AMBIGUOUS"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "NO_SIGNAL_OBSERVED",
+                      "SUGGESTIVE",
+                      "QUALIFYING",
+                      "AMBIGUOUS",
+                      null
+                    ]
+                  }
+                }
+              },
+              "EVENT_FAMILY_IDENTITY": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "second": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "minLength": 1
+                  }
+                }
+              },
+              "SAMPLE_OVERLAP": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "first",
+                  "second"
+                ],
+                "properties": {
+                  "first": {
+                    "enum": [
+                      "DOCUMENTED_INDEPENDENT",
+                      "DOCUMENTED_OVERLAP",
+                      "UNKNOWN"
+                    ]
+                  },
+                  "second": {
+                    "enum": [
+                      "DOCUMENTED_INDEPENDENT",
+                      "DOCUMENTED_OVERLAP",
+                      "UNKNOWN",
+                      null
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Both reviewers' categorical labels for every task (INV-A4). EVENT_FAMILY_IDENTITY labels are canonical family identifiers."
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": false
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "reviewer_labels": {
+                  "additionalProperties": {
+                    "properties": {
+                      "second": {
+                        "const": null
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "duplicate_reviewed": {
+                  "const": true
+                }
+              },
+              "required": [
+                "duplicate_reviewed"
+              ]
+            },
+            "then": {
+              "properties": {
+                "reviewer_labels": {
+                  "additionalProperties": {
+                    "properties": {
+                      "second": {
+                        "not": {
+                          "const": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "non_event_duplicate_review_min_fraction": {
+      "const": 0.3
+    },
+    "non_event_duplicate_review_min_count_floor": {
+      "const": 30
+    },
+    "non_event_review_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "duplicate_review_count",
+        "duplicate_review_fraction",
+        "disagreement_fraction",
+        "agreement_statistic",
+        "ac1",
+        "ac1_lower90",
+        "cohen_kappa",
+        "confusion_matrix_digest",
+        "unknown_fraction",
+        "ambiguous_fraction"
+      ],
+      "properties": {
+        "duplicate_review_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_review_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "disagreement_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "agreement_statistic": {
+          "const": "GWET_AC1"
+        },
+        "ac1": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "ac1_lower90": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "cohen_kappa": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "confusion_matrix_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        },
+        "unknown_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ambiguous_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "non_event_case_set_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "duplicate_review_selection_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "adjudication_policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "sampling_key_commitment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "review_salt_commitment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$",
+      "description": "SHA-256 of the custodian review salt, committed in the S6 bundle."
+    },
+    "first_review_label_set_registration_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$",
+      "description": "Digest of the complete first-review label set (event and non-event cases), registered (public OSF + OTS) before the salt is revealed."
+    },
+    "retest_salt_commitment_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$",
+      "description": "SHA-256 of the second custodian salt s_ret, committed in S6."
+    },
+    "post_revision_label_set_registration_digest": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-fA-F]{64}$"
+        }
+      ],
+      "description": "Registered digest of the complete post-revision first-review label set; required when a revision occurred, before s_ret is revealed."
+    }
+  }
+}

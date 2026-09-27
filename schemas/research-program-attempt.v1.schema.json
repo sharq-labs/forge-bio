@@ -196,6 +196,22 @@
             "type": "number",
             "exclusiveMinimum": 0,
             "maximum": 0.05
+          },
+          "endpoint": {
+            "const": "E1-NOVEL-STRICT"
+          },
+          "primary_metric": {
+            "const": "EVENT_RANK_PERCENTILE_V1"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "allocation_generation_id": {
+            "type": "null"
+          },
+          "allocated_alpha": {
+            "type": "null"
           }
         }
       }

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://forge-bio.local/schemas/big0f-provider-audit.v1.schema.json",
-  "title": "Forge Bio BIG 0F Provider Audit v1",
+  "$id": "https://forge-bio.local/schemas/big0f-provider-audit.v2.schema.json",
+  "title": "Forge Bio BIG 0F Provider Audit v2",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,7 +12,10 @@
     "provider_coupling",
     "ancestry_population_audit",
     "digest",
-    "audit_scope_manifest_digest"
+    "audit_scope_manifest_digest",
+    "required_field_registry_digest",
+    "selection_provenance_digest",
+    "summary"
   ],
   "properties": {
     "audit_id": {
@@ -20,7 +23,7 @@
       "minLength": 1
     },
     "schema_version": {
-      "const": "big0f-provider-audit-v1"
+      "const": "big0f-provider-audit-v2"
     },
     "source_families": {
       "type": "array",
@@ -138,7 +141,9 @@
           "mapping_needed",
           "license_access_constraint",
           "coverage_grade",
-          "evidence_digest"
+          "evidence_digest",
+          "time_scope",
+          "available"
         ],
         "properties": {
           "disease_id": {
@@ -156,8 +161,7 @@
           "criticality": {
             "enum": [
               "CRITICAL",
-              "REQUIRED",
-              "OPTIONAL"
+              "REQUIRED"
             ]
           },
           "historical_release_obtainable": {
@@ -192,8 +196,84 @@
           "evidence_digest": {
             "type": "string",
             "pattern": "^sha256:[0-9a-fA-F]{64}$"
+          },
+          "time_scope": {
+            "enum": [
+              "AS_OF_T",
+              "EVALUATION"
+            ]
+          },
+          "available": {
+            "type": "boolean",
+            "description": "The registry availability predicate for this cell's time_scope; recomputed by the verifier from the component booleans."
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "time_scope": {
+                  "const": "AS_OF_T"
+                },
+                "available": {
+                  "const": true
+                }
+              },
+              "required": [
+                "time_scope",
+                "available"
+              ]
+            },
+            "then": {
+              "properties": {
+                "historical_release_obtainable": {
+                  "const": true
+                },
+                "release_version_identifiable": {
+                  "const": true
+                },
+                "field_existed_at_t": {
+                  "const": true
+                },
+                "value_reconstructable": {
+                  "const": true
+                },
+                "retrospectively_curated": {
+                  "const": false
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "time_scope": {
+                  "const": "EVALUATION"
+                },
+                "available": {
+                  "const": true
+                }
+              },
+              "required": [
+                "time_scope",
+                "available"
+              ]
+            },
+            "then": {
+              "properties": {
+                "historical_release_obtainable": {
+                  "const": true
+                },
+                "release_version_identifiable": {
+                  "const": true
+                },
+                "value_reconstructable": {
+                  "const": true
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "provider_coupling": {
@@ -304,6 +384,56 @@
     "audit_scope_manifest_digest": {
       "type": "string",
       "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "required_field_registry_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "selection_provenance_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-fA-F]{64}$"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cell_count",
+        "required_field_availability",
+        "source_family_kinds_present",
+        "ancestry_metadata_coverage",
+        "shared_pipeline_fraction_primary"
+      ],
+      "properties": {
+        "cell_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Must equal the scope's expected_cell_count."
+        },
+        "required_field_availability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Gate REQUIRED_FIELD_AVAILABILITY: available cells / all cells in scope."
+        },
+        "source_family_kinds_present": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4,
+          "description": "Gate SOURCE_FAMILY_KINDS_PRESENT."
+        },
+        "ancestry_metadata_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Gate ANCESTRY_METADATA_COVERAGE."
+        },
+        "shared_pipeline_fraction_primary": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Gate SHARED_PIPELINE_FRACTION_PRIMARY."
+        }
+      }
     }
   }
 }

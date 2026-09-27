@@ -1,9 +1,14 @@
 # Pre-Code Readiness Checklist
 
-**Status:** ACTIVE — RED-TEAM HARDENED  
-**Rule:** no production scientific implementation begins until every P0 item is closed or explicitly superseded by an accepted ADR.
+**Status:** ACTIVE — RED-TEAM HARDENED; aligned with ADR-022  
+**Rule:** no production scientific implementation begins until every P0 item is closed or explicitly superseded by an accepted ADR.  
+**Phase order ([ADR-022](adr/ADR-022-final-scientific-consistency-closure.md) §6, D14):** 0. SPEC FREEZE → 1. minimal pre-BIG 0F verification harness → 2. BIG 0F → 3. core B-TGT-E1. The manual pilot **is** BIG 0F; there is no separate manual pilot. P0 items fall in phases 0–2. P1 items fall in phase 3 and must close before the sealed confirmatory run.  
+**Legend (ADR-022 D15; INV-D2):** `[x]` = SPEC-CLOSED, meaning the normative text is final at `SEAL_CANDIDATE` status. `[ ]` = open or IMPLEMENTATION-PENDING. Nothing is `SEALED` yet ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §5), and no checked item means a check is machine-enforced: the code and tests were removed and the harness does not exist yet.  
+**Precedence:** [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) wins where this checklist disagrees with it.
 
-## P0 — must close before core scientific coding
+## Phase 0 — SPEC FREEZE (P0: must close before core scientific coding)
+
+Condition and exit (ADR-022 §6): ADR-022 merged, and the targeted consistency attack finds no new false-GO P0 → PLAN FROZEN (last item of this phase).
 
 ### Scientific scope and temporal boundary
 
@@ -39,9 +44,9 @@
 - [x] B-TGT-E1 disease/genetic regime is explicitly restricted or stratified.
 - [x] E1-NOVEL-STRICT / E1-MATURATION / E1-REPLICATION / E1-CROSSMODAL semantics are accepted.
 - [x] PreTGeneticState separates no-observed-signal from suggestive/qualifying/ambiguous pre-T genetics.
-- [x] One primary E1 subtype selection procedure is accepted before sealed evaluation.
-- [x] Endpoint evidence-quality rule structure/dimensions are frozen in an executable schema.
-- [ ] Endpoint evidence-quality threshold values are chosen after provider/outcome feasibility audit.
+- [x] V0 primary E1 subtype is fixed now as E1-NOVEL-STRICT; no subtype is selected after BIG 0F (Freeze Statement §1; ADR-022 D2). Supersedes "one primary E1 subtype selection procedure is accepted before sealed evaluation".
+- [x] Endpoint evidence-quality rule structure/dimensions are specified in a JSON Schema, with the applicability matrix fixed (ADR-022 D17; INV-Q1–Q3).
+- [x] Assignment, phenotype, novelty and coverage definitions are fixed before BIG 0F in adjudication policy v2 (`BIG0F-ADJUDICATION-V2`). The endpoint-quality threshold values are set later (phase 3) and may only be equal or stricter (ADR-022 D7; INV-T8).
 - [x] Initial H candidate set and feasibility procedure are accepted.
 - [x] Fixed-K evaluation has a candidate-universe-normalized companion metric.
 - [x] Multiplicity policy for secondary endpoints/cutoffs/subgroups is defined.
@@ -92,13 +97,13 @@
 - [x] AUTHOR_NAMED / NEAREST_GENE / positional-only / generic-database mappings are non-primary unless independently high-specificity.
 - [x] Assignment-attention audit is mandatory.
 - [x] Combined Nuisance Model is the primary comparator.
-- [x] Genomic-architecture, cross-trait pleiotropy, observability, and attention nuisance families are mandatory where reconstructable.
+- [x] Genomic-architecture, cross-trait pleiotropy, observability, and attention nuisance families are mandatory. A family that cannot be historically reconstructed forces REDESIGN; it is never silently dropped (manifest v2; [BIG_0F_NUISANCE_EXECUTION_CONTRACT.md](BIG_0F_NUISANCE_EXECUTION_CONTRACT.md) §1). Supersedes "where reconstructable".
 - [x] GeneModelRelease is first-class for historical gene geometry/length/windows.
 - [x] Confirmatory MAP requires numeric alpha / effect / power / success fields.
 - [x] ConfirmatoryProgramBudget schema exists for research-program multiplicity.
-- [x] BIG 0F sampling rule and target-size rule are frozen in BIG_0F_PROTOCOL.md.
-- [x] BIG 0F numeric GO / REDESIGN / NO-GO thresholds are frozen before adjudication.
-- [x] BIG 0F pilot cases are permanently DEVELOPMENT_EXPOSED.
+- [x] BIG 0F sampling rule and target-size rule are frozen in BIG_0F_PROTOCOL.md (sampling key, disease order, expansion and cap: [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §7–§8).
+- [x] BIG 0F numeric GO / REDESIGN / NO-GO thresholds are specified in threshold manifest v2 (`SEAL_CANDIDATE`), to be sealed at S1 before adjudication (ADR-022 D9).
+- [x] BIG 0F pilot cases are permanently DEVELOPMENT_EXPOSED (exposure scope and untouched pool: BIG_0F_SELECTION_CUSTODY.md §4–§5).
 - [x] BIG 0F requires symmetric non-event historical audit.
 - [x] BIG 0F requires mini historical-provider availability audit.
 - [x] BIG 0F requires development-only Combined Nuisance headroom analysis.
@@ -107,35 +112,30 @@
 - [x] Cross-disease shared-control/study lineage is included in dependence sensitivity.
 - [x] Cross-field scientific semantic rules are specified.
 - [x] Hostile-review attack cases are documented as future regression-test requirements.
-- [ ] Implement and run the hostile-review regression suite when coding begins.
 - [x] Round 2 false-GO attacks are preserved as permanent implementation/test requirements.
-- [x] Disease-specific content-free attention volume and momentum are mandatory in the primary nuisance comparator.
+- [x] Disease-specific content-free attention volume and momentum are mandatory in the primary nuisance comparator (14 families incl. global attention volume and momentum, manifest v2; ADR-022 D11).
 - [x] BIG 0F model-evaluation mode is NUISANCE_ONLY; biological-model lift is not inspected in the pilot.
-- [x] V0 pilot primary subtype and metric are frozen as E1-NOVEL-STRICT / EVENT_RANK_PERCENTILE_V1.
+- [x] V0 primary subtype and metric are fixed now, for BIG 0F and confirmation alike, as E1-NOVEL-STRICT / EVENT_RANK_PERCENTILE_V1 (Freeze Statement §1; ADR-022 D2, D3).
 - [x] Primary positive ascertainment is restricted to hypothesis-free genome/exome/biobank-wide designs.
 - [x] OTHER_HIGH_SPECIFICITY_METHOD is closed for V0 primary credit.
 - [x] BIG 0F decision contract requires rejection of non-finite values, incomplete cross-field state, and unstable threshold decisions.
 - [x] BIG 0F threshold-sensitivity recomputation from a frozen manifest is specified; self-reporting is prohibited.
 - [x] INCONCLUSIVE is bounded and cannot be carried indefinitely.
 - [x] Power-analysis artifact and deterministic revalidation requirements are specified.
-- [x] Disease sampling uses an externally sealed frame plus the first verified post-seal public randomness-beacon round.
-- [x] The exact frame-seal attestation artifact is committed into the BIG 0F root seal bundle.
+- [x] Disease sampling uses the mechanical frame rule and the pinned drand quicknet round R pre-declared in the public S4 selection registration (ADR-022 D6, D13; BIG_0F_SELECTION_CUSTODY.md §7). Supersedes "first verified post-seal public randomness-beacon round".
+- [x] The S1 protocol-registration and S4 selection-registration attestation pairs are committed into the BIG 0F root seal bundle (`big0f-seal-bundle-v3`). This supersedes the frame-seal attestation of bundle v2 (ADR-022 D13).
 - [x] Future decision, sampling, and power implementations plus governing schemas/manifests must be committed by the seal bundle before use.
-- [x] FROZEN endpoint-quality field/operator and event-evaluation semantics are specified.
+- [x] Endpoint-quality field/operator and event-evaluation semantics are specified for a sealable rule (status `SEAL_CANDIDATE`/`SEALED`; formerly "FROZEN").
 - [x] Confirmatory attempts must be checked against one canonical program-wide alpha budget; renaming cannot reset the budget.
-- [ ] BIG 0F protocol/frame/random seed receives external seal before first adjudication.
-- [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
-- [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate.
-- [ ] Independent custodian assigned.
-- [ ] Implement and run the local canonical seal-bundle build/verify/tamper dry run before BIG 0F.
-- [ ] External OpenTimestamps/OSF seal mechanism dry-run tested end-to-end with synthetic artifacts.
+- [x] Independent sealing mechanism identified: OpenTimestamps + OSF Registration dual-seal candidate; seal_time = max(OTS Bitcoin block time, public registry time) (ADR-022 §5, D13).
+- [x] T/H selection and the 16-pair audit are specified as duties of an independent selection custodian; the study team sees aggregates only (ADR-022 D12).
 
 ### Round 2 false-GO closure plan
 
 - [x] Event-bearing disease diversity is a formal GO gate with sensitivity handling.
 - [x] First-passing cutoff/horizon selection requires a reconstructable feasibility ledger.
-- [x] Disease expansion from 12 to 15 is prefix-only and event-count-triggered.
-- [x] >150-event capping requires a committed raw universe and deterministic disease-preserving sampling.
+- [x] Disease expansion from 12 to 15 is prefix-only and event-count-triggered (counted in event families; BIG_0F_SELECTION_CUSTODY.md §8).
+- [x] >150-event capping requires a committed raw universe and deterministic disease-preserving sampling (over event families; BIG_0F_SELECTION_CUSTODY.md §8; INV-C10).
 - [x] A freely supplied disease-level SD is prohibited; power planning requires a frozen derivation/scenario contract without biological-arm leakage.
 - [x] Actual nuisance execution must bind to the complete frozen nuisance manifest and reproducible rank outputs.
 - [x] External timestamp/registry/beacon trust cannot be established by a self-declared VERIFIED field.
@@ -143,19 +143,51 @@
 - [x] Confirmatory program history must be append-only/hash-chained and externally anchorable.
 - [x] One canonical endpoint decision semantics source is required.
 - [x] Threshold provenance/digest hygiene and locus-level robustness requirements are specified.
-- [x] Power Input Derivation Contract frozen; proxy-only variance cannot support GO.
-- [x] Nuisance Execution Artifact contract frozen with candidate-universe/full-rank/training identity binding.
-- [x] Provider/applicability/curation/adjudicator evidence-artifact schemas frozen and evidence-bound.
-- [ ] Complete independent external-authority/beacon dry run before adjudication.
-- [x] Final hostile review of the frozen closure contracts completed; no new P0 false-GO design gap identified.
+- [x] Power and Variance Policy v2 specified: Stage A model-free pool-sufficiency screen at BIG 0F, Stage B DLVS before the confirmatory seal; proxy-only variance cannot support GO ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md); ADR-022 D10). Supersedes the removed Power Input Derivation Contract.
+- [x] Nuisance Execution Artifact contract frozen with candidate-universe/full-rank/training identity binding (frozen learner, out-of-fold ranks, adequacy check; ADR-022 D11).
+- [x] Provider/applicability/curation/adjudicator evidence-artifact schemas (v2) specified and evidence-bound.
+- [ ] ADR-022 merged, and the targeted consistency attack on D1–D19 finds no new false-GO P0 → **PLAN FROZEN** (ADR-022 §6, §9). The attack is done: round 5 found no new false-GO P0 (ADR-022 §8a). The item checks on merge. This replaces the item "Final hostile review of the frozen closure contracts completed; no new P0 false-GO design gap identified". That item was checked, and is now unchecked: the independent hostile review of `a1326e3` found false-GO P0 gaps (ADR-022 §1, §7).
 
 Normative detail: [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN.md).
 
-### Feasibility and governance
+### Governance
 
 - [x] BIG 0F pilot result has a machine-readable schema.
-- [x] BIG 0F GO/REDESIGN/NO_GO decision rules are specified deterministically; executable implementation is deferred.
-- [ ] Manual outcome feasibility pilot completed on heterogeneous events.
+- [x] BIG 0F GO/REDESIGN/NO_GO decision rules are specified deterministically (threshold manifest v2, ADR-022 D9); executable implementation is deferred.
+- [x] ADR-005 licensing posture decided: commercial-later; repository Apache-2.0; provider-data licenses remain separate.
+- [x] Initial lockbox custodian/storage mechanism chosen.
+- [x] Authoritative scientific-spec change governance chosen (protected branch or equivalent reviewed process).
+
+## Phase 1 — Minimal pre-BIG 0F verification harness (P0)
+
+Entry: PLAN FROZEN. Exit: all items below (ADR-022 §6). Each item is IMPLEMENTATION-PENDING until the harness implements it.
+
+- [ ] Schema/config validation.
+- [ ] Implement and run the hostile-review regression suite: one check per INV-* ID with at least one passing and one failing fixture ([SEMANTIC_INVARIANTS.md](SEMANTIC_INVARIANTS.md)), including the ADR-022 §4 simulations as fixtures (INV-D4).
+- [ ] Implement and run the local canonical hashing and seal-bundle build/verify/tamper dry run before BIG 0F.
+- [ ] OTS/OSF/drand verifiers implemented; complete independent external-authority/beacon verification before adjudication.
+- [ ] Metric reference implementation of EVENT_RANK_PERCENTILE_V1 ([METRIC_EVENT_RANK_PERCENTILE_V1.md](METRIC_EVENT_RANK_PERCENTILE_V1.md)).
+- [ ] Stage A power engine ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §2).
+- [ ] External OpenTimestamps/OSF seal mechanism dry-run tested end-to-end with synthetic artifacts (external-seal dry run passed).
+
+## Phase 2 — BIG 0F (P0)
+
+### Start gates
+
+BIG 0F adjudication cannot start until all of these exist (ADR-022 §6, §9):
+
+- [ ] The minimal pre-BIG 0F verification harness (Phase 1 complete).
+- [ ] A successful external-seal dry run.
+- [ ] Independent second adjudicator assigned for BIG 0F duplicate review.
+- [ ] Independent selection custodian assigned (ADR-022 D12).
+
+Before the first case is released to adjudicators:
+
+- [ ] S1 protocol registration, S4 selection registration (with the pre-declared drand round) and S6 seal bundle are externally sealed, and seal_time(S6) is independently verified ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2; ADR-022 §5). Supersedes "BIG 0F protocol/frame/random seed receives external seal before first adjudication".
+
+### BIG 0F execution and decision
+
+- [ ] BIG 0F completed on the custodian-selected diseases and event families (BIG_0F_SELECTION_CUSTODY.md §2, §8). Supersedes "Manual outcome feasibility pilot completed on heterogeneous events"; the manual pilot is BIG 0F (ADR-022 D14).
 - [ ] Pilot reports novelty ambiguity rate.
 - [ ] Pilot reports historical genetic-search coverage grade distribution.
 - [ ] Pilot reports variant/liftover/allele-harmonization ambiguity.
@@ -166,12 +198,11 @@ Normative detail: [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN
 - [ ] Pilot reports cohort/sample-overlap ambiguity.
 - [ ] Pilot reports retrospective-curation burden.
 - [ ] Pilot reports population/ancestry metadata coverage.
-- [ ] Pilot yields go/redesign/no-go recommendation for B-TGT-E1-v0.
-- [x] ADR-005 licensing posture decided: commercial-later; repository Apache-2.0; provider-data licenses remain separate.
-- [x] Initial lockbox custodian/storage mechanism chosen.
-- [x] Authoritative scientific-spec change governance chosen (protected branch or equivalent reviewed process).
+- [ ] BIG 0F yields GO / REDESIGN / NO_GO / INCONCLUSIVE for B-TGT-E1-v0 under threshold manifest v2, including the Stage A power screen (ADR-022 §6, D9, D10). GO is the entry condition for phase 3.
 
-## P1 — must close before sealed confirmatory run
+## Phase 3 — Core B-TGT-E1 (P1: must close before sealed confirmatory run)
+
+Entry: BIG 0F GO. Sequence: DLVS (Stage B) → confirmatory seal → confirmatory generation (ADR-022 §6).
 
 ### Providers and historical reconstruction
 
@@ -185,7 +216,7 @@ Normative detail: [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN
 
 - [ ] Disease sampling frame frozen from as-of-T criteria.
 - [ ] Candidate universe policy frozen.
-- [ ] Development/validation/sealed split frozen.
+- [ ] Development/validation/sealed split frozen (untouched pool: BIG_0F_SELECTION_CUSTODY.md §5; confirmatory sample drawn by the beacon/hash-sort mechanism: Freeze Statement §2).
 - [ ] Sealed-case selection cannot be changed in response to outcomes.
 - [ ] Identity gold-set error rate reported, including variants/loci/phenotypes/cohorts/datasets.
 - [ ] Variant normalization/liftover/allele-orientation gold-set error rate reported.
@@ -193,27 +224,30 @@ Normative detail: [BIG_0F_FALSE_GO_CLOSURE_PLAN.md](BIG_0F_FALSE_GO_CLOSURE_PLAN
 
 ### Statistics and controls
 
-- [ ] Exact confirmatory estimand instance (H, primary E1 subtype, primary metric) frozen after BIG 0F.
+- [ ] Confirmatory estimand instance sealed with the BIG 0F-selected (T\*, H\*), which the custodian's first-passing-pair rule produces (Freeze Statement §2). Primary subtype and primary metric are already fixed (Freeze Statement §1). Supersedes "(H, primary E1 subtype, primary metric) frozen after BIG 0F".
+- [ ] Endpoint evidence-quality threshold values set after BIG 0F and sealed before the custodian's release of any DLVS label (release log). They are equal to or stricter than adjudication policy v2 (Freeze Statement §2; INV-T8). Moved from P0.
 - [ ] Sample-size/event-yield feasibility completed on development-visible sources.
-- [ ] Simulation-based power analysis completed.
-- [ ] Confirmatory alpha, minimum scientifically meaningful effect, and target power frozen.
+- [ ] Stage B Development Lift & Variance Study (≥ 20 event-bearing development diseases) completed, and the Stage B power gate passes ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §3; ADR-022 D10). This is the simulation-based power analysis.
+- [x] Confirmatory alpha (0.05 one-sided), minimum scientifically meaningful effect (0.05, planning only) and target power (0.80) are fixed (Freeze Statement §1; ADR-022 D18).
 - [ ] Zero-event disease handling verified in metric engine.
 - [ ] All-frame observed-event review-budget utility implemented.
-- [ ] Primary metric frozen; any K/review-budget secondary metric chosen on development data only.
+- [ ] K/review-budget secondary metric chosen on development data only. The primary metric is already fixed as EVENT_RANK_PERCENTILE_V1 (Freeze Statement §1); Recall@K is a secondary companion only (INV-E9).
 - [ ] Candidate-universe-normalized primary/secondary metric implemented.
 - [ ] Combined Nuisance comparator implementation and exact as-of-T feature sources frozen.
-- [ ] Paired disease/challenge-level CI method frozen.
+- [x] Paired disease/challenge-level CI method specified: disease-level BCa bootstrap 95% CI plus the disease-family block bootstrap CI, at the single confirmatory cutoff (Freeze Statement §3; INV-E8).
 - [ ] Disease-family + consortium/study-family + shared-control dependence sensitivity method frozen.
 - [ ] Within-study multiplicity policy frozen.
-- [ ] ConfirmatoryProgramBudget / alpha-spending allocations frozen.
+- [x] ConfirmatoryProgramBudget allocation: the V0 confirmatory generation holds the full α = 0.05 (FIXED_SPLIT). Tests use the allocated α (Freeze Statement §1, §3; INV-L11).
+> Every sensitivity, control or diagnostic item below is either in the closed list of Freeze Statement §3a (BLOCKING, LABEL or REPORT) or is a REPORT-only diagnostic. No item outside §3a can grant or veto confirmatory success (INV-E11).
+
 - [ ] Negative-control suite frozen.
 - [ ] Temporal placebo control defined where feasible.
 - [ ] Outcome-source and gene-assignment sensitivity analyses frozen.
 - [ ] Ambiguous-event tipping-point / best-worst-case sensitivity frozen.
 - [ ] Precision-weighted or hierarchical disease sensitivity frozen alongside equal-disease primary weighting.
-- [ ] Label/feature method-family coupling sensitivity frozen for confirmatory interpretation.
-- [ ] Disease-specific attention-volume survival is required for any biological-value headline claim.
-- [ ] Input/outcome provider-coupling sensitivity frozen.
+- [x] Label/feature method-family coupling sensitivity: SENS-COUPLING (LABEL; Freeze Statement §3a).
+- [x] Attention-volume survival is satisfied by design. Disease-specific and global attention volume and momentum are mandatory nuisance families in the primary contrast, and SENS-ATTENTION is a LABEL analysis. There is no separate veto (Freeze Statement §3a; INV-E11).
+- [x] Input/outcome provider-coupling sensitivity: SENS-PROVIDER (LABEL; Freeze Statement §3a).
 - [ ] LD reference-panel / modern-evaluation-LD sensitivity frozen where applicable.
 - [ ] ScientificEventFamily credit sensitivity frozen.
 
@@ -303,7 +337,7 @@ These items are **non-blocking for the B-TGT-E1 BIG 0F pilot** unless that pilot
 
 ## Platform extension — BIG 0R5 model credibility & quantitative integrity
 
-These are non-blocking for the manual BIG 0F endpoint-feasibility pilot, but mandatory before T2+ Scientific Twin claims, probabilistic endpoint claims, or model-supported intervention simulation.
+These are non-blocking for BIG 0F (the endpoint-feasibility pilot), but mandatory before T2+ Scientific Twin claims, probabilistic endpoint claims, or model-supported intervention simulation.
 
 ### Policy/schema readiness
 
@@ -413,9 +447,9 @@ This is a feasibility analysis, not permission to inspect sealed outcomes.
 
 If expected uncertainty is too wide, ambiguity is too high, or the endpoint is dominated by discoverability/curation effects, redesign the benchmark before lockbox use.
 
-## Manual outcome feasibility pilot
+## BIG 0F outcome feasibility pilot (formerly "manual outcome feasibility pilot")
 
-Before provider-scale implementation, manually adjudicate a small heterogeneous set of future events and record:
+The manual pilot is BIG 0F (ADR-022 D14); there is no separate manual pilot. Before provider-scale implementation, manually adjudicate the event families that the selection custodian samples and caps ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2, §8). This replaces "a small heterogeneous set of future events": sampling is mechanical. Record:
 - pre-T genetic state: no-observed-signal vs suggestive vs qualifying vs ambiguous;
 - whether evidence was truly novel at T;
 - locus-level versus gene-level status;
@@ -450,7 +484,11 @@ For strongest retrospective claims, methodology should be frozen before sealed d
 
 ## Go/no-go rule
 
-**GO FOR CORE SCIENTIFIC CODE** only when all P0 items are closed.
+**PLAN FROZEN → BEGIN MINIMAL PRE-BIG0F VERIFICATION IMPLEMENTATION** only when phase 0 is complete (ADR-022 §9).
+
+**BIG 0F adjudication** only when phase 1 is complete and every phase 2 start gate is met (ADR-022 §6, §9).
+
+**GO FOR CORE SCIENTIFIC CODE** only when all P0 items are closed, including a BIG 0F GO (ADR-022 §6).
 
 **GO FOR SEALED CONFIRMATORY RUN** only when all P1 items are closed.
 
@@ -461,6 +499,11 @@ The active red-team register is [SCIENTIFIC_RED_TEAM_GAPS.md](SCIENTIFIC_RED_TEA
 
 ## Normative P0 artifact index
 
+- [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) — takes precedence over every document below
+- [adr/ADR-022-final-scientific-consistency-closure.md](adr/ADR-022-final-scientific-consistency-closure.md)
+- [SEMANTIC_INVARIANTS.md](SEMANTIC_INVARIANTS.md)
+- [BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md)
+- [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md)
 - [GLOSSARY.md](GLOSSARY.md)
 - [schemas/QOI_SCHEMA.md](schemas/QOI_SCHEMA.md)
 - [schemas/CONTEXT_OF_USE_SCHEMA.md](schemas/CONTEXT_OF_USE_SCHEMA.md)

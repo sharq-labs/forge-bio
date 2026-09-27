@@ -1,6 +1,6 @@
 # Benchmark V0 Specification
 
-**Status:** PRE-CODE HARDENING REQUIRED  
+**Status:** SPEC-CLOSED / IMPLEMENTATION-PENDING. Where this page disagrees with [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md), the Freeze Statement wins.  
 **Benchmark family:** B-TGT  
 **Benchmark role:** B-TGT-A1 — Disease–Gene Association Prioritization  
 **Benchmark ID:** B-TGT-E1-v0
@@ -25,11 +25,11 @@ TargetAssociationCandidate
     gene_entity_as_of_T
 ```
 
-The primary future gene label is **not** any gene mentioned near a qualifying locus. It must satisfy the high-specificity OutcomeGeneAssignmentPolicy defined by ADR-020.
+The primary future gene label is **not** any gene mentioned near a qualifying locus. It must satisfy the high-specificity OutcomeGeneAssignmentPolicy defined by ADR-020, with class definitions frozen before BIG 0F in `config/big0f-adjudication-policy.v2.json` ([BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §1).
 
-Author-named, nearest-gene, positional-only, generic database-gene, and modern-L2G-only assignments are secondary/sensitivity labels and cannot by themselves generate a primary positive.
+Author-named, nearest-gene, positional-only, generic database-gene, modern-L2G-only, current-curated-target-only and targeted candidate-gene coding assignments are secondary/sensitivity labels and cannot by themselves generate a primary positive.
 
-If BIG 0F shows that high-specificity gene assignment is too sparse or too attention-coupled to support an informative test, the benchmark REDESIGN fallback is locus-level primary credit rather than silently broadening gene assignment.
+If BIG 0F shows that high-specificity gene assignment is too sparse or too attention-coupled to support an informative test, the benchmark REDESIGN fallback is locus-level primary credit rather than silently broadening gene assignment. Locus-level primary credit is a V1 redesign, not a V0 option ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §4).
 
 Intervention direction remains outside the V0 endpoint.
 
@@ -77,19 +77,13 @@ They may not be pooled into the V0 headline result.
 
 ## 5. Cutoff selection
 
-The cutoff is not hard-coded.
+The cutoff is not hard-coded, and it is not chosen by the study team.
 
-BIG 1 evaluates candidate eras approximately 2005–2014 using provider qualification.
+V0 has **one** confirmatory cutoff T\*. There is no pooling across cutoffs ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1; INV-E8).
 
-The chosen T must satisfy preregistered minimums for:
-- historical provider fidelity;
-- disease and gene identity coverage;
-- candidate-universe completeness;
-- outcome-source coverage;
-- sufficient future observation horizon;
-- feasible novelty audit;
-- feasible outcome gene assignment;
-- acceptable retrospective-curation burden.
+The candidate cutoffs are 2005-12-31, 2008-12-31, 2011-12-31 and 2014-12-31, crossed with the horizons in §6 (the 16 pairs in `schemas/big0f-selection-provenance.v1.schema.json`). (T\*, H\*) is the first pair, in lexicographic order, whose five frozen predicates all pass, as computed by the independent selection custodian. If no pair passes, the result is REDESIGN. Normative rule: [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §2–§3.
+
+> Superseded by ADR-022 D12 and the Freeze Statement §6: the earlier "BIG 1 evaluates candidate eras against preregistered minimums" procedure. Provider availability, disease coverage, observation window, training anchors and raw event yield enter T/H selection only through the custodian predicates. Other feasibility conditions (for example curation burden, non-event audit completion and high-specificity positive yield) are BIG 0F gates in `config/big0f-thresholds.v2.json`, not cutoff-selection criteria.
 
 The selected cutoff becomes immutable inside the MAP.
 
@@ -97,7 +91,7 @@ The selected cutoff becomes immutable inside the MAP.
 
 H is a fixed duration, not "until today".
 
-Pre-code candidate horizons are:
+Candidate horizons are:
 
 ```text
 3 years
@@ -106,16 +100,11 @@ Pre-code candidate horizons are:
 10 years
 ```
 
-Provider/outcome feasibility may eliminate a candidate horizon when observation coverage is inadequate.
+H\* is not chosen separately. It is the horizon of the first passing (T, H) pair under the custodian rule in §5 ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §3). A pair whose observation window is not covered by the pinned discovery sources fails its predicates.
 
-Among feasible horizons, the development procedure chooses the **smallest H** that satisfies preregistered minimums for:
-- qualifying event yield;
-- number of event-bearing diseases;
-- outcome-source coverage;
-- censoring/ambiguity;
-- expected confidence-interval width.
+> Superseded by the Freeze Statement §6: the earlier "smallest feasible H meeting preregistered minimums for event yield, event-bearing diseases, coverage, censoring and CI width" rule.
 
-H is **not** selected because it maximizes Forge Bio lift or makes the model look best.
+H is **not** selected because it maximizes Forge Bio lift or makes the model look best. No custodian predicate uses a per-disease outcome visible to the study team.
 
 The chosen H is frozen before sealed evaluation. Sealed case outcomes may not be inspected to choose H.
 
@@ -133,7 +122,7 @@ PreTGeneticState
     AMBIGUOUS
 ```
 
-`NO_SIGNAL_OBSERVED` means no relevant signal was found after the preregistered historical audit **and** the candidate meets the MAP-frozen minimum HistoricalGeneticSearchCoverage grade. It is not an ontological claim that no signal existed anywhere.
+`NO_SIGNAL_OBSERVED` means no relevant signal was found after the preregistered historical audit **and** the candidate meets the minimum HistoricalGeneticSearchCoverage grade frozen before BIG 0F in `config/big0f-adjudication-policy.v2.json` → `pre_t_genetic_state` (the later endpoint-quality rule may only be equal or stricter; INV-T8). It is not an ontological claim that no signal existed anywhere.
 
 If historical search/measurement coverage is below the frozen threshold, the state is `AMBIGUOUS`, not `NO_SIGNAL_OBSERVED`.
 
@@ -154,7 +143,9 @@ Requirements:
 - `PreTGeneticState = NO_SIGNAL_OBSERVED`;
 - `HistoricalNoveltyAudit = NOVEL_CONFIRMED`;
 - a qualifying post-T event occurs in (T, T+H];
-- phenotype matching, gene assignment, and endpoint-quality rules pass.
+- phenotype matching, gene assignment, and endpoint-quality rules pass (definitions in adjudication policy v2; the later endpoint-quality rule may only be equal or stricter, INV-T8).
+
+Its ranking universe is the eligibility-filtered NOVEL-STRICT universe ([NOVEL_STRICT_ELIGIBILITY_RULE.md](NOVEL_STRICT_ELIGIBILITY_RULE.md)).
 
 This is the only E1 subtype that may support a strict "new genetic support" claim.
 
@@ -186,7 +177,9 @@ This subtype tests whether non-genetic biological evidence anticipates later gen
 
 ### Primary subtype
 
-The sealed confirmatory MAP must choose exactly one primary E1 subtype after feasibility work and before lockbox opening.
+The V0 primary subtype is fixed now: **E1-NOVEL-STRICT** ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1; ADR-022 D2; INV-E1). It is not chosen after feasibility work, and no BIG 0F outcome changes it inside V0. If E1-NOVEL-STRICT is not constructible, the outcome is REDESIGN to V1 (Freeze Statement §4).
+
+> Superseded by ADR-022 D2: "the sealed confirmatory MAP must choose exactly one primary E1 subtype after feasibility work".
 
 Other subtypes are secondary unless a separate MAP is registered.
 
@@ -226,7 +219,7 @@ The endpoint-quality payload retains, where applicable:
 
 Genome-wide significance alone is not a complete endpoint-quality rule.
 
-The precise quality threshold is frozen before sealed evaluation.
+The precise quality threshold is frozen before sealed evaluation. It may only be equal to or stricter than adjudication policy v2 ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §2; INV-T8).
 
 Genomic harmonization is part of scientific provenance, not a hidden preprocessing utility. Ambiguous strand/orientation, unresolved liftover, or unresolved variant normalization fails closed for strict replication matching.
 
@@ -252,22 +245,28 @@ evaluation_bridge_version
 
 Current learned locus-to-gene models, modern QTL resources, current curated target databases, or later therapeutic knowledge may not silently create strict historical gene-level ground truth.
 
-Canonical assignment classes used by BIG 0F-0 include:
+The canonical assignment classes are those of adjudication policy v2 (`BIG0F-ADJUDICATION-V2`, `config/big0f-adjudication-policy.v2.json`):
 
 ```text
-DIRECT_CODING_OR_LOF
+Primary:
+HYPOTHESIS_FREE_CODING_OR_LOF
 HIGH_CONFIDENCE_FINE_MAPPING
 PREREGISTERED_COLOCALIZATION
-OTHER_HIGH_SPECIFICITY_METHOD
+
+Secondary:
 AUTHOR_NAMED
 NEAREST_GENE
 POSITIONAL_PROXIMITY_ONLY
 GENERIC_DATABASE_GENE_FIELD
 MODERN_L2G_ONLY
-OTHER
+CURRENT_CURATED_TARGET_ONLY
+TARGETED_CANDIDATE_GENE_CODING
+
+Unresolved locus:
+LOCUS_ONLY
 ```
 
-Only the frozen high-specificity classes may create a primary gene-level positive.
+Only the three primary classes may create a primary gene-level positive. `OTHER_HIGH_SPECIFICITY_METHOD` does not exist in V0 (`other_high_specificity_method_allowed: false`). Class definitions: [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §1.
 
 Identity reconciliation may establish that two identifiers refer to the same entity. It may not manufacture causal-gene evidence.
 
@@ -279,10 +278,10 @@ A future genetic event for a related trait, biomarker, intermediate phenotype, o
 
 Every qualifying event receives an `OutcomePhenotypeMatchAssessment`.
 
-Primary V0 defaults:
+Primary V0 rules (adjudication policy v2; [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §2):
 - EXACT qualifies;
-- SAME_CONCEPT_DIFFERENT_DEFINITION requires explicit adjudication;
-- NARROWER is sensitivity/case-specific unless preregistered otherwise;
+- SAME_CONCEPT_DIFFERENT_DEFINITION qualifies only when both reviewers assign it;
+- NARROWER is sensitivity only and never qualifies for the primary endpoint, with no case-by-case exceptions;
 - BROADER, SURROGATE, RISK_FACTOR, INTERMEDIATE_PHENOTYPE, RELATED do not qualify for the primary endpoint;
 - UNRESOLVED fails closed.
 
@@ -379,7 +378,7 @@ The primary universe policy is frozen before sealed evaluation. Alternative univ
 
 Diseases must not be selected because designers know famous later successes.
 
-The disease frame is constructed mechanically from as-of-T criteria and, for development/pilot sampling, uses a committed random seed or fully deterministic sampling rule sealed before adjudication.
+The disease frame is constructed mechanically from as-of-T criteria and, for development/pilot sampling, uses a committed random seed or fully deterministic sampling rule sealed before adjudication. For BIG 0F and V0 this is the mechanical frame rule ([BIG_0F_FRAME_RULE.md](BIG_0F_FRAME_RULE.md)) plus the pinned drand quicknet round pre-declared in the S4 selection registration ([BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §7; ADR-022 D6, D13).
 
 Before sealed outcome inspection, construct and freeze the sampling frame from as-of-T criteria including:
 - disease vocabulary/release;
@@ -391,7 +390,7 @@ Before sealed outcome inspection, construct and freeze the sampling frame from a
 - disease-family strata;
 - candidate-universe-size strata.
 
-Manual/famous-case additions are exploratory and reported separately.
+Manual/famous-case additions are exploratory and reported separately. They never enter the frame (the frame rule allows no manual additions); in BIG 0F they are showcase cases under [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §4.
 
 Where practical, sealed disease identities remain hidden from the ranking methodology team until algorithm and feature families are frozen.
 
@@ -481,6 +480,8 @@ Candidate variables for the **Combined Nuisance Model** include, where historica
 - disease prevalence/recruitability proxies;
 - evidence-source/provider coverage.
 
+For V0 the Combined Nuisance Model is exactly the 14 mandatory families, with frozen definitions, in `config/big0f-nuisance-manifest.v2.json` (ADR-022 D11). A mandatory family that cannot be historically reconstructed forces REDESIGN; it is never silently dropped.
+
 These variables must use as-of-T representations and may not silently use current gene models, current LD, current annotation, or future study design.
 
 These controls are benchmark comparators; they are not automatically allowed as ranker features.
@@ -505,7 +506,7 @@ Mandatory:
 - genomic-architecture baseline;
 - cross-trait pleiotropy baseline;
 - historical genetic-observability baseline;
-- **Combined Nuisance Model** combining the frozen disease-specific attention, discoverability, genomic-architecture, pleiotropy, observability, sample-size, and provider-coverage families.
+- **Combined Nuisance Model** combining the frozen disease-specific attention, global attention, discoverability, genomic-architecture, pleiotropy, observability, sample-size, and provider-coverage families (the 14 families of `config/big0f-nuisance-manifest.v2.json`).
 
 The disease-specific attention terms are mandatory for the headline comparator. They are volume/momentum counts only; semantic biological evidence content remains reserved for the biological feature block.
 
@@ -528,9 +529,11 @@ DeltaPrimaryMetric =
 
 The two arms use the same frozen candidate universe, temporal protocol, learner family, preprocessing, hyperparameter search space, tuning budget, early-stopping policy, and random-seed policy. Capacity parity is mandatory and encoded in the MAP.
 
-B-TGT-E1-v0 fixes `EVENT_RANK_PERCENTILE_V1` as the primary metric because sparse future events can make Recall@K highly discrete.
+The primary contrast also carries the K = 19 permuted-biology placebo guard ([V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §3).
 
-Recall@K and a candidate-universe-normalized Recall@x% remain mandatory secondary metrics; BIG 0F does not select a different primary metric after seeing pilot outcomes.
+B-TGT-E1-v0 fixes `EVENT_RANK_PERCENTILE_V1` as the primary metric because sparse future events can make Recall@K highly discrete. Canonical definition: [METRIC_EVENT_RANK_PERCENTILE_V1.md](METRIC_EVENT_RANK_PERCENTILE_V1.md).
+
+Recall@K and a candidate-universe-normalized Recall@x% remain mandatory secondary (companion) metrics; they are never promoted to primary in V0 (INV-E9), and BIG 0F does not select a different primary metric after seeing pilot outcomes.
 
 The MAP freezes the exact comparator, metric, direction, and decision rule.
 
@@ -596,6 +599,8 @@ Before sealed evaluation, MAP freezes:
 - multiplicity policy for secondary endpoints, cutoffs, subgroups, and sensitivity analyses;
 - confirmatory-generation budget / alpha-spending policy across the research program.
 
+For B-TGT-E1-v0 the hypotheses, test statistic, direction, α, planning effect, target power, success rule, primary subtype, primary metric and primary comparator are fixed in [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §1 and §3. The minimum scientifically meaningful effect is a planning effect only and is never a success threshold (INV-E7).
+
 A free-text success rule is prohibited.
 
 ## 21. Coverage and ascertainment gates
@@ -644,7 +649,7 @@ Before accepting a scientific signal, run preregistered controls where applicabl
 - gene-assignment sensitivity;
 - exact-only vs broader identity bridge sensitivity.
 
-A null/control method that reproduces the claimed signal invalidates or materially weakens the interpretation until explained.
+These controls are REPORT diagnostics unless they appear in the closed list of [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §3a. The permuted-biology placebo guard (SENS-PLACEBO) is the only null control that can block success. A diagnostic that reproduces the claimed signal is reported prominently and qualifies the interpretation, but it cannot grant or veto success (INV-E11).
 
 ## 24. Ancestry and population applicability
 
@@ -717,7 +722,7 @@ Normative governance: [adr/ADR-010-validation-generations-and-outcome-freeze.md]
 ## 28. Success criterion
 
 A sealed confirmatory claim requires all of:
-1. no unresolved P0 scientific-integrity blocker;
+1. none of items 2–11 has failed;
 2. primary endpoint subtype and estimand frozen;
 3. ranking sealed before outcome reveal;
 4. HistoricalNoveltyAudit and PreTGeneticState policy passed;
@@ -727,12 +732,14 @@ A sealed confirmatory claim requires all of:
 8. exact Future Outcome snapshot/ledger/event-family commitment matches the frozen MAP;
 9. strict novelty meets the frozen HistoricalGeneticSearchCoverage threshold;
 10. genomic variant/locus harmonization and LD provenance pass;
-11. input/outcome provider coupling is measured and required sensitivities pass;
-12. primary delta exceeds the preregistered threshold against the strongest required attention/discoverability control;
-13. confidence interval satisfies the preregistered rule and dependence sensitivity is reported;
-14. signal is not driven by one disease/family/research-intensity stratum;
-15. null/placebo controls do not reproduce the result;
-16. sensitivity analyses show no material identity, reconstruction, phenotype-match, gene-assignment, replication, observability, event-family, provider-coupling, or outcome-source artifact.
+11. input/outcome provider coupling is measured and reported (SENS-PROVIDER is a LABEL analysis, Freeze Statement §3a);
+12. the confirmatory test against the Combined Nuisance comparator and the permuted-biology placebo guard pass, as defined in [V0_FREEZE_STATEMENT.md](V0_FREEZE_STATEMENT.md) §3 (the 0.05 planning effect is never a success threshold, INV-E7);
+13. the disease-level confidence interval and the dependence analyses are reported as required by Freeze Statement §3 item 7; a non-significant family-level result labels the claim dependence-fragile;
+14. the BLOCKING analyses of Freeze Statement §3a pass: SENS-PLACEBO (null/placebo controls do not reproduce the result) and SENS-LODO (no single disease drives the result);
+15. the LABEL analyses of Freeze Statement §3a are reported with their labels, covering dependence, eligibility, coverage, novelty, coupling, provider and attention stratum;
+16. the list in Freeze Statement §3a is closed. No other sensitivity analysis can grant or veto success.
+
+Items 1–11 are integrity preconditions: if one fails, the run is INVALID, not negative, and its α is still spent (Freeze Statement §4).
 
 Results are reported even when negative.
 
@@ -760,20 +767,20 @@ The project must not call the result "discovery signal" if a plausible alternati
 
 ## 30. BIG 0F contamination and adjudication rule
 
-BIG 0F is governed by ADR-021.
+BIG 0F is governed by ADR-021 as amended by [ADR-022](adr/ADR-022-final-scientific-consistency-closure.md). The manual pilot **is** BIG 0F; there is no separate manual pilot (ADR-022 D14).
 
-All diseases/events directly inspected in BIG 0F are permanently DEVELOPMENT_EXPOSED and cannot later enter a strongest-tier sealed confirmatory generation.
+Every disease whose per-disease post-T information reaches the study or ranking team in BIG 0F, by any route, is permanently DEVELOPMENT_EXPOSED and cannot later enter a strongest-tier sealed confirmatory generation (INV-X1; [BIG_0F_SELECTION_CUSTODY.md](BIG_0F_SELECTION_CUSTODY.md) §4).
 
-BIG 0F scientific adjudication does not begin until an independent second adjudicator is assigned. At least max(30 cases, 30% of adjudicated event cases), capped at the pilot size, receives independent blinded review.
+BIG 0F scientific adjudication does not begin until all four start gates in ADR-022 §9 are met: the minimal verification harness, a successful external-seal dry run, an independent second adjudicator and an independent selection custodian. At least max(30 cases, 30% of adjudicated event cases), capped at the pilot size, receives independent blinded review, selected as in [BIG_0F_ADJUDICATION_DEFINITIONS.md](BIG_0F_ADJUDICATION_DEFINITIONS.md) §4.
 
-The pilot protocol, disease frame, post-frame public-randomness beacon binding, target-N rule, adjudication policy, nuisance manifest, evaluator/schema digests, and numeric GO/REDESIGN/NO-GO thresholds are externally sealed before case adjudication.
+The pilot protocol, frame rule, pre-declared drand round (custody §7), target-N rule, adjudication policy, nuisance manifest, evaluator/schema digests, and numeric GO/REDESIGN/NO-GO thresholds are externally sealed before case adjudication. "Sealed" means seal_time as defined in ADR-022 §5.
 
 BIG 0F must also include:
 - a symmetric PreTGeneticState/novelty-audit cost sample on non-events;
 - a mini historical-provider availability audit;
 - assignment-method/attention audit;
 - development-only **nuisance-only** Combined Nuisance headroom analysis;
-- inputs for simulation-based confirmatory power analysis.
+- the Stage A pool-sufficiency power screen ([BIG_0F_POWER_AND_VARIANCE_POLICY.md](BIG_0F_POWER_AND_VARIANCE_POLICY.md) §2). Confirmatory planning variance comes later, from the Stage B Development Lift & Variance Study (ADR-022 D10).
 
 Normative critical-path decisions:
 - [adr/ADR-020-e1-primary-comparator-confirmatory-rule.md](adr/ADR-020-e1-primary-comparator-confirmatory-rule.md)
